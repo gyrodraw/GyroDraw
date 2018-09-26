@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("ch.epfl.sweng.bootcamp", appContext.getPackageName());
+        assertEquals("ch.epfl.sweng.SDP", appContext.getPackageName());
     }
 }

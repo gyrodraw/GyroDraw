@@ -8,7 +8,7 @@ jacoco {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "ch.epfl.sweng.bootcamp"
+        applicationId "ch.epfl.sweng.SDP"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1

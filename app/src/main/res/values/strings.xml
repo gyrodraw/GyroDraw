@@ -4,4 +4,7 @@
   <string name="unknown_error">Unknown error</string>
   <string name="error_message">Error message</string>
   <string name="login">Login</string>
+  <string name="home">Home</string>
+  <string name="sign_out">Sign out</string>
+  <string name="delete_account">Delete account</string>
 </resources>

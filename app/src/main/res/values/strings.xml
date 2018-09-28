@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">SDP</string>
+  <string name="app_name">Gyrodraw</string>
+  <string name="no_internet">No Internet connection</string>
+  <string name="unknown_error">Unknown error</string>
+  <string name="error_message">Error message</string>
+  <string name="login">Login</string>
 </resources>

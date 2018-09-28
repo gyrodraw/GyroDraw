@@ -17,8 +17,8 @@ public class HomeActivity extends AppCompatActivity {
         view = this.getWindow().getDecorView();
         view.setBackgroundResource(R.color.colorGrey);
 
-        TextView battleButton = findViewById(R.id.battleButton);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Mont-HeavyDEMO.otf");
-        battleButton.setTypeface(type);
+        TextView drawText = findViewById(R.id.drawText);
+        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
+        drawText.setTypeface(type);
     }
 }

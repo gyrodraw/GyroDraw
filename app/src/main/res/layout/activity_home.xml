@@ -7,17 +7,19 @@
     tools:context=".HomeActivity">
 
     <Button
-        android:id="@+id/battleButton"
+        android:id="@+id/drawButton"
         android:layout_width="468dp"
         android:layout_height="95dp"
         android:layout_marginBottom="32dp"
         android:background="@color/colorLightRed"
-        android:text="Battle !"
-        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:includeFontPadding="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/colorGrey"
-        android:textSize="50sp"
+        android:textSize="120sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Draw !" />
+
 </android.support.constraint.ConstraintLayout>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "360230838427",
+    "firebase_url": "https://gyrodraw.firebaseio.com",
+    "project_id": "gyrodraw",
+    "storage_bucket": "gyrodraw.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360230838427:android:ce7abe98727ae8d4",
+        "android_client_info": {
+          "package_name": "ch.epfl.sweng.SDP"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360230838427-gvvbtb7n7db9f02epqv9aneahna7s42n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCOWALG4EymDas_TR2FzuFkZFGvxfe8kI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

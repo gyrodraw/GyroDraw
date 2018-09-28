@@ -64,3 +64,13 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            details.useVersion '26.1.0'
+        }
+
+    }
+}

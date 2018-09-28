@@ -17,7 +17,7 @@ public class HomeActivity extends AppCompatActivity {
         view = this.getWindow().getDecorView();
         view.setBackgroundResource(R.color.colorGrey);
 
-        TextView drawText = findViewById(R.id.drawText);
+        TextView drawText = findViewById(R.id.drawButton);
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
         drawText.setTypeface(type);
     }

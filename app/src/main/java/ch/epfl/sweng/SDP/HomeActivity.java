@@ -34,14 +34,25 @@ public class HomeActivity extends AppCompatActivity {
         starsText.setPadding(60, -5, 0, 0);
     }
 
-    public void didTapButton(View view) {
-        Button button = (Button)findViewById(R.id.drawButton);
-        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+    public void onClickDrawButton(View view) {
+        Button drawButton = findViewById(R.id.drawButton);
+        bounceButton(drawButton);
+    }
 
-        // Use bounce interpolator with amplitude 0.2 and frequency 20
+    public void onClickTrophiesButton(View view) {
+        Button trophiesButton = findViewById(R.id.trophiesButton);
+        bounceButton(trophiesButton);
+    }
+
+    public void onClickStarsButton(View view) {
+        Button starsButton = findViewById(R.id.starsButton);
+        bounceButton(starsButton);
+    }
+
+    private void bounceButton(Button button) {
+        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(0.2, 20);
         myAnim.setInterpolator(interpolator);
-
         button.startAnimation(myAnim);
     }
 }

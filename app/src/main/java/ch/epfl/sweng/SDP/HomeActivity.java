@@ -22,16 +22,21 @@ public class HomeActivity extends AppCompatActivity {
         view.setBackgroundResource(R.color.colorGrey);
 
         TextView drawText = findViewById(R.id.drawButton);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Muroslant.otf");
-        drawText.setTypeface(type);
+        Typeface typeMuroslant = Typeface.createFromAsset(getAssets(),"fonts/Muroslant.otf");
+        drawText.setTypeface(typeMuroslant);
         drawText.setPadding(0, -14, 0, 0);
 
+        TextView leagueText = findViewById(R.id.leagueText);
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(),"fonts/Optimus.otf");
+        leagueText.setTypeface(typeOptimus);
+        leagueText.setPadding(0, -14, 0, 0);
+
         TextView trophiesText = findViewById(R.id.trophiesButton);
-        trophiesText.setTypeface(type);
+        trophiesText.setTypeface(typeMuroslant);
         trophiesText.setPadding(60, -5, 0, 0);
 
         TextView starsText = findViewById(R.id.starsButton);
-        starsText.setTypeface(type);
+        starsText.setTypeface(typeMuroslant);
         starsText.setPadding(60, -5, 0, 0);
     }
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -49,10 +50,15 @@ public class HomeActivity extends AppCompatActivity {
         bounceButton(starsButton);
     }
 
-    private void bounceButton(Button button) {
+    public void onClickLeagueImage(View view) {
+        ImageView leagueImage = findViewById(R.id.leagueImage);
+        bounceButton(leagueImage);
+    }
+
+    private void bounceButton(View view) {
         final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(0.2, 20);
         myAnim.setInterpolator(interpolator);
-        button.startAnimation(myAnim);
+        view.startAnimation(myAnim);
     }
 }

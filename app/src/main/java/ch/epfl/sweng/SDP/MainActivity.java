@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public void sendMessage(View view) {
         // Do something in response to button
 
-        Intent intent = new Intent(this, GreetingActivity.class);
+        Intent intent = new Intent(this, DrawingActivity.class);
         startActivity(intent);
     }
 }

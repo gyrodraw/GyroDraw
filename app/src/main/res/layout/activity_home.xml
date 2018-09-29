@@ -10,16 +10,18 @@
         android:id="@+id/drawButton"
         android:layout_width="468dp"
         android:layout_height="95dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/colorLightRed"
         android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="Draw !"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/colorGrey"
-        android:textSize="120sp"
+        android:textIsSelectable="false"
+        android:textSize="134sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Draw !" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -20,5 +20,6 @@ public class HomeActivity extends AppCompatActivity {
         TextView drawText = findViewById(R.id.drawButton);
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
         drawText.setTypeface(type);
+        drawText.setPadding(0, -12, 0, 0);
     }
 }

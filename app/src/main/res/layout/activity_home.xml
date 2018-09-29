@@ -10,8 +10,8 @@
         android:id="@+id/drawButton"
         android:layout_width="468dp"
         android:layout_height="95dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/colorLightRed"
+        android:layout_marginBottom="28dp"
+        android:background="@color/colorLightBlue"
         android:includeFontPadding="false"
         android:requiresFadingEdge="none"
         android:text="Draw !"
@@ -22,6 +22,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        style="?android:attr/borderlessButtonStyle" />
 
 </android.support.constraint.ConstraintLayout>

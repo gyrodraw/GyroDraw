@@ -18,8 +18,8 @@ public class HomeActivity extends AppCompatActivity {
         view.setBackgroundResource(R.color.colorGrey);
 
         TextView drawText = findViewById(R.id.drawButton);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
+        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Muroslant.otf");
         drawText.setTypeface(type);
-        drawText.setPadding(0, -12, 0, 0);
+        drawText.setPadding(0, -14, 0, 0);
     }
 }

@@ -24,7 +24,7 @@ public class MainActivityTest {
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(LoginActivity.class.getName(), null, false);
     @Test
-    public void testCanLogin() {
+    public void testCanOpenLoginActivity() {
         onView(ViewMatchers.withId(R.id.login)).perform(click());
         Activity loginActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);

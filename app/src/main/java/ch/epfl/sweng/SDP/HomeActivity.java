@@ -24,9 +24,7 @@ public class HomeActivity extends AppCompatActivity {
      * @param view the view corresponding to the clicked button
      */
     public void signOut(View view) {
-        final Toast toast = Toast
-                .makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT);
-        toast.show();
+        final Toast toast = makeAndShowToast("Signing out...");
 
         AuthUI.getInstance()
                 .signOut(this)
@@ -51,9 +49,7 @@ public class HomeActivity extends AppCompatActivity {
      * @param view the view corresponding to the clicked button
      */
     public void delete(View view) {
-        final Toast toast = Toast
-                .makeText(getApplicationContext(), "Deleting account...", Toast.LENGTH_SHORT);
-        toast.show();
+        final Toast toast = makeAndShowToast("Deleting account...");
 
         AuthUI.getInstance()
                 .delete(this)
@@ -70,5 +66,11 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private Toast makeAndShowToast(String msg) {
+        Toast t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+        t.show();
+        return t;
     }
 }

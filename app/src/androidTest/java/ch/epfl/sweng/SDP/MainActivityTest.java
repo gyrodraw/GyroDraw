@@ -3,13 +3,13 @@ package ch.epfl.sweng.SDP;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static org.junit.Assert.assertNotNull;
 
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ public class MainActivityTest {
         onView(ViewMatchers.withId(R.id.login)).perform(click());
         Activity loginActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
-        assertNotNull(loginActivity);
+        Assert.assertNotNull(loginActivity);
     }
 
 }

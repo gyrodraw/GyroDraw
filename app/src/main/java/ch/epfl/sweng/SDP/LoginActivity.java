@@ -11,8 +11,6 @@ import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,8 +33,7 @@ public class LoginActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-                        .setLogo(
-                                R.drawable.common_google_signin_btn_icon_dark) // here we need to specify our custom logo
+                        .setLogo(R.drawable.common_google_signin_btn_icon_dark) // custom logo here
                         .build(),
                 RC_SIGN_IN);
     }
@@ -50,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
                 finish();

@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="487dp"
+        android:layout_height="759dp"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background" />
+
     <Button
         android:id="@+id/trophiesButton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="450dp"
         android:layout_height="35dp"
-        android:layout_marginTop="24dp"
         android:background="@color/colorBlueTrophy"
-        android:gravity="left"
+        android:gravity="start"
         android:includeFontPadding="false"
         android:onClick="onClickTrophiesButton"
         android:requiresFadingEdge="none"
@@ -24,6 +35,7 @@
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,9 +44,9 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="450dp"
         android:layout_height="35dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="44dp"
         android:background="@color/colorGreenStar"
-        android:gravity="left"
+        android:gravity="start"
         android:includeFontPadding="false"
         android:onClick="onClickStarsButton"
         android:requiresFadingEdge="none"
@@ -45,28 +57,24 @@
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.varunest.sparkbutton.SparkButton
         android:id="@+id/drawButton"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="450dp"
-        android:layout_height="95dp"
-        android:layout_marginBottom="24dp"
-        android:background="@color/colorLightBlue"
-        android:includeFontPadding="false"
-        android:onClick="onClickDrawButton"
-        android:requiresFadingEdge="none"
-        android:text="Draw !"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorGrey"
-        android:textIsSelectable="false"
-        android:textSize="134sp"
-        android:textStyle="bold"
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:sparkbutton_activeImage="@drawable/draw_button"
+        app:sparkbutton_iconSize="500dp"
+        app:sparkbutton_animationSpeed="1.5"
+        app:sparkbutton_primaryColor="@color/colorDrawButton"
+        app:sparkbutton_secondaryColor="@color/colorDrawButtonPressed" />
 
     <ImageView
         android:id="@+id/leagueImage"
@@ -94,5 +102,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
-
 </android.support.constraint.ConstraintLayout>

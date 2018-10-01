@@ -21,10 +21,7 @@ public class HomeActivity extends AppCompatActivity {
         view = this.getWindow().getDecorView();
         view.setBackgroundResource(R.color.colorGrey);
 
-        TextView drawText = findViewById(R.id.drawButton);
         Typeface typeMuroslant = Typeface.createFromAsset(getAssets(),"fonts/Muroslant.otf");
-        drawText.setTypeface(typeMuroslant);
-        drawText.setPadding(0, -14, 0, 0);
 
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(),"fonts/Optimus.otf");
@@ -38,11 +35,6 @@ public class HomeActivity extends AppCompatActivity {
         TextView starsText = findViewById(R.id.starsButton);
         starsText.setTypeface(typeMuroslant);
         starsText.setPadding(60, -5, 0, 0);
-    }
-
-    public void onClickDrawButton(View view) {
-        Button drawButton = findViewById(R.id.drawButton);
-        bounceButton(drawButton);
     }
 
     public void onClickTrophiesButton(View view) {

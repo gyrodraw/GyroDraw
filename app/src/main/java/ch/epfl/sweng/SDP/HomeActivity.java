@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            // Deletion failed
+                            // Sign out failed
                         }
                     }
                 });
@@ -69,8 +69,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private Toast makeAndShowToast(String msg) {
-        Toast t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
-        t.show();
-        return t;
+        Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+        toast.show();
+        return toast;
     }
 }

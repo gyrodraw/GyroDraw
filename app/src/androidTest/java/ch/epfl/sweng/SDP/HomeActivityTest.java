@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import com.google.firebase.auth.FirebaseAuth;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,6 +27,7 @@ public class HomeActivityTest {
 
     @Test
     public void testCanSignOut() {
+        FirebaseAuth.getInstance().signInAnonymously();
         onView(withId(R.id.sign_out)).perform(click());
         Activity mainActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);

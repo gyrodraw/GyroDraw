@@ -7,25 +7,24 @@
   tools:context="ch.epfl.sweng.SDP.MainActivity"
   tools:layout_editor_absoluteY="25dp">
 
-    <Button
-      android:id="@+id/login"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="149dp"
-      android:onClick="startLogin"
-      android:text="@string/login"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      />
     <ImageView
       android:id="@+id/logo"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="125dp"
+      android:contentDescription="@string/app_logo"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:srcCompat="@mipmap/ic_launcher"
-      android:contentDescription="@string/app_logo"/>
+      app:srcCompat="@mipmap/ic_launcher"/>
+    <com.google.android.gms.common.SignInButton
+      android:id="@+id/login_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="120dp"
+      android:onClick="startLogin"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
 </android.support.constraint.ConstraintLayout>

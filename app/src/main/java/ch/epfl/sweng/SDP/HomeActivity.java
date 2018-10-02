@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
@@ -11,6 +12,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private static final String TAG = "HomeActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            // Sign out failed
+                            Log.e(TAG,"Sign out failed!");
                         }
                     }
                 });
@@ -62,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            // Deletion failed
+                            Log.e(TAG,"Delete account failed!");
                         }
                     }
                 });

@@ -9,24 +9,24 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="487dp"
+        android:layout_width="500dp"
         android:layout_height="759dp"
         android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/background" />
+        app:srcCompat="@drawable/background2" />
 
     <Button
         android:id="@+id/trophiesButton"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="450dp"
+        android:layout_width="500dp"
         android:layout_height="35dp"
+        android:layout_marginTop="16dp"
         android:background="@color/colorBlueTrophy"
         android:gravity="start"
         android:includeFontPadding="false"
-        android:onClick="onClickTrophiesButton"
         android:requiresFadingEdge="none"
         android:text="Trophies:"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
@@ -42,13 +42,12 @@
     <Button
         android:id="@+id/starsButton"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="450dp"
+        android:layout_width="500dp"
         android:layout_height="35dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorGreenStar"
         android:gravity="start"
         android:includeFontPadding="false"
-        android:onClick="onClickStarsButton"
         android:requiresFadingEdge="none"
         android:text="Stars:"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
@@ -59,28 +58,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/trophiesButton" />
 
-    <com.varunest.sparkbutton.SparkButton
+    <Button
         android:id="@+id/drawButton"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="500dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="95dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/colorDrawYellow"
+        android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="Draw !"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorGrey"
+        android:textIsSelectable="false"
+        android:textSize="134sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:sparkbutton_activeImage="@drawable/draw_button"
-        app:sparkbutton_iconSize="500dp"
-        app:sparkbutton_animationSpeed="1.5"
-        app:sparkbutton_primaryColor="@color/colorDrawButton"
-        app:sparkbutton_secondaryColor="@color/colorDrawButtonPressed" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/leagueImage"
         android:layout_width="294dp"
         android:layout_height="288dp"
-        android:onClick="onClickLeagueImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"

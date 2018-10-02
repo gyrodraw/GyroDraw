@@ -7,6 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+    <Button
+        android:id="@+id/drawButton2"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="500dp"
+        android:layout_height="95dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/colorDrawYellow"
+        android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="Draw !"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorGrey"
+        android:textIsSelectable="false"
+        android:textSize="134sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/backgroundImage"
         android:layout_width="500dp"
@@ -60,25 +79,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trophiesButton" />
 
-    <Button
-        android:id="@+id/drawButton"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="500dp"
-        android:layout_height="95dp"
-        android:layout_marginBottom="24dp"
-        android:background="@color/colorDrawYellow"
-        android:includeFontPadding="false"
-        android:requiresFadingEdge="none"
-        android:text="Draw !"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorGrey"
-        android:textIsSelectable="false"
-        android:textSize="134sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageView
         android:id="@+id/leagueImage"
         android:layout_width="294dp"
@@ -104,5 +104,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
+
+    <ImageView
+        android:id="@+id/drawButton"
+        android:layout_width="552dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/draw_button" />
 
 </android.support.constraint.ConstraintLayout>

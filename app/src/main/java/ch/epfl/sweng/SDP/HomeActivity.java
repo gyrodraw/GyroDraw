@@ -22,29 +22,28 @@ public class HomeActivity extends AppCompatActivity {
         view = this.getWindow().getDecorView();
         view.setBackgroundResource(R.color.colorGrey);
 
-        Typeface typeMuroslant = Typeface.createFromAsset(getAssets(),"fonts/Muroslant.otf");
         Typeface typeMuro = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(),"fonts/Optimus.otf");
 
-        final Button drawButton = findViewById(R.id.drawButton);
+        final ImageView drawButton = findViewById(R.id.drawButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
         final Button starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
 
-        drawButton.setTypeface(typeMuroslant);
-        drawButton.setPadding(0, -14, 0, 0);
         drawButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        drawButton.setImageResource(R.drawable.draw_button_pressed);
                         pressButton(drawButton);
                         break;
                     case MotionEvent.ACTION_UP:
+                        drawButton.setImageResource(R.drawable.draw_button);
                         bounceButton(drawButton, 0.2, 20);
                 }
-                return false;
+                return true;
             }
         });
 

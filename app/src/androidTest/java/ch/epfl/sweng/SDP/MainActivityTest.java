@@ -26,7 +26,7 @@ public class MainActivityTest {
 
     @Test
     public void testCanOpenLoginActivity() {
-        onView(withId(R.id.login)).perform(click());
+        onView(withId(R.id.login_button)).perform(click());
         Activity loginActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
         Assert.assertNotNull(loginActivity);

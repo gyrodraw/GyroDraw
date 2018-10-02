@@ -31,6 +31,14 @@ public class HomeActivity extends AppCompatActivity {
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
 
+        trophiesButton.setTypeface(typeMuro);
+        starsButton.setTypeface(typeMuro);
+        leagueText.setTypeface(typeOptimus);
+
+        trophiesButton.setPadding(140, -5, 0, 0);
+        starsButton.setPadding(140, -5, 0, 0);
+        leagueText.setPadding(0, -14, 0, 0);
+
         drawButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -47,8 +55,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        trophiesButton.setTypeface(typeMuro);
-        trophiesButton.setPadding(140, -5, 0, 0);
         trophiesButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -63,8 +69,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        starsButton.setTypeface(typeMuro);
-        starsButton.setPadding(140, -5, 0, 0);
+
         starsButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -92,9 +97,6 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        leagueText.setTypeface(typeOptimus);
-        leagueText.setPadding(0, -14, 0, 0);
     }
 
     private void bounceButton(View view, double amplitude, int frequency) {

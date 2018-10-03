@@ -27,14 +27,14 @@ public class HomeActivity extends AppCompatActivity {
      * @param view the view corresponding to the clicked button
      */
     public void signOut(View view) {
-        final Toast toast = makeAndShowToast("Signing out...");
+        final Toast toastSignOut = makeAndShowToast("Signing out...");
 
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            toast.cancel();
+                            toastSignOut.cancel();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -52,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
      * @param view the view corresponding to the clicked button
      */
     public void delete(View view) {
-        final Toast toast = makeAndShowToast("Deleting account...");
+        final Toast toastDelete = makeAndShowToast("Deleting account...");
 
         AuthUI.getInstance()
                 .delete(this)
@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            toast.cancel();
+                            toastDelete.cancel();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();

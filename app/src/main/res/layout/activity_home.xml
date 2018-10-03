@@ -1,43 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context=".HomeActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
 
-  <TextView
-    android:id="@+id/home"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/home"
-    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.501"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.244"/>
-  <Button
-    android:id="@+id/sign_out"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="184dp"
-    android:onClick="signOut"
-    android:text="@string/sign_out"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.736"
-    app:layout_constraintStart_toStartOf="parent"/>
-  <Button
-    android:id="@+id/delete_account"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="46dp"
-    android:layout_marginRight="46dp"
-    android:onClick="delete"
-    android:text="@string/delete_account"
-    app:layout_constraintBaseline_toBaselineOf="@+id/sign_out"
-    app:layout_constraintEnd_toStartOf="@+id/sign_out"/>
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="500dp"
+        android:layout_height="759dp"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background" />
+
+    <Button
+        android:id="@+id/trophiesButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="500dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorBlueTrophy"
+        android:gravity="start"
+        android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="@string/trophies_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorGrey"
+        android:textIsSelectable="false"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/starsButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="500dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorGreenStar"
+        android:gravity="start"
+        android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="@string/stars_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorGrey"
+        android:textIsSelectable="false"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trophiesButton" />
+
+    <ImageView
+        android:id="@+id/leagueImage"
+        android:layout_width="294dp"
+        android:layout_height="288dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.452"
+        app:srcCompat="@drawable/league1" />
+
+    <TextView
+        android:id="@+id/leagueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="5"
+        android:text="@string/league_1"
+        android:textColor="@color/colorLeague1"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
+
+    <ImageView
+        android:id="@+id/drawButton"
+        android:layout_width="552dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/draw_button" />
+
 </android.support.constraint.ConstraintLayout>

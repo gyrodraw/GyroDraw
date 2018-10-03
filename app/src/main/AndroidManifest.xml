@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ch.epfl.sweng.SDP.GreetingActivity"></activity>
+        <activity android:name=".AccountCreation">
+        </activity>
     </application>
 
 </manifest>

@@ -15,6 +15,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "360230838427-5sth44lao9as6jiua2qbpf6mlsju2k34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "34896dff43dfedc577cac2296c5170eb641e043e"
+          }
+        },
+        {
+          "client_id": "360230838427-d771m0521iblqt33ivmkmpp1srlp27tu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "de88acfad6d2280249be09410d79cf4a47bd34b3"
+          }
+        },
+        {
+          "client_id": "360230838427-pf10s0njp6alfi5gdgjlfnv1uu547kfi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "ea07df12d33a106e3bc7bce17b23ed4afb52c6f2"
+          }
+        },
+        {
+          "client_id": "360230838427-9s31ocntrvp38cklciu8lveoleo17cp8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "710509b76c8f3ce95a577b2b14aa42baa1540fc5"
+          }
+        },
+        {
           "client_id": "360230838427-gvvbtb7n7db9f02epqv9aneahna7s42n.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +61,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360230838427-16f3bplneo7h6bqm6h7olvp2qq76i4ja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

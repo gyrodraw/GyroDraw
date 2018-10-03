@@ -15,9 +15,12 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void sendMessage(View view) {
-        // Do something in response to button
-
         Intent intent = new Intent(this, GreetingActivity.class);
+        startActivity(intent);
+    }
+
+    public void openHome(View view) {
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
 }

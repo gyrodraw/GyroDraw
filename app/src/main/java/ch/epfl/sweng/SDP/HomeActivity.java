@@ -12,15 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
-    View view;
+    private final static int TOP_BUTTONS_FREQUENCY = 10;
+    private final static int DRAW_BUTTON_FREQUENCY = 20;
+    private final static int LEAGUE_IMAGE_FREQUENCY = 30;
+
+    private final static double MAIN_AMPLITUDE = 0.1;
+    private final static double DRAW_BUTTON_AMPLITUDE = 0.2;
+
+    private final static int LEFT_PADDING = 140;
+    private final static int TOP_PADDING = -5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        view = this.getWindow().getDecorView();
-        view.setBackgroundResource(R.color.colorGrey);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(),"fonts/Optimus.otf");
@@ -35,13 +40,36 @@ public class HomeActivity extends AppCompatActivity {
         starsButton.setTypeface(typeMuro);
         leagueText.setTypeface(typeOptimus);
 
-        trophiesButton.setPadding(140, -5, 0, 0);
-        starsButton.setPadding(140, -5, 0, 0);
-        leagueText.setPadding(0, -14, 0, 0);
+        trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
+        starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
 
+        setDrawButtonListener(drawButton);
+        setListener(trophiesButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
+        setListener(starsButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
+        setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
+    }
+
+    private void setListener(final View view, final double amplitude, final int frequency) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, amplitude, frequency);
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
+    private void setDrawButtonListener(final ImageView drawButton) {
         drawButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         drawButton.setImageResource(R.drawable.draw_button_pressed);
@@ -49,50 +77,8 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         drawButton.setImageResource(R.drawable.draw_button);
-                        bounceButton(drawButton, 0.2, 20);
-                }
-                return true;
-            }
-        });
-
-        trophiesButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(trophiesButton);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(trophiesButton, 0.1, 10);
-                }
-                return false;
-            }
-        });
-
-
-        starsButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(starsButton);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(starsButton, 0.1, 10);
-                }
-                return false;
-            }
-        });
-
-        leagueImage.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(leagueImage);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(leagueImage, 0.1, 30);
+                        bounceButton(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+                    default:
                 }
                 return true;
             }

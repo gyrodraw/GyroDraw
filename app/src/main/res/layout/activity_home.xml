@@ -28,7 +28,7 @@
         android:gravity="start"
         android:includeFontPadding="false"
         android:requiresFadingEdge="none"
-        android:text="Trophies:"
+        android:text="@string/trophies_button_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/colorGrey"
         android:textIsSelectable="false"
@@ -49,7 +49,7 @@
         android:gravity="start"
         android:includeFontPadding="false"
         android:requiresFadingEdge="none"
-        android:text="Stars:"
+        android:text="@string/stars_button_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/colorGrey"
         android:textIsSelectable="false"
@@ -69,7 +69,7 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498"
+        app:layout_constraintVertical_bias="0.452"
         app:srcCompat="@drawable/league1" />
 
     <TextView
@@ -79,7 +79,7 @@
         android:shadowColor="@android:color/black"
         android:shadowDy="5"
         android:shadowRadius="5"
-        android:text="League 1"
+        android:text="@string/league_1"
         android:textColor="@color/colorLeague1"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +91,7 @@
         android:layout_width="552dp"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

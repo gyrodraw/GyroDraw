@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">SDP</string>
+    <string name="trophies_button_text">Trophies:</string>
+    <string name="stars_button_text">Stars:</string>
+    <string name="league_1">League 1</string>
 </resources>

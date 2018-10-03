@@ -44,6 +44,12 @@ public class PaintView extends View {
         this(context, null);
     }
 
+    /**
+     * Constructor of our class, initialize the core parameters for our drawing.
+     *
+     * @param context Actual context for drawing.
+     * @param attrs XML attributes of the view.
+     */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mPaint = new Paint();
@@ -62,7 +68,7 @@ public class PaintView extends View {
 
     /**
      * Initialise the canvas according the dimensions in
-     * pixels of the screen
+     * pixels of the screen.
      *
      * @param metrics Object containing the dimensions of the screen
      */
@@ -93,7 +99,7 @@ public class PaintView extends View {
     }
 
     /**
-     * Clear everything that is drawn
+     * Clear everything that is drawn.
      */
     public void clear() {
         backgroundColor = DEFAULT_BG_COLOR;
@@ -174,7 +180,6 @@ public class PaintView extends View {
                 invalidate();
                 break;
             default:
-                break;
         }
 
         return true;

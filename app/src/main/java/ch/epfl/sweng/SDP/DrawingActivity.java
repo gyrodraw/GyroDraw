@@ -4,16 +4,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 public class DrawingActivity extends AppCompatActivity implements SensorEventListener {
 
-    private final static String TAG = "DrawingActivity";
+    private static final String TAG = "DrawingActivity";
     private PaintView paintView;
     private SensorManager mSensorManager;
     private final float[] mAccelerometerReading = new float[3];

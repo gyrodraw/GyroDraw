@@ -31,13 +31,14 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final int LEFT_PADDING = 140;
     private static final int TOP_PADDING = -5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(),"fonts/Optimus.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
@@ -76,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            Log.e(TAG,"Sign out failed!");
+                            Log.e(TAG, "Sign out failed!");
                         }
                     }
                 });
@@ -102,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            Log.e(TAG,"Delete account failed!");
+                            Log.e(TAG, "Delete account failed!");
                         }
                     }
                 });
@@ -119,7 +120,7 @@ public class HomeActivity extends AppCompatActivity {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         pressButton(view);
                         break;
@@ -137,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
         drawButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         drawButton.setImageResource(R.drawable.draw_button_pressed);
                         pressButton(drawButton);

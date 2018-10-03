@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP;
 
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;

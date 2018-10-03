@@ -65,14 +65,17 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            System.arraycopy(event.values, 0, mAccelerometerReading,
-                    0, mAccelerometerReading.length);
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            System.arraycopy(event.values, 0, mMagnetometerReading,
-                    0, mMagnetometerReading.length);
-        } else {
-            Log.d(TAG, "Should not come here");
+        switch(event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                System.arraycopy(event.values, 0, mAccelerometerReading,
+                        0, mAccelerometerReading.length);
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                System.arraycopy(event.values, 0, mMagnetometerReading,
+                        0, mMagnetometerReading.length);
+                break;
+            default:
+                Log.d(TAG, "Should not come here");
         }
 
         updateOrientationAngles();

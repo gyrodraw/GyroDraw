@@ -10,7 +10,7 @@ android {
         gyrodraw {
             keyAlias 'gyrodraw'
             keyPassword 'Bacillo2'
-            storeFile file('/Users/avenezia/my-release-key.keystore')
+            storeFile file('SDP/my-release-key.keystore')
             storePassword 'Bacillo2'
         }
     }

@@ -1,8 +1,11 @@
 package ch.epfl.sweng.SDP;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,8 +13,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private static final String TAG = "HomeActivity";
+
     private static final int TOP_BUTTONS_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
@@ -27,8 +37,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(),"fonts/Muro.otf");
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(),"fonts/Optimus.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
@@ -49,11 +59,68 @@ public class HomeActivity extends AppCompatActivity {
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
     }
 
+    /**
+     * Signs the current user out and starts the {@link MainActivity}.
+     *
+     * @param view the view corresponding to the clicked button
+     */
+    public void signOut(View view) {
+        final Toast toastSignOut = makeAndShowToast("Signing out...");
+
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            toastSignOut.cancel();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Log.e(TAG, "Sign out failed!");
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Deletes the user from FirebaseAuth and deletes any existing credentials for the user in
+     * Google Smart Lock. It then starts the {@link MainActivity}.
+     *
+     * @param view the view corresponding to the clicked button
+     */
+    public void delete(View view) {
+        final Toast toastDelete = makeAndShowToast("Deleting account...");
+
+        AuthUI.getInstance()
+                .delete(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            toastDelete.cancel();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Log.e(TAG, "Delete account failed!");
+                        }
+                    }
+                });
+    }
+
+    private Toast makeAndShowToast(String msg) {
+        Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+        toast.show();
+        return toast;
+    }
+
+
     private void setListener(final View view, final double amplitude, final int frequency) {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         pressButton(view);
                         break;
@@ -71,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
         drawButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         drawButton.setImageResource(R.drawable.draw_button_pressed);
                         pressButton(drawButton);
@@ -98,5 +165,7 @@ public class HomeActivity extends AppCompatActivity {
         final Animation press = AnimationUtils.loadAnimation(this, R.anim.press);
         press.setFillAfter(true);
         view.startAnimation(press);
+        Intent intent = new Intent(this, DrawingActivity.class);
+        startActivity(intent);
     }
 }

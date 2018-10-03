@@ -146,6 +146,7 @@ public class HomeActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         drawButton.setImageResource(R.drawable.draw_button);
                         bounceButton(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+                        startDrawingActivity();
                         break;
                     default:
                 }
@@ -165,6 +166,9 @@ public class HomeActivity extends AppCompatActivity {
         final Animation press = AnimationUtils.loadAnimation(this, R.anim.press);
         press.setFillAfter(true);
         view.startAnimation(press);
+    }
+
+    private void startDrawingActivity() {
         Intent intent = new Intent(this, DrawingActivity.class);
         startActivity(intent);
     }

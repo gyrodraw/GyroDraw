@@ -7,6 +7,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -23,7 +24,6 @@ public class HomeActivityTest {
     @Test
     public void testDrawButtonIsClickable() {
         onView(withId(R.id.drawButton)).perform(click());
-        onView(withId(R.id.drawButton)).check(matches(isClickable()));
     }
 
     @Test

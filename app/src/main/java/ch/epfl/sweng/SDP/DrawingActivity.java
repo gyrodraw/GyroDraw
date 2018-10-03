@@ -15,12 +15,12 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     private static final String TAG = "DrawingActivity";
     private PaintView paintView;
-    private SensorManager mSensorManager;
-    private float[] mAccelerometerReading = new float[3];
-    private float[] mMagnetometerReading = new float[3];
+    private SensorManager sensorManager;
+    private float[] accelerometerReading = new float[3];
+    private float[] magnetometerReading = new float[3];
 
-    private float[] mRotationMatrix = new float[9];
-    private float[] mOrientationAngles = new float[3];
+    private float[] rotationMatrix = new float[9];
+    private float[] orientationAngles = new float[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         paintView.init(metrics);
 
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -48,16 +48,16 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         // readings again.
 
         // Register accelerometer sensor listener
-        Sensor accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometer != null) {
-            mSensorManager.registerListener(this, accelerometer,
+            sensorManager.registerListener(this, accelerometer,
                     SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
         }
 
         // Register magnetic
-        Sensor magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        Sensor magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         if (magneticField != null) {
-            mSensorManager.registerListener(this, magneticField,
+            sensorManager.registerListener(this, magneticField,
                     SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
         }
     }
@@ -66,12 +66,12 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     public void onSensorChanged(SensorEvent event) {
         switch(event.sensor.getType()) {
             case Sensor.TYPE_ACCELEROMETER:
-                System.arraycopy(event.values, 0, mAccelerometerReading,
-                        0, mAccelerometerReading.length);
+                System.arraycopy(event.values, 0, accelerometerReading,
+                        0, accelerometerReading.length);
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                System.arraycopy(event.values, 0, mMagnetometerReading,
-                        0, mMagnetometerReading.length);
+                System.arraycopy(event.values, 0, magnetometerReading,
+                        0, magnetometerReading.length);
                 break;
             default:
                 Log.d(TAG, "Should not come here");
@@ -91,13 +91,13 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
      */
     public void updateOrientationAngles() {
         // Update rotation matrix, which is needed to update orientation angles.
-        SensorManager.getRotationMatrix(mRotationMatrix, null,
-                mAccelerometerReading, mMagnetometerReading);
+        SensorManager.getRotationMatrix(rotationMatrix, null,
+                accelerometerReading, magnetometerReading);
 
-        // "mRotationMatrix" now has up-to-date information.
+        // "rotationMatrix" now has up-to-date information.
 
-        SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
+        SensorManager.getOrientation(rotationMatrix, orientationAngles);
 
-        // "mOrientationAngles" now has up-to-date information.
+        // "orientationAngles" now has up-to-date information.
     }
 }

@@ -15,7 +15,7 @@ public class FingerPath {
     private Path path;
 
     /**
-     * Constructor of our class that initializes all the member variables
+     * Constructor of our class that initializes all the member variables.
      * @param color Color of the path
      * @param emboss Boolean indicating if the path should be embossed
      * @param blur Boolean indicating if the path should be blurred

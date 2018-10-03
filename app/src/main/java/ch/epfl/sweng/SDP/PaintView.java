@@ -24,21 +24,21 @@ public class PaintView extends View {
     private static final int DEFAULT_COLOR = Color.RED;
     private static final int DEFAULT_BG_COLOR = Color.WHITE;
     private static final float TOUCH_TOLERANCE = 4;
-    private float mXPos;
-    private float mYPos;
-    private Path mPath;
-    private Paint mPaint;
+    private float xpos;
+    private float ypos;
+    private Path path;
+    private Paint paint;
     private ArrayList<FingerPath> paths = new ArrayList<>();
     private int currentColor = DEFAULT_COLOR;
     private int backgroundColor = DEFAULT_BG_COLOR;
     private int strokeWidth;
     private boolean emboss;
     private boolean blur;
-    private Bitmap mBitmap;
-    private MaskFilter mEmboss;
-    private MaskFilter mBlur;
-    private Canvas mCanvas;
-    private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private Bitmap bitmap;
+    private MaskFilter embossMask;
+    private MaskFilter blurMask;
+    private Canvas canvas;
+    private Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 
     public PaintView(Context context) {
         this(context, null);
@@ -52,18 +52,18 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(DEFAULT_COLOR);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setXfermode(null);
-        mPaint.setAlpha(0xff);
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setColor(DEFAULT_COLOR);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setXfermode(null);
+        paint.setAlpha(0xff);
 
-        mEmboss = new EmbossMaskFilter(new float[] {1, 1, 1}, 0.4f, 6, 3.5f);
-        mBlur = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
+        embossMask = new EmbossMaskFilter(new float[] {1, 1, 1}, 0.4f, 6, 3.5f);
+        blurMask = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
     }
 
     /**
@@ -76,8 +76,8 @@ public class PaintView extends View {
         int height = metrics.heightPixels;
         int width = metrics.widthPixels;
 
-        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
 
         currentColor = DEFAULT_COLOR;
         strokeWidth = BRUSH_SIZE;
@@ -111,68 +111,68 @@ public class PaintView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
-        mCanvas.drawColor(backgroundColor);
+        canvas.drawColor(backgroundColor);
 
         for (FingerPath fp : paths) {
-            mPaint.setColor(fp.getColor());
-            mPaint.setStrokeWidth(fp.getStrokeWidth());
-            mPaint.setMaskFilter(null);
+            paint.setColor(fp.getColor());
+            paint.setStrokeWidth(fp.getStrokeWidth());
+            paint.setMaskFilter(null);
 
             if (fp.getEmboss()) {
-                mPaint.setMaskFilter(mEmboss);
+                paint.setMaskFilter(embossMask);
             }
             else if (fp.getBlur()) {
-                mPaint.setMaskFilter(mBlur);
+                paint.setMaskFilter(blurMask);
             }
             else {
                 Log.i(TAG, "Should not pass here");
             }
 
-            mCanvas.drawPath(fp.getPath(), mPaint);
+            canvas.drawPath(fp.getPath(), paint);
         }
 
-        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        canvas.drawBitmap(bitmap, 0, 0, bitmapPaint);
         canvas.restore();
     }
 
-    private void touchStart(float xPos, float yPos) {
-        mPath = new Path();
-        FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth, mPath);
+    private void touchStart(float xx, float yy) {
+        path = new Path();
+        FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth, path);
         paths.add(fp);
 
-        mPath.reset();
-        mPath.moveTo(xPos, yPos);
-        mXPos = xPos;
-        mYPos = yPos;
+        path.reset();
+        path.moveTo(xx, yy);
+        xpos = xx;
+        ypos = yy;
     }
 
-    private void touchMove(float xPos, float yPos) {
-        float dx = Math.abs(xPos - mXPos);
-        float dy = Math.abs(yPos - mYPos);
+    private void touchMove(float xx, float yy) {
+        float dx = Math.abs(xx - xpos);
+        float dy = Math.abs(yy - ypos);
 
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mXPos, mYPos, (xPos + mXPos) / 2, (yPos + mYPos) / 2);
-            mXPos = xPos;
-            mYPos = yPos;
+            path.quadTo(xpos, ypos, (xx + xpos) / 2, (yy + ypos) / 2);
+            xpos = xx;
+            ypos = yy;
         }
     }
 
     private void touchUp() {
-        mPath.lineTo(mXPos, mYPos);
+        path.lineTo(xpos, ypos);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float xPos = event.getX();
-        float yPos = event.getY();
+        float xx = event.getX();
+        float yy = event.getY();
 
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN :
-                touchStart(xPos, yPos);
+                touchStart(xx, yy);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE :
-                touchMove(xPos, yPos);
+                touchMove(xx, yy);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP :

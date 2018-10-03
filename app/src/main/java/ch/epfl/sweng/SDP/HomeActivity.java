@@ -12,15 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
-    private final static int TOP_BUTTONS_FREQUENCY = 10;
-    private final static int DRAW_BUTTON_FREQUENCY = 20;
-    private final static int LEAGUE_IMAGE_FREQUENCY = 30;
+    private static final int TOP_BUTTONS_FREQUENCY = 10;
+    private static final int DRAW_BUTTON_FREQUENCY = 20;
+    private static final int LEAGUE_IMAGE_FREQUENCY = 30;
 
-    private final static double MAIN_AMPLITUDE = 0.1;
-    private final static double DRAW_BUTTON_AMPLITUDE = 0.2;
+    private static final double MAIN_AMPLITUDE = 0.1;
+    private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
 
-    private final static int LEFT_PADDING = 140;
-    private final static int TOP_PADDING = -5;
+    private static final int LEFT_PADDING = 140;
+    private static final int TOP_PADDING = -5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         bounceButton(view, amplitude, frequency);
+                        break;
                     default:
                 }
                 return true;
@@ -78,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         drawButton.setImageResource(R.drawable.draw_button);
                         bounceButton(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+                        break;
                     default:
                 }
                 return true;

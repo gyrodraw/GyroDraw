@@ -20,9 +20,9 @@ import java.util.ArrayList;
 public class PaintView extends View {
 
     private static final String TAG = "PaintViewID";
-    public static int BRUSH_SIZE = 10;
-    public static final int DEFAULT_COLOR = Color.RED;
-    public static final int DEFAULT_BG_COLOR = Color.WHITE;
+    private static final int BRUSH_SIZE = 10;
+    private static final int DEFAULT_COLOR = Color.RED;
+    private static final int DEFAULT_BG_COLOR = Color.WHITE;
     private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;
@@ -98,19 +98,21 @@ public class PaintView extends View {
         mCanvas.drawColor(backgroundColor);
 
         for (FingerPath fp : paths) {
-            mPaint.setColor(fp.color);
-            mPaint.setStrokeWidth(fp.strokeWidth);
+            mPaint.setColor(fp.getColor());
+            mPaint.setStrokeWidth(fp.getStrokeWidth());
             mPaint.setMaskFilter(null);
 
-            if (fp.emboss)
+            if (fp.getEmboss()) {
                 mPaint.setMaskFilter(mEmboss);
-            else if (fp.blur)
+            }
+            else if (fp.getBlur()) {
                 mPaint.setMaskFilter(mBlur);
-            else
-                Log.i(TAG,  "Should not pass here");
+            }
+            else {
+                Log.i(TAG, "Should not pass here");
+            }
 
-            mCanvas.drawPath(fp.path, mPaint);
-
+            mCanvas.drawPath(fp.getPath(), mPaint);
         }
 
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);

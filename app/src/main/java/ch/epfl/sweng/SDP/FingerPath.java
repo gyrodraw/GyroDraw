@@ -2,6 +2,10 @@ package ch.epfl.sweng.SDP;
 
 import android.graphics.Path;
 
+/**
+ * Class that contains the core attributes of the path
+ * drawn with the finger
+ */
 public class FingerPath {
 
     private int color;

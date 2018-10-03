@@ -81,10 +81,14 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Does nothing for the moment
     }
 
+    /**
+     * Updates the rotation matrix according to the sensors to
+     * finally compute the orientation angles.
+     */
     public void updateOrientationAngles() {
         // Update rotation matrix, which is needed to update orientation angles.
         SensorManager.getRotationMatrix(mRotationMatrix, null,

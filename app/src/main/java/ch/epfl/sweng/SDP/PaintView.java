@@ -24,7 +24,8 @@ public class PaintView extends View {
     private static final int DEFAULT_COLOR = Color.RED;
     private static final int DEFAULT_BG_COLOR = Color.WHITE;
     private static final float TOUCH_TOLERANCE = 4;
-    private float mX, mY;
+    private float mXPos;
+    private float mYPos;
     private Path mPath;
     private Paint mPaint;
     private ArrayList<FingerPath> paths = new ArrayList<>();
@@ -59,6 +60,12 @@ public class PaintView extends View {
         mBlur = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
     }
 
+    /**
+     * Initialise the canvas according the dimensions in
+     * pixels of the screen
+     *
+     * @param metrics Object containing the dimensions of the screen
+     */
     public void init(DisplayMetrics metrics) {
         int height = metrics.heightPixels;
         int width = metrics.widthPixels;
@@ -85,6 +92,9 @@ public class PaintView extends View {
         blur = true;
     }
 
+    /**
+     * Clear everything that is drawn
+     */
     public void clear() {
         backgroundColor = DEFAULT_BG_COLOR;
         paths.clear();
@@ -119,44 +129,44 @@ public class PaintView extends View {
         canvas.restore();
     }
 
-    private void touchStart(float x, float y) {
+    private void touchStart(float xPos, float yPos) {
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth, mPath);
         paths.add(fp);
 
         mPath.reset();
-        mPath.moveTo(x, y);
-        mX = x;
-        mY = y;
+        mPath.moveTo(xPos, yPos);
+        mXPos = xPos;
+        mYPos = yPos;
     }
 
-    private void touchMove(float x, float y) {
-        float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
+    private void touchMove(float xPos, float yPos) {
+        float dx = Math.abs(xPos - mXPos);
+        float dy = Math.abs(yPos - mYPos);
 
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-            mX = x;
-            mY = y;
+            mPath.quadTo(mXPos, mYPos, (xPos + mXPos) / 2, (yPos + mYPos) / 2);
+            mXPos = xPos;
+            mYPos = yPos;
         }
     }
 
     private void touchUp() {
-        mPath.lineTo(mX, mY);
+        mPath.lineTo(mXPos, mYPos);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
+        float xPos = event.getX();
+        float yPos = event.getY();
 
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN :
-                touchStart(x, y);
+                touchStart(xPos, yPos);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE :
-                touchMove(x, y);
+                touchMove(xPos, yPos);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP :

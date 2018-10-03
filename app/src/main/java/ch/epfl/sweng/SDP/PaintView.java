@@ -37,7 +37,6 @@ public class PaintView extends View {
     private Bitmap bitmap;
     private MaskFilter embossMask;
     private MaskFilter blurMask;
-    private Canvas canvas;
     private Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 
     public PaintView(Context context) {
@@ -77,7 +76,6 @@ public class PaintView extends View {
         int width = metrics.widthPixels;
 
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
 
         currentColor = DEFAULT_COLOR;
         strokeWidth = BRUSH_SIZE;

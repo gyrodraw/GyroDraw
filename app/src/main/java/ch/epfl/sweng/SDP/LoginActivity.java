@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); for Till
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
                 finish();

@@ -6,6 +6,14 @@ jacoco {
 }
 
 android {
+    signingConfigs {
+        gyrodraw {
+            keyAlias 'gyrodraw'
+            keyPassword 'Bacillo2'
+            storeFile file('/Users/avenezia/my-release-key.keystore')
+            storePassword 'Bacillo2'
+        }
+    }
     compileSdkVersion 28
     buildToolsVersion "27.0.3"
     defaultConfig {
@@ -21,10 +29,10 @@ android {
         debug {
             testCoverageEnabled true
         }
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.gyrodraw
         }
     }
     productFlavors {

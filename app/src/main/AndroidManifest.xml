@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".GreetingActivity" />
         <activity android:name=".DrawingActivity"></activity>
+
     </application>
 
 </manifest>

@@ -16,11 +16,11 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     private static final String TAG = "DrawingActivity";
     private PaintView paintView;
     private SensorManager mSensorManager;
-    private final float[] mAccelerometerReading = new float[3];
-    private final float[] mMagnetometerReading = new float[3];
+    private float[] mAccelerometerReading = new float[3];
+    private float[] mMagnetometerReading = new float[3];
 
-    private final float[] mRotationMatrix = new float[9];
-    private final float[] mOrientationAngles = new float[3];
+    private float[] mRotationMatrix = new float[9];
+    private float[] mOrientationAngles = new float[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,8 +17,8 @@ before_script:
   # Emulator Management: Create, Start and Wait
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
+  - sleep 60
   - android-wait-for-emulator
-  - sleep 100
   - adb shell input keyevent 82
 script:
   - chmod +x ./gradlew

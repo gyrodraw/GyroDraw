@@ -12,4 +12,6 @@
   <string name="stars_button_text">Stars:</string>
   <string name="league_1">League 1</string>
   <string name="create_account">Create account</string>
+  <string name="sign_out">Sign out</string>
+  <string name="delete_account">Delete account</string>
 </resources>

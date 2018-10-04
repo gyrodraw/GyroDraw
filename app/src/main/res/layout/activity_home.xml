@@ -9,13 +9,17 @@
 
     <ImageView
         android:id="@+id/backgroundImage"
-        android:layout_width="500dp"
-        android:layout_height="759dp"
+        android:layout_width="2300dp"
+        android:layout_height="2000dp"
         android:foregroundGravity="center"
+        android:rotation="315"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.905"
         app:srcCompat="@drawable/background" />
 
     <Button

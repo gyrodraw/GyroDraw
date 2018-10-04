@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setBackgroundAnimation();
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
@@ -113,6 +115,13 @@ public class HomeActivity extends AppCompatActivity {
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
         return toast;
+    }
+
+    private void setBackgroundAnimation() {
+        final ImageView backgroundImage = findViewById(R.id.backgroundImage);
+        final Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.background_anim);
+        backgroundAnim.setInterpolator(new LinearInterpolator());
+        backgroundImage.startAnimation(backgroundAnim);
     }
 
 

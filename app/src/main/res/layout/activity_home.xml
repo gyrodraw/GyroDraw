@@ -96,5 +96,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/draw_button" />
+    <Button
+      android:id="@+id/sign_out"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:onClick="signOut"
+      android:text="Sign out"
+      app:layout_constraintEnd_toEndOf="parent"
+      tools:layout_editor_absoluteY="102dp"/>
+    <Button
+      android:id="@+id/delete_account"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginLeft="16dp"
+      android:onClick="delete"
+      android:text="Delete account"
+      app:layout_constraintStart_toStartOf="parent"
+      tools:layout_editor_absoluteY="102dp"/>
 
 </android.support.constraint.ConstraintLayout>

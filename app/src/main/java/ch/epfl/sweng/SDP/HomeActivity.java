@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -98,6 +100,9 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            getDefaultSharedPreferences(getApplicationContext()).edit()
+                                    .putBoolean("hasAccount", false).apply();
+
                             toastDelete.cancel();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);

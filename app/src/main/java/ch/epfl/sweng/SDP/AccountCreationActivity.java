@@ -5,15 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import android.widget.TextView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.Query;
 
-public class AccountCreation extends AppCompatActivity{
-    private static final FirebaseDatabase database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
-    private static final DatabaseReference databaseRef = database.getReference();
-    private String userID = "b05";
+public class AccountCreationActivity extends AppCompatActivity {
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private String userID = currentUser.getUid();
     private TextInputLayout usernameInput;
     private Button createAcc;
 
@@ -41,9 +40,10 @@ public class AccountCreation extends AppCompatActivity{
 
     private void createAccClicked() {
         t1.setText("clicked");
-        t2.setText(databaseRef.toString());
+        t2.setText(Constants.databaseRef.toString());
         String username = usernameInput.getEditText().getText().toString();
+        Query query = Constants.databaseRef.child("$uid").child("username").equalTo(username);
         Account acc = new Account(username);
-        databaseRef.child("users").child(userID).setValue(acc);
+        Constants.databaseRef.child("users").child(userID).setValue(acc);
     }
 }

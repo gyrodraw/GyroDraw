@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void gotoCreateAccountClicked() {
-        Intent i = new Intent(this, AccountCreation.class);
+        Intent i = new Intent(this, AccountCreationActivity.class);
         startActivity(i);
     }
 }

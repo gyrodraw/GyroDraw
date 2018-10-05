@@ -4,6 +4,7 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
+                assert response != null;
 
                 // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); for Till
 

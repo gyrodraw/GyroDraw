@@ -115,6 +115,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private Toast makeAndShowToast(String msg) {
+        assert msg != null;
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
         return toast;
@@ -160,6 +161,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void bounceButton(View view, double amplitude, int frequency) {
+        assert amplitude != 0;
         final Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
         bounce.setInterpolator(interpolator);

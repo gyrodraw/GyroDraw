@@ -42,9 +42,16 @@ public class AccountCreationActivity extends AppCompatActivity {
         t1.setText("clicked");
         t2.setText(Constants.databaseRef.toString());
         String username = usernameInput.getEditText().getText().toString();
+        Constants.databaseRef.child("users").orderByChild("username").equalTo(username).once("value", snapshot => {
+        if(snapshot.exists())  {
+
+        }
+            else {
+
+            }
+        });
         Query query = Constants.databaseRef.child("$uid").child("username").equalTo(username);
         Account acc = new Account(username);
         Constants.databaseRef.child("users").child(userID).setValue(acc);
     }
 }
-

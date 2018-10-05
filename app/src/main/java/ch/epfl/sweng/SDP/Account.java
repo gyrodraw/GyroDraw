@@ -21,13 +21,13 @@ public class Account implements java.io.Serializable {
         this.username = newName;
     }
 
-    public void changeRating(int a) throws Throwable{
+    public void changeTrophies(int a) throws Throwable{
         int newRating = Math.max(0, rating + a);
         //try to update database
         this.rating = newRating;
     }
 
-    public void addCurrency(int a) throws IllegalArgumentException {
+    public void addStars(int a) throws IllegalArgumentException {
         if (a < 0) {
             throw new IllegalArgumentException();
         }
@@ -35,7 +35,7 @@ public class Account implements java.io.Serializable {
         this.currency += a;
     }
 
-    public void subtractCurrency(int a) throws IllegalArgumentException {
+    public void subtractStars(int a) throws IllegalArgumentException {
         if (a < 0 || this.currency - a < 0) {
             throw new IllegalArgumentException();
         }

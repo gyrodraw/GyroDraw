@@ -97,16 +97,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/draw_button" />
 
-    <TextView
-        android:id="@+id/usernameText"
+    <Button
+        android:id="@+id/usernameButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="31dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="3dp"
-        android:shadowColor="@android:color/black"
-        android:shadowDy="5"
-        android:shadowRadius="10"
+        android:background="@android:color/transparent"
         android:text="@string/user_name"
         android:textColor="@color/colorDrawYellow"
         android:textSize="25sp"

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,16 +43,16 @@ public class HomeActivity extends AppCompatActivity {
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         final ImageView drawButton = findViewById(R.id.drawButton);
+        final Button usernameButton = findViewById(R.id.usernameButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
         final Button starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
-        TextView usernameText = findViewById(R.id.usernameText);
 
+        usernameButton.setTypeface(typeMuro);
         trophiesButton.setTypeface(typeMuro);
         starsButton.setTypeface(typeMuro);
         leagueText.setTypeface(typeOptimus);
-        usernameText.setTypeface(typeMuro);
 
         trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
@@ -59,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         setListener(trophiesButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
-        setListener(usernameText, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
+        setUsernameButtonListener(usernameButton);
     }
 
     /**
@@ -158,6 +160,25 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void setUsernameButtonListener(Button usernameButton) {
+        usernameButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
+                        startPopUpActivity();
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
     private void bounceButton(View view, double amplitude, int frequency) {
         final Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
@@ -173,6 +194,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private void startDrawingActivity() {
         Intent intent = new Intent(this, DrawingActivity.class);
+        startActivity(intent);
+    }
+
+    private void startPopUpActivity() {
+        Intent intent = new Intent(this, PopUpActivity.class);
         startActivity(intent);
     }
 }

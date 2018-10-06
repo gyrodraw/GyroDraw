@@ -168,9 +168,12 @@ public class HomeActivity extends AppCompatActivity {
         view.startAnimation(press);
     }
 
-    // To be removed
     private void startChooseWordsActivity() {
         Intent intent = new Intent(this, WaitingPageActivity.class);
+    }
+
+    private void startDrawingActivity() {
+        Intent intent = new Intent(this, DrawingActivity.class);
         startActivity(intent);
     }
 }

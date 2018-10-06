@@ -170,6 +170,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void startChooseWordsActivity() {
         Intent intent = new Intent(this, WaitingPageActivity.class);
+        startActivity(intent);
     }
 
     private void startDrawingActivity() {

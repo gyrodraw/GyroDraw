@@ -7,6 +7,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
@@ -14,7 +15,6 @@ import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class AccountCreationActivityTest {
     public void testCanOpenLoginActivity() {
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(homeActivity);
+        assertNotNull(homeActivity);
     }
 
     @Test

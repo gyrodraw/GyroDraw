@@ -172,9 +172,4 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, WaitingPageActivity.class);
         startActivity(intent);
     }
-
-    private void startDrawingActivity() {
-        Intent intent = new Intent(this, DrawingActivity.class);
-        startActivity(intent);
-    }
 }

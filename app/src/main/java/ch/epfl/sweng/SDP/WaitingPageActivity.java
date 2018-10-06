@@ -1,9 +1,11 @@
 package ch.epfl.sweng.SDP;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.database.DataSnapshot;
@@ -59,6 +61,11 @@ public class WaitingPageActivity extends AppCompatActivity {
                 // Does nothing for the moment
             }
         });
+    }
+
+    public void onClickWordsButtons(View view) {
+        Intent intent = new Intent(this, DrawingActivity.class);
+        startActivity(intent);
     }
 
     private void initProgressDialog() {

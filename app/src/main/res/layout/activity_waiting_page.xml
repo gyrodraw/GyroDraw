@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="149dp"
         android:layout_marginBottom="150dp"
+        android:onClick="onClickWordsButtons"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="@+id/buttonWord2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="220dp"
         android:text="Button"
+        android:onClick="onClickWordsButtons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/buttonWord1" />
 </android.support.constraint.ConstraintLayout>

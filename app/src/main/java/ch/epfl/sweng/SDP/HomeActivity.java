@@ -45,10 +45,12 @@ public class HomeActivity extends AppCompatActivity {
         final Button starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
+        TextView usernameText = findViewById(R.id.usernameText);
 
         trophiesButton.setTypeface(typeMuro);
         starsButton.setTypeface(typeMuro);
         leagueText.setTypeface(typeOptimus);
+        usernameText.setTypeface(typeMuro);
 
         trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
@@ -57,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         setListener(trophiesButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
+        setListener(usernameText, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
     }
 
     /**

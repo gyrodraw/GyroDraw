@@ -2,8 +2,10 @@ package ch.epfl.sweng.SDP;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,7 +22,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
-
     private static final String TAG = "HomeActivity";
 
     private static final int TOP_BUTTONS_FREQUENCY = 10;
@@ -123,7 +124,6 @@ public class HomeActivity extends AppCompatActivity {
         backgroundAnim.setInterpolator(new LinearInterpolator());
         backgroundImage.startAnimation(backgroundAnim);
     }
-
 
     private void setListener(final View view, final double amplitude, final int frequency) {
         view.setOnTouchListener(new View.OnTouchListener() {

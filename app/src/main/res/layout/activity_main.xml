@@ -17,6 +17,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:srcCompat="@mipmap/ic_launcher"/>
+
     <com.google.android.gms.common.SignInButton
       android:id="@+id/login_button"
       android:layout_width="wrap_content"

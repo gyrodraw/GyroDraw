@@ -3,10 +3,13 @@ package ch.epfl.sweng.SDP;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -22,7 +25,9 @@ public class HomeActivityTest {
 
     @Test
     public void testDrawButtonIsClickable() {
+        Intents.init();
         onView(withId(R.id.drawButton)).perform(click());
+        intended(hasComponent(DrawingActivity.class.getName()));
     }
 
     @Test

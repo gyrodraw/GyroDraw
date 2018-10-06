@@ -19,9 +19,6 @@
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".DrawingActivity"></activity>
-        <activity android:name=".PopUpActivity"
-            android:theme="@style/AppTheme.PopUpTheme"
-            ></activity>
     </application>
 
 </manifest>

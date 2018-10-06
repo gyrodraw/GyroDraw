@@ -1,8 +1,11 @@
 package ch.epfl.sweng.SDP;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
+    private Dialog profileWindow;
 
     private static final String TAG = "HomeActivity";
 
@@ -38,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        profileWindow = new Dialog(this);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
@@ -170,7 +175,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         bounceButton(view, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
-                        startPopUpActivity();
+                        ShowPopup();
                         break;
                     default:
                 }
@@ -197,8 +202,18 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startPopUpActivity() {
-        Intent intent = new Intent(this, PopUpActivity.class);
-        startActivity(intent);
+    private void ShowPopup() {
+        TextView txtclose;
+        profileWindow.setContentView(R.layout.activity_pop_up);
+        txtclose = profileWindow.findViewById(R.id.txtclose);
+        txtclose.setText("M");
+        txtclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profileWindow.dismiss();
+            }
+        });
+        profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        profileWindow.show();
     }
 }

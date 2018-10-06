@@ -6,14 +6,20 @@ class BounceInterpolator implements android.view.animation.Interpolator {
     private final double frequency;
 
     BounceInterpolator(double amplitude, double frequency) {
-        if (!(amplitude != 0)) throw new IllegalArgumentException("Amplitude should be different from 0");
+        if (!(amplitude != 0)) {
+            throw new IllegalArgumentException("Amplitude should be different from 0");
+        }
+
         this.amplitude = amplitude;
         this.frequency = frequency;
     }
 
     @Override
     public float getInterpolation(float time) {
-        if (!(time >= 0 && time <= 1.0)) throw new IllegalArgumentException("Time should be between 0 and 1.0");
+        if (!(time >= 0 && time <= 1.0)) {
+            throw new IllegalArgumentException("Time should be between 0 and 1.0");
+        }
+
         return (float) (-1 * Math.pow(Math.E, -time / amplitude) * Math.cos(frequency * time) + 1);
     }
 }

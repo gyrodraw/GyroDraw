@@ -15,6 +15,10 @@ public class AccountCreationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_creation);
     }
 
+    /**
+     * TODO
+     * @param view
+     */
     public void createAccount(View view) {
         getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("hasAccount", true)
                 .apply(); // Set and store hasAccount to true in preferences

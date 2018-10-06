@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             startActivity(intent);
             finish();
         }
+
+
     }
 
     @Override

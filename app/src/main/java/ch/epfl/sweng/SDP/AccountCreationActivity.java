@@ -1,27 +1,30 @@
 package ch.epfl.sweng.SDP;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
 
 public class AccountCreationActivity extends AppCompatActivity {
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private String userID = currentUser.getUid();
     private TextInputLayout usernameInput;
     private Button createAcc;
-
-    //testing stuff
-    private TextView t1;
-    private TextView t2;
+    private TextView usernameTaken;
+    private String username;
+    private Account account;
 
     private View.OnClickListener createAccListener = new View.OnClickListener() {
         @Override
@@ -36,27 +39,43 @@ public class AccountCreationActivity extends AppCompatActivity {
         usernameInput = this.findViewById(R.id.usernameInput);
         createAcc = this.findViewById(R.id.createAcc);
         createAcc.setOnClickListener(createAccListener);
-
-        t1 = this.findViewById(R.id.textView);
-        t2 = this.findViewById(R.id.textView2);
+        usernameTaken = this.findViewById(R.id.usernameTaken);
     }
 
     private void createAccClicked() {
-        t1.setText("clicked");
-        t2.setText(Constants.databaseRef.toString());
-        String username = usernameInput.getEditText().getText().toString();
+        username = usernameInput.getEditText().getText().toString();
         Constants.databaseRef.child("users").orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
+                if(snapshot.exists()) {
+                    //display a Text that the user name is already taken
+                    usernameTaken.setText("That username is already taken.");
+                }
+                else {
+                    account = new Account(username);
+                    Constants.databaseRef.child("users").child(userID).setValue(account, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                            if (databaseError != null) {
+                                usernameTaken.setText("Failed to write data to database.");
+                            }
+                            else {
+                                gotoHome();
+                            }
+                        }
+                    });
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-        Query query = Constants.databaseRef.child("$uid").child("username").equalTo(username);
-        Account acc = new Account(username);
-        Constants.databaseRef.child("users").child(userID).setValue(acc);
+    }
+
+    private void gotoHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("account", this.account);
+        startActivity(intent);
     }
 }

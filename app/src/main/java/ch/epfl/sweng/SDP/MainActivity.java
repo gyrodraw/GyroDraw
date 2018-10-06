@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         findViewById(R.id.login_button).setOnClickListener(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, AccountCreationActivity.class);
             startActivity(intent);
             finish();
         }

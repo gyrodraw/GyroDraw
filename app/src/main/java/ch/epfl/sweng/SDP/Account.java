@@ -1,9 +1,20 @@
 package ch.epfl.sweng.SDP;
 
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 public class Account implements java.io.Serializable {
     public String username;
-    public int rating;
-    public int currency;
+    public int trophies;
+    public int stars;
 
     public Account() {
 
@@ -11,37 +22,87 @@ public class Account implements java.io.Serializable {
 
     public Account(String username) {
         this.username = username;
-        this.rating = 1200;
-        this.currency = 0;
+        this.trophies = 1200;
+        this.stars = 0;
     }
 
-    public void changeUsername(String newName) throws IllegalArgumentException {
-        //check for availability
-        //try to update database
+    public void changeUsername(final String newName) throws IllegalArgumentException, DatabaseException {
+        Constants.databaseRef.child("users").orderByChild("username").equalTo(newName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    throw new IllegalArgumentException("Username already taken.");
+                }
+                else {
+                    Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(username).setValue(newName, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                            if (databaseError != null) {
+                                throw databaseError.toException();
+                            }
+                            else {
+                                username = newName;
+                            }
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
         this.username = newName;
     }
 
-    public void changeTrophies(int a) throws Throwable{
-        int newRating = Math.max(0, rating + a);
-        //try to update database
-        this.rating = newRating;
+    public void changeTrophies(int a) throws DatabaseException {
+        final int newTrophies = Math.max(0, trophies + a);
+        Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("trophies").setValue(newTrophies, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    throw databaseError.toException();
+                }
+                else {
+                    trophies = newTrophies;
+                }
+            }
+        });
     }
 
-    public void addStars(int a) throws IllegalArgumentException {
+    public void addStars(int a) throws IllegalArgumentException, DatabaseException {
         if (a < 0) {
             throw new IllegalArgumentException();
         }
-        //try to update database
-        this.currency += a;
+        final int newStars = stars += a;
+        Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    throw databaseError.toException();
+                }
+                else {
+                    stars = newStars;
+                }
+            }
+        });
     }
 
-    public void subtractStars(int a) throws IllegalArgumentException {
-        if (a < 0 || this.currency - a < 0) {
+    public void subtractStars(int a) throws IllegalArgumentException, DatabaseException {
+        if (a < 0 || stars - a < 0) {
             throw new IllegalArgumentException();
         }
-        this.currency -= a;
+        final int newStars = stars -= a;
+        Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    throw databaseError.toException();
+                }
+                else {
+                    stars = newStars;
+                }
+            }
+        });
     }
-
-
-
 }

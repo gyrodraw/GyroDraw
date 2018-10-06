@@ -66,11 +66,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.3'
 }
 
-
+apply plugin: 'com.google.gms.google-services'
 
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
+        com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
         if (requested.group == 'com.android.support') {
             details.useVersion '26.1.0'
         }

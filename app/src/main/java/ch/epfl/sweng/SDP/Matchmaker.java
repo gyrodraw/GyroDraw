@@ -6,10 +6,21 @@ import com.google.firebase.database.*;
 import com.google.firebase.auth.*;
 
 import java.security.PublicKey;
+import java.util.HashMap;
 
 public class Matchmaker {
 
-    public static final String TAG = "1";
+
+    private static Matchmaker single_instance = null;
+    // static method to create instance of Singleton class
+    public static Matchmaker getInstance()
+    {
+        if (single_instance == null)
+            single_instance = new Matchmaker();
+
+        return single_instance;
+    }
+
 
     public Matchmaker() {
 
@@ -19,22 +30,24 @@ public class Matchmaker {
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
 
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
+                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
 
                 // Update room
-                Log.d(TAG, "Value is: " + value);
+
+                System.out.println(map);
+
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+
             }
+
         });
 
     }

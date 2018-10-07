@@ -145,33 +145,23 @@ public class WaitingPageActivity extends AppCompatActivity {
 
     // Vote for the specified word and update the database
     private void voteForWord(WordNumber wordNumber) {
-        if (hasAlreadyVoted) {
-            if (!hasAlreadyClicked) {
-                switch (wordNumber) {
-                    case ONE:
-                        word1Ref.setValue(++word1Votes);
-                        word2Ref.setValue(--word2Votes);
-                        hasAlreadyClicked = true;
-                        break;
-                    case TWO:
-                        word2Ref.setValue(++word2Votes);
-                        word1Ref.setValue(--word1Votes);
-                        hasAlreadyClicked = true;
-                        break;
+        switch(wordNumber) {
+            case ONE:
+                word1Ref.setValue(++word1Votes);
+                if(hasAlreadyVoted) {
+                    word2Ref.setValue(--word2Votes);
                 }
-                hasAlreadyClicked = true;
-            } else {
-                hasAlreadyClicked = false;
-            }
-        } else {
-            switch (wordNumber) {
-                case ONE:
-                    word1Ref.setValue(++word1Votes);
-                    break;
-                case TWO:
-                    word2Ref.setValue(++word2Votes);
-                    break;
-            }
+                break;
+            case TWO:
+                word2Ref.setValue(++word2Votes);
+                if(hasAlreadyVoted) {
+                    word1Ref.setValue(--word1Votes);
+                }
+                break;
+            default:
+        }
+
+        if(!hasAlreadyVoted) {
             hasAlreadyVoted = true;
         }
     }

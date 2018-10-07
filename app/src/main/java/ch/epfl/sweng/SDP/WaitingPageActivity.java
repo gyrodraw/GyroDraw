@@ -20,25 +20,71 @@ import java.util.Random;
 
 public class WaitingPageActivity extends AppCompatActivity {
 
+    private enum WordNumber {
+        ONE, TWO
+    }
+
     private static final String TAG = "WaitingPage";
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
+    private static final int STEP = 1;
+    private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
+
+    private ProgressDialog progressDialog;
 
     private int usersReadyCount = 1;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference myRef;
-    private ProgressDialog progressDialog;
+
+    private boolean hasAlreadyVoted = false;
+    private boolean hasAlreadyClicked = false;
+
+    private DatabaseReference wordsVotesRef;
+
+    private Button word1View;
+    private DatabaseReference word1Ref;
+    private int word1Votes = 0;
+
+    private Button word2View;
+    private DatabaseReference word2Ref;
+    private int word2Votes = 0;
+
+    private final ValueEventListener listenerWord1 = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            word1Votes = dataSnapshot.getValue(Long.class).intValue();
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
+    private final ValueEventListener listenerWord2 = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            word2Votes = dataSnapshot.getValue(Long.class).intValue();
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_page);
-        mDatabase = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
-        myRef = mDatabase.getReference(WORD_CHILDREN_DB_ID);
-        initProgressDialog();
-        setGlobalVisibility(View.INVISIBLE);
+        FirebaseDatabase mDatabase = FirebaseDatabase
+                .getInstance("https://gyrodraw.firebaseio.com/");
+        DatabaseReference wordsSelectionRef = mDatabase.getReference(WORD_CHILDREN_DB_ID);
+        wordsVotesRef = mDatabase.getReference("rooms").child("432432432")
+                .child("words"); // need to be replaced with a search for a suitable room
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        initProgressDialog();
+        setGlobalVisibility(View.GONE);
+
+        wordsSelectionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Random r = new Random();
@@ -47,13 +93,20 @@ public class WaitingPageActivity extends AppCompatActivity {
                 int i1 = r.nextInt(WORDS_COUNT);
                 int i2 = r.nextInt(WORDS_COUNT);
 
-                // Get the words corresponding to the random numbers
+                // Get the words corresponding to the random numbers and update database
                 String word1 = dataSnapshot.child(Integer.toString(i1)).getValue(String.class);
+                word1Ref = wordsVotesRef.child(word1);
+                word1Ref.setValue(0);
+                word1Ref.addValueEventListener(listenerWord1);
+
                 String word2 = dataSnapshot.child(Integer.toString(i2)).getValue(String.class);
+                word2Ref = wordsVotesRef.child(word2);
+                word2Ref.setValue(0);
+                word2Ref.addValueEventListener(listenerWord2);
 
                 // Display them on the buttons
-                Button word1View = findViewById(R.id.buttonWord1);
-                Button word2View = findViewById(R.id.buttonWord2);
+                word1View = findViewById(R.id.buttonWord1);
+                word2View = findViewById(R.id.buttonWord2);
                 word1View.setText(word1);
                 word2View.setText(word2);
 
@@ -79,15 +132,58 @@ public class WaitingPageActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.buttonWord1:
                 if (checked) {
-                    // Vote for word1 TODO
+                    // Vote for word1
+                    voteForWord(WordNumber.ONE);
                 }
                 break;
             case R.id.buttonWord2:
                 if (checked) {
-                    // Vote for word2 TODO
+                    // Vote for word2
+                    voteForWord(WordNumber.TWO);
                 }
                 break;
         }
+    }
+
+    // Vote for the specified word and update the database
+    private void voteForWord(WordNumber wordNumber) {
+        if (hasAlreadyVoted) {
+            if (!hasAlreadyClicked) {
+                switch (wordNumber) {
+                    case ONE:
+                        word1Ref.setValue(++word1Votes);
+                        word2Ref.setValue(--word2Votes);
+                        hasAlreadyClicked = true;
+                        break;
+                    case TWO:
+                        word2Ref.setValue(++word2Votes);
+                        word1Ref.setValue(--word1Votes);
+                        hasAlreadyClicked = true;
+                        break;
+                }
+                hasAlreadyClicked = true;
+            } else {
+                hasAlreadyClicked = false;
+            }
+        } else {
+            switch (wordNumber) {
+                case ONE:
+                    word1Ref.setValue(++word1Votes);
+                    break;
+                case TWO:
+                    word2Ref.setValue(++word2Votes);
+                    break;
+            }
+            hasAlreadyVoted = true;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        word1Ref.removeEventListener(listenerWord1);
+        word2Ref.removeEventListener(listenerWord2);
+        wordsVotesRef.removeValue();
     }
 
     /* Now it is public in order to use it as a button for testing, should be reverted to private
@@ -95,14 +191,15 @@ public class WaitingPageActivity extends AppCompatActivity {
      */
     public void incrementCount(View view) {
         ProgressBar progressBar = findViewById(R.id.usersProgressBar);
-        progressBar.incrementProgressBy(1);
+        progressBar.incrementProgressBy(STEP);
         ++usersReadyCount;
         TextView usersReady = findViewById(R.id.usersTextView);
         usersReady.setText(
-                String.format(Locale.getDefault(), "%d/5 users ready", usersReadyCount));
+                String.format(Locale.getDefault(), "%d/%d users ready", usersReadyCount,
+                        NUMBER_OF_PLAYERS_NEEDED));
 
         // We should probably check if the database is ready too
-        if (usersReadyCount == 5) {
+        if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
             Intent intent = new Intent(this, DrawingActivity.class);
             startActivity(intent);
         }

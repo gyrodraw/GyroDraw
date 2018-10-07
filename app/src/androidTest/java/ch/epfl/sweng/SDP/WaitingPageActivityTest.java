@@ -1,34 +1,34 @@
 package ch.epfl.sweng.SDP;
 
-import static android.support.test.espresso.Espresso.onIdle;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
 
-import android.support.test.espresso.PerformException;
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.test.espresso.util.TreeIterables;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
-
+import android.widget.ProgressBar;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.Matcher;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {
@@ -36,6 +36,9 @@ public class WaitingPageActivityTest {
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<>(WaitingPageActivity.class);
+
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(WaitingPageActivity.class.getName(), null, false);
 
     @Test
     public void testButton1ChooseWords() {
@@ -53,6 +56,59 @@ public class WaitingPageActivityTest {
         onView(withId(R.id.buttonWord2)).perform(click());
         intended(hasComponent(DrawingActivity.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void isButtonWord1Visible() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(withId(R.id.buttonWord1)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void isButtonWord2Visible() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(withId(R.id.buttonWord2)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void isButtonWord1Clickable() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(withId(R.id.buttonWord1)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void isButtonWord2Clickable() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(withId(R.id.buttonWord2)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void isProgressBarVisible() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(withId(R.id.usersProgressBar)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void isUserCounterViewVisible() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(withId(R.id.usersTextView)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void incrementingUsersCountShouldChangeProgressBarAndTextView() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+
+        Activity currentActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 5000);
+        ProgressBar progressBar = currentActivity.findViewById(R.id.usersProgressBar);
+
+        onView(withId(R.id.incrementButton)).perform(click());
+        onView(withId(R.id.usersTextView)).check(matches(withText("2/5 users ready")));
+        assertThat(progressBar.getProgress(), is(2));
+
+        onView(withId(R.id.incrementButton)).perform(click());
+        onView(withId(R.id.usersTextView)).check(matches(withText("3/5 users ready")));
+        assertThat(progressBar.getProgress(), is(3));
     }
 
     /**

@@ -27,7 +27,7 @@ public class HomeActivityTest {
     public void testDrawButtonIsClickable() {
         Intents.init();
         onView(withId(R.id.drawButton)).perform(click());
-        intended(hasComponent(DrawingActivity.class.getName()));
+        intended(hasComponent(WaitingPageActivity.class.getName()));
     }
 
     @Test

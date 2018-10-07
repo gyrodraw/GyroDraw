@@ -88,6 +88,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+        profileWindow.dismiss();
     }
 
     /**
@@ -112,6 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+        profileWindow.dismiss();
     }
 
     private Toast makeAndShowToast(String msg) {

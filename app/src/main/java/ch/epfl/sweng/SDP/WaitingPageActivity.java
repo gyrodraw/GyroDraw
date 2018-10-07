@@ -28,8 +28,6 @@ public class WaitingPageActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
     private ProgressDialog progressDialog;
-    private Button word1View;
-    private Button word2View;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +52,17 @@ public class WaitingPageActivity extends AppCompatActivity {
                 String word2 = dataSnapshot.child(Integer.toString(i2)).getValue(String.class);
 
                 // Display them on the buttons
+                Button word1View = findViewById(R.id.buttonWord1);
+                Button word2View = findViewById(R.id.buttonWord2);
                 word1View.setText(word1);
                 word2View.setText(word2);
-                word1View.setVisibility(View.VISIBLE);
-                word2View.setVisibility(View.VISIBLE);
 
                 // Clear the progress dialog
-                if(progressDialog.isShowing()) {
+                if (progressDialog.isShowing()) {
                     progressDialog.cancel();
                     setGlobalVisibility(View.VISIBLE);
                 }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -99,7 +98,8 @@ public class WaitingPageActivity extends AppCompatActivity {
         progressBar.incrementProgressBy(1);
         ++usersReadyCount;
         TextView usersReady = findViewById(R.id.usersTextView);
-        usersReady.setText(String.format(Locale.getDefault(), "%d/5 users ready", usersReadyCount));
+        usersReady.setText(
+                String.format(Locale.getDefault(), "%d/5 users ready", usersReadyCount));
 
         // We should probably check if the database is ready too
         if (usersReadyCount == 5) {

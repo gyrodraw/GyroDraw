@@ -1,14 +1,16 @@
 <resources>
-  <string name="app_name">Gyrodraw</string>
-  <string name="no_internet">No Internet connection</string>
-  <string name="unknown_error">Unknown error</string>
-  <string name="error_message">Error message</string>
-  <string name="login">Login</string>
-  <string name="home">Home</string>
-  <string name="sign_out">Sign out</string>
-  <string name="delete_account">Delete account</string>
-  <string name="app_logo">App logo</string>
-  <string name="trophies_button_text">Trophies:</string>
-  <string name="stars_button_text">Stars:</string>
-  <string name="league_1">League 1</string>
+    <string name="app_name">Gyrodraw</string>
+    <string name="no_internet">No Internet connection</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="error_message">Error message</string>
+    <string name="login">Login</string>
+    <string name="home">Home</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete_account">Delete account</string>
+    <string name="app_logo">App logo</string>
+    <string name="trophies_button_text">Trophies:</string>
+    <string name="stars_button_text">Stars:</string>
+    <string name="league_1">League 1</string>
+    <string name="user_name">Username</string>
+    <string name="cross">X</string>
 </resources>

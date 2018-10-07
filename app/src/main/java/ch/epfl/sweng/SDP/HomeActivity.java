@@ -129,7 +129,7 @@ public class HomeActivity extends AppCompatActivity {
                 int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (id == R.id.drawButton) ((ImageView) view).setImageResource(R.drawable.draw_button_pressed);
+                        if (id == R.id.drawButton) { ((ImageView) view).setImageResource(R.drawable.draw_button_pressed); }
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -137,10 +137,10 @@ public class HomeActivity extends AppCompatActivity {
                             ((ImageView) view).setImageResource(R.drawable.draw_button);
                             startDrawingActivity();
                         }
-                        else if (id == R.id.usernameButton) showPopup();
-                        else if (id == R.id.signOutButton) signOut();
-                        else if (id == R.id.deleteButton) delete();
-                        else if (id == R.id.crossText) profileWindow.dismiss();
+                        else if (id == R.id.usernameButton) { showPopup(); }
+                        else if (id == R.id.signOutButton) { signOut(); }
+                        else if (id == R.id.deleteButton) { delete(); }
+                        else if (id == R.id.crossText) { profileWindow.dismiss(); }
                         bounceButton(view, amplitude, frequency);
                         break;
                     default:

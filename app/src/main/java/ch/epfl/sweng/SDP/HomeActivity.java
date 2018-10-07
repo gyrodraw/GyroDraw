@@ -70,10 +70,8 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * Signs the current user out and starts the {@link MainActivity}.
-     *
-     * @param view the view corresponding to the clicked button
      */
-    public void signOut(View view) {
+    private void signOut() {
         final Toast toastSignOut = makeAndShowToast("Signing out...");
 
         AuthUI.getInstance()
@@ -95,10 +93,8 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Deletes the user from FirebaseAuth and deletes any existing credentials for the user in
      * Google Smart Lock. It then starts the {@link MainActivity}.
-     *
-     * @param view the view corresponding to the clicked button
      */
-    public void delete(View view) {
+    private void delete() {
         final Toast toastDelete = makeAndShowToast("Deleting account...");
 
         AuthUI.getInstance()
@@ -129,19 +125,26 @@ public class HomeActivity extends AppCompatActivity {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
+                int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (view.getId() == R.id.drawButton)
+                        if (id == R.id.drawButton)
                             ((ImageView) view).setImageResource(R.drawable.draw_button_pressed);
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (view.getId() == R.id.drawButton) {
+                        if (id == R.id.drawButton) {
                             ((ImageView) view).setImageResource(R.drawable.draw_button);
                             startDrawingActivity();
                         }
-                        else if (view.getId() == R.id.usernameButton)
+                        else if (id == R.id.usernameButton)
                             showPopup();
+                        else if (id == R.id.signOutButton)
+                            signOut();
+                        else if (id == R.id.deleteButton)
+                            delete();
+                        else if (id == R.id.crossText)
+                            profileWindow.dismiss();
                         bounceButton(view, amplitude, frequency);
                         break;
                     default:
@@ -182,27 +185,10 @@ public class HomeActivity extends AppCompatActivity {
         signOutButton.setTypeface(typeMuro);
         deleteButton.setTypeface(typeMuro);
 
-        crossText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileWindow.dismiss();
-            }
-        });
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut(view);
-            }
-        });
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                delete(view);
-            }
-        });
-
+        setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(deleteButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
     }

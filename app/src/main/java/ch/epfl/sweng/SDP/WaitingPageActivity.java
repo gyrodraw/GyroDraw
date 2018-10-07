@@ -41,15 +41,13 @@ public class WaitingPageActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Random r = new Random();
 
                 // Generates two random numbers between 0 and WORDS_COUNT
-                int i1 = r.nextInt(WORDS_COUNT);
-                int i2 = r.nextInt(WORDS_COUNT);
+                int numbers[] = generateTwoRandomNumbers();
 
                 // Get the words corresponding to the random numbers
-                String word1 = dataSnapshot.child(Integer.toString(i1)).getValue(String.class);
-                String word2 = dataSnapshot.child(Integer.toString(i2)).getValue(String.class);
+                String word1 = dataSnapshot.child(Integer.toString(numbers[0])).getValue(String.class);
+                String word2 = dataSnapshot.child(Integer.toString(numbers[1])).getValue(String.class);
 
                 // Display them on the buttons
                 Button word1View = findViewById(R.id.buttonWord1);
@@ -106,6 +104,17 @@ public class WaitingPageActivity extends AppCompatActivity {
             Intent intent = new Intent(this, DrawingActivity.class);
             startActivity(intent);
         }
+    }
+
+    private int[] generateTwoRandomNumbers() {
+        Random rand = new Random();
+        int number1 = rand.nextInt(WORDS_COUNT);
+        int number2 = number1;
+        while(number1 == number2) {
+            number2 = rand.nextInt(WORDS_COUNT);
+        }
+
+        return new int[] {number1, number2};
     }
 
     private void initProgressDialog() {

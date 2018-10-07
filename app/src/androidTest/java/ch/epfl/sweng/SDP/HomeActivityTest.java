@@ -8,6 +8,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
 import static ch.epfl.sweng.SDP.HomeActivity.disableBackgroundAnimation;
 
 import org.junit.Rule;

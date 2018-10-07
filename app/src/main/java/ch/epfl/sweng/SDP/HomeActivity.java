@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -203,16 +202,25 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void ShowPopup() {
-        TextView txtclose;
         profileWindow.setContentView(R.layout.activity_pop_up);
-        txtclose = profileWindow.findViewById(R.id.txtclose);
-        txtclose.setText("M");
-        txtclose.setOnClickListener(new View.OnClickListener() {
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        TextView crossText = profileWindow.findViewById(R.id.crossText);
+        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
+        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
+
+        crossText.setTypeface(typeMuro);
+        signOutButton.setTypeface(typeMuro);
+        deleteButton.setTypeface(typeMuro);
+
+        crossText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 profileWindow.dismiss();
             }
         });
+
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
     }

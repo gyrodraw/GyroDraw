@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.Task;
 public class HomeActivity extends AppCompatActivity {
     private Dialog profileWindow;
 
-    public static boolean enableBackgroundAnimation = true;
+    private static boolean enableBackgroundAnimation = true;
     private static final String TAG = "HomeActivity";
 
     private static final int MAIN_FREQUENCY = 10;

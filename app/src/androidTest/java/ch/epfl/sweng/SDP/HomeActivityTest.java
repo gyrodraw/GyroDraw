@@ -65,7 +65,7 @@ public class HomeActivityTest {
     public void testCanSignOutAccount() {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.signOutButton)).perform(click());
-        SystemClock.sleep(2000);
+        SystemClock.sleep(4000);
         intended(hasComponent(MainActivity.class.getName()));
     }
 }

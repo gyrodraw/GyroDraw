@@ -43,9 +43,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
-
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
@@ -53,10 +50,12 @@ public class HomeActivity extends AppCompatActivity {
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
 
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+        leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         trophiesButton.setTypeface(typeMuro);
         starsButton.setTypeface(typeMuro);
-        leagueText.setTypeface(typeOptimus);
 
         trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
@@ -130,8 +129,7 @@ public class HomeActivity extends AppCompatActivity {
                 int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (id == R.id.drawButton)
-                            ((ImageView) view).setImageResource(R.drawable.draw_button_pressed);
+                        if (id == R.id.drawButton) ((ImageView) view).setImageResource(R.drawable.draw_button_pressed);
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -139,14 +137,10 @@ public class HomeActivity extends AppCompatActivity {
                             ((ImageView) view).setImageResource(R.drawable.draw_button);
                             startDrawingActivity();
                         }
-                        else if (id == R.id.usernameButton)
-                            showPopup();
-                        else if (id == R.id.signOutButton)
-                            signOut();
-                        else if (id == R.id.deleteButton)
-                            delete();
-                        else if (id == R.id.crossText)
-                            profileWindow.dismiss();
+                        else if (id == R.id.usernameButton) showPopup();
+                        else if (id == R.id.signOutButton) signOut();
+                        else if (id == R.id.deleteButton) delete();
+                        else if (id == R.id.crossText) profileWindow.dismiss();
                         bounceButton(view, amplitude, frequency);
                         break;
                     default:

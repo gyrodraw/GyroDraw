@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
 
-    private static final int TOP_BUTTONS_FREQUENCY = 10;
+    private static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
 
@@ -61,11 +61,11 @@ public class HomeActivity extends AppCompatActivity {
         trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
 
-        setDrawButtonListener(drawButton);
-        setListener(trophiesButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
-        setListener(starsButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
+        setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+        setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
-        setUsernameButtonListener(usernameButton);
+        setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
     }
 
     /**
@@ -131,50 +131,18 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        if (view.getId() == R.id.drawButton)
+                            ((ImageView) view).setImageResource(R.drawable.draw_button_pressed);
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
+                        if (view.getId() == R.id.drawButton) {
+                            ((ImageView) view).setImageResource(R.drawable.draw_button);
+                            startDrawingActivity();
+                        }
+                        else if (view.getId() == R.id.usernameButton)
+                            showPopup();
                         bounceButton(view, amplitude, frequency);
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
-    }
-
-    private void setDrawButtonListener(final ImageView drawButton) {
-        drawButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        drawButton.setImageResource(R.drawable.draw_button_pressed);
-                        pressButton(drawButton);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        drawButton.setImageResource(R.drawable.draw_button);
-                        bounceButton(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
-                        startDrawingActivity();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
-    }
-
-    private void setUsernameButtonListener(Button usernameButton) {
-        usernameButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
-                        ShowPopup();
                         break;
                     default:
                 }
@@ -201,7 +169,7 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void ShowPopup() {
+    private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -220,7 +188,21 @@ public class HomeActivity extends AppCompatActivity {
                 profileWindow.dismiss();
             }
         });
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOut(view);
+            }
+        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                delete(view);
+            }
+        });
 
+        setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(deleteButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
     }

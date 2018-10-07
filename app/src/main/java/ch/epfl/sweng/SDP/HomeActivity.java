@@ -15,11 +15,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
+    public static boolean enableBackgroundAnimation = true;
     private static final String TAG = "HomeActivity";
 
     private static final int TOP_BUTTONS_FREQUENCY = 10;
@@ -36,11 +38,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        setBackgroundAnimation();
+        if (enableBackgroundAnimation) {
+            setBackgroundAnimation();
+        }
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
-
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
         final Button starsButton = findViewById(R.id.starsButton);
@@ -172,5 +175,13 @@ public class HomeActivity extends AppCompatActivity {
         final Animation press = AnimationUtils.loadAnimation(this, R.anim.press);
         press.setFillAfter(true);
         view.startAnimation(press);
+    }
+
+    /**
+     * Disables the background animation.
+     * Call this method in every HomeActivity test
+     */
+    public static void disableBackgroundAnimation() {
+        enableBackgroundAnimation = false;
     }
 }

@@ -24,6 +24,8 @@ public class WaitingPageActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
     private ProgressDialog progressDialog;
+    private Button word1View;
+    private Button word2View;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,10 @@ public class WaitingPageActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
         myRef = mDatabase.getReference(WORD_CHILDREN_DB_ID);
         initProgressDialog();
+        word1View = findViewById(R.id.buttonWord1);
+        word2View = findViewById(R.id.buttonWord2);
+        word1View.setVisibility(View.GONE);
+        word2View.setVisibility(View.GONE);
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -47,13 +53,15 @@ public class WaitingPageActivity extends AppCompatActivity {
                 String word2 = dataSnapshot.child(Integer.toString(i2)).getValue(String.class);
 
                 // Display them on the buttons
-                Button word1View = findViewById(R.id.buttonWord1);
-                Button word2View = findViewById(R.id.buttonWord2);
                 word1View.setText(word1);
                 word2View.setText(word2);
+                word1View.setVisibility(View.VISIBLE);
+                word2View.setVisibility(View.VISIBLE);
 
                 // Clear the progress dialog
-                progressDialog.cancel();
+                if(progressDialog.isShowing()) {
+                    progressDialog.cancel();
+                }
             }
 
             @Override

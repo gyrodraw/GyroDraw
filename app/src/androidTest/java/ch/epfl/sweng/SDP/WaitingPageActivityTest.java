@@ -41,21 +41,26 @@ public class WaitingPageActivityTest {
             .addMonitor(WaitingPageActivity.class.getName(), null, false);
 
     @Test
-    public void testButton1ChooseWords() {
-        Intents.init();
+    public void testRadioButton1() {
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
         onView(withId(R.id.buttonWord1)).perform(click());
-        intended(hasComponent(DrawingActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
-    public void testButton2ChooseWords() {
-        Intents.init();
+    public void testRadioButton2() {
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
         onView(withId(R.id.buttonWord2)).perform(click());
+    }
+
+    @Test
+    public void testButtonIncreasePeople() {
+        Intents.init();
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        for(int i = 0; i < 4; i++) {
+            onView(withId(R.id.incrementButton)).perform(click());
+        }
+
         intended(hasComponent(DrawingActivity.class.getName()));
-        Intents.release();
     }
 
     @Test

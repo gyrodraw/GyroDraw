@@ -2,8 +2,8 @@ package ch.epfl.sweng.SDP;
 
 class BounceInterpolator implements android.view.animation.Interpolator {
 
-    private double amplitude;
-    private double frequency;
+    private final double amplitude;
+    private final double frequency;
 
     BounceInterpolator(double amplitude, double frequency) {
         this.amplitude = amplitude;

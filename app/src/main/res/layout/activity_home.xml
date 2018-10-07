@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context=".HomeActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".HomeActivity">
 
     <ImageView
       android:id="@+id/backgroundImage"
@@ -19,46 +20,46 @@
       app:srcCompat="@drawable/background"/>
 
     <Button
-      android:id="@+id/trophiesButton"
-      style="?android:attr/borderlessButtonStyle"
-      android:textStyle="bold"
-      android:layout_width="500dp"
-      android:layout_height="35dp"
-      android:layout_marginTop="16dp"
-      android:background="@color/colorBlueTrophy"
-      android:gravity="start"
-      android:includeFontPadding="false"
-      android:requiresFadingEdge="none"
-      android:text="@string/trophies_button_text"
-      android:textAppearance="@style/TextAppearance.AppCompat.Title"
-      android:textColor="@color/colorGrey"
-      android:textIsSelectable="false"
-      android:textSize="50sp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.512"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/trophiesButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="500dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorBlueTrophy"
+        android:gravity="start"
+        android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="@string/trophies_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorGrey"
+        android:textIsSelectable="false"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-      android:id="@+id/starsButton"
-      style="?android:attr/borderlessButtonStyle"
-      android:textStyle="bold"
-      android:layout_width="500dp"
-      android:layout_height="35dp"
-      android:layout_marginTop="8dp"
-      android:background="@color/colorGreenStar"
-      android:gravity="start"
-      android:includeFontPadding="false"
-      android:requiresFadingEdge="none"
-      android:text="@string/stars_button_text"
-      android:textAppearance="@style/TextAppearance.AppCompat.Title"
-      android:textColor="@color/colorGrey"
-      android:textIsSelectable="false"
-      android:textSize="50sp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.512"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/trophiesButton"/>
+        android:id="@+id/starsButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="500dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorGreenStar"
+        android:gravity="start"
+        android:includeFontPadding="false"
+        android:requiresFadingEdge="none"
+        android:text="@string/stars_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorGrey"
+        android:textIsSelectable="false"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trophiesButton" />
 
     <ImageView
       android:id="@+id/leagueImage"
@@ -73,18 +74,18 @@
       app:srcCompat="@drawable/league1"/>
 
     <TextView
-      android:id="@+id/leagueText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:shadowColor="@android:color/black"
-      android:shadowDy="5"
-      android:shadowRadius="5"
-      android:text="@string/league_1"
-      android:textColor="@color/colorLeague1"
-      android:textSize="30sp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/leagueImage"/>
+        android:id="@+id/leagueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:text="@string/league_1"
+        android:textColor="@color/colorLeague1"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
 
     <ImageView
       android:id="@+id/drawButton"
@@ -96,29 +97,20 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:srcCompat="@drawable/draw_button"/>
+
     <Button
-      android:id="@+id/sign_out"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="16dp"
-      android:layout_marginRight="16dp"
-      android:onClick="signOut"
-      android:text="@string/sign_out"
-      app:layout_constraintBottom_toTopOf="@+id/leagueImage"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/leagueImage"
-      />
-    <Button
-      android:id="@+id/delete_account"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginLeft="16dp"
-      android:onClick="delete"
-      android:text="@string/delete_account"
-      app:layout_constraintBottom_toTopOf="@+id/leagueImage"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/leagueImage"
-      />
+        android:id="@+id/usernameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/transparent"
+        android:text="@string/user_name"
+        android:textColor="@color/colorDrawYellow"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

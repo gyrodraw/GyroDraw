@@ -1,7 +1,10 @@
 package ch.epfl.sweng.SDP;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,15 +17,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
+    private Dialog profileWindow;
 
     private static final String TAG = "HomeActivity";
 
-    private static final int TOP_BUTTONS_FREQUENCY = 10;
+    private static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
 
@@ -36,35 +41,36 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+        profileWindow = new Dialog(this);
 
         final ImageView drawButton = findViewById(R.id.drawButton);
+        final Button usernameButton = findViewById(R.id.usernameButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
         final Button starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
 
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+        leagueText.setTypeface(typeOptimus);
+        usernameButton.setTypeface(typeMuro);
         trophiesButton.setTypeface(typeMuro);
         starsButton.setTypeface(typeMuro);
-        leagueText.setTypeface(typeOptimus);
 
         trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
 
-        setDrawButtonListener(drawButton);
-        setListener(trophiesButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
-        setListener(starsButton, MAIN_AMPLITUDE, TOP_BUTTONS_FREQUENCY);
+        setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+        setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
+        setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
     }
 
     /**
      * Signs the current user out and starts the {@link MainActivity}.
-     *
-     * @param view the view corresponding to the clicked button
      */
-    public void signOut(View view) {
+    private void signOut() {
         final Toast toastSignOut = makeAndShowToast("Signing out...");
 
         AuthUI.getInstance()
@@ -81,15 +87,14 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+        profileWindow.dismiss();
     }
 
     /**
      * Deletes the user from FirebaseAuth and deletes any existing credentials for the user in
      * Google Smart Lock. It then starts the {@link MainActivity}.
-     *
-     * @param view the view corresponding to the clicked button
      */
-    public void delete(View view) {
+    private void delete() {
         final Toast toastDelete = makeAndShowToast("Deleting account...");
 
         AuthUI.getInstance()
@@ -107,6 +112,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+        profileWindow.dismiss();
     }
 
     private Toast makeAndShowToast(String msg) {
@@ -120,11 +126,21 @@ public class HomeActivity extends AppCompatActivity {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
+                int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        if (id == R.id.drawButton) { ((ImageView) view).setImageResource(R.drawable.draw_button_pressed); }
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
+                        if (id == R.id.drawButton) {
+                            ((ImageView) view).setImageResource(R.drawable.draw_button);
+                            startChooseWordsActivity();
+                        }
+                        else if (id == R.id.usernameButton) { showPopup(); }
+                        else if (id == R.id.signOutButton) { signOut(); }
+                        else if (id == R.id.deleteButton) { delete(); }
+                        else if (id == R.id.crossText) { profileWindow.dismiss(); }
                         bounceButton(view, amplitude, frequency);
                         break;
                     default:
@@ -171,5 +187,26 @@ public class HomeActivity extends AppCompatActivity {
     private void startChooseWordsActivity() {
         Intent intent = new Intent(this, WaitingPageActivity.class);
         startActivity(intent);
+    }
+
+    private void showPopup() {
+        profileWindow.setContentView(R.layout.activity_pop_up);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        TextView crossText = profileWindow.findViewById(R.id.crossText);
+        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
+        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
+
+        crossText.setTypeface(typeMuro);
+        signOutButton.setTypeface(typeMuro);
+        deleteButton.setTypeface(typeMuro);
+
+        setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(deleteButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+
+        profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        profileWindow.show();
     }
 }

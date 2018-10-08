@@ -10,7 +10,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "ch.epfl.sweng.SDP"
-        minSdkVersion 16
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,10 @@ android {
         }
     }
     productFlavors {
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 

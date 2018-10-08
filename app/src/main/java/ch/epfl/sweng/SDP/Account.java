@@ -11,6 +11,8 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class Account implements java.io.Serializable {
     public String username;
     public int trophies;
@@ -34,7 +36,7 @@ public class Account implements java.io.Serializable {
                     throw new IllegalArgumentException("Username already taken.");
                 }
                 else {
-                    Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(username).setValue(newName, new DatabaseReference.CompletionListener() {
+                    Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").setValue(newName, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if (databaseError != null) {
@@ -101,6 +103,28 @@ public class Account implements java.io.Serializable {
                 }
                 else {
                     stars = newStars;
+                }
+            }
+        });
+    }
+
+    public void addFriend(final String usernameID) throws DatabaseException {
+        Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends").child(usernameID).setValue(true, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    throw databaseError.toException();
+                }
+            }
+        });
+    }
+
+    public void removeFriend(final String usernameID) throws DatabaseException {
+        Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends").child(usernameID).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    throw databaseError.toException();
                 }
             }
         });

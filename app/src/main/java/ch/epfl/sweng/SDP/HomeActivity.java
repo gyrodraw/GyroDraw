@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 public class HomeActivity extends AppCompatActivity {
     private Dialog profileWindow;
 
+    private static boolean enableBackgroundAnimation = true;
     private static final String TAG = "HomeActivity";
 
     private static final int MAIN_FREQUENCY = 10;
@@ -42,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
+        if (enableBackgroundAnimation) { setBackgroundAnimation(); }
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
@@ -49,17 +52,15 @@ public class HomeActivity extends AppCompatActivity {
         final Button starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
-
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         trophiesButton.setTypeface(typeMuro);
         starsButton.setTypeface(typeMuro);
-
         trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
-
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
@@ -121,6 +122,12 @@ public class HomeActivity extends AppCompatActivity {
         return toast;
     }
 
+    private void setBackgroundAnimation() {
+        final ImageView backgroundImage = findViewById(R.id.backgroundImage);
+        final Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.background_anim);
+        backgroundAnim.setInterpolator(new LinearInterpolator());
+        backgroundImage.startAnimation(backgroundAnim);
+    }
 
     private void setListener(final View view, final double amplitude, final int frequency) {
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -187,5 +194,13 @@ public class HomeActivity extends AppCompatActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
+    }
+
+    /**
+     * Disables the background animation.
+     * Call this method in every HomeActivity test
+     */
+    public static void disableBackgroundAnimation() {
+        enableBackgroundAnimation = false;
     }
 }

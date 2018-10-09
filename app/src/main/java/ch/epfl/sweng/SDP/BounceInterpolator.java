@@ -16,7 +16,7 @@ class BounceInterpolator implements android.view.animation.Interpolator {
 
     @Override
     public float getInterpolation(float time) {
-        if (!(time >= 0 && time <= 1.0)) {
+        if (!(0 <= time && time <= 1.0)) {
             throw new IllegalArgumentException("Time should be between 0 and 1.0");
         }
 

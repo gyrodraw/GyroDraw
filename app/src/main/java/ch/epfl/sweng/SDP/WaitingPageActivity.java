@@ -50,7 +50,10 @@ public class WaitingPageActivity extends AppCompatActivity {
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            word1Votes = dataSnapshot.getValue(Long.class).intValue();
+            Long value = dataSnapshot.getValue(Long.class);
+            if (value != null) {
+                word1Votes = value.intValue();
+            }
         }
 
         @Override
@@ -62,7 +65,10 @@ public class WaitingPageActivity extends AppCompatActivity {
     private final ValueEventListener listenerWord2 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            word2Votes = dataSnapshot.getValue(Long.class).intValue();
+            Long value = dataSnapshot.getValue(Long.class);
+            if (value != null) {
+                word2Votes = value.intValue();
+            }
         }
 
         @Override
@@ -92,21 +98,30 @@ public class WaitingPageActivity extends AppCompatActivity {
                 int numbers[] = generateTwoRandomNumbers();
 
                 // Get the words corresponding to the random numbers and update database
-                String word1 = dataSnapshot.child(Integer.toString(numbers[0])).getValue(String.class);
-                word1Ref = wordsVotesRef.child(word1);
-                word1Ref.setValue(0);
-                word1Ref.addValueEventListener(listenerWord1);
+                String word1 = dataSnapshot.child(Integer.toString(numbers[0]))
+                        .getValue(String.class);
+                if (word1 != null) {
+                    word1Ref = wordsVotesRef.child(word1);
+                    word1Ref.setValue(0);
+                    word1Ref.addValueEventListener(listenerWord1);
 
-                String word2 = dataSnapshot.child(Integer.toString(numbers[1])).getValue(String.class);
-                word2Ref = wordsVotesRef.child(word2);
-                word2Ref.setValue(0);
-                word2Ref.addValueEventListener(listenerWord2);
+                    // Display the word on the button
+                    word1View = findViewById(R.id.buttonWord1);
+                    word1View.setText(word1);
+                }
 
-                // Display them on the buttons
-                word1View = findViewById(R.id.buttonWord1);
-                word2View = findViewById(R.id.buttonWord2);
-                word1View.setText(word1);
-                word2View.setText(word2);
+
+                String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
+                        .getValue(String.class);
+                if (word2 != null) {
+                    word2Ref = wordsVotesRef.child(word2);
+                    word2Ref.setValue(0);
+                    word2Ref.addValueEventListener(listenerWord2);
+
+                    // Display the word on the button
+                    word2View = findViewById(R.id.buttonWord2);
+                    word2View.setText(word2);
+                }
 
                 // Clear the progress dialog
                 if (progressDialog.isShowing()) {
@@ -145,23 +160,23 @@ public class WaitingPageActivity extends AppCompatActivity {
 
     // Vote for the specified word and update the database
     private void voteForWord(WordNumber wordNumber) {
-        switch(wordNumber) {
+        switch (wordNumber) {
             case ONE:
                 word1Ref.setValue(++word1Votes);
-                if(hasAlreadyVoted) {
+                if (hasAlreadyVoted) {
                     word2Ref.setValue(--word2Votes);
                 }
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
-                if(hasAlreadyVoted) {
+                if (hasAlreadyVoted) {
                     word1Ref.setValue(--word1Votes);
                 }
                 break;
             default:
         }
 
-        if(!hasAlreadyVoted) {
+        if (!hasAlreadyVoted) {
             hasAlreadyVoted = true;
         }
     }
@@ -197,11 +212,11 @@ public class WaitingPageActivity extends AppCompatActivity {
         Random rand = new Random();
         int number1 = rand.nextInt(WORDS_COUNT);
         int number2 = number1;
-        while(number1 == number2) {
+        while (number1 == number2) {
             number2 = rand.nextInt(WORDS_COUNT);
         }
 
-        return new int[] {number1, number2};
+        return new int[]{number1, number2};
     }
 
     private void initProgressDialog() {

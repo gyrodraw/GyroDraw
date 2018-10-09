@@ -10,17 +10,13 @@
 
     <ImageView
         android:id="@+id/backgroundImage"
-        android:layout_width="2300dp"
-        android:layout_height="2000dp"
+        android:layout_width="500dp"
+        android:layout_height="759dp"
         android:foregroundGravity="center"
-        android:rotation="315"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.905"
         app:srcCompat="@drawable/background" />
 
     <Button
@@ -35,7 +31,7 @@
         android:requiresFadingEdge="none"
         android:text="@string/trophies_button_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorGrey"
         android:textIsSelectable="false"
         android:textSize="50sp"
         android:textStyle="bold"
@@ -56,7 +52,7 @@
         android:requiresFadingEdge="none"
         android:text="@string/stars_button_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorGrey"
         android:textIsSelectable="false"
         android:textSize="50sp"
         android:textStyle="bold"

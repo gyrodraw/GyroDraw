@@ -4,17 +4,24 @@ import android.support.test.espresso.IdlingResource;
 import android.view.View;
 
 public class ViewVisibilityIdlingResource implements IdlingResource {
-    private final View mView;
-    private final int mExpectedVisibility;
+    private final View view;
+    private final int expectedVisibility;
 
-    private boolean mIdle;
-    private ResourceCallback mResourceCallback;
+    private boolean idle;
+    private ResourceCallback resourceCallback;
 
+    /**
+     * Constructor of the class, instantiate the view and the expected visibility for
+     * the view.
+     *
+     * @param view
+     * @param expectedVisibility
+     */
     public ViewVisibilityIdlingResource(final View view, final int expectedVisibility) {
-        this.mView = view;
-        this.mExpectedVisibility = expectedVisibility;
-        this.mIdle = false;
-        this.mResourceCallback = null;
+        this.view = view;
+        this.expectedVisibility = expectedVisibility;
+        this.idle = false;
+        this.resourceCallback = null;
     }
 
     @Override
@@ -24,20 +31,18 @@ public class ViewVisibilityIdlingResource implements IdlingResource {
 
     @Override
     public final boolean isIdleNow() {
-        mIdle = mIdle || mView.getVisibility() == mExpectedVisibility;
+        idle = idle || view.getVisibility() == expectedVisibility;
 
-        if (mIdle) {
-            if (mResourceCallback != null) {
-                mResourceCallback.onTransitionToIdle();
-            }
+        if (idle && resourceCallback != null) {
+            resourceCallback.onTransitionToIdle();
         }
 
-        return mIdle;
+        return idle;
     }
 
     @Override
     public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
-        mResourceCallback = resourceCallback;
+        this.resourceCallback = resourceCallback;
     }
 
 }

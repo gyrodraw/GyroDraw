@@ -106,9 +106,10 @@ public class WaitingPageActivityTest {
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
                             View.VISIBLE);
 
-        Activity currentActivity = getInstrumentation()
+        /*Activity currentActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
-        ProgressBar progressBar = currentActivity.findViewById(R.id.usersProgressBar);
+        Activity currentActivity = mActivityRule.getActivity();*/
+        ProgressBar progressBar = mActivityRule.getActivity().findViewById(R.id.usersProgressBar);
 
         onView(withId(R.id.incrementButton)).perform(click());
         onView(withId(R.id.usersTextView)).check(matches(withText("2/5 users ready")));

@@ -226,10 +226,14 @@ public class WaitingPageActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    private void setGlobalVisibility(int visibility) {
+    private void setGlobalVisibility(final int visibility) {
+        findViewById(R.id.buttonWord1).setVisibility(visibility);
+        findViewById(R.id.buttonWord2).setVisibility(visibility);
         findViewById(R.id.radioGroup).setVisibility(visibility);
         findViewById(R.id.relativeLayout).setVisibility(visibility);
         findViewById(R.id.incrementButton).setVisibility(visibility);
+        findViewById(R.id.usersProgressBar).setVisibility(visibility);
+        findViewById(R.id.usersTextView).setVisibility(visibility);
     }
 
     // TODO

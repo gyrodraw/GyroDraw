@@ -105,18 +105,33 @@ public class WaitingPageActivityTest {
         assertThat(progressBar.getProgress(), is(3));
     }
 
+    /**
+     * Check if the view is displayed.
+     * 
+     * @param id Id of the view
+     */
     @Ignore
     public void isViewVisible(final int id) {
         waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
         onView(withId(id)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Check if the views are clickable.
+     *
+     * @param id Id of the view
+     */
     @Ignore
     public void isViewClickable(final int id) {
         waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
         onView(withId(id)).check(matches(isClickable()));
     }
 
+    /**
+     * Check if we can click the buttons.
+     *
+     * @param id Id of the view
+     */
     @Ignore
     public void clickButtonsTest(final int id) {
         waitForVisibility(mActivityRule.getActivity().findViewById(id),

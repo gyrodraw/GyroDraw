@@ -36,11 +36,9 @@ public class WaitingPageActivity extends AppCompatActivity {
 
     private DatabaseReference wordsVotesRef;
 
-    private Button word1View;
     private DatabaseReference word1Ref;
     private int word1Votes = 0;
 
-    private Button word2View;
     private DatabaseReference word2Ref;
     private int word2Votes = 0;
 
@@ -74,6 +72,41 @@ public class WaitingPageActivity extends AppCompatActivity {
         }
     };
 
+    private final ValueEventListener listenerWords = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            // Generates two random numbers between 0 and WORDS_COUNT
+            int[] numbers = generateTwoRandomNumbers();
+
+            // Get the words corresponding to the random numbers and update database
+            String word1 = dataSnapshot.child(Integer.toString(numbers[0]))
+                    .getValue(String.class);
+            if (word1 != null) {
+                word1Ref = wordsVotesRef.child(word1);
+                initRadioButton((Button)findViewById(R.id.buttonWord1), word1, word1Ref);
+            }
+
+            String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
+                    .getValue(String.class);
+            if (word2 != null) {
+                word2Ref = wordsVotesRef.child(word2);
+                initRadioButton((Button)findViewById(R.id.buttonWord2), word2, word2Ref);
+            }
+
+            // Clear the progress dialog
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+                setGlobalVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,40 +120,7 @@ public class WaitingPageActivity extends AppCompatActivity {
         initProgressDialog();
         setGlobalVisibility(View.GONE);
 
-        wordsSelectionRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                // Generates two random numbers between 0 and WORDS_COUNT
-                int[] numbers = generateTwoRandomNumbers();
-
-                // Get the words corresponding to the random numbers and update database
-                String word1 = dataSnapshot.child(Integer.toString(numbers[0]))
-                        .getValue(String.class);
-                if (word1 != null) {
-                    word1Ref = wordsVotesRef.child(word1);
-                    initRadioButton((Button)findViewById(R.id.buttonWord1), word1, word1Ref);
-                }
-
-                String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
-                        .getValue(String.class);
-                if (word2 != null) {
-                    word2Ref = wordsVotesRef.child(word2);
-                    initRadioButton((Button)findViewById(R.id.buttonWord2), word2, word2Ref);
-                }
-
-                // Clear the progress dialog
-                if (progressDialog.isShowing()) {
-                    progressDialog.cancel();
-                    setGlobalVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Does nothing for the moment
-            }
-        });
+        wordsSelectionRef.addValueEventListener(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,
@@ -129,8 +129,7 @@ public class WaitingPageActivity extends AppCompatActivity {
         dbRef.addValueEventListener(listenerWord1);
 
         // Display the word on the button
-        word1View = button;
-        word1View.setText(childString);
+        button.setText(childString);
     }
 
     /**

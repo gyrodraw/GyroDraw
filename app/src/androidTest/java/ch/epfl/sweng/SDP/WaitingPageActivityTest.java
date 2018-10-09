@@ -39,13 +39,12 @@ public class WaitingPageActivityTest {
 
     @Test
     public void testRadioButton1() {
-        isViewClickable(R.id.buttonWord1);
-
+        ClickButtonsTest(R.id.buttonWord1);
     }
 
     @Test
     public void testRadioButton2() {
-       isViewClickable(R.id.buttonWord2);
+       ClickButtonsTest(R.id.buttonWord2);
     }
 
     @Test
@@ -116,6 +115,13 @@ public class WaitingPageActivityTest {
     public void isViewClickable(final int id) {
         waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
         onView(withId(id)).check(matches(isClickable()));
+    }
+
+    @Ignore
+    public void ClickButtonsTest(final int id) {
+        waitForVisibility(mActivityRule.getActivity().findViewById(id),
+                View.VISIBLE);
+        onView(withId(id)).perform(click());
     }
 
     /**

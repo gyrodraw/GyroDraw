@@ -37,22 +37,15 @@ public class WaitingPageActivityTest {
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<>(WaitingPageActivity.class);
 
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(WaitingPageActivity.class.getName(), null, false);
-
     @Test
     public void testRadioButton1() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord1),
-                            View.VISIBLE);
-        onView(withId(R.id.buttonWord1)).perform(click());
+        isViewClickable(R.id.buttonWord1);
 
     }
 
     @Test
     public void testRadioButton2() {
-       waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord2),
-                        View.VISIBLE);
-       onView(withId(R.id.buttonWord2)).perform(click());
+       isViewClickable(R.id.buttonWord2);
     }
 
     @Test
@@ -69,36 +62,32 @@ public class WaitingPageActivityTest {
 
     @Test
     public void isButtonWord1Visible() {
-        isButtonWordVisible(R.id.buttonWord1);
+        isViewVisible(R.id.buttonWord1);
     }
 
     @Test
     public void isButtonWord2Visible() {
-        isButtonWordVisible(R.id.buttonWord2);
+        isViewVisible(R.id.buttonWord2);
     }
 
     @Test
     public void isButtonWord1Clickable() {
-        isButtonWordClickable(R.id.buttonWord1);
+        isViewClickable(R.id.buttonWord1);
     }
 
     @Test
     public void isButtonWord2Clickable() {
-        isButtonWordClickable(R.id.buttonWord2);
+        isViewClickable(R.id.buttonWord2);
     }
 
     @Test
     public void isProgressBarVisible() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.usersProgressBar),
-                            View.VISIBLE);
-        onView(withId(R.id.usersProgressBar)).check(matches(isDisplayed()));
+        isViewVisible(R.id.usersProgressBar);
     }
 
     @Test
     public void isUserCounterViewVisible() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.usersTextView),
-                        View.VISIBLE);
-        onView(withId(R.id.usersTextView)).check(matches(isDisplayed()));
+        isViewVisible(R.id.usersTextView);
     }
 
     @Test
@@ -106,9 +95,6 @@ public class WaitingPageActivityTest {
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
                             View.VISIBLE);
 
-        /*Activity currentActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 5000);
-        Activity currentActivity = mActivityRule.getActivity();*/
         ProgressBar progressBar = mActivityRule.getActivity().findViewById(R.id.usersProgressBar);
 
         onView(withId(R.id.incrementButton)).perform(click());
@@ -121,21 +107,15 @@ public class WaitingPageActivityTest {
     }
 
     @Ignore
-    public void isButtonWordVisible(final int id) {
+    public void isViewVisible(final int id) {
         waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
         onView(withId(id)).check(matches(isDisplayed()));
     }
 
     @Ignore
-    public void isButtonWordClickable(final int id) {
+    public void isViewClickable(final int id) {
         waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
         onView(withId(id)).check(matches(isClickable()));
-    }
-
-    @Ignore
-    public void isProgressBarVisible(final int id) {
-        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
-        onView(withId(id)).check(matches(isDisplayed()));
     }
 
     /**

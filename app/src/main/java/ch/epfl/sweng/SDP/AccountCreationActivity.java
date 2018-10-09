@@ -16,13 +16,13 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
-     * @param view
+     * Create an account and update the database
+     * @param view the button clicked
      */
     public void createAccount(View view) {
         getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("hasAccount", true)
                 .apply(); // Set and store hasAccount to true in preferences
-        
+        // TODO update database
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();

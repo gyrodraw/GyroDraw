@@ -16,6 +16,9 @@ import static org.hamcrest.Matchers.is;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.intent.Intents;
@@ -42,20 +45,21 @@ public class WaitingPageActivityTest {
 
     @Test
     public void testRadioButton1() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord1), View.VISIBLE);
         onView(withId(R.id.buttonWord1)).perform(click());
+
     }
 
     @Test
     public void testRadioButton2() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+       waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord2), View.VISIBLE);
         onView(withId(R.id.buttonWord2)).perform(click());
     }
 
     @Test
     public void testButtonIncreasePeople() {
         Intents.init();
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton), View.VISIBLE);
         for(int i = 0; i < 4; i++) {
             onView(withId(R.id.incrementButton)).perform(click());
         }
@@ -65,43 +69,43 @@ public class WaitingPageActivityTest {
 
     @Test
     public void isButtonWord1Visible() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord1), View.VISIBLE);
         onView(withId(R.id.buttonWord1)).check(matches(isDisplayed()));
     }
 
     @Test
     public void isButtonWord2Visible() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord2), View.VISIBLE);
         onView(withId(R.id.buttonWord2)).check(matches(isDisplayed()));
     }
 
     @Test
     public void isButtonWord1Clickable() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord1), View.VISIBLE);
         onView(withId(R.id.buttonWord1)).check(matches(isClickable()));
     }
 
     @Test
     public void isButtonWord2Clickable() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.buttonWord2), View.VISIBLE);
         onView(withId(R.id.buttonWord2)).check(matches(isClickable()));
     }
 
     @Test
     public void isProgressBarVisible() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.usersProgressBar), View.VISIBLE);
         onView(withId(R.id.usersProgressBar)).check(matches(isDisplayed()));
     }
 
     @Test
     public void isUserCounterViewVisible() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.usersTextView), View.VISIBLE);
         onView(withId(R.id.usersTextView)).check(matches(isDisplayed()));
     }
 
     @Test
     public void incrementingUsersCountShouldChangeProgressBarAndTextView() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton), View.VISIBLE);
 
         Activity currentActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
@@ -137,5 +141,9 @@ public class WaitingPageActivityTest {
                 uiController.loopMainThreadForAtLeast(millis);
             }
         };
+    }
+
+    public void waitForVisibility(final View view, final int visibility) {
+        Espresso.registerIdlingResources(new ViewVisibilityIdlingResource(view, visibility));
     }
 }

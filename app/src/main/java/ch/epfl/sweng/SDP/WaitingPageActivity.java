@@ -181,7 +181,7 @@ public class WaitingPageActivity extends AppCompatActivity {
         super.onStop();
         word1Ref.removeEventListener(listenerWord1);
         word2Ref.removeEventListener(listenerWord2);
-        wordsVotesRef.removeValue();
+        wordsVotesRef.removeValue(); // need to keep the most voted one though
     }
 
     /* Now it is public in order to use it as a button for testing, should be reverted to private

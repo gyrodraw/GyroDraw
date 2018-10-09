@@ -36,6 +36,7 @@ public class HomeActivityTest {
         Intents.init();
         onView(withId(R.id.drawButton)).perform(click());
         intended(hasComponent(DrawingActivity.class.getName()));
+        Intents.release();
     }
 
     @Test

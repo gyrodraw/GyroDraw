@@ -24,4 +24,23 @@ public class DrawingActivityTest {
     public void testCanvas() {
         onView(withId(R.id.paintView)).perform(click());
     }
+
+    @Test
+    public void tesDrawToggleIsClickable() {
+        onView(withId(R.id.fly_or_draw)).perform(click());
+        onView(withId(R.id.fly_or_draw)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void testClearButtonIsClickable() {
+        onView(withId(R.id.clear_canvas)).perform(click());
+        onView(withId(R.id.clear_canvas)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void testPaintViewFullyDisplayed() {
+        onView(withId(R.id.paintView)).check(matches(isCompletelyDisplayed()));
+    }
+
+    
 }

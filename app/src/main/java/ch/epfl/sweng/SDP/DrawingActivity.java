@@ -31,8 +31,6 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private Boolean draw;
     ToggleButton fly_draw;
 
     @Override
@@ -40,18 +38,16 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        //final ToggleButton fly_or_draw = (ToggleButton) findViewById(R.id.fly_or_draw);
 
         speed = 5;
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        //accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        //sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
 
         final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
 
+        fly_draw = findViewById(R.id.fly_or_draw);
         paintView = findViewById(R.id.paintView);
         paintView.circleX = size.x / 2 - paintView.circleRadius;
         paintView.circleY = size.y / 2 - paintView.circleRadius;
@@ -62,7 +58,6 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
                paintView.invalidate();
            }
         };
-        fly_draw = findViewById(R.id.fly_or_draw);
     }
 
     public void fly_or_draw(View view){

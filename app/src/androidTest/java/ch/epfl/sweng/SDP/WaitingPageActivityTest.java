@@ -58,30 +58,13 @@ public class WaitingPageActivityTest {
     @Test
     public void testButtonIncreasePeople() {
         Intents.init();
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton), View.VISIBLE);
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
+                            View.VISIBLE);
         for(int i = 0; i < 4; i++) {
             onView(withId(R.id.incrementButton)).perform(click());
         }
 
         intended(hasComponent(DrawingActivity.class.getName()));
-    }
-
-    @Ignore
-    public void isButtonWordVisible(final int id) {
-        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
-        onView(withId(id)).check(matches(isDisplayed()));
-    }
-
-    @Ignore
-    public void isButtonWordClickable(final int id) {
-        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
-        onView(withId(id)).check(matches(isClickable()));
-    }
-
-    @Ignore
-    public void isProgressBarVisible(final int id) {
-        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
-        onView(withId(id)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -106,7 +89,8 @@ public class WaitingPageActivityTest {
 
     @Test
     public void isProgressBarVisible() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.usersProgressBar), View.VISIBLE);
+        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.usersProgressBar),
+                            View.VISIBLE);
         onView(withId(R.id.usersProgressBar)).check(matches(isDisplayed()));
     }
 
@@ -135,6 +119,24 @@ public class WaitingPageActivityTest {
         assertThat(progressBar.getProgress(), is(3));
     }
 
+    @Ignore
+    public void isButtonWordVisible(final int id) {
+        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
+        onView(withId(id)).check(matches(isDisplayed()));
+    }
+
+    @Ignore
+    public void isButtonWordClickable(final int id) {
+        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
+        onView(withId(id)).check(matches(isClickable()));
+    }
+
+    @Ignore
+    public void isProgressBarVisible(final int id) {
+        waitForVisibility(mActivityRule.getActivity().findViewById(id), View.VISIBLE);
+        onView(withId(id)).check(matches(isDisplayed()));
+    }
+
     /**
      * Perform action of waiting for a specific time.
      */
@@ -158,6 +160,7 @@ public class WaitingPageActivityTest {
         };
     }
 
+    @Ignore
     public void waitForVisibility(final View view, final int visibility) {
         Espresso.registerIdlingResources(new ViewVisibilityIdlingResource(view, visibility));
     }

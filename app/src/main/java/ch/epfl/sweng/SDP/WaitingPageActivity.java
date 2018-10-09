@@ -24,7 +24,6 @@ public class WaitingPageActivity extends AppCompatActivity {
         ONE, TWO
     }
 
-    private static final String TAG = "WaitingPage";
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
     private static final int STEP = 1;
@@ -33,9 +32,7 @@ public class WaitingPageActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private int usersReadyCount = 1;
-
     private boolean hasAlreadyVoted = false;
-    private boolean hasAlreadyClicked = false;
 
     private DatabaseReference wordsVotesRef;
 
@@ -58,7 +55,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            // Does nothing for the moment
         }
     };
 
@@ -73,7 +70,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            // Does nothing for the moment
         }
     };
 
@@ -81,10 +78,10 @@ public class WaitingPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_page);
-        FirebaseDatabase mDatabase = FirebaseDatabase
+        FirebaseDatabase database = FirebaseDatabase
                 .getInstance("https://gyrodraw.firebaseio.com/");
-        DatabaseReference wordsSelectionRef = mDatabase.getReference(WORD_CHILDREN_DB_ID);
-        wordsVotesRef = mDatabase.getReference("rooms").child("432432432")
+        DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
+        wordsVotesRef = database.getReference("rooms").child("432432432")
                 .child("words"); // need to be replaced with a search for a suitable room
 
         initProgressDialog();
@@ -95,32 +92,21 @@ public class WaitingPageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 // Generates two random numbers between 0 and WORDS_COUNT
-                int numbers[] = generateTwoRandomNumbers();
+                int[] numbers = generateTwoRandomNumbers();
 
                 // Get the words corresponding to the random numbers and update database
                 String word1 = dataSnapshot.child(Integer.toString(numbers[0]))
                         .getValue(String.class);
                 if (word1 != null) {
                     word1Ref = wordsVotesRef.child(word1);
-                    word1Ref.setValue(0);
-                    word1Ref.addValueEventListener(listenerWord1);
-
-                    // Display the word on the button
-                    word1View = findViewById(R.id.buttonWord1);
-                    word1View.setText(word1);
+                    initRadioButton((Button)findViewById(R.id.buttonWord1), word1, word1Ref);
                 }
-
 
                 String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
                         .getValue(String.class);
                 if (word2 != null) {
                     word2Ref = wordsVotesRef.child(word2);
-                    word2Ref.setValue(0);
-                    word2Ref.addValueEventListener(listenerWord2);
-
-                    // Display the word on the button
-                    word2View = findViewById(R.id.buttonWord2);
-                    word2View.setText(word2);
+                    initRadioButton((Button)findViewById(R.id.buttonWord2), word2, word2Ref);
                 }
 
                 // Clear the progress dialog
@@ -137,6 +123,22 @@ public class WaitingPageActivity extends AppCompatActivity {
         });
     }
 
+    private void initRadioButton(Button button, String childString,
+                                 DatabaseReference dbRef) {
+        dbRef.setValue(0);
+        dbRef.addValueEventListener(listenerWord1);
+
+        // Display the word on the button
+        word1View = button;
+        word1View.setText(childString);
+    }
+
+    /**
+     * Callback function called when a radio button is pressed. Updates
+     * the votes in the database
+     *
+     * @param view View corresponding to the button clicked
+     */
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
@@ -155,6 +157,7 @@ public class WaitingPageActivity extends AppCompatActivity {
                     voteForWord(WordNumber.TWO);
                 }
                 break;
+            default:
         }
     }
 
@@ -189,8 +192,13 @@ public class WaitingPageActivity extends AppCompatActivity {
         wordsVotesRef.removeValue(); // need to keep the most voted one though
     }
 
-    /* Now it is public in order to use it as a button for testing, should be reverted to private
-     * afterwards
+    // Now it is public in order to use it as a button for testing, should be reverted to private
+    // afterwards
+
+    /**
+     * Increment the number of players logged in the room. This method exists
+     * only for testing purposes.
+     * @param view Button that will increase the count when pressed
      */
     public void incrementCount(View view) {
         ProgressBar progressBar = findViewById(R.id.usersProgressBar);

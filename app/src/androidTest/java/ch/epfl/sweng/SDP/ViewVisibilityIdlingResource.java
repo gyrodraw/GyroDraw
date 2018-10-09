@@ -11,11 +11,11 @@ public class ViewVisibilityIdlingResource implements IdlingResource {
     private ResourceCallback resourceCallback;
 
     /**
-     * Constructor of the class, instantiate the view and the expected visibility for
-     * the view.
+     * Constructor of the class, keeps a reference of the view and the expected
+     * visibility.
      *
-     * @param view
-     * @param expectedVisibility
+     * @param view View reference.
+     * @param expectedVisibility Visibility to be tested.
      */
     public ViewVisibilityIdlingResource(final View view, final int expectedVisibility) {
         this.view = view;

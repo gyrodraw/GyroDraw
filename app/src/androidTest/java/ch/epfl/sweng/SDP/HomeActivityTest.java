@@ -11,10 +11,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import static ch.epfl.sweng.SDP.HomeActivity.disableBackgroundAnimation;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +26,12 @@ public class HomeActivityTest {
 
     @Rule
     public final ActivityTestRule<HomeActivity> mActivityRule =
-            new ActivityTestRule<>(HomeActivity.class);
+            new ActivityTestRule<HomeActivity>(HomeActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableBackgroundAnimation();
+                }
+            };
 
     @Test
     public void testDrawButtonOpensDrawingActivity() {

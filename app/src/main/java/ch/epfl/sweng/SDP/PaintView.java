@@ -10,7 +10,7 @@ import android.view.View;
 
 
 public class PaintView extends View {
-
+    
     private Paint paint;
     private Paint paintC;
     private int circleRadius;

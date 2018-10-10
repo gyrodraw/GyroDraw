@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -104,6 +105,9 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            getDefaultSharedPreferences(getApplicationContext()).edit()
+                                    .putBoolean("hasAccount", false).apply();
+
                             toastDelete.cancel();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
@@ -117,6 +121,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private Toast makeAndShowToast(String msg) {
+        assert msg != null;
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
         return toast;
@@ -179,6 +184,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void bounceButton(View view, double amplitude, int frequency) {
+        assert amplitude != 0;
         final Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
         bounce.setInterpolator(interpolator);

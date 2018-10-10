@@ -22,7 +22,7 @@
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".WaitingPageActivity"></activity>
         <activity android:name=".DrawingActivity"></activity>
+        <activity android:name=".AccountCreationActivity"></activity>
     </application>
 
 </manifest>
-

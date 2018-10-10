@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +16,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.login_button).setOnClickListener(this);
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
+        if (auth.getCurrentUser() != null && getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean("hasAccount", false)) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();

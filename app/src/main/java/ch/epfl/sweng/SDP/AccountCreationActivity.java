@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,6 +64,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                                 usernameTaken.setText("Failed to write data to database.");
                             }
                             else {
+                                getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("hasAccount", true)
+                                        .apply();
                                 gotoHome();
                             }
                         }
@@ -80,5 +84,6 @@ public class AccountCreationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("account", this.account);
         startActivity(intent);
+        finish();
     }
 }

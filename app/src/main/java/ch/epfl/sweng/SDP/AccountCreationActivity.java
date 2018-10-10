@@ -5,11 +5,11 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.EditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,9 +51,9 @@ public class AccountCreationActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
-                    usernameTaken.setText("Username is already taken.");
+                    usernameTaken.setText(getString(R.string.username_taken));
                 }
                 else {
                     account = new Account(username); //failsafe with provisoryAccount, then set account to provisoryAccount once write successful?
@@ -63,7 +63,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if (databaseError != null) {
-                                usernameTaken.setText("Failed to write to database. Try again.");
+                                usernameTaken.setText(getString(R.string.database_error));
                             }
                             else {
                                 getDefaultSharedPreferences(getApplicationContext()).edit()
@@ -76,8 +76,8 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                usernameTaken.setText("An error occurred. Try again.");
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                usernameTaken.setText(getString(R.string.database_error));
             }
         });
     }

@@ -16,5 +16,7 @@
   <string name="username">username</string>
   <string name="enter_username">Enter Username</string>
   <string name="test_name">Max Muster</string>
+  <string name="username_taken">Username is already taken.</string>
+  <string name="database_error">Database error. Try again.</string>
 
 </resources>

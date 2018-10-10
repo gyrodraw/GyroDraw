@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".VotingPageActivity">
+
+  <RatingBar
+    android:id="@+id/ratingBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="91dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/drawing"/>
+
+  <ImageView
+    android:id="@+id/drawing"
+    android:layout_width="134dp"
+    android:layout_height="0dp"
+    android:layout_marginTop="103dp"
+    android:layout_marginBottom="172dp"
+    app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@android:drawable/sym_def_app_icon"
+    />
+  <TextView
+    android:id="@+id/playerNameView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Player's name"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/drawing"
+    />
+
+</android.support.constraint.ConstraintLayout>

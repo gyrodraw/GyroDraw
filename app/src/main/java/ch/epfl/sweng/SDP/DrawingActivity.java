@@ -62,9 +62,9 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
      * which enables the user to either fly or draw
      * @param view ToggleButton
      */
-    //public void flyOrDraw(View view){
-    //    paintView.setDraw(((ToggleButton) view).isChecked());
-    //}
+    public void flyOrDraw(View view){
+        paintView.setDraw(((ToggleButton) view).isChecked());
+    }
 
     /**
      * Clears the entire Path in paintView.
@@ -112,15 +112,15 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     /**
      * Called when accelerometer changed, circle coordinates are updated.
-     * @param xCo coordiate
-     * @param yCo coordinate
+     * @param coordinateX coordiate
+     * @param coordinateY coordinate
      */
-    public void updateValues(float xCo, float yCo){
+    public void updateValues(float coordinateX, float coordinateY){
         float tempX = paintView.getCircleX();
         float tempY = paintView.getCircleY();
 
-        tempX -= xCo * speed;
-        tempY += yCo * speed;
+        tempX -= coordinateX * speed;
+        tempY += coordinateY * speed;
 
         tempX = sanitizeCoordinate(tempX, size.x);
         tempY = sanitizeCoordinate(tempY, size.y);

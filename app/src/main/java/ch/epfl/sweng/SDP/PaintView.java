@@ -72,7 +72,9 @@ public class PaintView extends View {
         this.circleY = circleY;
     }
 
-    public void setDraw(boolean draw){ this.draw = draw; }
+    public void setDraw(boolean draw){
+        this.draw = draw;
+    }
 
     /**
      * Clears the canvas.

@@ -24,15 +24,4 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class AccountCreationActivityTest {
     @Rule
     public final ActivityTestRule<AccountCreationActivity> aCARule = new ActivityTestRule<>(AccountCreationActivity.class);
-
-    @Test
-    public void testTextInput() {
-
-    }
-    @Test
-    public void testCreateAccButton() {
-
-    }
-
-
 }

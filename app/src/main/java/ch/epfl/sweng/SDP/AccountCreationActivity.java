@@ -47,12 +47,11 @@ public class AccountCreationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot.exists()) {
-                    //display a Text that the user name is already taken
-                    usernameTaken.setText("That username is already taken.");
+                    usernameTaken.setText("Username is already taken.");
                 }
                 else {
                     account = new Account(username);
-                    Constants.databaseRef.child("users").child(userID).setValue(account, new DatabaseReference.CompletionListener() {
+                    Constants.usersRef.child(userID).setValue(account, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if (databaseError != null) {

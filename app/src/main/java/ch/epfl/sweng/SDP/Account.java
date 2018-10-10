@@ -11,8 +11,6 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 public class Account implements java.io.Serializable {
     public String username;
     public int trophies;
@@ -36,7 +34,7 @@ public class Account implements java.io.Serializable {
                     throw new IllegalArgumentException("Username already taken.");
                 }
                 else {
-                    Constants.databaseRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("username").setValue(newName, new DatabaseReference.CompletionListener() {
+                    Constants.databaseRef.child("users").child(getCurrentUserUID()).child("username").setValue(newName, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if (databaseError != null) {
@@ -59,7 +57,7 @@ public class Account implements java.io.Serializable {
 
     public void changeTrophies(int a) throws DatabaseException {
         final int newTrophies = Math.max(0, trophies + a);
-        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("trophies").setValue(newTrophies, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserUID()).child("trophies").setValue(newTrophies, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -77,7 +75,7 @@ public class Account implements java.io.Serializable {
             throw new IllegalArgumentException();
         }
         final int newStars = stars += a;
-        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -95,7 +93,7 @@ public class Account implements java.io.Serializable {
             throw new IllegalArgumentException();
         }
         final int newStars = stars -= a;
-        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -109,7 +107,7 @@ public class Account implements java.io.Serializable {
     }
 
     public void addFriend(final String usernameID) throws DatabaseException {
-        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends").child(usernameID).setValue(true, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserUID()).child("friends").child(usernameID).setValue(true, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -120,7 +118,7 @@ public class Account implements java.io.Serializable {
     }
 
     public void removeFriend(final String usernameID) throws DatabaseException {
-        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends").child(usernameID).removeValue(new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserUID()).child("friends").child(usernameID).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -128,5 +126,9 @@ public class Account implements java.io.Serializable {
                 }
             }
         });
+    }
+
+    private String getCurrentUserUID() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 }

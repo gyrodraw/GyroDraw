@@ -9,7 +9,11 @@
   <string name="trophies_button_text">Trophies:</string>
   <string name="stars_button_text">Stars:</string>
   <string name="league_1">League 1</string>
+  <string name="draw">Draw!</string>
+  <string name="fly">Fly!</string>
+    <string name="clear">Clear</string>
   <string name="create_account">Create account</string>
   <string name="user_name">Username</string>
   <string name="cross">X</string>
+
 </resources>

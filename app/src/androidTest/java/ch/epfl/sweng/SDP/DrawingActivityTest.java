@@ -2,6 +2,9 @@ package ch.epfl.sweng.SDP;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import android.support.test.rule.ActivityTestRule;
@@ -20,4 +23,21 @@ public class DrawingActivityTest {
     public void testCanvas() {
         onView(withId(R.id.paintView)).perform(click());
     }
+
+    @Test
+    public void testDrawToggleIsClickable() {
+        onView(withId(R.id.flyOrDraw)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void testClearButtonIsClickable() {
+        onView(withId(R.id.clearCanvas)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void testPaintViewFullyDisplayed() {
+        onView(withId(R.id.paintView)).check(matches(isCompletelyDisplayed()));
+    }
+
+
 }

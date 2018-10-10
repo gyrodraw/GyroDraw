@@ -122,8 +122,8 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         tempX -= x * speed;
         tempY += y * speed;
 
-        tempX = sanitizeCoordinate(tempX);
-        tempY = sanitizeCoordinate(tempY);
+        tempX = sanitizeCoordinate(tempX, size.x);
+        tempY = sanitizeCoordinate(tempY, size.y);
 
         paintView.setCircleX(tempX);
         paintView.setCircleY(tempY);
@@ -134,11 +134,11 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
      * @param f coordinate
      * @return sanitized coordinate
      */
-    public float sanitizeCoordinate(float f){
+    public float sanitizeCoordinate(float f, float max_bound){
         if(f < 0) {
             return 0;
-        } else if(f > size.x) {
-            return size.x;
+        } else if(f > max_bound) {
+            return max_bound;
         }
         else return f;
     }

@@ -76,10 +76,10 @@ public class AccountCreationActivity extends AppCompatActivity {
         //account.changeTrophies(200);
         //account.addStars(200);
         //account.changeUsername("other name");
-        account.addFriend("asljdf5i");
-        account.removeFriend("asljdf5i");
-        account.removeFriend("notExistingFriend");
-        account.addFriend("imaginary");
+        //account.addFriend("asljdf5i");
+        //account.removeFriend("asljdf5i");
+        //account.removeFriend("notExistingFriend");
+        //account.addFriend("imaginary");
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("account", this.account);
         startActivity(intent);

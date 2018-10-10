@@ -8,9 +8,9 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
+
 public class PaintView extends View {
 
-    private static final String TAG = "PaintViewID";
     private Paint paint;
     private Paint paintC;
     private int circleRadius;
@@ -23,6 +23,11 @@ public class PaintView extends View {
         this(context, null);
     }
 
+    /**
+     * constructor for the view
+     * @param context 
+     * @param attrs
+     */
     public PaintView(Context context, AttributeSet attrs){
         super(context, attrs);
         setFocusable(true);

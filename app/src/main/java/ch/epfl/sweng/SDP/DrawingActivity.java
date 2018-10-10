@@ -1,10 +1,6 @@
 package ch.epfl.sweng.SDP;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -89,7 +85,9 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometer != null) {
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        } else Log.d(TAG, "Sorry, we couldn't find the accelerometer on your device.");
+        } else {
+            Log.d(TAG, "We couldn't find the accelerometer on device.");
+        }
     }
 
     /**
@@ -102,21 +100,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
         // we only use accelerometer
         if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER){
-
-            float tempX = paintView.getCircleX();
-            float tempY = paintView.getCircleY();
-
-            tempX -= sensorEvent.values[0] * speed;
-            tempY += sensorEvent.values[1] * speed;
-
-            if(tempX < 0) tempX = 0;
-            else if(tempX > size.x) tempX= size.x;
-
-            if(tempY < 0) tempY = 0;
-            else if (tempY > size.y) tempY = size.y;
-
-            paintView.setCircleX(tempX);
-            paintView.setCircleY(tempY);
+            updateValues(sensorEvent.values[0], sensorEvent.values[1]);
             handler.sendEmptyMessage(0);
         }
     }
@@ -124,6 +108,39 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //does nothing
+    }
+
+    /**
+     * Called when accelerometer changed, circle coordinates are updated
+     * @param x coordiate
+     * @param y coordinate
+     */
+    public void updateValues(float x, float y){
+        float tempX = paintView.getCircleX();
+        float tempY = paintView.getCircleY();
+
+        tempX -= x * speed;
+        tempY += y * speed;
+
+        tempX = sanitizeCoordinate(tempX);
+        tempY = sanitizeCoordinate(tempY);
+
+        paintView.setCircleX(tempX);
+        paintView.setCircleY(tempY);
+    }
+
+    /**
+     * keep coordinates within screen boundaries
+     * @param f coordinate
+     * @return sanitized coordinate
+     */
+    public float sanitizeCoordinate(float f){
+        if(f < 0) {
+            return 0;
+        } else if(f > size.x) {
+            return size.x;
+        }
+        else return f;
     }
 
 }

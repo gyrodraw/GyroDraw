@@ -10,7 +10,7 @@ import android.view.View;
 
 
 public class PaintView extends View {
-    
+
     private Paint paint;
     private Paint paintC;
     private int circleRadius;
@@ -19,14 +19,10 @@ public class PaintView extends View {
     private Path path;
     private Boolean draw;
 
-    public PaintView(Context context) {
-        this(context, null);
-    }
-
     /**
-     * constructor for the view
-     * @param context
-     * @param attrs
+     * Constructor for the view.
+     * @param context Context of class
+     * @param attrs Attributes of class
      */
     public PaintView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -68,31 +64,25 @@ public class PaintView extends View {
         return draw;
     }
 
-    public void setCircleX(float x){
-        circleX = x;
+    public void setCircleX(float circleX){
+        this.circleX = circleX;
     }
 
-    public void setCircleY(float y){
-        circleY = y;
+    public void setCircleY(float circleY){
+        this.circleY = circleY;
     }
 
-    public void setCircleRadius(int circleRadius) {
-        this.circleRadius = circleRadius;
-    }
-
-    public void setDraw(boolean d){
-        draw = d;
-    }
+    public void setDraw(boolean draw){ this.draw = draw; }
 
     /**
-     * clears the canvas
+     * Clears the canvas.
      */
     public void clear() {
         path.reset();
     }
 
     /**
-     * draws the path and circle, if draw is set
+     * Draws the path and circle, if draw is set.
      * @param canvas to draw on
      */
     public void onDraw(Canvas canvas){

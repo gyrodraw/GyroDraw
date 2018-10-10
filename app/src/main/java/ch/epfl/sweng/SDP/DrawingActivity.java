@@ -58,16 +58,16 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     }
 
     /**
-     * Checks if ToggleButton Draw is checked and saves the boolean in paintView.draw
+     * Checks if ToggleButton Draw is checked and saves the boolean in paintView.draw.
      * which enables the user to either fly or draw
      * @param view ToggleButton
      */
-    public void flyOrDraw(View view){
-        paintView.setDraw(((ToggleButton) view).isChecked());
-    }
+    //public void flyOrDraw(View view){
+    //    paintView.setDraw(((ToggleButton) view).isChecked());
+    //}
 
     /**
-     * Clears the entire Path in paintView
+     * Clears the entire Path in paintView.
      * @param view paintView
      */
     public void clear(View view) {
@@ -91,7 +91,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     }
 
     /**
-     * Fires when a sensor detected a change
+     * Fires when a sensor detected a change.
      * @param sensorEvent the sensor that has changed
      */
     @Override
@@ -111,16 +111,16 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     }
 
     /**
-     * Called when accelerometer changed, circle coordinates are updated
-     * @param x coordiate
-     * @param y coordinate
+     * Called when accelerometer changed, circle coordinates are updated.
+     * @param xCo coordiate
+     * @param yCo coordinate
      */
-    public void updateValues(float x, float y){
+    public void updateValues(float xCo, float yCo){
         float tempX = paintView.getCircleX();
         float tempY = paintView.getCircleY();
 
-        tempX -= x * speed;
-        tempY += y * speed;
+        tempX -= xCo * speed;
+        tempY += yCo * speed;
 
         tempX = sanitizeCoordinate(tempX, size.x);
         tempY = sanitizeCoordinate(tempY, size.y);
@@ -130,17 +130,20 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     }
 
     /**
-     * keep coordinates within screen boundaries
-     * @param f coordinate
+     * Keep coordinates within screen boundaries.
+     * @param coordinate coordinate to sanitize
+     * @param maxBound maximum bound
      * @return sanitized coordinate
      */
-    public float sanitizeCoordinate(float f, float max_bound){
-        if(f < 0) {
+    public float sanitizeCoordinate(float coordinate, float maxBound){
+        if(coordinate < 0) {
             return 0;
-        } else if(f > max_bound) {
-            return max_bound;
+        } else if(coordinate > maxBound) {
+            return maxBound;
         }
-        else return f;
+        else {
+            return coordinate;
+        }
     }
 
 }

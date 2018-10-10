@@ -70,7 +70,7 @@ public class Account implements java.io.Serializable {
         Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError))
+                checkForDatabaseError(databaseError);
                 stars = newStars;
             }
         });
@@ -84,7 +84,7 @@ public class Account implements java.io.Serializable {
         Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError))
+                checkForDatabaseError(databaseError);
                 stars = newStars;
             }
         });

@@ -142,11 +142,11 @@ public class Account implements java.io.Serializable {
 
     /**
      * method that allows one to remove friends.
-     * @param usernameID String specifying FirebaseUser.UID of friend
+     * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
-    public void removeFriend(final String usernameID) throws DatabaseException {
-        Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameID).removeValue(new DatabaseReference.CompletionListener() {
+    public void removeFriend(final String usernameId) throws DatabaseException {
+        Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);

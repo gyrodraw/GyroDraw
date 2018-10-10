@@ -77,13 +77,6 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     private void gotoHome() {
-        account.addStars(500);
-        account.subtractStars(200);
-        account.changeUsername("wierdestErrorEver");
-        account.changeTrophies(300);
-        account.addFriend("imaginary");
-        account.addFriend("toBeRemoved");
-        account.removeFriend("toBeRemoved");
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("account", this.account);
         startActivity(intent);

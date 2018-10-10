@@ -11,4 +11,8 @@ public class AccountCreationActivityTest {
     @Rule
     public final ActivityTestRule<AccountCreationActivity> accountCreationActivityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
+
+    /**
+     * tests dependent on logged in / deconnected FirebaseUser -> how to simulate
+     */
 }

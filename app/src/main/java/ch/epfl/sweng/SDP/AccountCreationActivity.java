@@ -56,7 +56,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                     usernameTaken.setText(getString(R.string.username_taken));
                 }
                 else {
-                    account = new Account(username); //failsafe with provisoryAccount, then set account to provisoryAccount once write successful?
+                    //fail safe with provisoryAccount, then set account to provisoryAccount once write successful?
+                    account = new Account(username);
                     Constants.usersRef.child(userId)
                             .setValue(account, new DatabaseReference.CompletionListener() {
 

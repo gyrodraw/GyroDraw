@@ -43,7 +43,8 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException in case write to database fails
      */
     public void changeUsername(final String newName) throws IllegalArgumentException, DatabaseException {
-        Constants.usersRef.orderByChild("username").equalTo(newName).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.usersRef.orderByChild("username").equalTo(newName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {

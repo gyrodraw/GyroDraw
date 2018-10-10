@@ -25,7 +25,7 @@ public class PaintView extends View {
 
     /**
      * constructor for the view
-     * @param context 
+     * @param context
      * @param attrs
      */
     public PaintView(Context context, AttributeSet attrs){

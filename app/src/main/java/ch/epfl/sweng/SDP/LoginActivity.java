@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -47,34 +49,55 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); for Till
-                Intent intent = new Intent(this, HomeActivity.class);
-                startActivity(intent);
-                finish();
+                assert response != null;
+                handleSuccessfulSignIn(response);
             } else {
                 // Sign in failed
-                TextView errorMessage = findViewById(R.id.error_message);
-
-                // User pressed the back button
-                if (response == null) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    return;
-                }
-
-                // No network
-                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    errorMessage.setText(getString(R.string.no_internet));
-                    errorMessage.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                // Unknown error
-                errorMessage.setText(getString(R.string.unknown_error));
-                errorMessage.setVisibility(View.VISIBLE);
-
-                Log.e(TAG, "Sign-in error: ", response.getError());
+                handleFailedSignIn(response);
             }
         }
+    }
+
+    private void handleSuccessfulSignIn(IdpResponse response) {
+        assert response != null;
+
+        // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); for Till
+
+        if (response.isNewUser() || !getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean("hasAccount", false)) {
+            // New user or a user who signed in but not created an account
+            Intent intent = new Intent(this, AccountCreationActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            // User has an account
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void handleFailedSignIn(IdpResponse response) {
+        TextView errorMessage = findViewById(R.id.error_message);
+
+        // User pressed the back button
+        if (response == null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+        // No network
+        if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+            errorMessage.setText(getString(R.string.no_internet));
+            errorMessage.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        // Unknown error
+        errorMessage.setText(getString(R.string.unknown_error));
+        errorMessage.setVisibility(View.VISIBLE);
+
+        Log.e(TAG, "Sign-in error: ", response.getError());
     }
 }

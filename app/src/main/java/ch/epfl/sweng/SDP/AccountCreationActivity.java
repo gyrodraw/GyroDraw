@@ -31,6 +31,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             createAccClicked();
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +67,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 usernameTaken.setText("An error occurred, please retry.");

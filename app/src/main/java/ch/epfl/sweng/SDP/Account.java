@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -18,18 +18,32 @@ public class Account implements java.io.Serializable {
     public int trophies;
     public int stars;
 
+    /**
+     * empty Builder for Firebase support
+     */
     public Account() {
 
     }
 
+    /**
+     * Builder for account
+     * @param username String defining the preferred username
+     */
     public Account(String username) {
         this.username = username;
         this.trophies = 1200;
         this.stars = 0;
     }
 
+    /**
+     * method that allows one to change the current username to a new one, iff it is available, and then synchronizes the firebase
+     * @param newName
+     * @throws IllegalArgumentException in case the name is already taken
+     * @throws DatabaseException in case write to database fails
+     */
     public void changeUsername(final String newName) throws IllegalArgumentException, DatabaseException {
         Constants.usersRef.orderByChild("username").equalTo(newName).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -37,6 +51,7 @@ public class Account implements java.io.Serializable {
                 }
                 else {
                     Constants.databaseRef.child("users").child(getCurrentUserUID()).child("username").setValue(newName, new DatabaseReference.CompletionListener() {
+
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             checkForDatabaseError(databaseError);
@@ -53,8 +68,13 @@ public class Account implements java.io.Serializable {
         this.username = newName;
     }
 
-    public void changeTrophies(int a) throws DatabaseException {
-        final int newTrophies = Math.max(0, trophies + a);
+    /**
+     * method that allowes one to change rating (Trophies)
+     * @param change modifier of trophies
+     * @throws DatabaseException in case write to database fails
+     */
+    public void changeTrophies(int change) throws DatabaseException {
+        final int newTrophies = Math.max(0, trophies + change);
         Constants.usersRef.child(getCurrentUserUID()).child("trophies").setValue(newTrophies, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -64,11 +84,17 @@ public class Account implements java.io.Serializable {
         });
     }
 
-    public void addStars(int a) throws IllegalArgumentException, DatabaseException {
-        if (a < 0) {
+    /**
+     * method that allows one to add currency (stars)
+     * @param add positive int
+     * @throws IllegalArgumentException in case 'add' is negative
+     * @throws DatabaseException in case write to database fails
+     */
+    public void addStars(int add) throws IllegalArgumentException, DatabaseException {
+        if (add < 0) {
             throw new IllegalArgumentException();
         }
-        final int newStars = stars += a;
+        final int newStars = stars += add;
         Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -78,11 +104,17 @@ public class Account implements java.io.Serializable {
         });
     }
 
-    public void subtractStars(int a) throws IllegalArgumentException, DatabaseException {
-        if (a < 0 || stars - a < 0) {
+    /**
+     * method that allows to spend currency (stars)
+     * @param sub positive int
+     * @throws IllegalArgumentException in case 'sub' is negative or the balance after the transaction would be negative
+     * @throws DatabaseException in case write to database fails
+     */
+    public void subtractStars(int sub) throws IllegalArgumentException, DatabaseException {
+        if (sub < 0 || stars - sub < 0) {
             throw new IllegalArgumentException();
         }
-        final int newStars = stars -= a;
+        final int newStars = stars -= sub;
         Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -92,6 +124,11 @@ public class Account implements java.io.Serializable {
         });
     }
 
+    /**
+     * method that allows one to add friends
+     * @param usernameID String specifying FirebaseUser.UID of friend
+     * @throws DatabaseException in case write to database fails
+     */
     public void addFriend(final String usernameID) throws DatabaseException {
         Constants.usersRef.child(getCurrentUserUID()).child("friends").child(usernameID).setValue(true, new DatabaseReference.CompletionListener() {
             @Override
@@ -101,6 +138,11 @@ public class Account implements java.io.Serializable {
         });
     }
 
+    /**
+     * method that allows one to remove friends
+     * @param usernameID String specifying FirebaseUser.UID of friend
+     * @throws DatabaseException in case write to database fails
+     */
     public void removeFriend(final String usernameID) throws DatabaseException {
         Constants.usersRef.child(getCurrentUserUID()).child("friends").child(usernameID).removeValue(new DatabaseReference.CompletionListener() {
             @Override
@@ -110,10 +152,19 @@ public class Account implements java.io.Serializable {
         });
     }
 
+    /**
+     * method that gets the UID of the currently logged in user
+     * @return FirebaseUser.UID of logged in user
+     */
     private String getCurrentUserUID() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
+    /**
+     * checks if databaseError occurred
+     * @param databaseError potenial databaseError
+     * @throws DatabaseException in case databaseError is non-null
+     */
     private void checkForDatabaseError(@Nullable DatabaseError databaseError) throws DatabaseException {
         if (databaseError != null) {
             throw databaseError.toException();

@@ -223,6 +223,12 @@ public class HomeActivity extends AppCompatActivity {
         profileWindow.show();
     }
 
+    // To remove, only for testing
+    public void startVotingPage(View view) {
+        Intent intent = new Intent(this, VotingPageActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Disables the background animation.
      * Call this method in every HomeActivity test

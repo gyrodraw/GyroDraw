@@ -37,9 +37,8 @@ public class Account implements java.io.Serializable {
                     Constants.databaseRef.child("users").child(getCurrentUserUID()).child("username").setValue(newName, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            if (checkForDatabaseError(databaseError)) {
-                                username = newName;
-                            }
+                            checkForDatabaseError(databaseError);
+                            username = newName;
                         }
                     });
                 }
@@ -57,9 +56,8 @@ public class Account implements java.io.Serializable {
         Constants.usersRef.child(getCurrentUserUID()).child("trophies").setValue(newTrophies, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                if (checkForDatabaseError(databaseError)) {
-                    trophies = newTrophies;
-                }
+                checkForDatabaseError(databaseError);
+                trophies = newTrophies;
             }
         });
     }
@@ -72,9 +70,8 @@ public class Account implements java.io.Serializable {
         Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                if (checkForDatabaseError(databaseError)) {
-                    stars = newStars;
-                }
+                checkForDatabaseError(databaseError))
+                stars = newStars;
             }
         });
     }
@@ -87,9 +84,8 @@ public class Account implements java.io.Serializable {
         Constants.usersRef.child(getCurrentUserUID()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                if (checkForDatabaseError(databaseError)) {
-                    stars = newStars;
-                }
+                checkForDatabaseError(databaseError))
+                stars = newStars;
             }
         });
     }
@@ -116,10 +112,9 @@ public class Account implements java.io.Serializable {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    private boolean checkForDatabaseError(@Nullable DatabaseError databaseError) throws DatabaseException {
+    private void checkForDatabaseError(@Nullable DatabaseError databaseError) throws DatabaseException {
         if (databaseError != null) {
             throw databaseError.toException();
         }
-        return true;
     }
 }

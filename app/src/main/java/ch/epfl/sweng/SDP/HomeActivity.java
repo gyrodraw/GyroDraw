@@ -147,13 +147,34 @@ public class HomeActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         if (id == R.id.drawButton) {
                             ((ImageView) view).setImageResource(R.drawable.draw_button);
-                            startDrawingActivity();
+                            startChooseWordsActivity();
                         }
                         else if (id == R.id.usernameButton) { showPopup(); }
                         else if (id == R.id.signOutButton) { signOut(); }
                         else if (id == R.id.deleteButton) { delete(); }
                         else if (id == R.id.crossText) { profileWindow.dismiss(); }
                         bounceButton(view, amplitude, frequency);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
+    private void setDrawButtonListener(final ImageView drawButton) {
+        drawButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        drawButton.setImageResource(R.drawable.draw_button_pressed);
+                        pressButton(drawButton);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        drawButton.setImageResource(R.drawable.draw_button);
+                        bounceButton(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+                        startChooseWordsActivity();
                         break;
                     default:
                 }
@@ -176,8 +197,8 @@ public class HomeActivity extends AppCompatActivity {
         view.startAnimation(press);
     }
 
-    private void startDrawingActivity() {
-        Intent intent = new Intent(this, DrawingActivity.class);
+    private void startChooseWordsActivity() {
+        Intent intent = new Intent(this, WaitingPageActivity.class);
         startActivity(intent);
     }
 

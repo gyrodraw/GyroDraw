@@ -27,7 +27,7 @@ public class PaintView extends View {
     private float xpos;
     private float ypos;
     private Path path;
-    private Paint paint;
+    private final Paint paint;
     private ArrayList<FingerPath> paths = new ArrayList<>();
     private int currentColor = DEFAULT_COLOR;
     private int backgroundColor = DEFAULT_BG_COLOR;

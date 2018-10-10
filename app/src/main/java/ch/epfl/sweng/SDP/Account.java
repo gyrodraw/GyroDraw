@@ -1,16 +1,18 @@
 package ch.epfl.sweng.SDP;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Class that simulates an account
+ */
 public class Account implements java.io.Serializable {
     public String username;
     public int trophies;

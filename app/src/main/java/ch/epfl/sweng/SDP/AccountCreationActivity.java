@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 
 public class AccountCreationActivity extends AppCompatActivity {
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    private String userID = currentUser.getUid();
+    private String userId = currentUser.getUid();
     private TextInputLayout usernameInput;
     private Button createAcc;
     private TextView usernameTaken;
@@ -27,7 +27,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     private Account account;
     private View.OnClickListener createAccListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             createAccClicked();
         }
     };
@@ -44,6 +44,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     private void createAccClicked() {
         username = usernameInput.getEditText().getText().toString();
         Constants.usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -51,7 +52,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                 }
                 else {
                     account = new Account(username);
-                    Constants.usersRef.child(userID).setValue(account, new DatabaseReference.CompletionListener() {
+                    Constants.usersRef.child(userId).setValue(account, new DatabaseReference.CompletionListener() {
+
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if (databaseError != null) {

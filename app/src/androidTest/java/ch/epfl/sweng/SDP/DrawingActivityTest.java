@@ -27,14 +27,12 @@ public class DrawingActivityTest {
 
     @Test
     public void testDrawToggleIsClickable() {
-        onView(withId(R.id.fly_or_draw)).perform(click());
-        onView(withId(R.id.fly_or_draw)).check(matches(isClickable()));
+        onView(withId(R.id.flyOrDraw)).check(matches(isClickable()));
     }
 
     @Test
     public void testClearButtonIsClickable() {
-        onView(withId(R.id.clear_canvas)).perform(click());
-        onView(withId(R.id.clear_canvas)).check(matches(isClickable()));
+        onView(withId(R.id.clearCanvas)).check(matches(isClickable()));
     }
 
     @Test

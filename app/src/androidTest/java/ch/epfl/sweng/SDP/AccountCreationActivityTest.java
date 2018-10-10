@@ -31,6 +31,4 @@ public class AccountCreationActivityTest {
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard())
                 .check(matches(withText(R.string.test_name)));
     }
-
-
 }

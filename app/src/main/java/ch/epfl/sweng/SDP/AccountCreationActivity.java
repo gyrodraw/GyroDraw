@@ -56,7 +56,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                     usernameTaken.setText("Username is already taken.");
                 }
                 else {
-                    account = new Account(username);
+                    account = new Account(username); //failsafe with provisoryAccount, then set account to provisoryAccount once write successful?
                     Constants.usersRef.child(userId)
                             .setValue(account, new DatabaseReference.CompletionListener() {
 

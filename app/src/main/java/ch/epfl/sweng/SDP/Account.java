@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
@@ -60,6 +60,7 @@ public class Account implements java.io.Serializable {
                     });
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 throw databaseError.toException();
@@ -69,7 +70,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allowes one to change rating (Trophies)
+     * method that allowes one to change rating (Trophies).
      * @param change modifier of trophies
      * @throws DatabaseException in case write to database fails
      */
@@ -85,7 +86,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allows one to add currency (stars)
+     * method that allows one to add currency (stars).
      * @param add positive int
      * @throws IllegalArgumentException in case 'add' is negative
      * @throws DatabaseException in case write to database fails
@@ -105,7 +106,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allows to spend currency (stars)
+     * method that allows to spend currency (stars).
      * @param sub positive int
      * @throws IllegalArgumentException in case 'sub' is negative or the balance after the transaction would be negative
      * @throws DatabaseException in case write to database fails
@@ -125,7 +126,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allows one to add friends
+     * method that allows one to add friends.
      * @param usernameID String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -139,7 +140,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allows one to remove friends
+     * method that allows one to remove friends.
      * @param usernameID String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -153,7 +154,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that gets the UID of the currently logged in user
+     * method that gets the UID of the currently logged in user.
      * @return FirebaseUser.UID of logged in user
      */
     private String getCurrentUserUID() {
@@ -161,7 +162,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * checks if databaseError occurred
+     * checks if databaseError occurred.
      * @param databaseError potenial databaseError
      * @throws DatabaseException in case databaseError is non-null
      */

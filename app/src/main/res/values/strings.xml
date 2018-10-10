@@ -3,8 +3,6 @@
   <string name="no_internet">No Internet connection</string>
   <string name="unknown_error">Unknown error</string>
   <string name="error_message">Error message</string>
-  <string name="login">Login</string>
-  <string name="home">Home</string>
   <string name="sign_out">Sign out</string>
   <string name="delete_account">Delete account</string>
   <string name="app_logo">App logo</string>
@@ -14,4 +12,8 @@
   <string name="draw">Draw!</string>
   <string name="fly">Fly!</string>
     <string name="clear">Clear</string>
+  <string name="create_account">Create account</string>
+  <string name="user_name">Username</string>
+  <string name="cross">X</string>
+
 </resources>

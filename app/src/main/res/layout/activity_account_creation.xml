@@ -3,23 +3,20 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/login_layout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/colorPrimaryDark"
-  tools:context=".LoginActivity">
+  tools:context=".AccountCreationActivity">
 
-  <TextView
-    android:id="@+id/error_message"
+  <Button
+    android:id="@+id/create_account_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/error_message"
-    android:textColor="@color/colorLightGrey"
-    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-    android:visibility="gone"
-    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_marginTop="230dp"
+    android:onClick="createAccount"
+    android:text="@string/create_account"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.502"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:text="error_message"/>
+    />
 </android.support.constraint.ConstraintLayout>

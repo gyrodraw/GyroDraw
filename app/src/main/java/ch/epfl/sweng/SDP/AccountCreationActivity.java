@@ -43,7 +43,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     private void createAccClicked() {
         username = usernameInput.getEditText().getText().toString();
-        Constants.databaseRef.child("users").orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -67,19 +67,12 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                usernameTaken.setText("An error occurred, please retry.");
             }
         });
     }
 
     private void gotoHome() {
-        //account.changeTrophies(200);
-        //account.addStars(200);
-        //account.changeUsername("other name");
-        //account.addFriend("asljdf5i");
-        //account.removeFriend("asljdf5i");
-        //account.removeFriend("notExistingFriend");
-        //account.addFriend("imaginary");
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("account", this.account);
         startActivity(intent);

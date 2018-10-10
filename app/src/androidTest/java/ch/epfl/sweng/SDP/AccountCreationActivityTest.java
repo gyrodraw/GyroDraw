@@ -9,5 +9,6 @@ import org.junit.Rule;
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityTest {
     @Rule
-    public final ActivityTestRule<AccountCreationActivity> accountCreationActivityRule = new ActivityTestRule<>(AccountCreationActivity.class);
+    public final ActivityTestRule<AccountCreationActivity> accountCreationActivityRule =
+            new ActivityTestRule<>(AccountCreationActivity.class);
 }

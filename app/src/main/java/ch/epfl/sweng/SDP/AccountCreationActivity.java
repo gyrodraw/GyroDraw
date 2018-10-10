@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 
 public class AccountCreationActivity extends AppCompatActivity {
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    private String userId = currentUser.getUid();
+    private String userId;
     private TextInputLayout usernameInput;
     private Button createAcc;
     private TextView usernameTaken;
@@ -40,6 +40,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         createAcc = this.findViewById(R.id.createAcc);
         createAcc.setOnClickListener(createAccListener);
         usernameTaken = this.findViewById(R.id.usernameTaken);
+        userId = currentUser.getUid();
     }
 
     private void createAccClicked() {
@@ -76,6 +77,13 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     private void gotoHome() {
+        account.addStars(500);
+        account.subtractStars(200);
+        account.changeUsername("wierdestErrorEver");
+        account.changeTrophies(300);
+        account.addFriend("imaginary");
+        account.addFriend("toBeRemoved");
+        account.removeFriend("toBeRemoved");
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("account", this.account);
         startActivity(intent);

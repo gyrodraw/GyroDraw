@@ -11,4 +11,10 @@
   <string name="trophies_button_text">Trophies:</string>
   <string name="stars_button_text">Stars:</string>
   <string name="league_1">League 1</string>
+
+  <string name="create_acc">Create Account:</string>
+  <string name="username">username</string>
+  <string name="enter_username">Enter Username</string>
+  <string name="test_name">Max Muster</string>
+
 </resources>

@@ -5,7 +5,7 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
+import android.widget.EditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 public class AccountCreationActivity extends AppCompatActivity {
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private String userId;
-    private TextInputLayout usernameInput;
+    private EditText usernameInput;
     private Button createAcc;
     private TextView usernameTaken;
     private String username;
@@ -31,7 +31,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             createAccClicked();
-        }
+      }
     };
 
     @Override
@@ -46,7 +46,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     private void createAccClicked() {
-        username = usernameInput.getEditText().getText().toString();
+        username = usernameInput.getText().toString();
         Constants.usersRef.orderByChild("username").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -63,7 +63,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                             if (databaseError != null) {
-                                usernameTaken.setText("Failed to write data to database.");
+                                usernameTaken.setText("Failed to write to database. Try again.");
                             }
                             else {
                                 getDefaultSharedPreferences(getApplicationContext()).edit()
@@ -77,7 +77,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                usernameTaken.setText("An error occurred, please retry.");
+                usernameTaken.setText("An error occurred. Try again.");
             }
         });
     }

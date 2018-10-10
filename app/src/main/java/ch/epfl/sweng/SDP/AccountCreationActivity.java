@@ -47,7 +47,8 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     private void createAccClicked() {
         username = usernameInput.getEditText().getText().toString();
-        Constants.usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.usersRef.orderByChild("username").equalTo(username)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -56,7 +57,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                 }
                 else {
                     account = new Account(username);
-                    Constants.usersRef.child(userId).setValue(account, new DatabaseReference.CompletionListener() {
+                    Constants.usersRef.child(userId)
+                            .setValue(account, new DatabaseReference.CompletionListener() {
 
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -64,8 +66,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                                 usernameTaken.setText("Failed to write data to database.");
                             }
                             else {
-                                getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("hasAccount", true)
-                                        .apply();
+                                getDefaultSharedPreferences(getApplicationContext()).edit()
+                                        .putBoolean("hasAccount", true).apply();
                                 gotoHome();
                             }
                         }

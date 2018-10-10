@@ -51,7 +51,8 @@ public class Account implements java.io.Serializable {
                     throw new IllegalArgumentException("Username already taken.");
                 }
                 else {
-                    Constants.databaseRef.child("users").child(getCurrentUserId()).child("username").setValue(newName, new DatabaseReference.CompletionListener() {
+                    Constants.databaseRef.child("users").child(getCurrentUserId()).child("username")
+                            .setValue(newName, new DatabaseReference.CompletionListener() {
 
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -77,7 +78,8 @@ public class Account implements java.io.Serializable {
      */
     public void changeTrophies(int change) throws DatabaseException {
         final int newTrophies = Math.max(0, trophies + change);
-        Constants.usersRef.child(getCurrentUserId()).child("trophies").setValue(newTrophies, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserId()).child("trophies")
+                .setValue(newTrophies, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
@@ -97,7 +99,8 @@ public class Account implements java.io.Serializable {
             throw new IllegalArgumentException();
         }
         final int newStars = stars += add;
-        Constants.usersRef.child(getCurrentUserId()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserId()).child("stars")
+                .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
@@ -117,7 +120,8 @@ public class Account implements java.io.Serializable {
             throw new IllegalArgumentException();
         }
         final int newStars = stars -= sub;
-        Constants.usersRef.child(getCurrentUserId()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserId()).child("stars")
+                .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
@@ -132,7 +136,8 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException in case write to database fails
      */
     public void addFriend(final String usernameId) throws DatabaseException {
-        Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId).setValue(true, new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId)
+                .setValue(true, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
@@ -146,7 +151,8 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException in case write to database fails
      */
     public void removeFriend(final String usernameId) throws DatabaseException {
-        Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId).removeValue(new DatabaseReference.CompletionListener() {
+        Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId)
+                .removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);

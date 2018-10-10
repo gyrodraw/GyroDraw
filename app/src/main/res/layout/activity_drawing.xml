@@ -28,7 +28,7 @@
         android:layout_height="match_parent">
 
         <ToggleButton
-            android:id="@+id/fly_or_draw"
+            android:id="@+id/flyOrDraw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -37,7 +37,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="fly_or_draw"
+            android:onClick="flyOrDraw"
             android:text="@string/fly"
             android:textOff="@string/fly"
             android:textOn="@string/draw"
@@ -49,7 +49,7 @@
             app:layout_constraintVertical_bias="0.983" />
 
         <Button
-            android:id="@+id/clear_canvas"
+            android:id="@+id/clearCanvas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -62,7 +62,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.09"
-            app:layout_constraintStart_toEndOf="@+id/fly_or_draw"
+            app:layout_constraintStart_toEndOf="@+id/flyOrDraw"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.984"
             android:onClick="clear"/>

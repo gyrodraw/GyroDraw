@@ -12,12 +12,12 @@ public class PaintView extends View {
 
     private static final String TAG = "PaintViewID";
     private Paint paint;
-    private Paint paintc;
-    public int circleRadius;
-    public float circleX;
-    public float circleY;
+    private Paint paintC;
+    private int circleRadius;
+    private float circleX;
+    private float circleY;
     private Path path;
-    public Boolean draw;
+    private Boolean draw;
 
     public PaintView(Context context) {
         this(context, null);
@@ -27,19 +27,19 @@ public class PaintView extends View {
         super(context, attrs);
         setFocusable(true);
         paint = new Paint();
-        paintc = new Paint();
+        paintC = new Paint();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(10);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        paintc.setColor(Color.RED);
-        paintc.setStyle(Paint.Style.STROKE);
-        paintc.setStrokeJoin(Paint.Join.ROUND);
-        paintc.setStrokeWidth(10);
-        paintc.setStrokeCap(Paint.Cap.ROUND);
+        paintC.setColor(Color.RED);
+        paintC.setStyle(Paint.Style.STROKE);
+        paintC.setStrokeJoin(Paint.Join.ROUND);
+        paintC.setStrokeWidth(10);
+        paintC.setStrokeCap(Paint.Cap.ROUND);
 
-        circleRadius = 10;
+        circleRadius = 10; //will be modifiable in future, not hardcoded
         circleX = 0;
         circleY = 0;
         draw = false;
@@ -47,22 +47,60 @@ public class PaintView extends View {
         path.moveTo(circleX, circleY);
     }
 
+    public float getCircleX() {
+        return circleX;
+    }
+
+    public float getCircleY(){
+        return circleY;
+    }
+
+    public int getCircleRadius() {
+        return circleRadius;
+    }
+
+    public boolean getDraw(){
+        return draw;
+    }
+
+    public void setCircleX(float x){
+        circleX = x;
+    }
+
+    public void setCircleY(float y){
+        circleY = y;
+    }
+
+    public void setCircleRadius(int circleRadius) {
+        this.circleRadius = circleRadius;
+    }
+
+    public void setDraw(boolean d){
+        draw = d;
+    }
+
+    /**
+     * clears the canvas
+     */
     public void clear() {
         path.reset();
     }
 
-
+    /**
+     * draws the path and circle, if draw is set
+     * @param canvas to draw on
+     */
     public void onDraw(Canvas canvas){
         canvas.save();
         if(draw){
-            paintc.setStyle(Paint.Style.FILL);
-            paintc.setStrokeWidth(10);
+            paintC.setStyle(Paint.Style.FILL);
+            paintC.setStrokeWidth(10);
             path.lineTo(circleX, circleY);
         } else {
-            paintc.setStyle(Paint.Style.STROKE);
-            paintc.setStrokeWidth(5);
+            paintC.setStyle(Paint.Style.STROKE);
+            paintC.setStrokeWidth(5);
         }
-        canvas.drawCircle(circleX, circleY, circleRadius, paintc);
+        canvas.drawCircle(circleX, circleY, circleRadius, paintC);
         canvas.drawPath(path, paint);
         canvas.restore();
         path.moveTo(circleX, circleY);

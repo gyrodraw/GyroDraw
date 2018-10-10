@@ -15,10 +15,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class DrawingActivityTest {
+public class PaintViewTest {
     @Rule
-    public final ActivityTestRule<DrawingActivity> mActivityRule =
-            new ActivityTestRule<>(DrawingActivity.class);
+    public final PaintViewRule<PaintView> mActivityRule =
+            new PaintViewRule<>(PaintView.class);
 
     @Test
     public void testCanvas() {
@@ -26,7 +26,7 @@ public class DrawingActivityTest {
     }
 
     @Test
-    public void testDrawToggleIsClickable() {
+    public void tesDrawToggleIsClickable() {
         onView(withId(R.id.fly_or_draw)).perform(click());
         onView(withId(R.id.fly_or_draw)).check(matches(isClickable()));
     }

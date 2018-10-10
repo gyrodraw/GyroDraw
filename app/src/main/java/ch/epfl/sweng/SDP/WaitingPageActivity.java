@@ -32,7 +32,6 @@ public class WaitingPageActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private int usersReadyCount = 1;
-    private boolean hasAlreadyVoted = false;
 
     private DatabaseReference wordsVotesRef;
 
@@ -148,16 +147,25 @@ public class WaitingPageActivity extends AppCompatActivity {
                 if (checked) {
                     // Vote for word1
                     voteForWord(WordNumber.ONE);
+                    disableButtons();
                 }
                 break;
             case R.id.buttonWord2:
                 if (checked) {
                     // Vote for word2
                     voteForWord(WordNumber.TWO);
+                    disableButtons();
                 }
                 break;
             default:
         }
+    }
+
+    private void disableButtons() {
+        Button b1 = findViewById(R.id.buttonWord1);
+        b1.setEnabled(false);
+        Button b2 = findViewById(R.id.buttonWord2);
+        b2.setEnabled(false);
     }
 
     // Vote for the specified word and update the database
@@ -165,27 +173,17 @@ public class WaitingPageActivity extends AppCompatActivity {
         switch (wordNumber) {
             case ONE:
                 word1Ref.setValue(++word1Votes);
-                if (hasAlreadyVoted) {
-                    word2Ref.setValue(--word2Votes);
-                }
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
-                if (hasAlreadyVoted) {
-                    word1Ref.setValue(--word1Votes);
-                }
                 break;
             default:
-        }
-
-        if (!hasAlreadyVoted) {
-            hasAlreadyVoted = true;
         }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         word1Ref.removeEventListener(listenerWord1);
         word2Ref.removeEventListener(listenerWord2);
         wordsVotesRef.removeValue(); // need to keep the most voted one though

@@ -54,7 +54,7 @@ public class LocalDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_NAME, null, values);
-
+ 
         db.close();
     }
 

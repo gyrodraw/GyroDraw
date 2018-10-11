@@ -13,19 +13,29 @@ public class Matchmaker {
 
     private static Matchmaker single_instance = null;
     // static method to create instance of Singleton class
+    private DatabaseReference myRef;
+
+    /**
+     *
+     * @return returns a singelton instance
+     */
     public static Matchmaker getInstance()
     {
-        if (single_instance == null)
+        if (single_instance == null) {
             single_instance = new Matchmaker();
+        }
 
         return single_instance;
     }
 
 
+    /**
+     *  Matchmaker init
+     */
     public Matchmaker() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("rooms");
+        myRef = database.getReference("rooms");
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
@@ -52,34 +62,29 @@ public class Matchmaker {
 
     }
 
-    public void joinRoom(String roomID) {
+    /**
+     * join a room
+     * @param roomId the id of the room
+     */
+    public void joinRoom(String roomId) {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("rooms");
+
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomID).child("users").child(currentFirebaseUser.getUid()).setValue("InRoom");
+        myRef.child(roomId).child("users").child(currentFirebaseUser.getUid()).setValue("InRoom");
 
     }
 
-    public void leaveRoom(String roomID) {
+    /**
+     * leave a room
+     * @param roomId the id of the room
+     */
+    public void leaveRoom(String roomId) {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("rooms");
+
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomID).child("users").child(currentFirebaseUser.getUid()).removeValue();
-
-    }
-
-
-    public void createRoom(String roomname) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("rooms");
-
-        // room owner + roomname
-        myRef.push().setValue("New room");
+        myRef.child(roomId).child("users").child(currentFirebaseUser.getUid()).removeValue();
 
     }
 

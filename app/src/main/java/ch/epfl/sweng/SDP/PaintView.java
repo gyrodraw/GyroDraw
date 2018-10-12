@@ -133,13 +133,8 @@ public class PaintView extends View {
      * Saves the bitmap in the local DB.
      */
     public void saveCanvasInDB(){
-        try {
-            this.draw(canvas);
-            localDBHandler.addBitmapToDB(bitmap);
-            fbStorageHandler.sendBitmapToFireBaseStorage(bitmap);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.draw(canvas);
+        localDBHandler.addBitmapToDB(bitmap);
+        fbStorageHandler.sendBitmapToFireBaseStorage(bitmap);
     }
 }

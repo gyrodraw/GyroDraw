@@ -28,6 +28,7 @@ public class PaintView extends View {
     ImageView i = findViewById(R.id.myImage);
     private Canvas canvas;
     private LocalDBHandler localDBHandler;
+    private FBStorageHandler fbStorageHandler;
     private Point size;
     private Boolean set;
 
@@ -39,6 +40,7 @@ public class PaintView extends View {
     public PaintView(Context context, AttributeSet attrs){
         super(context, attrs);
         localDBHandler = new LocalDBHandler(context, null, null, 1);
+        fbStorageHandler = new FBStorageHandler();
         setFocusable(true);
         paint = new Paint();
         paintC = new Paint();
@@ -133,7 +135,8 @@ public class PaintView extends View {
     public void saveCanvasInDB(){
         try {
             this.draw(canvas);
-            localDBHandler.addBitmap(bitmap);
+            localDBHandler.addBitmapToDB(bitmap);
+            fbStorageHandler.sendBitmapToFireBaseStorage(bitmap);
 
         } catch (IOException e) {
             e.printStackTrace();

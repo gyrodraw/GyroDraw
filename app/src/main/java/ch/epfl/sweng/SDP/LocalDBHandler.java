@@ -7,19 +7,29 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class LocalDBHandler extends SQLiteOpenHelper {
 
+    private static final String TAG = "LocalDBHandler";
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "productDB.db";
+    private static final String DATABASE_NAME = "myImages.db";
     private static final String TABLE_NAME = "myImages";
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_TIMESTAMP = "timestamp";
+    private static final String COLUMN_IMAGE = "image";
+    private static final int QUALITY = 20;
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_IMAGE = "image";
 
     public LocalDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -27,7 +37,7 @@ public class LocalDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID + " INTEGER PRIMARY KEY," + COLUMN_NAME + " TEXT," + COLUMN_IMAGE + " BLOB )";
+        String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID + " INTEGER PRIMARY KEY," + COLUMN_TIMESTAMP + " TEXT," + COLUMN_IMAGE + " BLOB )";
 
         db.execSQL(CREATE_TABLE);
     }
@@ -38,10 +48,10 @@ public class LocalDBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addBitmap(Bitmap bitmap) throws IOException {
+    public void addBitmapToDB(Bitmap bitmap) throws IOException {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, bos);
         byte[] bArray = bos.toByteArray();
         bos.close();
 
@@ -49,16 +59,16 @@ public class LocalDBHandler extends SQLiteOpenHelper {
         String ts = tsLong.toString();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, ts);
+        values.put(COLUMN_TIMESTAMP, ts);
         values.put(COLUMN_IMAGE, bArray);
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_NAME, null, values);
- 
+
         db.close();
     }
 
-    public Bitmap getBitmap(int name) {
+    public Bitmap getLatestBitmapFromDB() {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -66,7 +76,6 @@ public class LocalDBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         Bitmap bitmap;
-        String s;
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst();

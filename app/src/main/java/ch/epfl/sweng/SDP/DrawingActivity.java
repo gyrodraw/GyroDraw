@@ -89,7 +89,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
             public void onTick(long millisUntilFinished) {
                 TextView t = findViewById(R.id.timeRemaining);
-                t.setText(""+(millisUntilFinished / timeIntervall)+" "+paintView.getWidth()+" " +paintView.getHeight()+" "+size.x + " "+size.y);
+                t.setText(""+(millisUntilFinished / timeIntervall));
             }
 
             public void onFinish() {

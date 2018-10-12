@@ -37,12 +37,11 @@ public class DrawingActivityTest {
 
     @Test
     public void testClearButtonIsClickable() {
-        onView(withId(R.id.clearCanvas)).check(matches(isClickable()));
         onView(withId(R.id.clearCanvas)).perform(click());
     }
 
     @Test
     public void testPaintViewFullyDisplayed() {
-        onView(withId(R.id.paintView)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.paintView)).perform(click());
     }
 }

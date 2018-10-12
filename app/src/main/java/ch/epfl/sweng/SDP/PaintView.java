@@ -21,10 +21,11 @@ public class PaintView extends View {
 
     /**
      * Constructor for the view.
+     *
      * @param context Context of class
-     * @param attrs Attributes of class
+     * @param attrs   Attributes of class
      */
-    public PaintView(Context context, AttributeSet attrs){
+    public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setFocusable(true);
         paint = new Paint();
@@ -52,7 +53,7 @@ public class PaintView extends View {
         return circleX;
     }
 
-    public float getCircleY(){
+    public float getCircleY() {
         return circleY;
     }
 
@@ -60,19 +61,19 @@ public class PaintView extends View {
         return circleRadius;
     }
 
-    public boolean getDraw(){
+    public boolean getDraw() {
         return draw;
     }
 
-    public void setCircleX(float circleX){
+    public void setCircleX(float circleX) {
         this.circleX = circleX;
     }
 
-    public void setCircleY(float circleY){
+    public void setCircleY(float circleY) {
         this.circleY = circleY;
     }
 
-    public void setDraw(boolean draw){
+    public void setDraw(boolean draw) {
         this.draw = draw;
     }
 
@@ -85,11 +86,12 @@ public class PaintView extends View {
 
     /**
      * Draws the path and circle, if draw is set.
+     *
      * @param canvas to draw on
      */
-    public void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas) {
         canvas.save();
-        if(draw){
+        if (draw) {
             paintC.setStyle(Paint.Style.FILL);
             paintC.setStrokeWidth(10);
             path.lineTo(circleX, circleY);

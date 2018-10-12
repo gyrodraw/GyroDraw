@@ -19,7 +19,7 @@ import android.view.WindowManager;
 import android.widget.ToggleButton;
 
 
-public class DrawingActivity extends AppCompatActivity implements SensorEventListener{
+public class DrawingActivity extends AppCompatActivity implements SensorEventListener {
     private PaintView paintView;
 
     private static final String TAG = "DrawingActivity";
@@ -49,25 +49,27 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         paintView.setCircleY(size.y / 2 - paintView.getCircleRadius());
 
         // informes the paintView that it has to be updated
-        handler = new Handler(){
-           @Override
-           public void handleMessage(Message message){
-               paintView.invalidate();
-           }
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                paintView.invalidate();
+            }
         };
     }
 
     /**
      * Checks if ToggleButton Draw is checked and saves the boolean in paintView.draw.
      * which enables the user to either fly or draw
+     *
      * @param view ToggleButton
      */
-    public void flyOrDraw(View view){
+    public void flyOrDraw(View view) {
         paintView.setDraw(((ToggleButton) view).isChecked());
     }
 
     /**
      * Clears the entire Path in paintView.
+     *
      * @param view paintView
      */
     public void clear(View view) {
@@ -92,6 +94,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     /**
      * Fires when a sensor detected a change.
+     *
      * @param sensorEvent the sensor that has changed
      */
     @Override
@@ -99,7 +102,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         Sensor mySensor = sensorEvent.sensor;
 
         // we only use accelerometer
-        if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER){
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             updateValues(sensorEvent.values[0], sensorEvent.values[1]);
             handler.sendEmptyMessage(0);
         }
@@ -112,10 +115,11 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     /**
      * Called when accelerometer changed, circle coordinates are updated.
+     *
      * @param coordinateX coordiate
      * @param coordinateY coordinate
      */
-    public void updateValues(float coordinateX, float coordinateY){
+    public void updateValues(float coordinateX, float coordinateY) {
         float tempX = paintView.getCircleX();
         float tempY = paintView.getCircleY();
 
@@ -131,17 +135,17 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     /**
      * Keep coordinates within screen boundaries.
+     *
      * @param coordinate coordinate to sanitize
-     * @param maxBound maximum bound
+     * @param maxBound   maximum bound
      * @return sanitized coordinate
      */
-    public float sanitizeCoordinate(float coordinate, float maxBound){
-        if(coordinate < 0) {
+    public float sanitizeCoordinate(float coordinate, float maxBound) {
+        if (coordinate < 0) {
             return 0;
-        } else if(coordinate > maxBound) {
+        } else if (coordinate > maxBound) {
             return maxBound;
-        }
-        else {
+        } else {
             return coordinate;
         }
     }

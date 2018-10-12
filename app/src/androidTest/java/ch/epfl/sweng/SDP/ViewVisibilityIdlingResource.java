@@ -14,7 +14,7 @@ public class ViewVisibilityIdlingResource implements IdlingResource {
      * Constructor of the class, keeps a reference of the view and the expected
      * visibility.
      *
-     * @param view View reference.
+     * @param view               View reference.
      * @param expectedVisibility Visibility to be tested.
      */
     public ViewVisibilityIdlingResource(final View view, final int expectedVisibility) {

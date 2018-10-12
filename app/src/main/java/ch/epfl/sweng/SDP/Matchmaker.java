@@ -8,7 +8,7 @@ import com.google.firebase.auth.*;
 import java.security.PublicKey;
 import java.util.HashMap;
 
-public class Matchmaker {
+public classgMatchmaker {
 
 
     private static Matchmaker single_instance = null;
@@ -17,7 +17,7 @@ public class Matchmaker {
 
     /**
      *
-     * @return returns a singelton instance
+     * @return returns a singelton instance.
      */
     public static Matchmaker getInstance()
     {
@@ -30,7 +30,7 @@ public class Matchmaker {
 
 
     /**
-     *  Matchmaker init
+     *  Matchmaker init.
      */
     public Matchmaker() {
 
@@ -63,8 +63,8 @@ public class Matchmaker {
     }
 
     /**
-     * join a room
-     * @param roomId the id of the room
+     * join a room.
+     * @param roomId the id of the room.
      */
     public void joinRoom(String roomId) {
 
@@ -76,8 +76,8 @@ public class Matchmaker {
     }
 
     /**
-     * leave a room
-     * @param roomId the id of the room
+     * leave a room.
+     * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
 

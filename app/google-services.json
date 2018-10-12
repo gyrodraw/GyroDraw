@@ -47,6 +47,30 @@
           }
         },
         {
+          "client_id": "360230838427-tbrce27ads1ha22a7jll5409ok5o3kg9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "54de912013004a1076f9bcace6b2748651fb0673"
+          }
+        },
+        {
+          "client_id": "360230838427-k03b9hj8biv89e58807fv5fup707uf9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "40172fffcb32d09ce24799dd59bb77d540198437"
+          }
+        },
+        {
+          "client_id": "360230838427-6s2drhbusq4di2hdblh3jsejagak2p1g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "50a6062800603e32f088d27890a8ba033e5d5cb5"
+          }
+        },
+        {
           "client_id": "360230838427-gvvbtb7n7db9f02epqv9aneahna7s42n.apps.googleusercontent.com",
           "client_type": 3
         }

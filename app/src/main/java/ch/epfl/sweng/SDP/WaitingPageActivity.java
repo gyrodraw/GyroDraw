@@ -10,11 +10,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.Locale;
 import java.util.Random;
 
@@ -83,14 +85,14 @@ public class WaitingPageActivity extends AppCompatActivity {
                     .getValue(String.class);
             if (word1 != null) {
                 word1Ref = wordsVotesRef.child(word1);
-                initRadioButton((Button)findViewById(R.id.buttonWord1), word1, word1Ref);
+                initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref);
             }
 
             String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
                     .getValue(String.class);
             if (word2 != null) {
                 word2Ref = wordsVotesRef.child(word2);
-                initRadioButton((Button)findViewById(R.id.buttonWord2), word2, word2Ref);
+                initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref);
             }
 
             // Clear the progress dialog
@@ -112,13 +114,13 @@ public class WaitingPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_waiting_page);
         FirebaseDatabase database = FirebaseDatabase
                 .getInstance("https://gyrodraw.firebaseio.com/");
-        DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsVotesRef = database.getReference("rooms").child("432432432")
                 .child("words"); // need to be replaced with a search for a suitable room
 
         initProgressDialog();
         setGlobalVisibility(View.GONE);
 
+        DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addValueEventListener(listenerWords);
     }
 
@@ -184,9 +186,15 @@ public class WaitingPageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        word1Ref.removeEventListener(listenerWord1);
-        word2Ref.removeEventListener(listenerWord2);
-        wordsVotesRef.removeValue(); // need to keep the most voted one though
+        if (word1Ref != null) {
+            word1Ref.removeEventListener(listenerWord1);
+        }
+        if (word2Ref != null) {
+            word2Ref.removeEventListener(listenerWord2);
+        }
+        if (wordsVotesRef != null) {
+            wordsVotesRef.removeValue();
+        } // need to keep the most voted one though
     }
 
     // Now it is public in order to use it as a button for testing, should be reverted to private
@@ -195,6 +203,7 @@ public class WaitingPageActivity extends AppCompatActivity {
     /**
      * Increment the number of players logged in the room. This method exists
      * only for testing purposes.
+     *
      * @param view Button that will increase the count when pressed
      */
     public void incrementCount(View view) {

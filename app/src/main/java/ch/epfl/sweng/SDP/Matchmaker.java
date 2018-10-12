@@ -8,7 +8,7 @@ import com.google.firebase.auth.*;
 import java.security.PublicKey;
 import java.util.HashMap;
 
-public classgMatchmaker {
+public class Matchmaker {
 
 
     private static Matchmaker single_instance = null;

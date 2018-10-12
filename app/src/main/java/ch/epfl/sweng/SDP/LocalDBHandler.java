@@ -7,14 +7,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,12 +40,16 @@ public class LocalDBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addBitmapToDB(Bitmap bitmap) throws IOException {
+    public void addBitmapToDB(Bitmap bitmap) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, bos);
         byte[] bArray = bos.toByteArray();
-        bos.close();
+        try {
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();

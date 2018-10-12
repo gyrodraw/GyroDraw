@@ -1,12 +1,12 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.home;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +20,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

@@ -1,11 +1,13 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.auth;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 public class AccountCreationActivity extends AppCompatActivity {
 

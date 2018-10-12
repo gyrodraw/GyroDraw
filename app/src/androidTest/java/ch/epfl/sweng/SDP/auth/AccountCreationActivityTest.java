@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.auth;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.support.test.espresso.Espresso.onView;
@@ -12,9 +12,11 @@ import static org.junit.Assert.assertTrue;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +32,7 @@ public class AccountCreationActivityTest {
     public void testCanOpenHomeActivity() {
         Intents.init();
         HomeActivity.disableBackgroundAnimation();
-        onView(withId(R.id.create_account_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.create_account_button)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
     }

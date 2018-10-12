@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.graphics.Canvas;

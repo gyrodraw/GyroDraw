@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.game;
 
 import android.support.test.espresso.IdlingResource;
 import android.view.View;

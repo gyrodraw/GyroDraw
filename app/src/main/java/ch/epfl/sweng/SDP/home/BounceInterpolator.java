@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.home;
 
 class BounceInterpolator implements android.view.animation.Interpolator {
 

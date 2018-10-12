@@ -1,21 +1,4 @@
-package ch.epfl.sweng.SDP;
-
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.ProgressBar;
-
-import org.hamcrest.Matcher;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-
-import static org.hamcrest.Matchers.is;
-import org.junit.runner.RunWith;
+package ch.epfl.sweng.SDP.game;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -28,6 +11,23 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
+
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.ProgressBar;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import org.hamcrest.Matcher;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {

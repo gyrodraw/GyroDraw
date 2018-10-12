@@ -186,9 +186,15 @@ public class WaitingPageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (word1Ref != null) word1Ref.removeEventListener(listenerWord1);
-        if (word2Ref != null) word2Ref.removeEventListener(listenerWord2);
-        if (wordsVotesRef != null) wordsVotesRef.removeValue(); // need to keep the most voted one though
+        if (word1Ref != null) {
+            word1Ref.removeEventListener(listenerWord1);
+        }
+        if (word2Ref != null) {
+            word2Ref.removeEventListener(listenerWord2);
+        }
+        if (wordsVotesRef != null) {
+            wordsVotesRef.removeValue();
+        } // need to keep the most voted one though
     }
 
     // Now it is public in order to use it as a button for testing, should be reverted to private

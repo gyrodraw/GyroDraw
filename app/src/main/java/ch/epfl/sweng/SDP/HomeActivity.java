@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -147,25 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
-                        switch (id) {
-                            case R.id.drawButton:
-                                ((ImageView) view).setImageResource(R.drawable.draw_button);
-                                startChooseWordsActivity();
-                                break;
-                            case R.id.usernameButton:
-                                showPopup();
-                                break;
-                            case R.id.signOutButton:
-                                signOut();
-                                break;
-                            case R.id.deleteButton:
-                                delete();
-                                break;
-                            case R.id.crossText:
-                                profileWindow.dismiss();
-                                break;
-                            default:
-                        }
+                        listenerEventSelector(view, id);
                         bounceButton(view, amplitude, frequency);
                         break;
                     default:
@@ -173,6 +156,28 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void listenerEventSelector(final View view, int id) {
+        switch (id) {
+            case R.id.drawButton:
+                ((ImageView) view).setImageResource(R.drawable.draw_button);
+                startChooseWordsActivity();
+                break;
+            case R.id.usernameButton:
+                showPopup();
+                break;
+            case R.id.signOutButton:
+                signOut();
+                break;
+            case R.id.deleteButton:
+                delete();
+                break;
+            case R.id.crossText:
+                profileWindow.dismiss();
+                break;
+            default:
+        }
     }
 
     private void bounceButton(View view, double amplitude, int frequency) {

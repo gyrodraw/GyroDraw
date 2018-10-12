@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP;
 
 import android.os.Bundle;
+
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.content.Intent;

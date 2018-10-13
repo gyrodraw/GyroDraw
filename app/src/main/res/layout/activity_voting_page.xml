@@ -27,7 +27,8 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@android:drawable/sym_def_app_icon"/>
+    app:srcCompat="@android:drawable/sym_def_app_icon"
+    android:contentDescription="@string/drawing"/>
   <TextView
     android:id="@+id/playerNameView"
     android:layout_width="wrap_content"

@@ -15,5 +15,6 @@
     <string name="create_account">Create account</string>
     <string name="user_name">Username</string>
     <string name="cross">X</string>
+  <string name="drawing">Drawing</string>
 
 </resources>

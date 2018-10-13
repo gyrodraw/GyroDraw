@@ -56,6 +56,7 @@ public class WaitingPageActivityTest {
         }
 
         intended(hasComponent(DrawingActivity.class.getName()));
+        Intents.release();
     }
 
     @Test

@@ -16,5 +16,6 @@
     <string name="user_name">Username</string>
     <string name="cross">X</string>
   <string name="drawing">Drawing</string>
+  <string name="home">Home</string>
 
 </resources>

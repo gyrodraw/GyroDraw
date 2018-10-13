@@ -5,6 +5,8 @@
 /.idea/modules.xml
 /.idea/workspace.xml
 .DS_Store
+/functions/package-lock.json
+/functions/node_modules
 /build
 /captures
 .externalNativeBuild

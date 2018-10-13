@@ -1,12 +1,12 @@
 package ch.epfl.sweng.SDP;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +28,7 @@ import com.google.android.gms.tasks.Task;
 public class HomeActivity extends AppCompatActivity {
     private Dialog profileWindow;
 
-    private static boolean enableBackgroundAnimation = true;
+    private static boolean enableBackgroundAnimation = false;
     private static final String TAG = "HomeActivity";
 
     private static final int MAIN_FREQUENCY = 10;
@@ -46,7 +47,9 @@ public class HomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
-        if (enableBackgroundAnimation) { setBackgroundAnimation(); }
+        if (enableBackgroundAnimation) {
+            setBackgroundAnimation();
+        }
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
@@ -146,14 +149,7 @@ public class HomeActivity extends AppCompatActivity {
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (id == R.id.drawButton) {
-                            ((ImageView) view).setImageResource(R.drawable.draw_button);
-                            startChooseWordsActivity();
-                        }
-                        else if (id == R.id.usernameButton) { showPopup(); }
-                        else if (id == R.id.signOutButton) { signOut(); }
-                        else if (id == R.id.deleteButton) { delete(); }
-                        else if (id == R.id.crossText) { profileWindow.dismiss(); }
+                        listenerEventSelector(view, id);
                         bounceButton(view, amplitude, frequency);
                         break;
                     default:
@@ -163,25 +159,26 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void setDrawButtonListener(final ImageView drawButton) {
-        drawButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        drawButton.setImageResource(R.drawable.draw_button_pressed);
-                        pressButton(drawButton);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        drawButton.setImageResource(R.drawable.draw_button);
-                        bounceButton(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
-                        startChooseWordsActivity();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+    private void listenerEventSelector(final View view, int id) {
+        switch (id) {
+            case R.id.drawButton:
+                ((ImageView) view).setImageResource(R.drawable.draw_button);
+                startChooseWordsActivity();
+                break;
+            case R.id.usernameButton:
+                showPopup();
+                break;
+            case R.id.signOutButton:
+                signOut();
+                break;
+            case R.id.deleteButton:
+                delete();
+                break;
+            case R.id.crossText:
+                profileWindow.dismiss();
+                break;
+            default:
+        }
     }
 
     private void bounceButton(View view, double amplitude, int frequency) {

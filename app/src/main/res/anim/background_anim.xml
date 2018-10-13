@@ -3,6 +3,6 @@
     <translate
         android:toXDelta="-2850"
         android:toYDelta="2850"
-        android:duration = "15000"
+        android:duration="15000"
         android:repeatCount="infinite" />
 </set>

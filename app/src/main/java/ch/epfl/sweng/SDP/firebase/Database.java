@@ -33,6 +33,7 @@ public class Database {
      *
      * @param path the path to follow inside the database in order to retrieve the reference
      * @return the DatabaseReference associated to the given path
+     * @throws IllegalArgumentException if the given string is null
      */
     public DatabaseReference getReference(String path) {
         if (path == null) {

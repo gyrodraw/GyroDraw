@@ -8,7 +8,7 @@ import com.google.firebase.auth.*;
 import java.security.PublicKey;
 import java.util.HashMap;
 
-public class Matchmaker {
+public class Matchmaker implements MatchmakingInterface {
 
 
     private static Matchmaker single_instance = null;

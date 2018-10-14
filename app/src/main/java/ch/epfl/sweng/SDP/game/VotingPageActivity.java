@@ -28,8 +28,13 @@ import java.util.Locale;
 public class VotingPageActivity extends AppCompatActivity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
+    private final String path = "mockRooms.ABCDE";
+    private final String user = "aa";
     private DatabaseReference rankingRef;
     private DatabaseReference counterRef;
+    private DatabaseReference endVotingRef;
+    private DatabaseReference usersRef;
+    private DatabaseReference endVotingUsersRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private int count = 0;
@@ -70,6 +75,43 @@ public class VotingPageActivity extends AppCompatActivity {
         }
     };
 
+    private final ValueEventListener listenerEndVoting = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                if(value == 1) {
+                    // TODO create constants for states
+                    usersRef.setValue(2);
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
+    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                if(value == 1) {
+                    // Start new activity
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +121,10 @@ public class VotingPageActivity extends AppCompatActivity {
         Database database = Database.getInstance();
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
-        counterRef = database.getReference("mockRooms.ABCDE.timer.observableTime");
+        counterRef = database.getReference(path + ".timer.observableTime");
+        endVotingRef = database.getReference(path + ".timer.endVoting");
+        usersRef = database.getReference(path + ".connectedUsers." + user);
+        endVotingUsersRef = database.getReference(path + ".timer.usersEndVoting");
 
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
                 "1539331659.jpg"}; // hardcoded now, need to be given by the server/script
@@ -97,6 +142,8 @@ public class VotingPageActivity extends AppCompatActivity {
 
         initProgressBar();
         counterRef.addValueEventListener(listenerCounter);
+        endVotingRef.addValueEventListener(listenerEndVoting);
+        endVotingUsersRef.addValueEventListener(listenerEndUsersVoting);
     }
 
     @Override

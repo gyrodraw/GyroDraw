@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import ch.epfl.sweng.SDP.R;
@@ -28,6 +29,7 @@ public class VotingPageActivity extends AppCompatActivity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private DatabaseReference rankingRef;
+    private DatabaseReference counterRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private int count = 0;
@@ -36,6 +38,8 @@ public class VotingPageActivity extends AppCompatActivity {
     private int[] ratings;
     private int ratingCounter = 0;
     // private String[] playersNames; to retrieve from the database
+
+    private ProgressBar progressBar;
 
     private RatingBar ratingBar;
 
@@ -48,6 +52,24 @@ public class VotingPageActivity extends AppCompatActivity {
         }
     };
 
+    private final ValueEventListener listenerCounter = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                if(value != progressBar.getProgress()) {
+                    progressBar.setProgress(20 - value);
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment.
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +79,7 @@ public class VotingPageActivity extends AppCompatActivity {
         Database database = Database.getInstance();
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
+        counterRef = database.getReference("mockRooms.ABCDE.timer.observableTime");
 
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
                 "1539331659.jpg"}; // hardcoded now, need to be given by the server/script
@@ -71,6 +94,9 @@ public class VotingPageActivity extends AppCompatActivity {
                 sendRatingToDatabase();
             }
         });
+
+        initProgressBar();
+        counterRef.addValueEventListener(listenerCounter);
     }
 
     @Override
@@ -81,6 +107,12 @@ public class VotingPageActivity extends AppCompatActivity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
+    }
+
+    private void initProgressBar() {
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(20);
+        progressBar.setProgress(0);
     }
 
     public void changeImage(View v) {

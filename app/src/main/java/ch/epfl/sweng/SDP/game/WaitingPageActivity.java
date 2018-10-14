@@ -54,7 +54,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -69,7 +69,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -85,14 +85,16 @@ public class WaitingPageActivity extends AppCompatActivity {
                     .getValue(String.class);
             if (word1 != null) {
                 word1Ref = wordsVotesRef.child(word1);
-                initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref);
+                initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
+                        WordNumber.ONE);
             }
 
             String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
                     .getValue(String.class);
             if (word2 != null) {
                 word2Ref = wordsVotesRef.child(word2);
-                initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref);
+                initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
+                        WordNumber.TWO);
             }
 
             // Clear the progress dialog
@@ -104,7 +106,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -125,9 +127,10 @@ public class WaitingPageActivity extends AppCompatActivity {
     }
 
     private void initRadioButton(Button button, String childString,
-            DatabaseReference dbRef) {
+            DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.setValue(0);
-        dbRef.addListenerForSingleValueEvent(listenerWord1);
+        dbRef.addListenerForSingleValueEvent(
+                wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
         // Display the word on the button
         button.setText(childString);

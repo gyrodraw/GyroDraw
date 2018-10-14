@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -17,23 +18,15 @@ import java.io.IOException;
 public class FBStorageHandler {
 
     private static final String TAG = "fbStorageHandler";
-    private StorageReference mStorageRef;
     private static final int QUALITY = 20;
     private static final int MAX_TRIALS = 3;
     private int trials;
 
     public FBStorageHandler(){
-        mStorageRef = FirebaseStorage.getInstance().getReference();
         trials = 0;
     }
 
-    public void sendBitmapToFireBaseStorage(final Bitmap bitmap){
-        Long tsLong = System.currentTimeMillis()/1000;
-        String ts = tsLong.toString();
-        // Create a reference to "mountains.jpg"
-        StorageReference imageRef = mStorageRef.child(""+ts+".jpg");
-
-
+    public void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, baos);
         byte[] data = baos.toByteArray();
@@ -51,7 +44,7 @@ public class FBStorageHandler {
                     Log.d(TAG, "Upload to Firebase Storage failed.");
                 } else {
                     ++trials;
-                    sendBitmapToFireBaseStorage(bitmap);
+                    sendBitmapToFireBaseStorage(bitmap, imageRef);
                 }
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -64,6 +57,19 @@ public class FBStorageHandler {
     }
 
     public Bitmap getBitmapFromFireBaseStorageReference(StorageReference reference){
-        return null;
+        final long ONE_MEGABYTE = 1024 * 1024;
+        final Bitmap[] bitmap = new Bitmap[1];
+        reference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                bitmap[0] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                bitmap[0] = null; // Handle any errors
+            }
+        });
+        return bitmap[0];
     }
 }

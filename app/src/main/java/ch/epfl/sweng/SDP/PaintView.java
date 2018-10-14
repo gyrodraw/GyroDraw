@@ -11,6 +11,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.IOException;
 
 
@@ -135,6 +138,11 @@ public class PaintView extends View {
     public void saveCanvasInDB(){
         this.draw(canvas);
         localDBHandler.addBitmapToDB(bitmap);
-        fbStorageHandler.sendBitmapToFireBaseStorage(bitmap);
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        // Create a reference to "mountains.jpg"
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = mStorageRef.child(""+ts+".jpg");
+        fbStorageHandler.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

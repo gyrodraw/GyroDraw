@@ -22,7 +22,7 @@ public class LocalDBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_IMAGE = "image";
     private static final int QUALITY = 20;
 
-    
+
     public LocalDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }

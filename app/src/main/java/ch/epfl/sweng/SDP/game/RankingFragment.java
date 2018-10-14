@@ -12,18 +12,24 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.R;
 import java.util.Locale;
 
+/**
+ * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
+ */
 public class RankingFragment extends ListFragment {
+
+    private static final String RANKING_KEY = "Ranking";
+
+    private String[] ranking;
 
     public RankingFragment() {
     }
-
-    private String[] ranking;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
 
-        ranking = getArguments().getStringArray("Ranking");
+        // Retrieve the ranking array, passed as argument on instantiation of the class
+        ranking = getArguments().getStringArray(RANKING_KEY);
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
 
@@ -33,6 +39,7 @@ public class RankingFragment extends ListFragment {
         ArrayAdapter<String> adapter = new RankingAdapter(getActivity(), ranking);
         setListAdapter(adapter);
     }
+
 
     private class RankingAdapter extends ArrayAdapter<String> {
 

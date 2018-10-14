@@ -30,9 +30,35 @@ public class Account implements java.io.Serializable {
      * @param username String defining the preferred username
      */
     public Account(String username) {
+        if (username == null) throw new NullPointerException();
         this.username = username;
         this.trophies = 1200;
         this.stars = 0;
+    }
+
+    /**
+     * Builder for account
+     * @param username String defining the preferred username
+     * @param trophies int defining current rating
+     * @param stars int defining current currency
+     */
+    public Account(String username, int trophies, int stars) {
+        if (username == null) throw new NullPointerException();
+        this.username = username;
+        this.trophies = trophies;
+        this.stars = stars;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getTrophies() {
+        return trophies;
+    }
+
+    public int getStars() {
+        return stars;
     }
 
     /**
@@ -42,7 +68,10 @@ public class Account implements java.io.Serializable {
      * @throws IllegalArgumentException in case the name is already taken
      * @throws DatabaseException in case write to database fails
      */
-    public void changeUsername(final String newName) throws IllegalArgumentException, DatabaseException {
+    public void changeUsername(final String newName) throws NullPointerException, IllegalArgumentException, DatabaseException {
+        if (newName == null) {
+            throw new NullPointerException();
+        }
         Constants.usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -69,7 +98,6 @@ public class Account implements java.io.Serializable {
                 throw databaseError.toException();
             }
         });
-        this.username = newName;
     }
 
     /**
@@ -99,7 +127,7 @@ public class Account implements java.io.Serializable {
         if (add < 0) {
             throw new IllegalArgumentException();
         }
-        final int newStars = stars += add;
+        final int newStars = add + stars;
         Constants.usersRef.child(getCurrentUserId()).child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
@@ -136,7 +164,10 @@ public class Account implements java.io.Serializable {
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
-    public void addFriend(final String usernameId) throws DatabaseException {
+    public void addFriend(final String usernameId) throws NullPointerException, DatabaseException {
+        if (usernameId == null) {
+            throw new NullPointerException();
+        }
         Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId)
                 .setValue(true, new DatabaseReference.CompletionListener() {
             @Override
@@ -151,7 +182,10 @@ public class Account implements java.io.Serializable {
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
-    public void removeFriend(final String usernameId) throws DatabaseException {
+    public void removeFriend(final String usernameId) throws NullPointerException, DatabaseException {
+        if (usernameId == null) {
+            throw new NullPointerException();
+        }
         Constants.usersRef.child(getCurrentUserId()).child("friends").child(usernameId)
                 .removeValue(new DatabaseReference.CompletionListener() {
             @Override

@@ -47,6 +47,10 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     private void createAccClicked() {
         username = usernameInput.getText().toString();
+        if (username.isEmpty()) {
+            usernameTaken.setText("Username must not be empty.");
+            return;
+        }
         Constants.usersRef.orderByChild("username").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -56,7 +60,6 @@ public class AccountCreationActivity extends AppCompatActivity {
                     usernameTaken.setText(getString(R.string.username_taken));
                 }
                 else {
-                    //fail safe with provisoryAccount, then set account to provisoryAccount once write successful?
                     account = new Account(username);
                     Constants.usersRef.child(userId)
                             .setValue(account, new DatabaseReference.CompletionListener() {

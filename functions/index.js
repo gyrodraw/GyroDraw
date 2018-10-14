@@ -11,24 +11,27 @@ admin.initializeApp();
 exports.connectedUsers = functions.database.ref('/mockRooms/ABCDE/connectedUsers').onWrite((event) => {
     return admin.database().ref('/mockRooms/ABCDE/connectedUsers').once("value")
     .then(snapshot => {
-      let ready = true;
-      snapshot.forEach( (child) => {
-        if(child.val() !== 1) {
-          ready = false;
-        }
-      });
-
-      if(ready) {
-        admin.database().ref('/mockRooms/ABCDE/timer/startTimer').set(1);
-        console.log("Ready");
-      } else {
-        admin.database().ref('/mockRooms/ABCDE/timer/startTimer').set(0);
-        console.log("Not ready");
-      }
-
-      return;
+      checkUsersReady(2, 'mockRooms/ABCDE/timer/usersEndVoting', snapshot);
+      return checkUsersReady(1, 'mockRooms/ABCDE/timer/startTimer', snapshot);
     });
 });
+
+function checkUsersReady(state, path, snapshot) {
+  let ready = true;
+  snapshot.forEach( (child) => {
+    if(child.val() !== state) {
+      ready = false;
+    }
+  });
+
+  if(ready) {
+    admin.database().ref(path).set(1);
+    console.log("Ready");
+  } else {
+    admin.database().ref(path).set(0);
+    console.log("Not ready");
+  }
+}
 
 exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer').onWrite((event) => {
   return admin.database().ref('/mockRooms/ABCDE/timer/startTimer').once("value")
@@ -45,9 +48,9 @@ exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer')
                 return console.log('Timer of ' + totalTime + ' has finished.');
             })
             .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+            .then(() => admin.database().ref('/mockRooms/ABCDE/timer/endVoting').set(1))
             .then(() => event.data.ref.remove())
             .catch(error => console.error(error));
-
     }
     return;
   })

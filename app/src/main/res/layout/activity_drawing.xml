@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DrawingActivity">
+    tools:context=".game.drawing.DrawingActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <ch.epfl.sweng.SDP.PaintView
+        <ch.epfl.sweng.SDP.game.drawing.PaintView
             android:id="@+id/paintView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,21 +1,21 @@
-package ch.epfl.sweng.SDP;
-
-import android.os.Bundle;
+package ch.epfl.sweng.SDP.auth;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-
 import java.util.Collections;
 import java.util.List;
 

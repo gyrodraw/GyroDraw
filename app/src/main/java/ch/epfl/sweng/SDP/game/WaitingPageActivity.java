@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.game;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,13 +10,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Locale;
 import java.util.Random;
 
@@ -112,30 +112,29 @@ public class WaitingPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_page);
-        FirebaseDatabase database = FirebaseDatabase
-                .getInstance("https://gyrodraw.firebaseio.com/");
-        wordsVotesRef = database.getReference("rooms").child("432432432")
-                .child("words"); // need to be replaced with a search for a suitable room
+        Database database = Database.getInstance();
+
+        wordsVotesRef = database.getReference(
+                "rooms.432432432.words"); // need to be replaced with a search for a suitable room
 
         initProgressDialog();
         setGlobalVisibility(View.GONE);
 
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
-        wordsSelectionRef.addValueEventListener(listenerWords);
+        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,
-                                 DatabaseReference dbRef) {
+            DatabaseReference dbRef) {
         dbRef.setValue(0);
-        dbRef.addValueEventListener(listenerWord1);
+        dbRef.addListenerForSingleValueEvent(listenerWord1);
 
         // Display the word on the button
         button.setText(childString);
     }
 
     /**
-     * Callback function called when a radio button is pressed. Updates
-     * the votes in the database
+     * Callback function called when a radio button is pressed. Updates the votes in the database
      *
      * @param view View corresponding to the button clicked
      */
@@ -186,23 +185,17 @@ public class WaitingPageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (word1Ref != null) {
-            word1Ref.removeEventListener(listenerWord1);
-        }
-        if (word2Ref != null) {
-            word2Ref.removeEventListener(listenerWord2);
-        }
         if (wordsVotesRef != null) {
-            wordsVotesRef.removeValue();
-        } // need to keep the most voted one though
+            wordsVotesRef.removeValue(); // need to keep the most voted word here
+        }
     }
 
     // Now it is public in order to use it as a button for testing, should be reverted to private
     // afterwards
 
     /**
-     * Increment the number of players logged in the room. This method exists
-     * only for testing purposes.
+     * Increment the number of players logged in the room. This method exists only for testing
+     * purposes.
      *
      * @param view Button that will increase the count when pressed
      */

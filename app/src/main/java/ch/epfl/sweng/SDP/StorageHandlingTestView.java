@@ -45,7 +45,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * Tests case where we want to get from empty database.
      * @param view button
      */
-    public void testGetFromEmptyDb(View view) {
+    public void getFromEmptyDb(View view) {
         localDbHandler.getLatestBitmapFromDb();
     }
 
@@ -53,7 +53,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * Tests adding and getting from local db.
      * @param view button
      */
-    public void testAddAndRetrieveSuccessfully(View view){
+    public void addAndRetrieveSuccessfully(View view){
         localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         localDbHandler.getLatestBitmapFromDb();
     }
@@ -62,7 +62,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * Tests putting and getting from storage.
      * @param view button
      */
-    public void testPutAndGetFromStorage(View view) {
+    public void putAndGetFromStorage(View view) {
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         // Create a reference to "mountains.jpg"
@@ -76,8 +76,16 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * Tests getting element with null reference from storage.
      * @param view button
      */
-    public void testGetNullFromStorage(View view) {
+    public void getNullFromStorage(View view) {
         fbStorageHandler.getBitmapFromFireBaseStorageReference(null);
+    }
+
+    /**
+     * Tests if databaes is overwritten with newer version.
+     * @param view button
+     */
+    public void overrideDatabase(View view){
+        localDbHandler = new LocalDbHandler(StorageHandlingTestView.this, null, 2);
     }
 
 }

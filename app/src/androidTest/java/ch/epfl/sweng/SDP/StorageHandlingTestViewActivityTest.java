@@ -19,7 +19,27 @@ public class StorageHandlingTestViewActivityTest {
            new ActivityTestRule<>(StorageHandlingTestView.class);
 
     @Test
-    public void testClickOnButtonAddAndRetrieveDbEntry() {
+    public void testGetFromEmptyDb() {
         onView(withId(R.id.button1)).perform(click());
+    }
+
+    @Test
+    public void testAddAndRetrieveSuccessfully() {
+        onView(withId(R.id.button2)).perform(click());
+    }
+
+    @Test
+    public void testPutAndGetFromStorage() {
+        onView(withId(R.id.button3)).perform(click());
+    }
+
+    @Test
+    public void testGetNullFromStorage() {
+        onView(withId(R.id.button4)).perform(click());
+    }
+
+    @Test
+    public void testOverrideDatabase() {
+        onView(withId(R.id.button5)).perform(click());
     }
 }

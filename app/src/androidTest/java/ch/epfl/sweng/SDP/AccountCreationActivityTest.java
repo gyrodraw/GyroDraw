@@ -11,6 +11,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.espresso.Espresso.onView;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.google.firebase.database.DatabaseException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,24 +47,40 @@ public class AccountCreationActivityTest {
         onView(withId(R.id.createAcc)).perform(click());
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
+    public void testGetStars() {
+        Account testAccount = activityRule.getActivity().getAccount();
+        testAccount.setUserId("123456789");
+        testAccount.getStars();
+        testAccount.subtractStars(10);
+        //assertEquals("Adding stars does not yield right result", stars+20, testAccount.getStars());
+    }
+
+    @Test(expected = DatabaseException.class)
     public void testAddStars() {
         Account testAccount = activityRule.getActivity().getAccount();
         testAccount.setUserId("123456789");
         testAccount.getStars();
         testAccount.addStars(20);
-        testAccount.addStars(-10);
+        //assertEquals("Adding stars does not yield right result", stars+20, testAccount.getStars());
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testSubtractStars() {
+        Account testAccount = activityRule.getActivity().getAccount();
+        testAccount.setUserId("123456789");
+        testAccount.subtractStars(10);
         //assertEquals("Adding stars does not yield right result", stars+20, testAccount.getStars());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNegativeTrophies() {
+    public void testAddNegativeTrophies() {
         Account testAccount = activityRule.getActivity().getAccount();
         testAccount.setUserId("123456789");
         testAccount.addStars(-10);
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testChangeTrophies() {
         Account testAccount = activityRule.getActivity().getAccount();
         testAccount.setUserId("123456789");
@@ -70,7 +89,7 @@ public class AccountCreationActivityTest {
         //assertEquals("Adding stars does not yield right result", 20, testAccount.getTrophies());
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testChangeUsername() {
         Account testAccount = activityRule.getActivity().getAccount();
         testAccount.setUserId("123456789");

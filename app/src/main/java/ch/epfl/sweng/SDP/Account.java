@@ -207,14 +207,6 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that gets the UID of the currently logged in user.
-     * @return FirebaseUser.UID of logged in user
-     */
-    //private String getCurrentUserId() {
-    //    return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    //}
-
-    /**
      * checks if databaseError occurred.
      * @param databaseError potenial databaseError
      * @throws DatabaseException in case databaseError is non-null

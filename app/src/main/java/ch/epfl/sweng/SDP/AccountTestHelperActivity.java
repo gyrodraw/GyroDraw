@@ -7,8 +7,9 @@ import android.view.View;
 
 public class AccountTestHelperActivity  extends AppCompatActivity {
 
-    private final static String TAG = "AccountTestHelperAct";
+    private static final String TAG = "AccountTestHelperAct";
     private Account testAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,6 +17,10 @@ public class AccountTestHelperActivity  extends AppCompatActivity {
         testAccount = new Account("testAccount", 100, 100);
     }
 
+    /**
+     * Launches all tests for Account functions.
+     * @param view button
+     */
     public void launchTests(View view){
         try{
             testGetStars();

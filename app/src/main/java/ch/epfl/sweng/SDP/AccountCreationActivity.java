@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 
 public class AccountCreationActivity extends AppCompatActivity {
-    private final static FirebaseUser CURRENT_USER = FirebaseAuth.getInstance().getCurrentUser();
+    private static final FirebaseUser CURRENT_USER = FirebaseAuth.getInstance().getCurrentUser();
     private String userId;
     private EditText usernameInput;
     private Button createAcc;
@@ -44,11 +44,6 @@ public class AccountCreationActivity extends AppCompatActivity {
                 createAccClicked();
             }
         };
-
-    }
-
-    public Account getAccount(){
-        return account;
     }
 
     /**
@@ -69,41 +64,57 @@ public class AccountCreationActivity extends AppCompatActivity {
         username = usernameInput.getText().toString();
         if (username.isEmpty()) {
             usernameTaken.setText("Username must not be empty.");
-            return;
+        } else {
+            checkIfNameIsTakenOrCreateAccount();
         }
+    }
+
+    /**
+     * Checks if username is already taken.
+     * Else creates a new account.
+     */
+    private void checkIfNameIsTakenOrCreateAccount(){
         Constants.usersRef.orderByChild("username").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    usernameTaken.setText(getString(R.string.username_taken));
-                }
-                else {
-                    account = new Account(username);
-                    Constants.usersRef.child(userId)
-                            .setValue(account, new DatabaseReference.CompletionListener() {
-
-                        @Override
-                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            if (databaseError != null) {
-                                usernameTaken.setText(getString(R.string.database_error));
-                            }
-                            else {
-                                getDefaultSharedPreferences(getApplicationContext()).edit()
-                                        .putBoolean("hasAccount", true).apply();
-                                gotoHome();
-                            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            usernameTaken.setText(getString(R.string.username_taken));
                         }
-                    });
-                }
-            }
+                        else {
+                            createAccount();
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                usernameTaken.setText(getString(R.string.database_error));
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        usernameTaken.setText(getString(R.string.database_error));
+                    }
+                });
+    }
+
+    /**
+     * Creates a new account.
+     */
+    private void createAccount(){
+        account = new Account(username);
+        Constants.usersRef.child(userId)
+                .setValue(account, new DatabaseReference.CompletionListener() {
+
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError,
+                                           @NonNull DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            usernameTaken.setText(getString(R.string.database_error));
+                        }
+                        else {
+                            getDefaultSharedPreferences(getApplicationContext()).edit()
+                                    .putBoolean("hasAccount", true).apply();
+                            gotoHome();
+                        }
+                    }
+                });
     }
 
     private void gotoHome() {

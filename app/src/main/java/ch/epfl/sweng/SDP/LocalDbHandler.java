@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class LocalDbHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "myImages.db";
     private static final String TABLE_NAME = "myImages";
     private static final String COLUMN_ID = "_id";
@@ -24,8 +23,8 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     /**
      * Helper class to save images in local database.
      */
-    public LocalDbHandler(Context context, SQLiteDatabase.CursorFactory factory) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+    public LocalDbHandler(Context context, SQLiteDatabase.CursorFactory factory, int dbVersion) {
+        super(context, DATABASE_NAME, factory, dbVersion);
     }
 
     /**

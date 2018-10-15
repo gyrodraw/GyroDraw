@@ -36,7 +36,7 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs){
         super(context, attrs);
-        localDbHandler = new LocalDbHandler(context, null);
+        localDbHandler = new LocalDbHandler(context, null, 1);
         fbStorageHandler = new FbStorageHandler();
         setFocusable(true);
         paint = new Paint();

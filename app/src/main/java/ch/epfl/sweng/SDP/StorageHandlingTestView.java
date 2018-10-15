@@ -15,6 +15,7 @@ import com.google.firebase.storage.StorageReference;
 public class StorageHandlingTestView extends AppCompatActivity {
 
     LocalDbHandler localDbHandler;
+    LocalDbHandler localDbHandler2;
     FbStorageHandler fbStorageHandler;
     private Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bitmap);
@@ -25,7 +26,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storagehandlingtest);
-        localDbHandler = new LocalDbHandler(StorageHandlingTestView.this,null);
+        localDbHandler = new LocalDbHandler(StorageHandlingTestView.this,null, 1);
         fbStorageHandler = new FbStorageHandler();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
@@ -52,6 +53,8 @@ public class StorageHandlingTestView extends AppCompatActivity {
         StorageReference imageRef = storageRef.child(""+ts+".jpg");
         fbStorageHandler.sendBitmapToFireBaseStorage(bitmap,imageRef);
         fbStorageHandler.getBitmapFromFireBaseStorageReference(imageRef);
+        fbStorageHandler.getBitmapFromFireBaseStorageReference(null);
+        localDbHandler2 = new LocalDbHandler(StorageHandlingTestView.this,null, 2);
     }
 
 }

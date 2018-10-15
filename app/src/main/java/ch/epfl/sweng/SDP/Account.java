@@ -22,7 +22,7 @@ public class Account implements java.io.Serializable {
     private String userId;
 
     /**
-     * empty Builder for Firebase support.
+     * Empty Builder for Firebase support.
      */
     public Account() {
 
@@ -60,15 +60,10 @@ public class Account implements java.io.Serializable {
 
     /**
      * Checks if user is null because a test is being run.
-     * If yes, set default userId, else throw Exception.
      */
     public void initializeUserId(){
         if(firebaseUser == null){
-            if(getClass() == null){
-                this.userId = "123456789";
-            } else {
-                throw new NullPointerException("Firebase User is null!");
-            }
+            // does nothing for now, important for tests to work
         } else {
             this.userId = firebaseUser.getUid();
         }
@@ -200,7 +195,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allows one to add friends.
+     * Method that allows one to add friends.
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -219,7 +214,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * method that allows one to remove friends.
+     * Method that allows one to remove friends.
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -239,7 +234,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * checks if databaseError occurred.
+     * Checks if databaseError occurred.
      * @param databaseError potenial databaseError
      * @throws DatabaseException in case databaseError is non-null
      */

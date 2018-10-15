@@ -12,33 +12,19 @@ import static android.support.test.espresso.Espresso.onView;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.google.firebase.database.DatabaseException;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class AccountCreationActivityTest {
+public class AccountTestHelperActivityTest {
 
     @Rule
-    public final ActivityTestRule<AccountCreationActivity> activityRule =
-            new ActivityTestRule<>(AccountCreationActivity.class);
+    public final ActivityTestRule<AccountTestHelperActivity> accountFunctionsActivityRule =
+            new ActivityTestRule<>(AccountTestHelperActivity.class);
 
     @Test
-    public void testCreateAccIsClickable() {
-        onView(withId(R.id.createAcc)).check(matches(isClickable()));
-    }
-
-    @Test
-    public void testUsernameInputInputsCorrectly() {
-        onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard())
-                .check(matches(withText(R.string.test_name)));
-    }
-
-    @Test
-    public void testAccountGetsCreated() {
-        onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard());
-        onView(withId(R.id.createAcc)).perform(click());
+    public void testAccountFunctions() {
+        onView(withId(R.id.button1)).perform(click());
     }
 }

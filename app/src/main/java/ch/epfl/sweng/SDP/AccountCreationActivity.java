@@ -27,12 +27,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     private TextView usernameTaken;
     private String username;
     private Account account;
-    private View.OnClickListener createAccListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            createAccClicked();
-      }
-    };
+    private View.OnClickListener createAccListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +38,16 @@ public class AccountCreationActivity extends AppCompatActivity {
         createAcc.setOnClickListener(createAccListener);
         usernameTaken = this.findViewById(R.id.usernameTaken);
         userId = CURRENT_USER.getUid();
+        createAccListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createAccClicked();
+            }
+        };
+    }
+
+    public Account getAccount(){
+        return account;
     }
 
     private void createAccClicked() {

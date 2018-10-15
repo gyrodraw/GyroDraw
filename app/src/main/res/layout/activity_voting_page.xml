@@ -3,6 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/votingPageLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".game.VotingPageActivity">
@@ -24,6 +25,7 @@
     android:layout_width="320dp"
     android:layout_height="302dp"
     android:layout_marginTop="4dp"
+    android:contentDescription="@string/drawing"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -50,6 +52,17 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/playerNameView"
     app:layout_constraintVertical_bias="0.771"/>
+  <Button
+    android:id="@+id/rankingButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:onClick="showFinalRanking"
+    android:text="Ranking (testing only)"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
 
   <ProgressBar
       android:id="@+id/progressBar"

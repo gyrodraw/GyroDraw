@@ -2,14 +2,13 @@ package ch.epfl.sweng.SDP.auth;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-public class AccountCreationActivity extends AppCompatActivity {
+public class AccountCreationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +25,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("hasAccount", true)
                 .apply(); // Set and store hasAccount to true in preferences
         // TODO update database
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        launchActivity(HomeActivity.class);
         finish();
     }
 }

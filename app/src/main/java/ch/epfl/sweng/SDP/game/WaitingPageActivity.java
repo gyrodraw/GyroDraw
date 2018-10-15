@@ -1,15 +1,14 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
@@ -20,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Locale;
 import java.util.Random;
 
-public class WaitingPageActivity extends AppCompatActivity {
+public class WaitingPageActivity extends Activity {
 
     private enum WordNumber {
         ONE, TWO
@@ -54,7 +53,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -69,7 +68,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -85,14 +84,16 @@ public class WaitingPageActivity extends AppCompatActivity {
                     .getValue(String.class);
             if (word1 != null) {
                 word1Ref = wordsVotesRef.child(word1);
-                initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref);
+                initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
+                        WordNumber.ONE);
             }
 
             String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
                     .getValue(String.class);
             if (word2 != null) {
                 word2Ref = wordsVotesRef.child(word2);
-                initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref);
+                initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
+                        WordNumber.TWO);
             }
 
             // Clear the progress dialog
@@ -104,7 +105,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -125,9 +126,10 @@ public class WaitingPageActivity extends AppCompatActivity {
     }
 
     private void initRadioButton(Button button, String childString,
-            DatabaseReference dbRef) {
+            DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.setValue(0);
-        dbRef.addListenerForSingleValueEvent(listenerWord1);
+        dbRef.addListenerForSingleValueEvent(
+                wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
         // Display the word on the button
         button.setText(childString);
@@ -162,13 +164,6 @@ public class WaitingPageActivity extends AppCompatActivity {
         }
     }
 
-    private void disableButtons() {
-        Button b1 = findViewById(R.id.buttonWord1);
-        b1.setEnabled(false);
-        Button b2 = findViewById(R.id.buttonWord2);
-        b2.setEnabled(false);
-    }
-
     // Vote for the specified word and update the database
     private void voteForWord(WordNumber wordNumber) {
         switch (wordNumber) {
@@ -182,11 +177,18 @@ public class WaitingPageActivity extends AppCompatActivity {
         }
     }
 
+    private void disableButtons() {
+        Button b1 = findViewById(R.id.buttonWord1);
+        b1.setEnabled(false);
+        Button b2 = findViewById(R.id.buttonWord2);
+        b2.setEnabled(false);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         if (wordsVotesRef != null) {
-            wordsVotesRef.removeValue(); // need to keep the most voted word here
+            wordsVotesRef.removeValue(); // need to keep the most voted word here, it has to be done by the script not by this class
         }
     }
 
@@ -210,8 +212,7 @@ public class WaitingPageActivity extends AppCompatActivity {
 
         // We should probably check if the database is ready too
         if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            Intent intent = new Intent(this, DrawingActivity.class);
-            startActivity(intent);
+            launchActivity(DrawingActivity.class);
         }
     }
 

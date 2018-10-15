@@ -26,7 +26,7 @@ public class PaintView extends View {
     private Boolean draw;
     private Bitmap bitmap;
     private Canvas canvas;
-    private LocalDbHandler localDBHandler;
+    private LocalDbHandler localDbHandler;
     private FbStorageHandler fbStorageHandler;
 
     /**
@@ -36,7 +36,7 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs){
         super(context, attrs);
-        localDBHandler = new LocalDbHandler(context, null);
+        localDbHandler = new LocalDbHandler(context, null);
         fbStorageHandler = new FbStorageHandler();
         setFocusable(true);
         paint = new Paint();
@@ -50,12 +50,10 @@ public class PaintView extends View {
         paintC.setStyle(Paint.Style.STROKE);
         paintC.setStrokeWidth(10);
 
-        size = new Point();
         circleRadius = 10; //will be modifiable in future, not hardcoded
         circleX = 0;
         circleY = 0;
         draw = false;
-        set = false;
         path = new Path();
         path.moveTo(circleX, circleY);
     }
@@ -131,7 +129,7 @@ public class PaintView extends View {
      */
     public void saveCanvasInDb(){
         this.draw(canvas);
-        localDBHandler.addBitmapToDb(bitmap);
+        localDbHandler.addBitmapToDb(bitmap);
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();

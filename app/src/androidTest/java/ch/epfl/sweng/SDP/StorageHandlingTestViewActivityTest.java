@@ -1,11 +1,11 @@
 package ch.epfl.sweng.SDP;
 
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class StorageHandlingTestViewActivityTest {
            new ActivityTestRule<>(StorageHandlingTestView.class);
 
     @Test
-    public void testClickOnButtonAddAndRetrieveDBEntry() {
+    public void testClickOnButtonAddAndRetrieveDbEntry() {
         onView(withId(R.id.button1)).perform(click());
     }
 }

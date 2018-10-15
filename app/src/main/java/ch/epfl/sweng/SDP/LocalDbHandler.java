@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP;
 
-import android.content.Context;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -34,8 +34,8 @@ public class LocalDbHandler extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID +
-                " INTEGER PRIMARY KEY," + COLUMN_TIMESTAMP + " TEXT," + COLUMN_IMAGE + " BLOB )";
+        String createTable = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID
+                + " INTEGER PRIMARY KEY," + COLUMN_TIMESTAMP + " TEXT," + COLUMN_IMAGE + " BLOB )";
 
         db.execSQL(createTable);
     }
@@ -82,7 +82,7 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Retrieves the most recent bitmap from the table
+     * Retrieves the most recent bitmap from the table.
      * @return the newest bitmap
      */
     public Bitmap getLatestBitmapFromDb() {

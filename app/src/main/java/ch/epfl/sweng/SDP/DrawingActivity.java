@@ -33,7 +33,6 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
-    private CountDownTimer countDownTimer;
     ToggleButton flyDraw;
 
     @Override
@@ -65,7 +64,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         display.getSize(size);
         paintView.setSizeAndInit(size);
 
-        countDownTimer = setCountdownTimer();
+        setCountdownTimer();
 
         // informes the paintView that it has to be updated
         handler = new Handler(){
@@ -93,8 +92,8 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
             }
 
             public void onFinish() {
-                TextView t = findViewById(R.id.timeRemaining);
-                t.setText("Time over!");
+                TextView textView = findViewById(R.id.timeRemaining);
+                textView.setText("Time over!");
                 stop();
             }
         }.start();
@@ -196,8 +195,8 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
      */
     private void stop(){
         paintView.saveCanvasInDb();
-        countDownTimer = null;
-        startActivity(new Intent(DrawingActivity.this, RatingActivity.class));
+        // we must add redirection
+        // here startActivity(new Intent(DrawingActivity.this, insertRedirectionHere.class));
     }
 
 }

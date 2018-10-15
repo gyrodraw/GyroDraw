@@ -22,12 +22,6 @@ public class FbStorageHandler {
 
     private static final String TAG = "fbStorageHandler";
     private static final int QUALITY = 20;
-    private static final int MAX_TRIALS = 3;
-    private int trials;
-
-    public FbStorageHandler(){
-        trials = 0;
-    }
 
     /**
      * Uploads a given bitmap to Firebase Storage at given StorageReference.
@@ -36,25 +30,19 @@ public class FbStorageHandler {
      */
     public void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef){
         if(bitmap != null && imageRef != null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, baos);
-            byte[] data = baos.toByteArray();
-
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
+            byte[] data = byteArrayOutputStream.toByteArray();
             UploadTask uploadTask = imageRef.putBytes(data);
             try {
-                baos.close();
+                byteArrayOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    if (trials > MAX_TRIALS) {
-                        Log.d(TAG, "Upload to Firebase Storage failed.");
-                    } else {
-                        ++trials;
-                        sendBitmapToFireBaseStorage(bitmap, imageRef);
-                    }
+                    Log.d(TAG, "Upload to Firebase Storage failed.");
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

@@ -59,14 +59,6 @@ public class StorageHandlingTestView extends AppCompatActivity {
     }
 
     /**
-     * Tests getting element with null reference from storage.
-     * @param view button
-     */
-    public void testGetNullFromStorage(View view) {
-        fbStorageHandler.getBitmapFromFireBaseStorageReference(null);
-    }
-
-    /**
      * Tests putting and getting from storage.
      * @param view button
      */
@@ -81,11 +73,11 @@ public class StorageHandlingTestView extends AppCompatActivity {
     }
 
     /**
-     * Tests if new table is created when newer version is available.
+     * Tests getting element with null reference from storage.
      * @param view button
      */
-    public void testOnUpdate(View view){
-        localDbHandler2 = new LocalDbHandler(StorageHandlingTestView.this,null, 2);
+    public void testGetNullFromStorage(View view) {
+        fbStorageHandler.getBitmapFromFireBaseStorageReference(null);
     }
 
 }

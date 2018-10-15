@@ -1,12 +1,13 @@
 package ch.epfl.sweng.SDP;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {

@@ -24,20 +24,7 @@ public class VotingPageActivityTest {
             new ActivityTestRule<>(VotingPageActivity.class);
 
     @Test
-    public void testDrawingIsVisible() {
-        SystemClock.sleep(1000);
-        onView(withId(R.id.drawing)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testPlayerNameIsVisible() {
-        SystemClock.sleep(1000);
-        onView(withId(R.id.playerNameView)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void testRatingBarIsVisible() {
-        SystemClock.sleep(1000);
         onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
     }
 

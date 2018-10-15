@@ -55,13 +55,13 @@ public class LocalDbHandler extends SQLiteOpenHelper {
      * Adds a bitmap to the local db.
      * @param bitmap to insert
      */
-    public void addBitmapToDb(Bitmap bitmap) {
+    public void addBitmapToDb(Bitmap bitmap, ByteArrayOutputStream bos) {
         if(bitmap != null) {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, bos);
-            byte[] byteArray = bos.toByteArray();
+            ByteArrayOutputStream byteArrayOutputStream = bos;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
             try {
-                bos.close();
+                byteArrayOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

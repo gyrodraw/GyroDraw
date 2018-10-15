@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+
 
 public class PaintView extends View {
 
@@ -129,7 +131,7 @@ public class PaintView extends View {
      */
     public void saveCanvasInDb(){
         this.draw(canvas);
-        localDbHandler.addBitmapToDb(bitmap);
+        localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();

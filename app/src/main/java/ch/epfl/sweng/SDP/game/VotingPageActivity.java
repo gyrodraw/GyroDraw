@@ -35,7 +35,7 @@ public class VotingPageActivity extends AppCompatActivity {
     private final String user = "aa";
     private DatabaseReference rankingRef;
     private DatabaseReference counterRef;
-    private DatabaseReference endVotingRef;
+    private DatabaseReference endTimeRef;
     private DatabaseReference usersRef;
     private DatabaseReference endVotingUsersRef;
 
@@ -78,12 +78,13 @@ public class VotingPageActivity extends AppCompatActivity {
         }
     };
 
-    private final ValueEventListener listenerEndVoting = new ValueEventListener() {
+    private final ValueEventListener listenerEndTime = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if(dataSnapshot.getValue(Integer.class) != null) {
                 Integer value = dataSnapshot.getValue(Integer.class);
 
+                // Check if the timer ended
                 if(value == 1) {
                     // TODO create constants for states
                     usersRef.setValue(2);
@@ -103,6 +104,7 @@ public class VotingPageActivity extends AppCompatActivity {
             if(dataSnapshot.getValue(Integer.class) != null) {
                 Integer value = dataSnapshot.getValue(Integer.class);
 
+                // Check if all the players are ready for the next phase
                 if(value == 1) {
                     // Start new activity
                 }
@@ -125,9 +127,9 @@ public class VotingPageActivity extends AppCompatActivity {
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
         counterRef = database.getReference(path + ".timer.observableTime");
-        endVotingRef = database.getReference(path + ".timer.endVoting");
+        endTimeRef = database.getReference(path + ".timer.endTime");
         usersRef = database.getReference(path + ".connectedUsers." + user);
-        endVotingUsersRef = database.getReference(path + ".timer.usersEndVoting");
+        endVotingUsersRef = database.getReference(path + ".timer.usersEndTime");
 
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
                 "1539331659.jpg"}; // hardcoded now, need to be given by the server/script
@@ -145,7 +147,7 @@ public class VotingPageActivity extends AppCompatActivity {
 
         initProgressBar();
         counterRef.addValueEventListener(listenerCounter);
-        endVotingRef.addValueEventListener(listenerEndVoting);
+        endTimeRef.addValueEventListener(listenerEndTime);
         endVotingUsersRef.addValueEventListener(listenerEndUsersVoting);
     }
 

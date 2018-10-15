@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -18,6 +19,9 @@ public class Account implements java.io.Serializable {
     private int trophies;
     private int stars;
     private String userId;
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
+    private static final DatabaseReference databaseRef = database.getReference();
+    private static final DatabaseReference usersRef = databaseRef.child("users");
 
     /**
      * empty Builder for Firebase support.
@@ -75,7 +79,7 @@ public class Account implements java.io.Serializable {
         if (newName == null) {
             throw new NullPointerException();
         }
-        Constants.usersRef.orderByChild("username").equalTo(newName)
+        usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -84,7 +88,7 @@ public class Account implements java.io.Serializable {
                     throw new IllegalArgumentException("Username already taken.");
                 }
                 else {
-                    Constants.databaseRef.child("users").child(userId).child("username")
+                    databaseRef.child("users").child(userId).child("username")
                             .setValue(newName, new DatabaseReference.CompletionListener() {
 
                         @Override
@@ -110,7 +114,7 @@ public class Account implements java.io.Serializable {
      */
     public void changeTrophies(int change) throws DatabaseException {
         final int newTrophies = Math.max(0, trophies + change);
-        Constants.usersRef.child(userId).child("trophies")
+        usersRef.child(userId).child("trophies")
                 .setValue(newTrophies, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -131,7 +135,7 @@ public class Account implements java.io.Serializable {
             throw new IllegalArgumentException();
         }
         final int newStars = add + stars;
-        Constants.usersRef.child(userId).child("stars")
+        usersRef.child(userId).child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -152,7 +156,7 @@ public class Account implements java.io.Serializable {
             throw new IllegalArgumentException();
         }
         final int newStars = stars -= sub;
-        Constants.usersRef.child(userId).child("stars")
+        usersRef.child(userId).child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -171,7 +175,7 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new NullPointerException();
         }
-        Constants.usersRef.child(userId).child("friends").child(usernameId)
+        usersRef.child(userId).child("friends").child(usernameId)
                 .setValue(true, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -189,7 +193,7 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new NullPointerException();
         }
-        Constants.usersRef.child(userId).child("friends").child(usernameId)
+        usersRef.child(userId).child("friends").child(usernameId)
                 .removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {

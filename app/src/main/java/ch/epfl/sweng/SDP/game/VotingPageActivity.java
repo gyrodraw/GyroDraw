@@ -28,6 +28,9 @@ import java.util.Locale;
 public class VotingPageActivity extends AppCompatActivity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
+
+    // For the moment it is defined as a constant
+    private static final int WAITING_TIME = 20;
     private final String path = "mockRooms.ABCDE";
     private final String user = "aa";
     private DatabaseReference rankingRef;
@@ -64,7 +67,7 @@ public class VotingPageActivity extends AppCompatActivity {
                 Integer value = dataSnapshot.getValue(Integer.class);
 
                 if(value != progressBar.getProgress()) {
-                    progressBar.setProgress(20 - value);
+                    progressBar.setProgress(WAITING_TIME - value);
                 }
             }
         }
@@ -108,7 +111,7 @@ public class VotingPageActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            // Does nothing for the moment
         }
     };
 

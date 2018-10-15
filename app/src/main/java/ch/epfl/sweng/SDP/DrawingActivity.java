@@ -88,8 +88,8 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         return new CountDownTimer(time, timeIntervall) {
 
             public void onTick(long millisUntilFinished) {
-                TextView t = findViewById(R.id.timeRemaining);
-                t.setText(""+(millisUntilFinished / timeIntervall));
+                TextView textView = findViewById(R.id.timeRemaining);
+                textView.setText(Long.toString(millisUntilFinished / timeIntervall));
             }
 
             public void onFinish() {
@@ -190,8 +190,13 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         }
     }
 
+    /**
+     * Gets called when time is over.
+     * Saves drawing in database and storage and calls new activity.
+     */
     private void stop(){
-        paintView.saveCanvasInDB();
+        paintView.saveCanvasInDb();
+        countDownTimer = null;
         startActivity(new Intent(DrawingActivity.this, RatingActivity.class));
     }
 

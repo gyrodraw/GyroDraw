@@ -14,8 +14,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class StorageHandlingTestView extends AppCompatActivity {
 
-    LocalDBHandler localDBHandler;
-    FBStorageHandler fbStorageHandler;
+    LocalDbHandler localDbHandler;
+    FbStorageHandler fbStorageHandler;
     private Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bitmap);
     private Paint paint = new Paint();
@@ -25,8 +25,8 @@ public class StorageHandlingTestView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storagehandlingtest);
-        localDBHandler = new LocalDBHandler(StorageHandlingTestView.this, "myImages.db", null, 1);
-        fbStorageHandler = new FBStorageHandler();
+        localDbHandler = new LocalDbHandler(StorageHandlingTestView.this,null);
+        fbStorageHandler = new FbStorageHandler();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
@@ -38,14 +38,18 @@ public class StorageHandlingTestView extends AppCompatActivity {
         canvas.drawBitmap(bitmap, 0, 0, paint);
     }
 
+    /**
+     * Testwise adds and retrieves bitmaps from database and storage.
+     * @param view button
+     */
     public void clickAndAdd(View view){
-        localDBHandler.addBitmapToDB(bitmap);
-        localDBHandler.getLatestBitmapFromDB();
+        localDbHandler.addBitmapToDb(bitmap);
+        localDbHandler.getLatestBitmapFromDb();
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         // Create a reference to "mountains.jpg"
-        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = mStorageRef.child(""+ts+".jpg");
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child(""+ts+".jpg");
         fbStorageHandler.sendBitmapToFireBaseStorage(bitmap,imageRef);
         fbStorageHandler.getBitmapFromFireBaseStorageReference(imageRef);
     }

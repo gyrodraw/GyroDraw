@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
-
 
 public class PaintView extends View {
 
@@ -24,16 +22,12 @@ public class PaintView extends View {
     private int circleRadius;
     private float circleX;
     private float circleY;
-    private float scale;
     private Path path;
     private Boolean draw;
     private Bitmap bitmap;
-    ImageView i = findViewById(R.id.myImage);
     private Canvas canvas;
-    private LocalDBHandler localDBHandler;
-    private FBStorageHandler fbStorageHandler;
-    private Point size;
-    private Boolean set;
+    private LocalDbHandler localDBHandler;
+    private FbStorageHandler fbStorageHandler;
 
     /**
      * Constructor for the view.
@@ -42,8 +36,8 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs){
         super(context, attrs);
-        localDBHandler = new LocalDBHandler(context, "myImages.db", null, 1);
-        fbStorageHandler = new FBStorageHandler();
+        localDBHandler = new LocalDbHandler(context, null);
+        fbStorageHandler = new FbStorageHandler();
         setFocusable(true);
         paint = new Paint();
         paintC = new Paint();
@@ -56,7 +50,6 @@ public class PaintView extends View {
         paintC.setStyle(Paint.Style.STROKE);
         paintC.setStrokeWidth(10);
 
-        scale = 1;
         size = new Point();
         circleRadius = 10; //will be modifiable in future, not hardcoded
         circleX = 0;
@@ -99,7 +92,8 @@ public class PaintView extends View {
     public void setSizeAndInit(Point size) {
         circleX = size.x / 2 - circleRadius;
         circleY = size.y / 2 - circleRadius;
-        bitmap = Bitmap.createBitmap(size.x, (int)(((float)size.y/size.x)*size.x), Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(size.x,
+                (int)(((float)size.y/size.x)*size.x), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
     }
 
@@ -135,14 +129,14 @@ public class PaintView extends View {
      * Gets called when time for drawing is over.
      * Saves the bitmap in the local DB.
      */
-    public void saveCanvasInDB(){
+    public void saveCanvasInDb(){
         this.draw(canvas);
-        localDBHandler.addBitmapToDB(bitmap);
+        localDBHandler.addBitmapToDb(bitmap);
+        // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
-        // Create a reference to "mountains.jpg"
-        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = mStorageRef.child(""+ts+".jpg");
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child(""+ts+".jpg");
         fbStorageHandler.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

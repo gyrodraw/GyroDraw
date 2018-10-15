@@ -9,16 +9,15 @@ import android.widget.TextView;
 public class RatingActivity extends AppCompatActivity {
 
     private ImageView imageView;
-    private LocalDBHandler localDBHandler;
+    private LocalDbHandler localDBHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
         imageView = findViewById(R.id.myImage);
-        localDBHandler = new LocalDBHandler(getApplicationContext(), null, null, 1);
-        //textView.setText(localDBHandler.getBitmap(0));
-        Bitmap bitmap = localDBHandler.getLatestBitmapFromDB();
+        localDBHandler = new LocalDbHandler(getApplicationContext(), null);
+        Bitmap bitmap = localDBHandler.getLatestBitmapFromDb();
 
         imageView.setImageBitmap(bitmap);
     }

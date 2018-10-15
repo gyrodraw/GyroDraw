@@ -57,7 +57,7 @@ public class AccountCreationActivity extends AppCompatActivity {
      */
     private void initializeUserId(){
         if(CURRENT_USER == null){
-            if(this.getCallingActivity().getClassName().equals("AccountCreationActivityTest")){
+            if(getIntent() == null){
                 userId = "123456789";
             }
         } else {

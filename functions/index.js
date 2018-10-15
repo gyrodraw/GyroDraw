@@ -5,14 +5,16 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const maxPlayers = 5;
+var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
 
 admin.initializeApp();
 
 exports.connectedUsers = functions.database.ref('/mockRooms/ABCDE/connectedUsers').onWrite((event) => {
     return admin.database().ref('/mockRooms/ABCDE/connectedUsers').once("value")
     .then(snapshot => {
-      checkUsersReady(2, 'mockRooms/ABCDE/timer/usersEndVoting', snapshot);
-      return checkUsersReady(1, 'mockRooms/ABCDE/timer/startTimer', snapshot);
+      checkUsersReady(StateEnum.endVotingPage, 'mockRooms/ABCDE/timer/usersEndVoting', snapshot);
+      checkUsersReady(StateEnum.votingPage, 'mockRooms/ABCDE/timer/startTimer', snapshot);
+      return;
     });
 });
 
@@ -26,6 +28,9 @@ function checkUsersReady(state, path, snapshot) {
 
   if(ready) {
     admin.database().ref(path).set(1);
+    if(state === StateEnum.endVotingPage) {
+      admin.database().ref('mockRooms/ABCDE/timer/endTime').set(0);
+    }
     console.log("Ready");
   } else {
     admin.database().ref(path).set(0);
@@ -48,7 +53,7 @@ exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer')
                 return console.log('Timer of ' + totalTime + ' has finished.');
             })
             .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
-            .then(() => admin.database().ref('/mockRooms/ABCDE/timer/endVoting').set(1))
+            .then(() => admin.database().ref('/mockRooms/ABCDE/timer/endTime').set(1))
             .then(() => event.data.ref.remove())
             .catch(error => console.error(error));
     }

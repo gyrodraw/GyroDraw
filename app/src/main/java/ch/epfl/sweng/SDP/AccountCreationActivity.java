@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 
 public class AccountCreationActivity extends AppCompatActivity {
-    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final static FirebaseUser CURRENT_USER = FirebaseAuth.getInstance().getCurrentUser();
     private String userId;
     private EditText usernameInput;
     private Button createAcc;
@@ -42,7 +42,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         createAcc = this.findViewById(R.id.createAcc);
         createAcc.setOnClickListener(createAccListener);
         usernameTaken = this.findViewById(R.id.usernameTaken);
-        userId = currentUser.getUid();
+        userId = CURRENT_USER.getUid();
     }
 
     private void createAccClicked() {

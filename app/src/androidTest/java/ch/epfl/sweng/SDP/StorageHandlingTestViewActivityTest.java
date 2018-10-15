@@ -12,11 +12,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class LocalDBHandlerTestViewActivityTest {
+public class StorageHandlingTestViewActivityTest {
 
     @Rule
-    public final ActivityTestRule<LocalDBHandlerTestView> mActivityRule =
-           new ActivityTestRule<>(LocalDBHandlerTestView.class);
+    public final ActivityTestRule<StorageHandlingTestView> mActivityRule =
+           new ActivityTestRule<>(StorageHandlingTestView.class);
 
     @Test
     public void testClickOnButtonAddAndRetrieveDBEntry() {

@@ -6,13 +6,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class LocalDBHandlerTestView extends AppCompatActivity {
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+public class StorageHandlingTestView extends AppCompatActivity {
 
     LocalDBHandler localDBHandler;
+    FBStorageHandler fbStorageHandler;
     private Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bitmap);
     private Paint paint = new Paint();
@@ -21,8 +24,9 @@ public class LocalDBHandlerTestView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_localdbtestview);
-        localDBHandler = new LocalDBHandler(LocalDBHandlerTestView.this, "myImages.db", null, 1);
+        setContentView(R.layout.activity_storagehandlingtest);
+        localDBHandler = new LocalDBHandler(StorageHandlingTestView.this, "myImages.db", null, 1);
+        fbStorageHandler = new FBStorageHandler();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
@@ -37,6 +41,13 @@ public class LocalDBHandlerTestView extends AppCompatActivity {
     public void clickAndAdd(View view){
         localDBHandler.addBitmapToDB(bitmap);
         localDBHandler.getLatestBitmapFromDB();
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        // Create a reference to "mountains.jpg"
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = mStorageRef.child(""+ts+".jpg");
+        fbStorageHandler.sendBitmapToFireBaseStorage(bitmap,imageRef);
+        fbStorageHandler.getBitmapFromFireBaseStorageReference(imageRef);
     }
 
 }

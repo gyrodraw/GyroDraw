@@ -195,8 +195,7 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
      */
     private void stop(){
         paintView.saveCanvasInDb();
-        // we must add redirection
-        // here startActivity(new Intent(DrawingActivity.this, insertRedirectionHere.class));
+        // add redirection here
     }
 
 }

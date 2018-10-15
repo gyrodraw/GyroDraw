@@ -28,5 +28,6 @@
         </activity>
         <activity android:name=".auth.AccountCreationActivity"/>
         <activity android:name=".game.VotingPageActivity"/>
+      <activity android:name=".Activity"/>
     </application>
 </manifest>

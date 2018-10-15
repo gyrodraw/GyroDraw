@@ -60,9 +60,7 @@ public class HomeActivity extends Activity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Long value = dataSnapshot.getValue(Long.class);
             if(value == 1) {
-                Intent intent = new Intent(getApplicationContext(),
-                                            VotingPageActivity.class);
-                startActivity(intent);
+                launchActivity(VotingPageActivity.class);
             }
         }
 

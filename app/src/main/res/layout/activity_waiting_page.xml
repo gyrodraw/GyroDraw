@@ -1,90 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context=".WaitingPageActivity">
-
-  <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/radioGroup"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="97dp"
-    android:layout_marginBottom="227dp"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:orientation="vertical"
-    app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.192">
-    <RadioButton
-      android:id="@+id/buttonWord1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="start"
-      android:onClick="onRadioButtonClicked"
-      android:text="Word1"/>
-    <RadioButton
-      android:id="@+id/buttonWord2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="start"
-      android:onClick="onRadioButtonClicked"
-      android:text="Word2"/>
-  </RadioGroup>
+    android:layout_height="match_parent"
+    tools:context=".WaitingPageActivity">
 
-  <RelativeLayout
-    android:id="@+id/relativeLayout"
-    android:layout_width="157dp"
-    android:layout_height="183dp"
-    android:layout_marginBottom="120dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.502"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="97dp"
+        android:layout_marginBottom="227dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.192">
 
-    <ProgressBar
-      android:id="@+id/usersProgressBar"
-      style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="155dp"
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
-      android:max="5"
-      android:progress="1"
-      />
-    <TextView
-      android:id="@+id/usersTextView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="58dp"
-      android:layout_alignBottom="@id/usersProgressBar"
-      android:layout_alignParentBottom="true"
-      android:layout_centerInParent="true"
-      android:text="1/5 users ready"/>
+        <RadioButton
+            android:id="@+id/buttonWord1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:onClick="onRadioButtonClicked"
+            android:text="Word1" />
+
+        <RadioButton
+            android:id="@+id/buttonWord2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:onClick="onRadioButtonClicked"
+            android:text="Word2" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="157dp"
+        android:layout_height="183dp"
+        android:layout_marginBottom="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+        <ProgressBar
+            android:id="@+id/usersProgressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="155dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:max="5"
+            android:progress="1" />
+
+        <TextView
+            android:id="@+id/usersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="58dp"
+            android:layout_alignBottom="@id/usersProgressBar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:text="1/5 users ready" />
 
 
-  </RelativeLayout>
-  <Button
-    android:id="@+id/incrementButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="28dp"
-    android:gravity="center"
-    android:onClick="incrementCount"
-    android:text="Increment users ready (for testing only)"
-    app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/incrementButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:gravity="center"
+        android:onClick="incrementCount"
+        android:text="Increment users ready (for testing only)"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

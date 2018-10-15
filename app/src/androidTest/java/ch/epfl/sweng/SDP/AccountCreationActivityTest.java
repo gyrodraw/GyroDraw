@@ -29,20 +29,17 @@ public class AccountCreationActivityTest {
 
     @Test
     public void testCreateAccIsClickable() {
-        activityRule.getActivity().getAccount().setUserId("123456789");
         onView(withId(R.id.createAcc)).check(matches(isClickable()));
     }
 
     @Test
     public void testUsernameInputInputsCorrectly() {
-        activityRule.getActivity().getAccount().setUserId("123456789");
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard())
                 .check(matches(withText(R.string.test_name)));
     }
 
     @Test
     public void testAccountGetsCreated() {
-        activityRule.getActivity().getAccount().setUserId("123456789");
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard());
         onView(withId(R.id.createAcc)).perform(click());
     }
@@ -50,7 +47,6 @@ public class AccountCreationActivityTest {
     @Test(expected = DatabaseException.class)
     public void testGetStars() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.getStars();
         testAccount.subtractStars(10);
         //assertEquals("Adding stars does not yield right result", stars+20, testAccount.getStars());
@@ -59,7 +55,6 @@ public class AccountCreationActivityTest {
     @Test(expected = DatabaseException.class)
     public void testAddStars() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.getStars();
         testAccount.addStars(20);
         //assertEquals("Adding stars does not yield right result", stars+20, testAccount.getStars());
@@ -68,7 +63,6 @@ public class AccountCreationActivityTest {
     @Test(expected = DatabaseException.class)
     public void testSubtractStars() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.subtractStars(10);
         //assertEquals("Adding stars does not yield right result", stars+20, testAccount.getStars());
     }
@@ -76,14 +70,12 @@ public class AccountCreationActivityTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddNegativeTrophies() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.addStars(-10);
     }
 
     @Test(expected = DatabaseException.class)
     public void testChangeTrophies() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.changeTrophies(20);
         testAccount.getTrophies();
         //assertEquals("Adding stars does not yield right result", 20, testAccount.getTrophies());
@@ -92,7 +84,6 @@ public class AccountCreationActivityTest {
     @Test(expected = DatabaseException.class)
     public void testChangeUsername() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.changeUsername("newName");
         testAccount.getUsername();
         //assertEquals("Adding stars does not yield right result", 20, testAccount.getTrophies());
@@ -101,7 +92,30 @@ public class AccountCreationActivityTest {
     @Test(expected = NullPointerException.class)
     public void testNullUserName() {
         Account testAccount = activityRule.getActivity().getAccount();
-        testAccount.setUserId("123456789");
         testAccount.changeUsername(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullAddFriend() {
+        Account testAccount = activityRule.getActivity().getAccount();
+        testAccount.addFriend(null);
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testAddFriend() {
+        Account testAccount = activityRule.getActivity().getAccount();
+        testAccount.addFriend("123456789");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testRemoveNullFriend() {
+        Account testAccount = activityRule.getActivity().getAccount();
+        testAccount.removeFriend(null);
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testRemoveFriend() {
+        Account testAccount = activityRule.getActivity().getAccount();
+        testAccount.removeFriend("123456789");
     }
 }

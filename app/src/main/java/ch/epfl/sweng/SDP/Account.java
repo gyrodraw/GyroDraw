@@ -52,14 +52,6 @@ public class Account implements java.io.Serializable {
         this.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    /**
-     * Is needed for testing.
-     * @param userId random id
-     */
-    public void setUserId(String userId){
-        this.userId = userId;
-    }
-
     public String getUsername() {
         return username;
     }

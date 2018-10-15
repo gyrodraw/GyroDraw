@@ -37,17 +37,32 @@ public class AccountCreationActivity extends AppCompatActivity {
         createAcc = this.findViewById(R.id.createAcc);
         createAcc.setOnClickListener(createAccListener);
         usernameTaken = this.findViewById(R.id.usernameTaken);
-        userId = CURRENT_USER.getUid();
+        initializeUserId();
         createAccListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createAccClicked();
             }
         };
+
     }
 
     public Account getAccount(){
         return account;
+    }
+
+    /**
+     * Initializes userId to firebase id.
+     * Or in case of test, to default 123456789.
+     */
+    private void initializeUserId(){
+        if(CURRENT_USER == null){
+            if(this.getCallingActivity().getClassName().equals("AccountCreationActivityTest")){
+                userId = "123456789";
+            }
+        } else {
+            userId = CURRENT_USER.getUid();
+        }
     }
 
     private void createAccClicked() {

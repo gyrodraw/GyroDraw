@@ -2,17 +2,16 @@ package ch.epfl.sweng.SDP.game;
 
 import static java.lang.String.format;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -25,7 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.Locale;
 
-public class VotingPageActivity extends AppCompatActivity {
+public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
 
@@ -109,8 +108,7 @@ public class VotingPageActivity extends AppCompatActivity {
      * @param view the view corresponding to the button pressed
      */
     public void startHomeActivity(View view) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        launchActivity(HomeActivity.class);
         finish();
     }
 

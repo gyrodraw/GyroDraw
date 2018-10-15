@@ -3,13 +3,11 @@ package ch.epfl.sweng.SDP.home;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
@@ -28,7 +27,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends Activity {
     private Dialog profileWindow;
 
     private static boolean enableBackgroundAnimation = false;
@@ -87,8 +86,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             toastSignOut.cancel();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
+                            launchActivity(MainActivity.class);
                             finish();
                         } else {
                             Log.e(TAG, "Sign out failed!");
@@ -115,8 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                                     .putBoolean("hasAccount", false).apply();
 
                             toastDelete.cancel();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
+                            launchActivity(MainActivity.class);
                             finish();
                         } else {
                             Log.e(TAG, "Delete account failed!");
@@ -165,7 +162,7 @@ public class HomeActivity extends AppCompatActivity {
         switch (id) {
             case R.id.drawButton:
                 ((ImageView) view).setImageResource(R.drawable.draw_button);
-                startChooseWordsActivity();
+                launchActivity(WaitingPageActivity.class);
                 break;
             case R.id.usernameButton:
                 showPopup();
@@ -197,11 +194,6 @@ public class HomeActivity extends AppCompatActivity {
         view.startAnimation(press);
     }
 
-    private void startChooseWordsActivity() {
-        Intent intent = new Intent(this, WaitingPageActivity.class);
-        startActivity(intent);
-    }
-
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
@@ -225,8 +217,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // To remove, only for testing
     public void startVotingPage(View view) {
-        Intent intent = new Intent(this, VotingPageActivity.class);
-        startActivity(intent);
+        launchActivity(VotingPageActivity.class);
     }
 
     /**

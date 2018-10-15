@@ -4,13 +4,13 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
@@ -19,7 +19,7 @@ import com.firebase.ui.auth.IdpResponse;
 import java.util.Collections;
 import java.util.List;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 42;
@@ -69,13 +69,11 @@ public class LoginActivity extends AppCompatActivity {
         if (response.isNewUser() || !getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("hasAccount", false)) {
             // New user or a user who signed in but not created an account
-            Intent intent = new Intent(this, AccountCreationActivity.class);
-            startActivity(intent);
+            launchActivity(AccountCreationActivity.class);
             finish();
         } else {
             // User has an account
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            launchActivity(HomeActivity.class);
             finish();
         }
     }
@@ -85,8 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // User pressed the back button
         if (response == null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            launchActivity(MainActivity.class);
             return;
         }
 

@@ -11,16 +11,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ToggleButton;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
 
-public class DrawingActivity extends AppCompatActivity implements SensorEventListener {
+public class DrawingActivity extends Activity implements SensorEventListener {
     private PaintView paintView;
 
     private static final String TAG = "DrawingActivity";

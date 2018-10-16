@@ -100,8 +100,8 @@ public class WaitingPageActivity extends Activity {
             }
 
             setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                    R.id.incrementButton, R.id.playersCounterText,
-                    R.id.playersReadyText, R.id.waitingAnimationSquare);
+                    R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                    R.id.playersReadyText, R.id.voteText);
             setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
 
@@ -122,14 +122,15 @@ public class WaitingPageActivity extends Activity {
                 "rooms.432432432.words"); // need to be replaced with a search for a suitable room
 
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                R.id.incrementButton, R.id.playersCounterText,
-                R.id.playersReadyText, R.id.waitingAnimationSquare);
+                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.playersCounterText)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);

@@ -31,8 +31,8 @@ public class VotingPageActivity extends Activity {
 
     // For the moment it is defined as a constant
     private static final int WAITING_TIME = 20;
-    private final String path = "mockRooms.ABCDE";
-    private final String user = "aa";
+    private static final String PATH = "mockRooms.ABCDE";
+    private static final String USER = "aa"; // need to be replaced with the username
 
     private DatabaseReference rankingRef;
     private DatabaseReference counterRef;
@@ -62,57 +62,51 @@ public class VotingPageActivity extends Activity {
     private final ValueEventListener listenerCounter = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue(Integer.class) != null) {
-                Integer value = dataSnapshot.getValue(Integer.class);
-
-                if(value != progressBar.getProgress()) {
-                    progressBar.setProgress(WAITING_TIME - value);
-                }
+            Integer value = dataSnapshot.getValue(Integer.class);
+            if (value != null && value != progressBar.getProgress()) {
+                progressBar.setProgress(WAITING_TIME - value);
             }
         }
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment.
+            throw databaseError.toException();
         }
     };
 
     private final ValueEventListener listenerEndTime = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue(Integer.class) != null) {
-                Integer value = dataSnapshot.getValue(Integer.class);
+            Integer value = dataSnapshot.getValue(Integer.class);
 
-                // Check if the timer ended
-                if(value == 1) {
-                    // TODO create constants for states
-                    usersRef.setValue(2);
-                }
+            // Check if the timer ended
+            if (value != null && value == 1) {
+                // TODO create constants for states
+                usersRef.setValue(2);
             }
+
         }
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
     private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue(Integer.class) != null) {
-                Integer value = dataSnapshot.getValue(Integer.class);
+            Integer value = dataSnapshot.getValue(Integer.class);
 
-                // Check if all the players are ready for the next phase
-                if(value == 1) {
-                    // Start new activity
-                }
+            // Check if all the players are ready for the next phase
+            if (value != null && value == 1) {
+                // Start new activity
             }
         }
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
+            throw databaseError.toException();
         }
     };
 
@@ -125,10 +119,11 @@ public class VotingPageActivity extends Activity {
         Database database = Database.getInstance();
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
-        counterRef = database.getReference(path + ".timer.observableTime");
-        endTimeRef = database.getReference(path + ".timer.endTime");
-        usersRef = database.getReference(path + ".connectedUsers." + user);
-        endVotingUsersRef = database.getReference(path + ".timer.usersEndTime");
+        counterRef = database.getReference(PATH + ".timer.observableTime");
+        endTimeRef = database.getReference(PATH + ".timer.endTime");
+        usersRef = database
+                .getReference(PATH + ".connectedUsers." + USER);
+        endVotingUsersRef = database.getReference(PATH + ".timer.usersEndTime");
 
         // Get the drawingIds
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
@@ -136,7 +131,7 @@ public class VotingPageActivity extends Activity {
                 "1539381600.jpg"}; // hardcoded now, need to be given by the server/script
 
         // Get the players' names
-        playersNames = new String[]{"Player1", "Player2", "Player3",
+        playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
                 "Player4"}; // hardcoded now, need to be given by the server/script or retrieved from database
 
         ratingBar = findViewById(R.id.ratingBar);

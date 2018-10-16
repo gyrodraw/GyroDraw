@@ -95,7 +95,7 @@
 
         <RadioButton
             android:id="@+id/buttonWord1"
-            android:layout_width="wrap_content"
+            android:layout_width="301dp"
             android:layout_height="100dp"
             android:layout_gravity="left"
             android:button="@null"
@@ -107,10 +107,11 @@
 
         <RadioButton
             android:id="@+id/buttonWord2"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="100dp"
             android:layout_gravity="right"
             android:button="@null"
+            android:gravity="right|center"
             android:includeFontPadding="false"
             android:onClick="onRadioButtonClicked"
             android:text="Word2"

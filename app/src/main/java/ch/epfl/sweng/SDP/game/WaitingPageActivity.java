@@ -3,8 +3,12 @@ package ch.epfl.sweng.SDP.game;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -175,12 +179,28 @@ public class WaitingPageActivity extends Activity {
         switch (wordNumber) {
             case ONE:
                 word1Ref.setValue(++word1Votes);
+                ((ImageView) findViewById(R.id.imageWord1)).setImageResource(R.drawable.word_image_picked);
+                animateWord1();
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
+                ((ImageView) findViewById(R.id.imageWord2)).setImageResource(R.drawable.word_image_picked);
+                animateWord2();
                 break;
             default:
         }
+    }
+
+    private void animateWord1() {
+        final Animation pickWord1 = AnimationUtils.loadAnimation(this, R.anim.pick_word_1);
+        pickWord1.setFillAfter(true);
+        findViewById(R.id.imageWord1).startAnimation(pickWord1);
+    }
+
+    private void animateWord2() {
+        final Animation pickWord2 = AnimationUtils.loadAnimation(this, R.anim.pick_word_2);
+        pickWord2.setFillAfter(true);
+        findViewById(R.id.imageWord2).startAnimation(pickWord2);
     }
 
     private void disableButtons() {

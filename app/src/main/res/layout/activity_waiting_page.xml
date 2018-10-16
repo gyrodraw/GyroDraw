@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:onClick="onRadioButtonClicked"
+            android:button="@null"
             android:text="Word1" />
 
         <RadioButton
@@ -52,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:button="@null"
             android:onClick="onRadioButtonClicked"
             android:text="Word2" />
     </RadioGroup>
@@ -93,17 +95,22 @@
 
     <Button
         android:id="@+id/incrementButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_width="246dp"
+        android:layout_height="35dp"
+        android:background="@null"
         android:gravity="center"
         android:onClick="incrementCount"
         android:text="Increment users ready (for testing only)"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        android:textColor="@color/colorGrey"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 
     <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/waitingAnimationSquare"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="120dp"
@@ -112,11 +119,26 @@
         android:layout_marginRight="120dp"
         android:layout_marginStart="120dp"
         android:layout_marginTop="350dp"
-        android:src="@drawable/waiting_animation"
+        android:src="@drawable/waiting_animation_square"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/waitingAnimationDots"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginLeft="170dp"
+        android:layout_marginRight="170dp"
+        android:layout_marginStart="170dp"
+        android:src="@drawable/waiting_animation_dots"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

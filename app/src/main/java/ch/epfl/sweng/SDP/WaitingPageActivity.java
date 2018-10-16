@@ -95,11 +95,7 @@ public class WaitingPageActivity extends AppCompatActivity {
                 initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref);
             }
 
-            // Clear the progress dialog
-            if (progressDialog.isShowing()) {
-                progressDialog.cancel();
-                setGlobalVisibility(View.VISIBLE);
-            }
+            setGlobalVisibility(View.VISIBLE);
         }
 
         @Override
@@ -111,13 +107,13 @@ public class WaitingPageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
         FirebaseDatabase database = FirebaseDatabase
                 .getInstance("https://gyrodraw.firebaseio.com/");
         wordsVotesRef = database.getReference("rooms").child("432432432")
                 .child("words"); // need to be replaced with a search for a suitable room
 
-        initProgressDialog();
         setGlobalVisibility(View.GONE);
 
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
@@ -186,6 +182,7 @@ public class WaitingPageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         if (word1Ref != null) {
             word1Ref.removeEventListener(listenerWord1);
         }
@@ -248,6 +245,7 @@ public class WaitingPageActivity extends AppCompatActivity {
         findViewById(R.id.incrementButton).setVisibility(visibility);
         findViewById(R.id.usersProgressBar).setVisibility(visibility);
         findViewById(R.id.usersTextView).setVisibility(visibility);
+        findViewById(R.id.waitingAnimationSquare).setVisibility(visibility);
     }
 
     // TODO

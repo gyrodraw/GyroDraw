@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.firebase;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -17,21 +17,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".WaitingPageActivity"></activity>
-        <activity android:name=".DrawingActivity">
+        <activity android:name=".auth.LoginActivity"></activity>
+        <activity android:name=".home.HomeActivity"></activity>
+        <activity android:name=".game.WaitingPageActivity"></activity>
+        <activity android:name=".game.drawing.DrawingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AccountCreationActivity"></activity>
+        <activity android:name=".auth.AccountCreationActivity"></activity>
         <activity android:name=".StorageHandlingTestView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".game.VotingPageActivity"></activity>
     </application>
 </manifest>

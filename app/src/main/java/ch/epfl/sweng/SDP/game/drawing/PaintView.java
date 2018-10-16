@@ -16,6 +16,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 
+import ch.epfl.sweng.SDP.FbStorageHandler;
+import ch.epfl.sweng.SDP.LocalDbHandler;
+
 
 public class PaintView extends View {
 

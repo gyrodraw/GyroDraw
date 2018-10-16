@@ -107,6 +107,9 @@ public class HomeActivity extends Activity {
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
         dbRefTimer.addValueEventListener(listenerAllReady);
+
+        // Testing method
+        initUsersDatabase();
     }
 
     /**
@@ -253,7 +256,6 @@ public class HomeActivity extends Activity {
     // To remove, only for testing
     public void startVotingPage(View view) {
         // For testing purposes only
-        initUsersDatabase();
         dbRef.child(user).setValue(1);
         // Commented because of conflicts but can be still useful
         // launchActivity(VotingPageActivity.class);
@@ -261,6 +263,7 @@ public class HomeActivity extends Activity {
 
     // Testing purpose method
     private void initUsersDatabase() {
+        dbRef.child(user).setValue(0);
         dbRef.child("bb").setValue(1);
         dbRef.child("cc").setValue(1);
         dbRef.child("dd").setValue(1);

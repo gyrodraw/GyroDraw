@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
@@ -28,7 +29,16 @@ public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
 
+    // For the moment it is defined as a constant
+    private static final int WAITING_TIME = 20;
+    private final String path = "mockRooms.ABCDE";
+    private final String user = "aa";
+
     private DatabaseReference rankingRef;
+    private DatabaseReference counterRef;
+    private DatabaseReference endTimeRef;
+    private DatabaseReference usersRef;
+    private DatabaseReference endVotingUsersRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short drawingDownloadCounter = 0;
@@ -39,13 +49,72 @@ public class VotingPageActivity extends Activity {
 
     private String[] playersNames;
 
+    private ProgressBar progressBar;
     private ImageView drawingView;
     private TextView playerNameView;
+
     private RatingBar ratingBar;
 
     public int[] getRatings() {
         return ratings.clone();
     }
+
+    private final ValueEventListener listenerCounter = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                if(value != progressBar.getProgress()) {
+                    progressBar.setProgress(WAITING_TIME - value);
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment.
+        }
+    };
+
+    private final ValueEventListener listenerEndTime = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                // Check if the timer ended
+                if(value == 1) {
+                    // TODO create constants for states
+                    usersRef.setValue(2);
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
+    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+
+                // Check if all the players are ready for the next phase
+                if(value == 1) {
+                    // Start new activity
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +125,10 @@ public class VotingPageActivity extends Activity {
         Database database = Database.getInstance();
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
+        counterRef = database.getReference(path + ".timer.observableTime");
+        endTimeRef = database.getReference(path + ".timer.endTime");
+        usersRef = database.getReference(path + ".connectedUsers." + user);
+        endVotingUsersRef = database.getReference(path + ".timer.usersEndTime");
 
         // Get the drawingIds
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
@@ -88,6 +161,11 @@ public class VotingPageActivity extends Activity {
                 sendRatingToDatabase(playersNames[ratingToSendCounter]);
             }
         });
+
+        initProgressBar();
+        counterRef.addValueEventListener(listenerCounter);
+        endTimeRef.addValueEventListener(listenerEndTime);
+        endVotingUsersRef.addValueEventListener(listenerEndUsersVoting);
     }
 
     @Override
@@ -99,6 +177,12 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
+    }
+
+    private void initProgressBar() {
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(20);
+        progressBar.setProgress(0);
     }
 
     /**

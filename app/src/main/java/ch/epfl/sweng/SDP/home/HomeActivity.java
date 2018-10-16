@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,11 +22,17 @@ import android.widget.Toast;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends Activity {
     private Dialog profileWindow;
@@ -42,6 +49,26 @@ public class HomeActivity extends Activity {
 
     private static final int LEFT_PADDING = 140;
     private static final int TOP_PADDING = -5;
+
+    private Database database;
+    private DatabaseReference dbRef;
+    private DatabaseReference dbRefTimer;
+
+    // To be removed (for testing purposes only)
+    private final ValueEventListener listenerAllReady = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Long value = dataSnapshot.getValue(Long.class);
+            if(value == 1) {
+                launchActivity(VotingPageActivity.class);
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +99,12 @@ public class HomeActivity extends Activity {
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+
+        database = database.getInstance();
+        dbRef = database.getReference("mockRooms.ABCDE.connectedUsers.aa");
+
+        dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
+        dbRefTimer.addValueEventListener(listenerAllReady);
     }
 
     /**
@@ -217,7 +250,11 @@ public class HomeActivity extends Activity {
 
     // To remove, only for testing
     public void startVotingPage(View view) {
-        launchActivity(VotingPageActivity.class);
+        // For testing purposes only
+        String user = "aa";
+        dbRef.setValue(1);
+        // Commented because of conflicts but can be still useful
+        // launchActivity(VotingPageActivity.class);
     }
 
     /**

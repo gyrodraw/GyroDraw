@@ -182,7 +182,8 @@ public class HomeActivity extends Activity {
                 int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (id == R.id.drawButton) { ((ImageView) view).setImageResource(R.drawable.draw_button_pressed); }
+                        if (id == R.id.drawButton) { ((ImageView) view)
+                                .setImageResource(R.drawable.draw_button_pressed); }
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -268,10 +269,11 @@ public class HomeActivity extends Activity {
         dbRef.child("cc").setValue(1);
         dbRef.child("dd").setValue(1);
         dbRef.child("ee").setValue(1);
-        dbRef.getParent().child("timer").child("endTime").setValue(0);
-        dbRef.getParent().child("timer").child("observableTime").setValue(0);
-        dbRef.getParent().child("timer").child("startTimer").setValue(0);
-        dbRef.getParent().child("timer").child("usersEndVoting").setValue(0);
+        DatabaseReference timerRef = dbRef.getParent().child("timer");
+        timerRef.child("endTime").setValue(0);
+        timerRef.child("observableTime").setValue(0);
+        timerRef.child("startTimer").setValue(0);
+        timerRef.child("usersEndVoting").setValue(0);
     }
 
     /**

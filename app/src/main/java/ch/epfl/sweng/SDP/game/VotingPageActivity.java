@@ -192,7 +192,7 @@ public class VotingPageActivity extends Activity {
     }
 
     // public for testing only
-    public void changeImage(View v) {
+    public void changeImage(View view) {
         ++changeDrawingCounter;
         changeDrawing(drawings[changeDrawingCounter], playersNames[changeDrawingCounter]);
         ratingBar.setEnabled(true);
@@ -208,7 +208,8 @@ public class VotingPageActivity extends Activity {
         return "123456789"; // the room ID should be given by the server/script
     }
 
-    // Retrieve the drawings corresponding to the given ids from the storage and store them in the drawings field.
+    // Retrieve the drawings corresponding to the given ids from the
+    // storage and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage(String[] drawingsIds) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];

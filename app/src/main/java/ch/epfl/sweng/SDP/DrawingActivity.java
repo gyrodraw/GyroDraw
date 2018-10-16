@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 
@@ -24,6 +26,8 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
 
     private static final String TAG = "DrawingActivity";
     private int speed;
+    private int time;
+    private int timeIntervall;
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
@@ -35,18 +39,30 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        speed = 5;
+        speed = 5; //will be passed as variable in future, not hardcoded
+        time = 60000; //will be passed as variable in future, not hardcoded
+        timeIntervall = 1000; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        final Display display = getWindowManager().getDefaultDisplay();
-        size = new Point();
-        display.getSize(size);
-
         flyDraw = findViewById(R.id.flyOrDraw);
         paintView = findViewById(R.id.paintView);
-        paintView.setCircleX(size.x / 2 - paintView.getCircleRadius());
-        paintView.setCircleY(size.y / 2 - paintView.getCircleRadius());
+
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+
+    final Display display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
+        paintView.setSizeAndInit(size);
+
+        setCountdownTimer();
 
         // informes the paintView that it has to be updated
         handler = new Handler() {
@@ -55,6 +71,31 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
                 paintView.invalidate();
             }
         };
+    }
+
+    public Point getSize() {
+        return size;
+    }
+
+    /**
+     * Initializes the countdown to a given time.
+     * @return the countdown
+     */
+    private CountDownTimer setCountdownTimer(){
+        return new CountDownTimer(time, timeIntervall) {
+
+            public void onTick(long millisUntilFinished) {
+                TextView textView = findViewById(R.id.timeRemaining);
+                textView.setText(Long.toString(millisUntilFinished / timeIntervall));
+            }
+
+            public void onFinish() {
+                TextView textView = findViewById(R.id.timeRemaining);
+                textView.setText("Time over!");
+                stop();
+            }
+        }.start();
+
     }
 
     /**
@@ -148,6 +189,15 @@ public class DrawingActivity extends AppCompatActivity implements SensorEventLis
         } else {
             return coordinate;
         }
+    }
+
+    /**
+     * Gets called when time is over.
+     * Saves drawing in database and storage and calls new activity.
+     */
+    private void stop(){
+        paintView.saveCanvasInDb();
+        // add redirection here
     }
 
 }

@@ -6,6 +6,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import android.support.test.rule.ActivityTestRule;
@@ -27,24 +28,21 @@ public class DrawingActivityTest {
     }
 
     @Test
-    public void testDrawToggleIsClickable() {
-        onView(withId(R.id.flyOrDraw)).check(matches(isClickable()));
-    }
-
-    @Test
-    public void testDrawToggleIsCheckedAfterClicking() {
+    public void testDrawToggleReactsCorrectlyToClicking(){
+        onView(withId(R.id.flyOrDraw)).check(matches(isNotChecked()));
         onView(withId(R.id.flyOrDraw)).perform(click());
         onView(withId(R.id.flyOrDraw)).check(matches(isChecked()));
+        onView(withId(R.id.flyOrDraw)).perform(click());
+        onView(withId(R.id.flyOrDraw)).check(matches(isNotChecked()));
     }
 
     @Test
     public void testClearButtonIsClickable() {
-        onView(withId(R.id.clearCanvas)).check(matches(isClickable()));
         onView(withId(R.id.clearCanvas)).perform(click());
     }
 
     @Test
     public void testPaintViewFullyDisplayed() {
-        onView(withId(R.id.paintView)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.paintView)).perform(click());
     }
 }

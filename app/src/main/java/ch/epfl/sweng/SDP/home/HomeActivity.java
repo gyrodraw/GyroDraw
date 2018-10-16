@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 public class HomeActivity extends Activity {
     private Dialog profileWindow;
 
+    private final String user = "aa";
+
     private static boolean enableBackgroundAnimation = false;
     private static final String TAG = "HomeActivity";
 
@@ -101,7 +103,7 @@ public class HomeActivity extends Activity {
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
 
         database = database.getInstance();
-        dbRef = database.getReference("mockRooms.ABCDE.connectedUsers.aa");
+        dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
         dbRefTimer.addValueEventListener(listenerAllReady);
@@ -251,10 +253,22 @@ public class HomeActivity extends Activity {
     // To remove, only for testing
     public void startVotingPage(View view) {
         // For testing purposes only
-        String user = "aa";
-        dbRef.setValue(1);
+        initUsersDatabase();
+        dbRef.child(user).setValue(1);
         // Commented because of conflicts but can be still useful
         // launchActivity(VotingPageActivity.class);
+    }
+
+    // Testing purpose method
+    private void initUsersDatabase() {
+        dbRef.child("bb").setValue(1);
+        dbRef.child("cc").setValue(1);
+        dbRef.child("dd").setValue(1);
+        dbRef.child("ee").setValue(1);
+        dbRef.getParent().child("timer").child("endTime").setValue(0);
+        dbRef.getParent().child("timer").child("observableTime").setValue(0);
+        dbRef.getParent().child("timer").child("startTimer").setValue(0);
+        dbRef.getParent().child("timer").child("usersEndVoting").setValue(0);
     }
 
     /**

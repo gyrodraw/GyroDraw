@@ -27,7 +27,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    productFlavors {
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -67,6 +68,8 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:4.2.0'
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

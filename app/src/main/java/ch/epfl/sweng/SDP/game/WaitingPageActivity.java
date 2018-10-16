@@ -180,15 +180,15 @@ public class WaitingPageActivity extends Activity {
             case ONE:
                 word1Ref.setValue(++word1Votes);
                 ((ImageView) findViewById(R.id.imageWord1)).setImageResource(R.drawable.word_image_picked);
-                animateWord1();
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
                 ((ImageView) findViewById(R.id.imageWord2)).setImageResource(R.drawable.word_image_picked);
-                animateWord2();
                 break;
             default:
         }
+        animateWord1();
+        animateWord2();
     }
 
     private void animateWord1() {

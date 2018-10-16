@@ -80,13 +80,8 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void isProgressBarVisible() {
-        isViewVisible(R.id.usersProgressBar);
-    }
-
-    @Test
     public void isUserCounterViewVisible() {
-        isViewVisible(R.id.usersTextView);
+        isViewVisible(R.id.playersCounterText);
     }
 
     @Test
@@ -94,15 +89,11 @@ public class WaitingPageActivityTest {
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
                 View.VISIBLE);
 
-        ProgressBar progressBar = mActivityRule.getActivity().findViewById(R.id.usersProgressBar);
+        onView(withId(R.id.incrementButton)).perform(click());
+        onView(withId(R.id.playersCounterText)).check(matches(withText("2/5 users ready")));
 
         onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.usersTextView)).check(matches(withText("2/5 users ready")));
-        assertThat(progressBar.getProgress(), is(2));
-
-        onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.usersTextView)).check(matches(withText("3/5 users ready")));
-        assertThat(progressBar.getProgress(), is(3));
+        onView(withId(R.id.playersCounterText)).check(matches(withText("3/5 users ready")));
     }
 
     /**

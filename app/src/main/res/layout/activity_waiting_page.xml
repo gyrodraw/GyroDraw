@@ -51,40 +51,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageWord1"
+        android:layout_width="756dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="200dp"
+        android:layout_marginRight="200dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/radioGroup"
+        app:srcCompat="@drawable/word_image" />
+
+    <ImageView
+        android:id="@+id/imageWord2"
+        android:layout_width="756dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginStart="200dp"
+        android:rotation="180"
+        app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/word_image" />
+
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="227dp"
+        android:layout_height="200dp"
         android:layout_marginEnd="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="97dp"
+        android:layout_marginTop="60dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192">
+        app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
             android:id="@+id/buttonWord1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_height="100dp"
+            android:layout_gravity="left"
             android:button="@null"
+            android:includeFontPadding="false"
             android:onClick="onRadioButtonClicked"
-            android:text="Word1" />
+            android:text="Word1"
+            android:textColor="@color/colorGrey"
+            android:textSize="50sp" />
 
         <RadioButton
             android:id="@+id/buttonWord2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_height="100dp"
+            android:layout_gravity="right"
             android:button="@null"
+            android:includeFontPadding="false"
             android:onClick="onRadioButtonClicked"
-            android:text="Word2" />
+            android:text="Word2"
+            android:textColor="@color/colorGrey"
+            android:textSize="50sp" />
     </RadioGroup>
 
     <TextView

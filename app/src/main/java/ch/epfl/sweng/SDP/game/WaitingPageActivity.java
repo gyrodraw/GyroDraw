@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,10 +29,7 @@ public class WaitingPageActivity extends Activity {
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
-    private static final int STEP = 1;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-
-    private ProgressDialog progressDialog;
 
     private int usersReadyCount = 1;
 
@@ -99,14 +95,10 @@ public class WaitingPageActivity extends Activity {
                         WordNumber.TWO);
             }
 
-            // Clear the progress dialog
-            if (progressDialog.isShowing()) {
-                progressDialog.cancel();
-                setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                        R.id.incrementButton, R.id.playersCounterText,
-                        R.id.playersReadyText, R.id.waitingAnimationSquare);
-                setVisibility(View.GONE, R.id.waitingAnimationDots);
-            }
+            setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                    R.id.incrementButton, R.id.playersCounterText,
+                    R.id.playersReadyText, R.id.waitingAnimationSquare);
+            setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
 
         @Override
@@ -122,8 +114,6 @@ public class WaitingPageActivity extends Activity {
         setContentView(R.layout.activity_waiting_page);
         Database database = Database.getInstance();
 
-        initProgressDialog();
-
         wordsVotesRef = database.getReference(
                 "rooms.432432432.words"); // need to be replaced with a search for a suitable room
 
@@ -134,6 +124,8 @@ public class WaitingPageActivity extends Activity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.playersCounterText)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
 
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
@@ -238,13 +230,6 @@ public class WaitingPageActivity extends Activity {
         }
 
         return new int[]{number1, number2};
-    }
-
-    private void initProgressDialog() {
-        progressDialog = new ProgressDialog(this, R.style.MyTheme);
-        progressDialog.setCancelable(false);
-        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        progressDialog.show();
     }
 
     // TODO

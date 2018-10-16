@@ -102,7 +102,8 @@ public class Account implements java.io.Serializable {
      * @throws IllegalArgumentException if username not available anymore
      * @throws DatabaseException if problem with firebase
      */
-    private void updateUsername(final String newName) throws IllegalArgumentException, DatabaseException{
+    private void updateUsername(final String newName)
+            throws IllegalArgumentException, DatabaseException{
         Constants.usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -164,7 +165,8 @@ public class Account implements java.io.Serializable {
         Constants.usersRef.child(userId).child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+            public void onComplete(@Nullable DatabaseError databaseError,
+                                   @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
                 stars = newStars;
             }
@@ -174,8 +176,7 @@ public class Account implements java.io.Serializable {
     /**
      * Method that allows to spend currency (stars).
      * @param amount positive int
-     * @throws IllegalArgumentException in case 'sub' is negative
-     * or the balance after the transaction would be negative
+     * @throws IllegalArgumentException in case amount or balance are negative
      * @throws DatabaseException in case write to database fails
      */
     public void subtractStars(int amount) throws IllegalArgumentException, DatabaseException {

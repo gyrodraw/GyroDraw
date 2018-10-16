@@ -17,73 +17,51 @@ public class AccountTestHelperActivity  extends AppCompatActivity {
         testAccount = new Account("testAccount", 100, 100);
     }
 
-    /**
-     * Launches all tests for Account functions.
-     * @param view button
-     */
-    public void launchTests(View view){
-        try{
-            testGetStars();
-            testAddStars();
-            testSubtractStars();
-            testAddNegativeTrophies();
-            testChangeTrophies();
-            testAddFriend();
-            testNullAddFriend();
-            testRemoveFriend();
-            testChangeUsername();
-            testNullUserName();
-            testRemoveNullFriend();
-        } catch (Exception exception){
-            Log.d(TAG, "An exception was thrown during testing, which is normal.");
-        }
-    }
-
-    public void testGetStars() {
+    public void testGetStars(View view) {
         testAccount.getStars();
         testAccount.subtractStars(10);
     }
 
-    public void testAddStars() {
+    public void testAddStars(View view) {
         testAccount.getStars();
         testAccount.addStars(20);
     }
 
-    public void testSubtractStars() {
+    public void testSubtractStars(View view) {
         testAccount.subtractStars(10);
     }
 
-    public void testAddNegativeTrophies() {
+    public void testAddNegativeTrophies(View view) {
         testAccount.addStars(-10);
     }
 
-    public void testChangeTrophies() {
+    public void testChangeTrophies(View view) {
         testAccount.changeTrophies(20);
         testAccount.getTrophies();
     }
 
-    public void testChangeUsername() {
+    public void testChangeUsername(View view) {
         testAccount.changeUsername("newName");
         testAccount.getUsername();
     }
 
-    public void testNullUserName() {
+    public void testNullUserName(View view) {
         testAccount.changeUsername(null);
     }
 
-    public void testNullAddFriend() {
+    public void testNullAddFriend(View view) {
         testAccount.addFriend(null);
     }
 
-    public void testAddFriend() {
+    public void testAddFriend(View view) {
         testAccount.addFriend("123456789");
     }
 
-    public void testRemoveNullFriend() {
+    public void testRemoveNullFriend(View view) {
         testAccount.removeFriend(null);
     }
 
-    public void testRemoveFriend() {
+    public void testRemoveFriend(View view) {
         testAccount.removeFriend("123456789");
     }
 }

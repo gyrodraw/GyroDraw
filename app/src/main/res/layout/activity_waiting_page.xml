@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WaitingPageActivity">
+    tools:context=".game.WaitingPageActivity">
 
     <ImageView
         android:id="@+id/backgroundImage"
@@ -21,98 +21,24 @@
         app:layout_constraintVertical_bias="0.903"
         app:srcCompat="@drawable/home_background" />
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="97dp"
-        android:layout_marginBottom="227dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192">
-
-        <RadioButton
-            android:id="@+id/buttonWord1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:onClick="onRadioButtonClicked"
-            android:button="@null"
-            android:text="Word1" />
-
-        <RadioButton
-            android:id="@+id/buttonWord2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:button="@null"
-            android:onClick="onRadioButtonClicked"
-            android:text="Word2" />
-    </RadioGroup>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="157dp"
-        android:layout_height="183dp"
-        android:layout_marginBottom="120dp"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/waitingAnimationDots"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginLeft="170dp"
+        android:layout_marginRight="170dp"
+        android:layout_marginStart="170dp"
+        android:src="@drawable/waiting_animation_dots"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
-
-        <ProgressBar
-            android:id="@+id/usersProgressBar"
-            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="155dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:max="5"
-            android:progress="1" />
-
-        <TextView
-            android:id="@+id/usersTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="58dp"
-            android:layout_alignBottom="@id/usersProgressBar"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:text="1/5 users ready" />
-
-
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/incrementButton"
-        android:layout_width="246dp"
-        android:layout_height="35dp"
-        android:background="@null"
-        android:gravity="center"
-        android:onClick="incrementCount"
-        android:text="Increment users ready (for testing only)"
-        android:textColor="@color/colorGrey"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/waitingAnimationSquare"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_marginBottom="120dp"
         android:layout_marginEnd="120dp"
         android:layout_marginLeft="120dp"
@@ -125,20 +51,103 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/waitingAnimationDots"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="170dp"
-        android:layout_marginLeft="170dp"
-        android:layout_marginRight="170dp"
-        android:layout_marginStart="170dp"
-        android:src="@drawable/waiting_animation_dots"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="227dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="97dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.192">
+
+        <RadioButton
+            android:id="@+id/buttonWord1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:button="@null"
+            android:onClick="onRadioButtonClicked"
+            android:text="Word1" />
+
+        <RadioButton
+            android:id="@+id/buttonWord2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:button="@null"
+            android:onClick="onRadioButtonClicked"
+            android:text="Word2" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/playersReadyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:includeFontPadding="false"
+        android:text="@string/players_ready"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="20sp"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        app:layout_constraintEnd_toEndOf="@+id/waitingAnimationSquare"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="@+id/waitingAnimationSquare"
+        app:layout_constraintTop_toBottomOf="@+id/playersCounterText" />
+
+    <TextView
+        android:id="@+id/playersCounterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:includeFontPadding="false"
+        android:text="1/5"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="80sp"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        app:layout_constraintBottom_toBottomOf="@+id/waitingAnimationSquare"
+        app:layout_constraintEnd_toEndOf="@+id/waitingAnimationSquare"
+        app:layout_constraintStart_toStartOf="@+id/waitingAnimationSquare"
+        app:layout_constraintTop_toTopOf="@+id/waitingAnimationSquare" />
+
+    <Button
+        android:id="@+id/incrementButton"
+        android:layout_width="307dp"
+        android:layout_height="27dp"
+        android:layout_marginBottom="10dp"
+        android:background="@null"
+        android:gravity="center"
+        android:onClick="incrementCount"
+        android:text="Increment users ready (for testing only)"
+        android:textColor="@color/colorGrey"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

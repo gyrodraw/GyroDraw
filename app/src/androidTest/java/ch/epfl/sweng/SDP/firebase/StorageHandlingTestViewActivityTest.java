@@ -1,12 +1,14 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.firebase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import ch.epfl.sweng.SDP.R;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +22,7 @@ public class StorageHandlingTestViewActivityTest {
 
     @Test
     public void testGetFromEmptyDb() {
-        onView(withId(R.id.button1)).perform(click());
+        onView(ViewMatchers.withId(R.id.button1)).perform(click());
     }
 
     @Test

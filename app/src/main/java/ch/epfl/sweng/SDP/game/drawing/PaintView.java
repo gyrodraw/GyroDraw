@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,12 +9,14 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+
+import ch.epfl.sweng.SDP.firebase.FbStorageHandler;
+import ch.epfl.sweng.SDP.firebase.LocalDbHandler;
 
 
 public class PaintView extends View {

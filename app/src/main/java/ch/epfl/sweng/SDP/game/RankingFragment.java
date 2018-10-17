@@ -22,6 +22,7 @@ public class RankingFragment extends ListFragment {
     private String[] ranking;
 
     public RankingFragment() {
+        // Empty constructor
     }
 
     @Override

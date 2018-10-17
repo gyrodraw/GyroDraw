@@ -136,7 +136,8 @@ public class VotingPageActivity extends Activity {
 
         // Get the players' names
         playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
-                "Player4"}; // hardcoded now, need to be given by the server/script or retrieved from database
+                "Player4"}; // hardcoded now, need to be given by the
+                            // server/script or retrieved from database
 
         ratings = new int[NUMBER_OF_DRAWINGS];
         ratingBar = findViewById(R.id.ratingBar);
@@ -291,7 +292,8 @@ public class VotingPageActivity extends Activity {
                 Bundle bundle = new Bundle();
                 bundle.putStringArray("Ranking", ranking);
 
-                // Clear the UI; buttonChangeImage and rankingButton need to be removed after testing
+                // Clear the UI; buttonChangeImage and rankingButton need
+                // to be removed after testing
                 setVisibility(View.GONE, R.id.ratingBar, R.id.drawing, R.id.playerNameView,
                         R.id.buttonChangeImage, R.id.rankingButton);
 

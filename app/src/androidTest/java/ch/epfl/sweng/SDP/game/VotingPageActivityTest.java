@@ -45,8 +45,8 @@ public class VotingPageActivityTest {
     public void progressBarTest() {
         Drawable notAnimatedDrawable = ContextCompat.getDrawable(mActivityRule.getActivity(),
                                         R.drawable.draw_button);
-        ((ProgressBar) mActivityRule.getActivity().findViewById(R.id.progressBar)).
-                        setIndeterminateDrawable(notAnimatedDrawable);
+        ((ProgressBar) mActivityRule.getActivity().findViewById(R.id.progressBar))
+                .setIndeterminateDrawable(notAnimatedDrawable);
 
         onView(withId(R.id.progressBar)).check(matches(isDisplayed()));
     }

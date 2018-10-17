@@ -161,32 +161,10 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException in case write to database fails
      */
     public void addStars(int amount) throws IllegalArgumentException, DatabaseException {
-        if (amount < 0) {
-            throw new IllegalArgumentException();
-        }
         final int newStars = amount + stars;
-        Constants.usersRef.child(userId).child("stars")
-                .setValue(newStars, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-                stars = newStars;
-            }
-        });
-    }
-
-    /**
-     * Method that allows to spend currency (stars).
-     * @param amount positive int
-     * @throws IllegalArgumentException in case amount or balance are negative
-     * @throws DatabaseException in case write to database fails
-     */
-    public void subtractStars(int amount) throws IllegalArgumentException, DatabaseException {
-        if (amount < 0 || stars - amount < 0) {
-            throw new IllegalArgumentException();
+        if (newStars < 0) {
+            throw new IllegalArgumentException("Negative Balance");
         }
-        final int newStars = stars - amount;
         Constants.usersRef.child(userId).child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
             @Override

@@ -4,7 +4,13 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+/.idea/caches
 .DS_Store
+/functions/package-lock.json
+/functions/node_modules
 /build
 /captures
 .externalNativeBuild
+npm-debug.log
+/functions/node_modules/
+/functions/etc/

@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 
+import ch.epfl.sweng.SDP.home.HomeActivity;
+
 public class AccountCreationActivity extends AppCompatActivity {
     private static final FirebaseUser CURRENT_USER = FirebaseAuth.getInstance().getCurrentUser();
     private String userId;

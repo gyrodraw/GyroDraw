@@ -17,51 +17,109 @@ public class AccountTestHelperActivity  extends AppCompatActivity {
         testAccount = new Account("testAccount", 100, 100);
     }
 
-    public void testGetStars(View view) {
+    public void testAccountFunctions(View view){
+        try{
+            testGetStars();
+        } catch(Exception e) {
+
+        }
+        try{
+            testAddStars();
+        } catch(Exception e) {
+
+        }
+        try{
+            testSubtractStars();
+        } catch (Exception e){
+
+        }
+        try{
+            testChangeTrophies();
+        } catch (Exception e){
+
+        }
+        try{
+            testAddNegativeTrophies();
+        } catch (Exception e){
+
+        }
+        try{
+            testAddFriend();
+        } catch (Exception e){
+
+        }
+        try{
+            testRemoveFriend();
+        } catch (Exception e){
+
+        }
+        try{
+            testRemoveNullFriend();
+        } catch (Exception e){
+
+        }
+        try{
+            testNullAddFriend();
+        } catch (Exception e){
+
+        }
+        try{
+            testChangeUsername();
+        } catch (Exception e){
+
+        }
+        try{
+            testNullUserName();
+        } catch (Exception e){
+
+        }
+    }
+
+    public void testGetStars() {
         testAccount.getStars();
         testAccount.subtractStars(10);
     }
 
-    public void testAddStars(View view) {
+    public void testAddStars() {
         testAccount.getStars();
         testAccount.addStars(20);
     }
 
-    public void testSubtractStars(View view) {
+    public void testSubtractStars() {
         testAccount.subtractStars(10);
     }
 
-    public void testAddNegativeTrophies(View view) {
+    public void testAddNegativeTrophies() {
         testAccount.addStars(-10);
     }
 
-    public void testChangeTrophies(View view) {
+    public void testChangeTrophies() {
         testAccount.changeTrophies(20);
         testAccount.getTrophies();
     }
 
-    public void testChangeUsername(View view) {
+    public void testChangeUsername() {
         testAccount.changeUsername("newName");
         testAccount.getUsername();
     }
 
-    public void testNullUserName(View view) {
+    public void testNullUserName() {
         testAccount.changeUsername(null);
     }
 
-    public void testNullAddFriend(View view) {
+    public void testNullAddFriend() {
         testAccount.addFriend(null);
     }
 
-    public void testAddFriend(View view) {
+    public void testAddFriend() {
         testAccount.addFriend("123456789");
     }
 
-    public void testRemoveNullFriend(View view) {
+    public void testRemoveNullFriend() {
         testAccount.removeFriend(null);
     }
 
-    public void testRemoveFriend(View view) {
+    public void testRemoveFriend() {
         testAccount.removeFriend("123456789");
     }
 }

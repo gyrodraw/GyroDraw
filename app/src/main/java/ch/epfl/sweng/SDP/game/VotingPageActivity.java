@@ -154,7 +154,8 @@ public class VotingPageActivity extends Activity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
 
-        // Make the drawingView and the playerNameView invisible until the drawings have been downloaded
+        // Make the drawingView and the playerNameView invisible
+        // until the drawings have been downloaded
         setVisibility(View.INVISIBLE, drawingView, playerNameView);
         initProgressBar();
     }
@@ -187,7 +188,10 @@ public class VotingPageActivity extends Activity {
         finish();
     }
 
-    // public for testing only
+    /**
+     * Switch the drawing when clicking the button.
+     * @param view View referencing the button
+     */
     public void changeImage(View view) {
         ++changeDrawingCounter;
         changeDrawing(drawings[changeDrawingCounter], playersNames[changeDrawingCounter]);
@@ -274,7 +278,11 @@ public class VotingPageActivity extends Activity {
 
     /* public for testing only, the users in the database should be already sorted by their ranking
     before calling this */
-    // Show the final ranking in a new fragment
+
+    /**
+     * Show the final ranking in a new fragment.
+     * @param view View referencing the button
+     */
     public void showFinalRanking(View view) {
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -254,6 +254,12 @@ public class HomeActivity extends Activity {
     }
 
     // To remove, only for testing
+
+    /**
+     * Callback function when clicking the voting button.
+     * Sets the user ready in the database.
+     * @param view View referencing the button
+     */
     public void startVotingPage(View view) {
         // For testing purposes only
         dbRef.child(user).setValue(1);

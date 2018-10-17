@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".auth.AccountCreationActivity"></activity>
-        <activity android:name=".firebase.StorageHandlingTestView">
+        <activity android:name=".StorageHandlingTestView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

@@ -5,14 +5,12 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableWaitingAnimation;
-import static org.hamcrest.Matchers.is;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -21,7 +19,6 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
-import android.widget.ProgressBar;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import org.hamcrest.Matcher;
@@ -83,6 +80,34 @@ public class WaitingPageActivityTest {
     @Test
     public void isButtonWord2Clickable() {
         isViewClickable(R.id.buttonWord2);
+    }
+
+    @Test
+    public void areButtonWordsLockedAfterVoteWord1() {
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+
+        assert(mActivityRule.getActivity().getWord1Votes() == 1);
+        assert(mActivityRule.getActivity().getWord2Votes() == 0);
+    }
+
+    @Test
+    public void areButtonWordsLockedAfterVoteWord2() {
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+
+        assert(mActivityRule.getActivity().getWord1Votes() == 0);
+        assert(mActivityRule.getActivity().getWord2Votes() == 1);
     }
 
     @Test

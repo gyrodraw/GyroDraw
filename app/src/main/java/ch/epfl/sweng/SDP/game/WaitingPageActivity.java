@@ -216,14 +216,6 @@ public class WaitingPageActivity extends Activity {
         b2.setEnabled(false);
     }
 
-    /**
-     * Disables the waiting animation.
-     * Call this method in every WaitingPageActivity test
-     */
-    public static void disableWaitingAnimation() {
-        enableWaitingAnimation = false;
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -264,6 +256,32 @@ public class WaitingPageActivity extends Activity {
         }
 
         return new int[]{number1, number2};
+    }
+
+    /**
+     * Getter of the number of votes for word 1
+     *
+     * @return the number of votes for word 1
+     */
+    public int getWord1Votes() {
+        return word1Votes;
+    }
+
+    /**
+     * Getter of the number of votes for word 2
+     *
+     * @return the number of votes for word 2
+     */
+    public int getWord2Votes() {
+        return word2Votes;
+    }
+
+    /**
+     * Disables the waiting animation.
+     * Call this method in every WaitingPageActivity test
+     */
+    public static void disableWaitingAnimation() {
+        enableWaitingAnimation = false;
     }
 
     // TODO

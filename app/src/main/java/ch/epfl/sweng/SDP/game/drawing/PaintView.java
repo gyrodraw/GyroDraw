@@ -15,7 +15,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 
-import ch.epfl.sweng.SDP.firebase.FbStorageHandler;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 
 
@@ -31,7 +31,7 @@ public class PaintView extends View {
     private Bitmap bitmap;
     private Canvas canvas;
     private LocalDbHandler localDbHandler;
-    private FbStorageHandler fbStorageHandler;
+    private FbStorage fbStorage;
 
     /**
      * Constructor for the view.
@@ -42,7 +42,7 @@ public class PaintView extends View {
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         localDbHandler = new LocalDbHandler(context, null, 1);
-        fbStorageHandler = new FbStorageHandler();
+        fbStorage = new FbStorage();
         setFocusable(true);
         paint = new Paint();
         paintC = new Paint();
@@ -141,6 +141,6 @@ public class PaintView extends View {
         String ts = tsLong.toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child(""+ts+".jpg");
-        fbStorageHandler.sendBitmapToFireBaseStorage(bitmap, imageRef);
+        fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

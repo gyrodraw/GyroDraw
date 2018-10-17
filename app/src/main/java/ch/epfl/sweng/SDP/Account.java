@@ -15,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
  * Class that simulates an account.
  */
 public class Account implements java.io.Serializable {
-    private static final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser firebaseUser;
     private String username;
     private int trophies;
     private int stars;
@@ -62,9 +62,10 @@ public class Account implements java.io.Serializable {
      * Checks if user is null because a test is being run.
      */
     public void initializeUserId(){
-        if(firebaseUser == null){
+        if(FirebaseAuth. == null || firebaseUser == null){
             // does nothing for now, important for tests to work
         } else {
+            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             this.userId = firebaseUser.getUid();
         }
     }

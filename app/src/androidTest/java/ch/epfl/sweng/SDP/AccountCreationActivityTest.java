@@ -31,12 +31,6 @@ public class AccountCreationActivityTest {
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
 
-    @Before
-    public void initialize(){
-        testAccount = new Account("testAccount", 100, 100);
-        testAccount.setUserId("1234567890");
-    }
-
     @Test
     public void testCreateAccIsClickable() {
         onView(withId(R.id.createAcc)).check(matches(isClickable()));
@@ -52,29 +46,5 @@ public class AccountCreationActivityTest {
     public void testAccountGetsCreated() {
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard());
         onView(withId(R.id.createAcc)).perform(click());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddNegativeTrophies() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        testAccount.addStars(-1000);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullUserName() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        testAccount.changeUsername(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullAddFriend() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        testAccount.addFriend(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveNullFriend() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        testAccount.removeFriend(null);
     }
 }

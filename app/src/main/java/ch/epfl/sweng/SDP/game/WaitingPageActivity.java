@@ -136,7 +136,8 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Callback function called when a radio button is pressed. Updates the votes in the database
+     * Callback function called when a radio button is pressed.
+     * Updates the votes in the database.
      *
      * @param view View corresponding to the button clicked
      */
@@ -188,7 +189,9 @@ public class WaitingPageActivity extends Activity {
     protected void onPause() {
         super.onPause();
         if (wordsVotesRef != null) {
-            wordsVotesRef.removeValue(); // need to keep the most voted word here, it has to be done by the script not by this class
+            // need to keep the most voted word here, it has to
+            // be done by the script not by this class
+            wordsVotesRef.removeValue();
         }
     }
 

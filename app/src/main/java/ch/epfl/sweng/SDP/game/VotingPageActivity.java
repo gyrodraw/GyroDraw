@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game;
 
 import static java.lang.String.format;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;

@@ -11,6 +11,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableWaitingAnimation;
 import static org.hamcrest.Matchers.is;
 
 import android.support.test.espresso.Espresso;
@@ -34,7 +35,12 @@ public class WaitingPageActivityTest {
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
-            new ActivityTestRule<>(WaitingPageActivity.class);
+            new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableWaitingAnimation();
+                }
+            };
 
     @Test
     public void testRadioButton1() {
@@ -90,10 +96,10 @@ public class WaitingPageActivityTest {
                 View.VISIBLE);
 
         onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.playersCounterText)).check(matches(withText("2/5 users ready")));
+        onView(withId(R.id.playersCounterText)).check(matches(withText("2/5")));
 
         onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.playersCounterText)).check(matches(withText("3/5 users ready")));
+        onView(withId(R.id.playersCounterText)).check(matches(withText("3/5")));
     }
 
     /**

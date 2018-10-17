@@ -18,6 +18,6 @@
     <string name="drawing">Drawing</string>
     <string name="home">Home</string>
     <string name="players_ready">Players ready</string>
-    <string name="vote">Vote for the word you want to draw</string>
+    <string name="vote">Vote for what you want to draw</string>
 
 </resources>

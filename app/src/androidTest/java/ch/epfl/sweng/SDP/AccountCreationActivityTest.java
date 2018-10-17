@@ -87,14 +87,14 @@ public class AccountCreationActivityTest {
         testAccount.getTrophies();
     }
 
-    @Test
-    public void testChangeUsername() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Long tsLong = System.currentTimeMillis()/1000;
-        String timestamp = tsLong.toString();
-        testAccount.changeUsername(timestamp);
-        testAccount.getUsername();
-    }
+    //@Test
+    //public void testChangeUsername() {
+    //    FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
+    //    Long tsLong = System.currentTimeMillis()/1000;
+    //    String timestamp = tsLong.toString();
+    //    testAccount.changeUsername(timestamp);
+    //    testAccount.getUsername();
+    //}
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullUserName() {

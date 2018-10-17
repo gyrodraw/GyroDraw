@@ -1,21 +1,27 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.Locale;
 import java.util.Random;
 
@@ -25,12 +31,11 @@ public class WaitingPageActivity extends Activity {
         ONE, TWO
     }
 
+    private static boolean enableWaitingAnimation = true;
+
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
-    private static final int STEP = 1;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-
-    private ProgressDialog progressDialog;
 
     private int usersReadyCount = 1;
 
@@ -96,13 +101,13 @@ public class WaitingPageActivity extends Activity {
                         WordNumber.TWO);
             }
 
-            // Clear the progress dialog
-            if (progressDialog.isShowing()) {
-                progressDialog.cancel();
-                setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                        R.id.relativeLayout, R.id.incrementButton, R.id.usersProgressBar,
-                        R.id.usersTextView);
-            }
+            setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                    R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                    R.id.playersReadyText, R.id.voteText);
+
+            if (enableWaitingAnimation) setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
+
+            setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
 
         @Override
@@ -114,23 +119,30 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
         Database database = Database.getInstance();
 
         wordsVotesRef = database.getReference(
                 "rooms.432432432.words"); // need to be replaced with a search for a suitable room
 
-        initProgressDialog();
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                R.id.relativeLayout, R.id.incrementButton, R.id.usersProgressBar,
-                R.id.usersTextView);
+                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.playersCounterText)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,
-            DatabaseReference dbRef, WordNumber wordNumber) {
+                                 DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.setValue(0);
         dbRef.addListenerForSingleValueEvent(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
@@ -174,12 +186,28 @@ public class WaitingPageActivity extends Activity {
         switch (wordNumber) {
             case ONE:
                 word1Ref.setValue(++word1Votes);
+                ((ImageView) findViewById(R.id.imageWord1)).setImageResource(R.drawable.word_image_picked);
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
+                ((ImageView) findViewById(R.id.imageWord2)).setImageResource(R.drawable.word_image_picked);
                 break;
             default:
         }
+        animateWord1();
+        animateWord2();
+    }
+
+    private void animateWord1() {
+        final Animation pickWord1 = AnimationUtils.loadAnimation(this, R.anim.pick_word_1);
+        pickWord1.setFillAfter(true);
+        findViewById(R.id.imageWord1).startAnimation(pickWord1);
+    }
+
+    private void animateWord2() {
+        final Animation pickWord2 = AnimationUtils.loadAnimation(this, R.anim.pick_word_2);
+        pickWord2.setFillAfter(true);
+        findViewById(R.id.imageWord2).startAnimation(pickWord2);
     }
 
     private void disableButtons() {
@@ -209,12 +237,10 @@ public class WaitingPageActivity extends Activity {
      * @param view Button that will increase the count when pressed
      */
     public void incrementCount(View view) {
-        ProgressBar progressBar = findViewById(R.id.usersProgressBar);
-        progressBar.incrementProgressBy(STEP);
         ++usersReadyCount;
-        TextView usersReady = findViewById(R.id.usersTextView);
+        TextView usersReady = findViewById(R.id.playersCounterText);
         usersReady.setText(
-                String.format(Locale.getDefault(), "%d/%d users ready", usersReadyCount,
+                String.format(Locale.getDefault(), "%d/%d", usersReadyCount,
                         NUMBER_OF_PLAYERS_NEEDED));
 
         // We should probably check if the database is ready too
@@ -234,11 +260,30 @@ public class WaitingPageActivity extends Activity {
         return new int[]{number1, number2};
     }
 
-    private void initProgressDialog() {
-        progressDialog = new ProgressDialog(this, R.style.MyTheme);
-        progressDialog.setCancelable(false);
-        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        progressDialog.show();
+    /**
+     * Getter of the number of votes for word 1
+     *
+     * @return the number of votes for word 1
+     */
+    public int getWord1Votes() {
+        return word1Votes;
+    }
+
+    /**
+     * Getter of the number of votes for word 2
+     *
+     * @return the number of votes for word 2
+     */
+    public int getWord2Votes() {
+        return word2Votes;
+    }
+
+    /**
+     * Disables the waiting animation.
+     * Call this method in every WaitingPageActivity test
+     */
+    public static void disableWaitingAnimation() {
+        enableWaitingAnimation = false;
     }
 
     // TODO

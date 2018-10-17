@@ -5,13 +5,12 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableWaitingAnimation;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -20,7 +19,6 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
-import android.widget.ProgressBar;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import org.hamcrest.Matcher;
@@ -34,7 +32,12 @@ public class WaitingPageActivityTest {
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
-            new ActivityTestRule<>(WaitingPageActivity.class);
+            new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableWaitingAnimation();
+                }
+            };
 
     @Test
     public void testRadioButton1() {
@@ -80,13 +83,36 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void isProgressBarVisible() {
-        isViewVisible(R.id.usersProgressBar);
+    public void areButtonWordsLockedAfterVoteWord1() {
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+
+        assert(mActivityRule.getActivity().getWord1Votes() == 1);
+        assert(mActivityRule.getActivity().getWord2Votes() == 0);
+    }
+
+    @Test
+    public void areButtonWordsLockedAfterVoteWord2() {
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+        onView(withId(R.id.buttonWord2)).perform(click());
+
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+        onView(withId(R.id.buttonWord1)).perform(click());
+
+        assert(mActivityRule.getActivity().getWord1Votes() == 0);
+        assert(mActivityRule.getActivity().getWord2Votes() == 1);
     }
 
     @Test
     public void isUserCounterViewVisible() {
-        isViewVisible(R.id.usersTextView);
+        isViewVisible(R.id.playersCounterText);
     }
 
     @Test
@@ -94,15 +120,11 @@ public class WaitingPageActivityTest {
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
                 View.VISIBLE);
 
-        ProgressBar progressBar = mActivityRule.getActivity().findViewById(R.id.usersProgressBar);
+        onView(withId(R.id.incrementButton)).perform(click());
+        onView(withId(R.id.playersCounterText)).check(matches(withText("2/5")));
 
         onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.usersTextView)).check(matches(withText("2/5 users ready")));
-        assertThat(progressBar.getProgress(), is(2));
-
-        onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.usersTextView)).check(matches(withText("3/5 users ready")));
-        assertThat(progressBar.getProgress(), is(3));
+        onView(withId(R.id.playersCounterText)).check(matches(withText("3/5")));
     }
 
     /**

@@ -47,9 +47,6 @@ public class HomeActivity extends Activity {
     private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
 
-    private static final int LEFT_PADDING = 140;
-    private static final int TOP_PADDING = -5;
-
     private Database database;
     private DatabaseReference dbRef;
     private DatabaseReference dbRefTimer;
@@ -91,8 +88,8 @@ public class HomeActivity extends Activity {
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
-        final Button trophiesButton = findViewById(R.id.trophiesButton);
-        final Button starsButton = findViewById(R.id.starsButton);
+        final ImageView trophiesButton = findViewById(R.id.trophiesButton);
+        final ImageView starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -100,10 +97,6 @@ public class HomeActivity extends Activity {
 
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
-        trophiesButton.setTypeface(typeMuro);
-        starsButton.setTypeface(typeMuro);
-        trophiesButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
-        starsButton.setPadding(LEFT_PADDING, TOP_PADDING, 0, 0);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);

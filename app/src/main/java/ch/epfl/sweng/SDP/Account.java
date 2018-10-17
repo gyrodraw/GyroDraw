@@ -25,7 +25,7 @@ public class Account implements java.io.Serializable {
      * Empty Builder for Firebase support.
      */
     public Account() {
-
+        initializeUserId();
     }
 
     /**
@@ -69,6 +69,10 @@ public class Account implements java.io.Serializable {
         }
     }
 
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -88,10 +92,9 @@ public class Account implements java.io.Serializable {
      * @throws IllegalArgumentException in case the name is already taken
      * @throws DatabaseException in case write to database fails
      */
-    public void changeUsername(final String newName) throws NullPointerException,
-            IllegalArgumentException, DatabaseException {
+    public void changeUsername(final String newName) throws IllegalArgumentException, DatabaseException {
         if (newName == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         updateUsername(newName);
     }
@@ -200,9 +203,9 @@ public class Account implements java.io.Serializable {
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
-    public void addFriend(final String usernameId) throws NullPointerException, DatabaseException {
+    public void addFriend(final String usernameId) throws IllegalArgumentException, DatabaseException {
         if (usernameId == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         Constants.usersRef.child(userId).child("friends").child(usernameId)
                 .setValue(true, new DatabaseReference.CompletionListener() {
@@ -220,9 +223,9 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException in case write to database fails
      */
     public void removeFriend(final String usernameId)
-            throws NullPointerException, DatabaseException {
+            throws IllegalArgumentException, DatabaseException {
         if (usernameId == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         Constants.usersRef.child(userId).child("friends").child(usernameId)
                 .removeValue(new DatabaseReference.CompletionListener() {

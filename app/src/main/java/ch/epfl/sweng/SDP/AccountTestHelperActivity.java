@@ -15,6 +15,7 @@ public class AccountTestHelperActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounttesthelper);
         testAccount = new Account("testAccount", 100, 100);
+        testAccount.setUserId("1234567890");
     }
 
     public void testAccountFunctions(View view){

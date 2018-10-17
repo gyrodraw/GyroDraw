@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                 createAccClicked();
             }
         };
+        createAcc.setOnClickListener(createAccListener);
     }
 
     /**
@@ -52,15 +54,13 @@ public class AccountCreationActivity extends AppCompatActivity {
      */
     private void initializeUserId(){
         if(CURRENT_USER == null){
-            if(getIntent() == null){
-                userId = "123456789";
-            }
+
         } else {
             userId = CURRENT_USER.getUid();
         }
     }
 
-    private void createAccClicked() {
+    public void createAccClicked() {
         username = usernameInput.getText().toString();
         if (username.isEmpty()) {
             usernameTaken.setText("Username must not be empty.");
@@ -78,9 +78,9 @@ public class AccountCreationActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    public void onDataChange(DataSnapshot snapshot) {
                         if(snapshot.exists()) {
-                            usernameTaken.setText(getString(R.string.username_taken));
+                            usernameTaken.setText("Username already taken.");
                         }
                         else {
                             createAccount();
@@ -111,6 +111,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                         else {
                             getDefaultSharedPreferences(getApplicationContext()).edit()
                                     .putBoolean("hasAccount", true).apply();
+                            usernameTaken.setText("Success!");
                             gotoHome();
                         }
                     }

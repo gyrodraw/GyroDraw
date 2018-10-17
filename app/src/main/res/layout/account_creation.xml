@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="25dp">
+    tools:layout_editor_absoluteY="25dp"
+    tools:context=".AccountCreationActivity">
 
     <Button
         android:id="@+id/createAcc"
@@ -29,6 +30,7 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/createAcc"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameTaken" />
 

@@ -27,7 +27,7 @@ public class AccountCreationActivityTest {
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
-            new ActivityTestRule<>(AccountCreationActivity.class);
+            new ActivityTestRule<AccountCreationActivity>(AccountCreationActivity.class);
 
     @Test
     public void testCreateAccIsClickable() {

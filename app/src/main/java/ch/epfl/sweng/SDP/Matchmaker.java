@@ -2,8 +2,13 @@ package ch.epfl.sweng.SDP;
 
 import android.util.Log;
 
-import com.google.firebase.database.*;
-import com.google.firebase.auth.*;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -11,21 +16,21 @@ import java.util.HashMap;
 public class Matchmaker implements MatchmakingInterface {
 
 
-    private static Matchmaker single_instance = null;
+    private static Matchmaker singleInstance = null;
     // static method to create instance of Singleton class
     private DatabaseReference myRef;
 
     /**
-     *
-     * @return returns a singelton instance.
+     *  Create a singleton Instance
+     * @return returns a singleton instance.
      */
     public static Matchmaker getInstance()
     {
-        if (single_instance == null) {
-            single_instance = new Matchmaker();
+        if (singleInstance == null) {
+            singleInstance = new Matchmaker();
         }
 
-        return single_instance;
+        return singleInstance;
     }
 
 
@@ -38,28 +43,23 @@ public class Matchmaker implements MatchmakingInterface {
         myRef = database.getReference("rooms");
 
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
-
                 // Update room
 
-                System.out.println(map);
-
+                Log.d("1",map.toString());
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-
             }
-
         });
-
     }
 
     /**
@@ -67,12 +67,8 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void joinRoom(String roomId) {
-
-
-
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         myRef.child(roomId).child("users").child(currentFirebaseUser.getUid()).setValue("InRoom");
-
     }
 
     /**
@@ -80,12 +76,8 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-
-
-
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         myRef.child(roomId).child("users").child(currentFirebaseUser.getUid()).removeValue();
-
     }
 
 

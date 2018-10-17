@@ -44,30 +44,4 @@ exports.joinGame = functions.https.onRequest((req, res) => {
     });
   });
 
-
-
-            // no empty room found, create new game.
-
-
-
-  // Create a new room
-
-
-  // Create the room
-  // Push the new message into the Realtime Database using the Firebase Admin SDK.
-//  return admin.database().ref('/messages').push({original: original}).then((snapshot) => {
-    // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
-//  });
-
-
 });
-
-// check if there is an available room. If so, join game.
-/* exports.joinGameListener = functions.database.ref('/rooms/{uid}/users')
-    .onWrite(event => {
-      var users = event.data.val();
-
-      if (users.length > 4) {
-           console.log('Room is full, starting game!');
-      }
-}); */

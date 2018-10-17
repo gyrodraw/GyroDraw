@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-
 import com.google.firebase.FirebaseApp;
 
 import com.google.firebase.auth.FirebaseAuth;

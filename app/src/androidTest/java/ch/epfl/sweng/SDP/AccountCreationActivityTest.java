@@ -25,8 +25,6 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityTest {
 
-    Account testAccount;
-
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);

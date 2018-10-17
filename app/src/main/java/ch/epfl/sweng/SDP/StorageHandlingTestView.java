@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.firebase.FbStorageHandler;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -17,7 +18,6 @@ import java.io.ByteArrayOutputStream;
 public class StorageHandlingTestView extends AppCompatActivity {
 
     LocalDbHandler localDbHandler;
-    LocalDbHandler localDbHandler2;
     FbStorageHandler fbStorageHandler;
     private Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bitmap);

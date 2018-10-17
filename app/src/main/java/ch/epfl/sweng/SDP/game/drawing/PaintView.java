@@ -9,14 +9,13 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 
-import ch.epfl.sweng.SDP.FbStorageHandler;
+import ch.epfl.sweng.SDP.firebase.FbStorageHandler;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 
 

@@ -99,7 +99,9 @@ public class WaitingPageActivity extends Activity {
             // Clear the progress dialog
             if (progressDialog.isShowing()) {
                 progressDialog.cancel();
-                setGlobalVisibility(View.VISIBLE);
+                setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                        R.id.relativeLayout, R.id.incrementButton, R.id.usersProgressBar,
+                        R.id.usersTextView);
             }
         }
 
@@ -119,7 +121,9 @@ public class WaitingPageActivity extends Activity {
                 "rooms.432432432.words"); // need to be replaced with a search for a suitable room
 
         initProgressDialog();
-        setGlobalVisibility(View.GONE);
+        setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                R.id.relativeLayout, R.id.incrementButton, R.id.usersProgressBar,
+                R.id.usersTextView);
 
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
@@ -237,21 +241,9 @@ public class WaitingPageActivity extends Activity {
         progressDialog.show();
     }
 
-    private void setGlobalVisibility(final int visibility) {
-        findViewById(R.id.buttonWord1).setVisibility(visibility);
-        findViewById(R.id.buttonWord2).setVisibility(visibility);
-        findViewById(R.id.radioGroup).setVisibility(visibility);
-        findViewById(R.id.relativeLayout).setVisibility(visibility);
-        findViewById(R.id.incrementButton).setVisibility(visibility);
-        findViewById(R.id.usersProgressBar).setVisibility(visibility);
-        findViewById(R.id.usersTextView).setVisibility(visibility);
-    }
-
     // TODO
     private void getReadyUsers() {
         // Do stuff with the database
         // Should increment the counter with incrementCounter()
     }
-
-
 }

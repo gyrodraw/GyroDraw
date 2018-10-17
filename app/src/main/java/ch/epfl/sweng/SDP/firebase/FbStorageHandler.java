@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.firebase;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

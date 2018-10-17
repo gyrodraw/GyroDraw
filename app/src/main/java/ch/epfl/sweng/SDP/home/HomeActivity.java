@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,7 +30,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends Activity {
@@ -102,7 +100,7 @@ public class HomeActivity extends Activity {
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
 
-        database = database.getInstance();
+        database = Database.getInstance();
         dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");

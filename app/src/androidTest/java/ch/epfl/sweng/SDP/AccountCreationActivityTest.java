@@ -54,21 +54,21 @@ public class AccountCreationActivityTest {
         onView(withId(R.id.createAcc)).perform(click());
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testGetStars() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.getStars();
         testAccount.subtractStars(10);
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testAddStars() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.getStars();
         testAccount.addStars(20);
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testSubtractStars() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.subtractStars(10);
@@ -80,14 +80,14 @@ public class AccountCreationActivityTest {
         testAccount.addStars(-10);
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testChangeTrophies() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.changeTrophies(20);
         testAccount.getTrophies();
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testChangeUsername() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.changeUsername("newName");
@@ -106,7 +106,7 @@ public class AccountCreationActivityTest {
         testAccount.addFriend(null);
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testAddFriend() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.addFriend("123456789");
@@ -118,7 +118,7 @@ public class AccountCreationActivityTest {
         testAccount.removeFriend(null);
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testRemoveFriend() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         testAccount.removeFriend("123456789");

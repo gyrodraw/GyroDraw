@@ -40,7 +40,7 @@ public class AccountCreationActivityTest {
                 .check(matches(withText(R.string.test_name)));
     }
 
-    @Test(expected = DatabaseException.class)
+    @Test
     public void testAccountGetsCreated() {
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard());
         onView(withId(R.id.createAcc)).perform(click());

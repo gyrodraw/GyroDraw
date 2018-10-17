@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.google.firebase.FirebaseApp;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         setContentView(R.layout.activity_main);
         findViewById(R.id.login_button).setOnClickListener(this);
 
+        FirebaseApp.initializeApp(this);
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null && getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("hasAccount", false)) {
@@ -25,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             startActivity(intent);
             finish();
         }
+
+
     }
 
     @Override

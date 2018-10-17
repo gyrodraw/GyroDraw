@@ -90,7 +90,9 @@ public class AccountCreationActivityTest {
     @Test(expected = DatabaseException.class)
     public void testChangeUsername() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        testAccount.changeUsername("newName");
+        Long tsLong = System.currentTimeMillis()/1000;
+        String timestamp = tsLong.toString();
+        testAccount.changeUsername(timestamp);
         testAccount.getUsername();
     }
 

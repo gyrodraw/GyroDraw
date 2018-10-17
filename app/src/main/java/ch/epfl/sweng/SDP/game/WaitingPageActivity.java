@@ -105,7 +105,9 @@ public class WaitingPageActivity extends Activity {
                     R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
                     R.id.playersReadyText, R.id.voteText);
 
-            if (enableWaitingAnimation) setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
+            if (enableWaitingAnimation) {
+                setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
+            }
 
             setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
@@ -186,11 +188,13 @@ public class WaitingPageActivity extends Activity {
         switch (wordNumber) {
             case ONE:
                 word1Ref.setValue(++word1Votes);
-                ((ImageView) findViewById(R.id.imageWord1)).setImageResource(R.drawable.word_image_picked);
+                ((ImageView) findViewById(R.id.imageWord1))
+                        .setImageResource(R.drawable.word_image_picked);
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
-                ((ImageView) findViewById(R.id.imageWord2)).setImageResource(R.drawable.word_image_picked);
+                ((ImageView) findViewById(R.id.imageWord2))
+                        .setImageResource(R.drawable.word_image_picked);
                 break;
             default:
         }
@@ -261,7 +265,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Getter of the number of votes for word 1
+     * Getter of the number of votes for word 1.
      *
      * @return the number of votes for word 1
      */
@@ -270,7 +274,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Getter of the number of votes for word 2
+     * Getter of the number of votes for word 2.
      *
      * @return the number of votes for word 2
      */

@@ -62,7 +62,7 @@ public class Account implements java.io.Serializable {
      * Checks if user is null because a test is being run.
      */
     public void initializeUserId(){
-        if(FirebaseAuth. == null || firebaseUser == null){
+        if(firebaseUser == null){
             // does nothing for now, important for tests to work
         } else {
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

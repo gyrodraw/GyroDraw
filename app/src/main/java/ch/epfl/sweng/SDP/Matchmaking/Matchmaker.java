@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.Matchmaking;
 
 import android.util.Log;
 
@@ -7,10 +7,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.security.PublicKey;
 import java.util.HashMap;
 
 public class Matchmaker implements MatchmakingInterface {

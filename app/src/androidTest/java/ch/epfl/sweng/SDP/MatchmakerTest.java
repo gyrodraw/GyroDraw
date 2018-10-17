@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP;
 
 import org.junit.Test;
 
+import ch.epfl.sweng.SDP.Matchmaking.Matchmaker;
+
 import static org.junit.Assert.assertTrue;
 
 public class MatchmakerTest {

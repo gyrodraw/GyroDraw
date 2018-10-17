@@ -21,7 +21,7 @@ public class Matchmaker implements MatchmakingInterface {
     private DatabaseReference myRef;
 
     /**
-     *  Create a singleton Instance
+     *  Create a singleton Instance.
      * @return returns a singleton instance.
      */
     public static Matchmaker getInstance()

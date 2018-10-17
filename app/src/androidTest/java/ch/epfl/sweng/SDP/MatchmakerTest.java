@@ -14,7 +14,7 @@ public class MatchmakerTest {
 
     @Test
     public void matchMaker() {
-        Matchmaker.getInstance();
+        Matchmaker m = new Matchmaker();
         assertTrue(true);
     }
 

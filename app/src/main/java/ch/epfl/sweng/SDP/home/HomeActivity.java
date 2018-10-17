@@ -79,6 +79,15 @@ public class HomeActivity extends Activity {
             setBackgroundAnimation();
         }
 
+        // Testing method
+        database = Database.getInstance();
+        dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
+
+        dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
+        dbRefTimer.addValueEventListener(listenerAllReady);
+
+        initUsersDatabase();
+
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);
@@ -99,15 +108,6 @@ public class HomeActivity extends Activity {
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-
-        database = Database.getInstance();
-        dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
-
-        dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
-        dbRefTimer.addValueEventListener(listenerAllReady);
-
-        // Testing method
-        initUsersDatabase();
     }
 
     /**

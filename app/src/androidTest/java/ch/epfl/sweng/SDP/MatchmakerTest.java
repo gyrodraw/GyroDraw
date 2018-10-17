@@ -14,7 +14,8 @@ public class MatchmakerTest {
 
     @Test
     public void matchMaker() {
-        Matchmaker m = new Matchmaker();
+        Matchmaker matchMaker = new Matchmaker();
+        matchMaker.leaveRoom("2312");
         assertTrue(true);
     }
 

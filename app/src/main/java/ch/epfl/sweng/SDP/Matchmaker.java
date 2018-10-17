@@ -67,8 +67,8 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void joinRoom(String roomId) {
-        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomId).child("users").child(currentFirebaseUser.getUid()).setValue("InRoom");
+       // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        myRef.child(roomId).child("users").child("123").setValue("InRoom");
     }
 
     /**
@@ -76,8 +76,8 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomId).child("users").child(currentFirebaseUser.getUid()).removeValue();
+        // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        myRef.child(roomId).child("users").child("123").removeValue();
     }
 
 

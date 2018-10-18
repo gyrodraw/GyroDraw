@@ -68,7 +68,7 @@ public class Account implements java.io.Serializable {
     private void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException{
         if (newName == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Username must not be null");
         }
         Constants.usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {

@@ -34,7 +34,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_creation);
+        setContentView(R.layout.activity_account_creation);
         usernameInput = this.findViewById(R.id.usernameInput);
         createAcc = this.findViewById(R.id.createAcc);
         createAcc.setOnClickListener(createAccListener);

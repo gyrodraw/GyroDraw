@@ -14,6 +14,8 @@ import com.firebase.ui.auth.IdpResponse;
 import java.util.Collections;
 import java.util.List;
 
+import ch.epfl.sweng.SDP.auth.AccountCreationActivity;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";

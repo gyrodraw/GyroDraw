@@ -16,6 +16,7 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.utils.GifView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -127,6 +128,11 @@ public class WaitingPageActivity extends Activity {
 
         wordsVotesRef = database.getReference(
                 "rooms.432432432.words"); // need to be replaced with a search for a suitable room
+
+        ((GifView) findViewById(R.id.waitingAnimationSquare))
+                .setGifImageResource(R.drawable.waiting_animation_square);
+        ((GifView) findViewById(R.id.waitingAnimationDots))
+                .setGifImageResource(R.drawable.waiting_animation_dots);
 
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                 R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,

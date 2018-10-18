@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.903"
         app:srcCompat="@drawable/home_background" />
 
-    <pl.droidsonroids.gif.GifImageView
+    <ch.epfl.sweng.SDP.utils.GifView
         android:id="@+id/waitingAnimationDots"
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -29,13 +29,12 @@
         android:layout_marginLeft="170dp"
         android:layout_marginRight="170dp"
         android:layout_marginStart="170dp"
-        android:src="@drawable/waiting_animation_dots"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <pl.droidsonroids.gif.GifImageView
+    <ch.epfl.sweng.SDP.utils.GifView
         android:id="@+id/waitingAnimationSquare"
         android:layout_width="250dp"
         android:layout_height="250dp"
@@ -45,7 +44,6 @@
         android:layout_marginRight="120dp"
         android:layout_marginStart="120dp"
         android:layout_marginTop="350dp"
-        android:src="@drawable/waiting_animation_square"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

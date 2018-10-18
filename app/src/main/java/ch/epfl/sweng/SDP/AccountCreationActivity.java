@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 public class AccountCreationActivity extends AppCompatActivity {
-    private String userId;
     private EditText usernameInput;
     private Button createAcc;
     private TextView usernameTaken;
@@ -46,7 +45,6 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         };
         createAcc.setOnClickListener(createAccListener);
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     public void createAccClicked() {
@@ -88,7 +86,7 @@ public class AccountCreationActivity extends AppCompatActivity {
      */
     private void createAccount(){
         account = new Account(username);
-        Constants.usersRef.child(userId)
+        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(account, new DatabaseReference.CompletionListener() {
 
                     @Override

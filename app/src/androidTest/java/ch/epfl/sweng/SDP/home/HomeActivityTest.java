@@ -16,7 +16,6 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
@@ -71,21 +70,6 @@ public class HomeActivityTest {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.crossText)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
-    }
-
-    @Test
-    public void testToast(){
-        mActivityRule.getActivity().makeAndShowToast("Test Toast!");
-    }
-
-    @Test
-    public void testSetBackgroundAnimation(){
-        mActivityRule.getActivity().setBackgroundAnimation();
-    }
-
-    @Test
-    public void testSetListener(){
-        mActivityRule.getActivity().setListener(mActivityRule.getActivity().findViewById(R.id.usernameButton), 0, 0);
     }
 
     /*@Test

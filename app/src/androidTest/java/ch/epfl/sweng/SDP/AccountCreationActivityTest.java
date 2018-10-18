@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.auth;
+package ch.epfl.sweng.SDP;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.support.test.espresso.Espresso.onView;
@@ -16,6 +16,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.AccountCreationActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import org.junit.runner.RunWith;
 public class AccountCreationActivityTest {
 
     @Rule
-    public final ActivityTestRule<AccountCreationActivity> mActivityRule =
+    public final ActivityTestRule<ch.epfl.sweng.SDP.auth.AccountCreationActivity> mActivityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
 
     @Test

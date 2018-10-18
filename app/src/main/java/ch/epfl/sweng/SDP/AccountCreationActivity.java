@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 public class AccountCreationActivity extends AppCompatActivity {
-    private static final FirebaseUser CURRENT_USER = FirebaseAuth.getInstance().getCurrentUser();
     private String userId;
     private EditText usernameInput;
     private Button createAcc;
@@ -40,7 +39,6 @@ public class AccountCreationActivity extends AppCompatActivity {
         createAcc = this.findViewById(R.id.createAcc);
         createAcc.setOnClickListener(createAccListener);
         usernameTaken = this.findViewById(R.id.usernameTaken);
-        initializeUserId();
         createAccListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,18 +46,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         };
         createAcc.setOnClickListener(createAccListener);
-    }
-
-    /**
-     * Initializes userId to firebase id.
-     * Or in case of test, to default 123456789.
-     */
-    private void initializeUserId(){
-        if(CURRENT_USER == null){
-
-        } else {
-            userId = CURRENT_USER.getUid();
-        }
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     public void createAccClicked() {

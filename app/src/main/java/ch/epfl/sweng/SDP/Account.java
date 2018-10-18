@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP;
 
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -20,8 +21,11 @@ public class Account implements java.io.Serializable {
     private int trophies;
     private int stars;
     private String userId;
+    private Constants constants;
 
-    public Account(){
+    public Account(Constants constants, String userId){
+        this.constants = constants;
+        this.userId = userId;
         username = "standardName";
         trophies = 0;
         stars = 0;
@@ -42,6 +46,7 @@ public class Account implements java.io.Serializable {
      * @param stars int defining current currency
      */
     public Account(String username, int trophies, int stars) {
+        this.constants = new Constants();
         this.username = username;
         this.trophies = trophies;
         this.stars = stars;
@@ -72,7 +77,7 @@ public class Account implements java.io.Serializable {
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
         }
-        Constants.usersRef.orderByChild("username").equalTo(newName)
+        constants.getUsersRef().orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
@@ -81,7 +86,7 @@ public class Account implements java.io.Serializable {
                             throw new IllegalArgumentException("Username already taken.");
                         }
                         else {
-                            Constants.databaseRef.child("users").child(userId).child("username")
+                            constants.databaseRef.child("users").child(userId).child("username")
                                     .setValue(newName, new DatabaseReference.CompletionListener() {
 
                                         @Override
@@ -108,15 +113,9 @@ public class Account implements java.io.Serializable {
      */
     public void changeTrophies(int change) throws DatabaseException {
         final int newTrophies = Math.max(0, trophies + change);
-        Constants.usersRef.child(userId).child("trophies")
-                .setValue(newTrophies, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-                trophies = newTrophies;
-            }
-        });
+        constants.getUsersRef().child(userId).child("trophies")
+                .setValue(newTrophies, createCompletionListener());
+        trophies = newTrophies;
     }
 
     /**
@@ -130,15 +129,9 @@ public class Account implements java.io.Serializable {
         if (newStars < 0) {
             throw new IllegalArgumentException("Negative Balance");
         }
-        Constants.usersRef.child(userId).child("stars")
-                .setValue(newStars, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-                stars = newStars;
-            }
-        });
+        constants.getUsersRef().child(userId).child("stars")
+                .setValue(newStars, createCompletionListener());
+        stars = newStars;
     }
 
     /**
@@ -151,14 +144,8 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        Constants.usersRef.child(userId).child("friends").child(usernameId)
-                .setValue(true, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-            }
-        });
+        constants.getUsersRef().child(userId).child("friends").child(usernameId)
+                .setValue(true, createCompletionListener());
     }
 
     /**
@@ -171,14 +158,8 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        Constants.usersRef.child(userId).child("friends").child(usernameId)
-                .removeValue(new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-            }
-        });
+        constants.getUsersRef().child(userId).child("friends").child(usernameId)
+                .removeValue(createCompletionListener());
     }
 
     /**
@@ -191,5 +172,15 @@ public class Account implements java.io.Serializable {
         if (databaseError != null) {
             throw databaseError.toException();
         }
+    }
+
+    private DatabaseReference.CompletionListener createCompletionListener(){
+        return new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError,
+                                   @NonNull DatabaseReference databaseReference) {
+                checkForDatabaseError(databaseError);
+            }
+        };
     }
 }

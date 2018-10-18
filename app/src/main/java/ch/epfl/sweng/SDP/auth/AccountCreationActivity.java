@@ -30,6 +30,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     private String username;
     private Account account;
     private View.OnClickListener createAccListener;
+    private Constants constants;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         };
         createAcc.setOnClickListener(createAccListener);
+        constants = new Constants();
     }
 
     /**
@@ -65,7 +67,7 @@ public class AccountCreationActivity extends AppCompatActivity {
      * Else creates a new account.
      */
     private void checkIfNameIsTakenOrCreateAccount(){
-        Constants.usersRef.orderByChild("username").equalTo(username)
+        constants.getUsersRef().orderByChild("username").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
@@ -90,7 +92,7 @@ public class AccountCreationActivity extends AppCompatActivity {
      */
     private void createAccount(){
         account = new Account(username);
-        Constants.usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+        constants.getUsersRef().child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(account, new DatabaseReference.CompletionListener() {
 
                     @Override

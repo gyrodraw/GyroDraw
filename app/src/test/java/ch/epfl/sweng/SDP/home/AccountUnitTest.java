@@ -12,11 +12,6 @@ public class AccountUnitTest {
     Account account = new Account();
 
     @Test
-    public void testCreateAccount(){
-        new Account("testName");
-    }
-
-    @Test
     public void testGetStars(){
         assertThat(account.getStars(), is(0));
     }

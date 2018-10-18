@@ -153,21 +153,21 @@ public class HomeActivity extends Activity {
         profileWindow.dismiss();
     }
 
-    private Toast makeAndShowToast(String msg) {
+    public Toast makeAndShowToast(String msg) {
         assert msg != null;
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
         return toast;
     }
 
-    private void setBackgroundAnimation() {
+    public void setBackgroundAnimation() {
         final ImageView backgroundImage = findViewById(R.id.backgroundImage);
         final Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.background_anim);
         backgroundAnim.setInterpolator(new LinearInterpolator());
         backgroundImage.startAnimation(backgroundAnim);
     }
 
-    private void setListener(final View view, final double amplitude, final int frequency) {
+    public void setListener(final View view, final double amplitude, final int frequency) {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -189,7 +189,7 @@ public class HomeActivity extends Activity {
         });
     }
 
-    private void listenerEventSelector(final View view, int id) {
+    public void listenerEventSelector(final View view, int id) {
         switch (id) {
             case R.id.drawButton:
                 ((ImageView) view).setImageResource(R.drawable.draw_button);

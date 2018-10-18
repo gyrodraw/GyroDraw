@@ -72,6 +72,11 @@ public class HomeActivityTest {
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
 
+    @Test
+    public void testToast(){
+        mActivityRule.getActivity().makeAndShowToast("Test Toast!");
+    }
+
     /*@Test
     public void testCanSignOutAccount() {
         onView(withId(R.id.usernameButton)).perform(click());

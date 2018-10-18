@@ -21,6 +21,10 @@ public class Account implements java.io.Serializable {
     private int stars;
     private String userId;
 
+    public Account(){
+
+    }
+
     /**
      * Builder for account.
      * @param username String defining the preferred username

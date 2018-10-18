@@ -22,24 +22,11 @@ public class Account implements java.io.Serializable {
     private String userId;
 
     /**
-     * Empty Builder for Firebase support.
-     */
-    public Account() {
-        initializeUserId();
-    }
-
-    /**
      * Builder for account.
      * @param username String defining the preferred username
      */
     public Account(String username) {
-        if (username == null){
-            throw new NullPointerException("Username is null");
-        }
-        this.username = username;
-        this.trophies = 0;
-        this.stars = 0;
-        initializeUserId();
+        this(username, 0, 0);
     }
   
     /**
@@ -49,29 +36,11 @@ public class Account implements java.io.Serializable {
      * @param stars int defining current currency
      */
     public Account(String username, int trophies, int stars) {
-        if (username == null){
-            throw new NullPointerException("Username is null");
-        }
         this.username = username;
         this.trophies = trophies;
         this.stars = stars;
-        initializeUserId();
-    }
-
-    /**
-     * Checks if user is null because a test is being run.
-     */
-    public void initializeUserId(){
-        if(firebaseUser == null){
-            // does nothing for now, important for tests to work
-        } else {
-            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            this.userId = firebaseUser.getUid();
-        }
-    }
-
-    public void setUserId(String userId){
-        this.userId = userId;
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        this.userId = firebaseUser.getUid();
     }
 
     public String getUsername() {
@@ -87,20 +56,6 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * Method that allows one to change the current username to a new one,
-     * if and only if the name is available, and then synchronizes the firebase.
-     * @param newName String specifying preferred new name
-     * @throws IllegalArgumentException in case the name is already taken
-     * @throws DatabaseException in case write to database fails
-     */
-    public void changeUsername(final String newName) throws IllegalArgumentException, DatabaseException {
-        if (newName == null) {
-            throw new IllegalArgumentException();
-        }
-        updateUsername(newName);
-    }
-
-    /**
      * Updates Username to newName.
      * @param newName new username
      * @throws IllegalArgumentException if username not available anymore
@@ -108,6 +63,9 @@ public class Account implements java.io.Serializable {
      */
     private void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException{
+        if (newName == null) {
+            throw new IllegalArgumentException();
+        }
         Constants.usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 

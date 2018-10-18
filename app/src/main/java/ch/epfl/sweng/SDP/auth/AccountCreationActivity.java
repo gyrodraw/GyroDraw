@@ -10,16 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.Account;
+import ch.epfl.sweng.SDP.Constants;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.Constants;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -48,6 +48,9 @@ public class AccountCreationActivity extends AppCompatActivity {
         createAcc.setOnClickListener(createAccListener);
     }
 
+    /**
+     * Gets called when user entered username and clicked on create account.
+     */
     public void createAccClicked() {
         username = usernameInput.getText().toString();
         if (username.isEmpty()) {

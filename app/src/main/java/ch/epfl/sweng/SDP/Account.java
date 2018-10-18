@@ -65,7 +65,7 @@ public class Account implements java.io.Serializable {
      * @throws IllegalArgumentException if username not available anymore
      * @throws DatabaseException if problem with firebase
      */
-    private void updateUsername(final String newName)
+    public void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException{
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");

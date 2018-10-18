@@ -13,10 +13,10 @@ import android.view.View;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
-
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.LocalDbHandler;
+
+import java.io.ByteArrayOutputStream;
 
 
 public class PaintView extends View {

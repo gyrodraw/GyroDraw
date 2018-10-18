@@ -22,7 +22,9 @@ public class Account implements java.io.Serializable {
     private String userId;
 
     public Account(){
-
+        username = "standardName";
+        trophies = 0;
+        stars = 0;
     }
 
     /**
@@ -83,8 +85,8 @@ public class Account implements java.io.Serializable {
                                     .setValue(newName, new DatabaseReference.CompletionListener() {
 
                                         @Override
-                                        public void onComplete(@Nullable DatabaseError databaseError,
-                                                               @NonNull DatabaseReference databaseReference) {
+                                        public void onComplete(DatabaseError databaseError,
+                                                               DatabaseReference databaseReference) {
                                             checkForDatabaseError(databaseError);
                                             username = newName;
                                         }
@@ -144,7 +146,8 @@ public class Account implements java.io.Serializable {
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
-    public void addFriend(final String usernameId) throws IllegalArgumentException, DatabaseException {
+    public void addFriend(final String usernameId)
+            throws IllegalArgumentException, DatabaseException {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }

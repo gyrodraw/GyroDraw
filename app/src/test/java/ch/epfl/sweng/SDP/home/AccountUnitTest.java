@@ -9,18 +9,41 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AccountUnitTest {
 
+    Account account = new Account();
+
     @Test
     public void testGetStars(){
-        Account account = createFakeAccount(null, 10, 0);
-        assertThat(account.getStars(), is(10));
+        assertThat(account.getStars(), is(0));
     }
 
-    private static Account createFakeAccount(String username, final int stars, int trophies){
-        return new Account(){
-            @Override
-            public int getStars() {
-                return stars;
-            }
-        };
+    @Test
+    public void testGetUsername(){
+        assertThat(account.getUsername(), is("standardName"));
     }
+
+    @Test
+    public void testGetTrophies(){
+        assertThat(account.getTrophies(), is(0));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullUsername(){
+        account.updateUsername(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNegativeBalanceStars(){
+        account.addStars(-1000);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNullFriend(){
+        account.addFriend(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeNullFriend(){
+        account.removeFriend(null);
+    }
+
 }

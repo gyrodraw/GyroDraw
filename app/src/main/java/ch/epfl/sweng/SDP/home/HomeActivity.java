@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends Activity {
+
     private Dialog profileWindow;
 
     private final String user = "aa";
@@ -56,7 +57,7 @@ public class HomeActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Long value = dataSnapshot.getValue(Long.class);
-            if(value == 1) {
+            if (value == 1) {
                 launchActivity(VotingPageActivity.class);
             }
         }
@@ -91,6 +92,7 @@ public class HomeActivity extends Activity {
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final ImageView starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
@@ -102,6 +104,11 @@ public class HomeActivity extends Activity {
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+    }
+
+    // Launch the LeaguesActivity.
+    private void showLeagues() {
+        launchActivity(LeaguesActivity.class);
     }
 
     /**
@@ -174,8 +181,10 @@ public class HomeActivity extends Activity {
                 int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (id == R.id.drawButton) { ((ImageView) view)
-                                .setImageResource(R.drawable.draw_button_pressed); }
+                        if (id == R.id.drawButton) {
+                            ((ImageView) view)
+                                    .setImageResource(R.drawable.draw_button_pressed);
+                        }
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -195,6 +204,9 @@ public class HomeActivity extends Activity {
                 ((ImageView) view).setImageResource(R.drawable.draw_button);
                 launchActivity(WaitingPageActivity.class);
                 break;
+            case R.id.leagueImage:
+                showLeagues();
+                break;
             case R.id.usernameButton:
                 showPopup();
                 break;
@@ -211,7 +223,7 @@ public class HomeActivity extends Activity {
         }
     }
 
-    private void bounceButton(View view, double amplitude, int frequency) {
+    private void bounceButton(final View view, double amplitude, int frequency) {
         assert amplitude != 0;
         final Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
@@ -249,8 +261,8 @@ public class HomeActivity extends Activity {
     // To remove, only for testing
 
     /**
-     * Callback function when clicking the voting button.
-     * Sets the user ready in the database.
+     * Callback function when clicking the voting button. Sets the user ready in the database.
+     *
      * @param view View referencing the button
      */
     public void startVotingPage(View view) {
@@ -275,8 +287,7 @@ public class HomeActivity extends Activity {
     }
 
     /**
-     * Disables the background animation.
-     * Call this method in every HomeActivity test
+     * Disables the background animation. Call this method in every HomeActivity test
      */
     public static void disableBackgroundAnimation() {
         enableBackgroundAnimation = false;

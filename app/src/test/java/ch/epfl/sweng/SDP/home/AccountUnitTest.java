@@ -38,9 +38,11 @@ public class AccountUnitTest {
     public void init(){
         mockConstants = Mockito.mock(Constants.class);
         account = new Account(mockConstants, "123456789");
+        account.setUserId("123456789");
         mockReference = Mockito.mock(DatabaseReference.class);
         mockQuery = Mockito.mock(Query.class);
         when(mockConstants.getUsersRef()).thenReturn(mockReference);
+        when(mockConstants.getFirebaseUserId()).thenReturn("123456789");
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
         when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
@@ -51,13 +53,21 @@ public class AccountUnitTest {
     }
 
     @Test
+    public void testAccountValuesCorrect(){
+        assertEquals(account.getTrophies(), 0);
+        assertEquals(account.getStars(), 0);
+        assertEquals(account.getUsername(), "123456789");
+        assertEquals(mockConstants.getFirebaseUserId(), "123456789");
+    }
+
+    @Test
     public void testGetStars(){
         assertThat(account.getStars(), is(0));
     }
 
     @Test
     public void testGetUsername(){
-        assertThat(account.getUsername(), is("standardName"));
+        assertThat(account.getUsername(), is("123456789"));
     }
 
     @Test
@@ -85,6 +95,12 @@ public class AccountUnitTest {
     @Test
     public void testRemoveFriend(){
         account.removeFriend("EPFLien");
+    }
+
+    @Test
+    public void testUpdateUsername(){
+        account.updateUsername("987654321");
+        assertEquals(account.getUsername(), "987654321");
     }
 
     @Test(expected = IllegalArgumentException.class)

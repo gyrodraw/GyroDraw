@@ -16,27 +16,18 @@ import com.google.firebase.database.ValueEventListener;
  * Class that simulates an account.
  */
 public class Account implements java.io.Serializable {
-    private FirebaseUser firebaseUser;
+    private String userId;
     private String username;
     private int trophies;
     private int stars;
-    private String userId;
     private Constants constants;
-
-    public Account(Constants constants, String userId){
-        this.constants = constants;
-        this.userId = userId;
-        username = "standardName";
-        trophies = 0;
-        stars = 0;
-    }
 
     /**
      * Builder for account.
      * @param username String defining the preferred username
      */
-    public Account(String username) {
-        this(username, 0, 0);
+    public Account(Constants constants, String username) {
+        this(constants, username, 0, 0);
     }
   
     /**
@@ -45,13 +36,12 @@ public class Account implements java.io.Serializable {
      * @param trophies int defining current rating
      * @param stars int defining current currency
      */
-    public Account(String username, int trophies, int stars) {
-        this.constants = new Constants();
+    public Account(Constants constants, String username, int trophies, int stars) {
+        this.constants = constants;
+        this.userId = constants.getFirebaseUserId();
         this.username = username;
         this.trophies = trophies;
         this.stars = stars;
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        this.userId = firebaseUser.getUid();
     }
 
     public String getUsername() {
@@ -64,6 +54,10 @@ public class Account implements java.io.Serializable {
 
     public int getStars() {
         return stars;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**
@@ -93,7 +87,6 @@ public class Account implements java.io.Serializable {
                                         public void onComplete(DatabaseError databaseError,
                                                                DatabaseReference databaseReference) {
                                             checkForDatabaseError(databaseError);
-                                            username = newName;
                                         }
                                     });
                         }
@@ -104,6 +97,7 @@ public class Account implements java.io.Serializable {
                         throw databaseError.toException();
                     }
                 });
+        username = newName;
     }
 
     /**

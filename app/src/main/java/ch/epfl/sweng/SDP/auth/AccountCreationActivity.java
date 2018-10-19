@@ -91,7 +91,7 @@ public class AccountCreationActivity extends AppCompatActivity {
      * Creates a new account.
      */
     private void createAccount(){
-        account = new Account(username);
+        account = new Account(new Constants(), username);
         constants.getUsersRef().child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(account, new DatabaseReference.CompletionListener() {
 

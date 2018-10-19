@@ -60,7 +60,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     /**
      * Calls HomeActivity.
      */
-    private void gotoHome() {
+    public void gotoHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("account", this.account);
         startActivity(intent);

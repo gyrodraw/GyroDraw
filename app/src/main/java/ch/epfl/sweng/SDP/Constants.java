@@ -11,6 +11,9 @@ public class Constants {
     private DatabaseReference usersRef;
     private FirebaseUser firebaseUser;
 
+    /**
+     * Defines Constants for Firebase.
+     */
     public Constants() {
         this.database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
         this.databaseRef = database.getReference();

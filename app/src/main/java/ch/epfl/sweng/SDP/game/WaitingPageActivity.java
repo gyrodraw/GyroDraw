@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.AccountCreationActivity;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -122,7 +123,7 @@ public class WaitingPageActivity extends Activity {
         Database database = Database.INSTANCE;
 
         wordsVotesRef = database.getReference(
-                "rooms.432432432.words"); // need to be replaced with a search for a suitable room
+                "rooms.LeagueTest.words"); // need to be replaced with a search for a suitable room
 
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                 R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
@@ -135,12 +136,14 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
+        DatabaseReference wordsSelectionRef = database
+                .getReference("leagues." + AccountCreationActivity.getAccount().getCurrentLeague()
+                        + "." + WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,
-                                 DatabaseReference dbRef, WordNumber wordNumber) {
+            DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.setValue(0);
         dbRef.addListenerForSingleValueEvent(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
@@ -150,8 +153,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Callback function called when a radio button is pressed.
-     * Updates the votes in the database.
+     * Callback function called when a radio button is pressed. Updates the votes in the database.
      *
      * @param view View corresponding to the button clicked
      */
@@ -279,8 +281,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Disables the waiting animation.
-     * Call this method in every WaitingPageActivity test
+     * Disables the waiting animation. Call this method in every WaitingPageActivity test
      */
     public static void disableWaitingAnimation() {
         enableWaitingAnimation = false;

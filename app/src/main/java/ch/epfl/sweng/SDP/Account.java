@@ -65,19 +65,10 @@ public class Account implements java.io.Serializable {
      * Registers this account in Firebase.
      * @param context to set hasAccount to true in.
      */
-    public void registerAccount(final Context context){
-        usersRef.child(userId).setValue(this,
-                new DatabaseReference.CompletionListener() {
-
-                    @Override
-                    public void onComplete(@Nullable DatabaseError databaseError,
-                                           @NonNull DatabaseReference databaseReference)
-                                            throws DatabaseException{
-                        checkForDatabaseError(databaseError);
-                        getDefaultSharedPreferences(context).edit()
-                                .putBoolean("hasAccount", true).apply();
-                    }
-                });
+    public void registerAccount(final Context context) throws  DatabaseException{
+        usersRef.child(userId).setValue(this, createCompletionListener());
+        getDefaultSharedPreferences(context).edit()
+                .putBoolean("hasAccount", true).apply();
     }
 
     /**
@@ -118,14 +109,7 @@ public class Account implements java.io.Serializable {
             throws IllegalArgumentException, DatabaseException{
         checkIfAccountNameIsFree(newName);
         usersRef.child("users").child(userId).child("username")
-                .setValue(newName, new DatabaseReference.CompletionListener() {
-
-                    @Override
-                    public void onComplete(DatabaseError databaseError,
-                                           DatabaseReference databaseReference) {
-                        checkForDatabaseError(databaseError);
-                    }
-                });
+                .setValue(newName, createCompletionListener());
         username = newName;
     }
 
@@ -197,6 +181,10 @@ public class Account implements java.io.Serializable {
         }
     }
 
+    /**
+     * Creates a CompletionListener that checks if there was a DatabaseError.
+     * @return CompletionListener
+     */
     private DatabaseReference.CompletionListener createCompletionListener(){
         return new DatabaseReference.CompletionListener(){
             @Override

@@ -8,7 +8,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.containsString;
 
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -27,10 +26,15 @@ public class AccountCreationActivityTest {
     public final ActivityTestRule<AccountCreationActivity> mActivityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
 
-
     @Test
     public void testCreateAccIsClickable() {
         onView(ViewMatchers.withId(R.id.createAcc)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void testCreateAccountWithNullName() {
+        onView(ViewMatchers.withId(R.id.createAcc)).perform(click());
+        onView(ViewMatchers.withId(R.id.usernameTaken)).check(matches(withText("Username must not be empty.")));
     }
 
     @Test

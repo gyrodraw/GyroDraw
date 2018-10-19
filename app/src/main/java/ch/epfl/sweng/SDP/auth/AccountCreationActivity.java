@@ -2,8 +2,6 @@ package ch.epfl.sweng.SDP.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -15,15 +13,6 @@ import ch.epfl.sweng.SDP.Constants;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 public class AccountCreationActivity extends AppCompatActivity {
     private EditText usernameInput;
     private Button createAcc;
@@ -31,6 +20,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     private String username;
     private Account account;
     private View.OnClickListener createAccListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +36,6 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         };
         createAcc.setOnClickListener(createAccListener);
-        account = new Account(new Constants(), null);
     }
 
     /**
@@ -57,31 +46,15 @@ public class AccountCreationActivity extends AppCompatActivity {
         if (username.isEmpty()) {
             usernameTaken.setText("Username must not be empty.");
         } else {
+            account = new Account(new Constants(), username);
             try{
-                checkIfNameIsTakenOrCreateAccount();
+                account.checkIfAccountNameIsFree(username);
+                account.registerAccount(this.getApplicationContext());
                 gotoHome();
             } catch (Exception exception){
                 usernameTaken.setText(exception.getMessage());
             }
         }
-    }
-
-    /**
-     * Checks if username is already taken.
-     * Else creates a new account.
-     */
-    private void checkIfNameIsTakenOrCreateAccount()
-            throws IllegalArgumentException, DatabaseException {
-        account.checkIfAccountNameIsFree(username);
-        createAccount();
-    }
-
-    /**
-     * Creates a new account.
-     */
-    private void createAccount() throws IllegalArgumentException,
-                                    DatabaseException{
-            account.registerAccount(this.getApplicationContext());
     }
 
     /**

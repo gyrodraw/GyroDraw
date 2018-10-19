@@ -113,4 +113,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ch.epfl.sweng.SDP.utils.GifView
+        android:id="@+id/backgroundAnimation"
+        android:layout_width="780dp"
+        android:layout_height="1098dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

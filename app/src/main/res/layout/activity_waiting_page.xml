@@ -21,34 +21,6 @@
         app:layout_constraintVertical_bias="0.903"
         app:srcCompat="@drawable/home_background" />
 
-    <ch.epfl.sweng.SDP.utils.GifView
-        android:id="@+id/waitingAnimationDots"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="170dp"
-        android:layout_marginLeft="170dp"
-        android:layout_marginRight="170dp"
-        android:layout_marginStart="170dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ch.epfl.sweng.SDP.utils.GifView
-        android:id="@+id/waitingAnimationSquare"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="120dp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginRight="120dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="350dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/imageWord1"
         android:layout_width="567dp"
@@ -115,6 +87,32 @@
             android:textSize="40sp" />
     </RadioGroup>
 
+    <ch.epfl.sweng.SDP.utils.GifView
+        android:id="@+id/waitingAnimationDots"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginLeft="170dp"
+        android:layout_marginRight="170dp"
+        android:layout_marginStart="170dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ch.epfl.sweng.SDP.utils.GifView
+        android:id="@+id/waitingAnimationSquare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/playersCounterText"
+        app:layout_constraintEnd_toEndOf="@+id/playersCounterText"
+        app:layout_constraintStart_toStartOf="@+id/playersCounterText"
+        app:layout_constraintTop_toTopOf="@+id/playersCounterText" />
+
     <TextView
         android:id="@+id/playersReadyText"
         android:layout_width="wrap_content"
@@ -131,7 +129,7 @@
         android:shadowRadius="10"
         android:text="@string/players_ready"
         android:textColor="@color/colorLightGrey"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/waitingAnimationSquare"
         app:layout_constraintStart_toStartOf="@+id/waitingAnimationSquare"
         app:layout_constraintTop_toBottomOf="@+id/playersCounterText" />
@@ -142,23 +140,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="250dp"
         android:includeFontPadding="false"
         android:shadowColor="@android:color/black"
         android:shadowDy="5"
         android:shadowRadius="10"
         android:text="1/5"
         android:textColor="@color/colorLightGrey"
-        android:textSize="80sp"
-        app:layout_constraintBottom_toBottomOf="@+id/waitingAnimationSquare"
-        app:layout_constraintEnd_toEndOf="@+id/waitingAnimationSquare"
-        app:layout_constraintStart_toStartOf="@+id/waitingAnimationSquare"
-        app:layout_constraintTop_toTopOf="@+id/waitingAnimationSquare" />
+        android:textSize="70sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/incrementButton"

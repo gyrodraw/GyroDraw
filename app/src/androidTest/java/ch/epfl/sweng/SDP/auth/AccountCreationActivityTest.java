@@ -34,12 +34,6 @@ public class AccountCreationActivityTest {
     }
 
     @Test
-    public void testEmptyUsername() {
-        onView(withId(R.id.createAcc)).perform(click());
-        onView(withId(R.id.usernameTaken)).check(matches(withText(containsString("Username must not be empty."))));
-    }
-
-    @Test
     public void testUsernameInputInputsCorrectly() {
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard())
                 .check(matches(withText(R.string.test_name)));

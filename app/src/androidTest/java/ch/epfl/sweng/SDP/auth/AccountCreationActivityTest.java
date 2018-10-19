@@ -8,6 +8,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
+
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -39,8 +41,8 @@ public class AccountCreationActivityTest {
 
     @Test
     public void testEmptyUsername() {
-        onView(withId(R.id.usernameButton)).perform(click());
-        onView(withId(R.id.usernameTaken)).check(matches(withText("Username must not be empty.")));
+        onView(withId(R.id.createAcc)).perform(click());
+        onView(withId(R.id.usernameTaken)).check(matches(withText(containsString("Username must not be empty."))));
     }
 
 

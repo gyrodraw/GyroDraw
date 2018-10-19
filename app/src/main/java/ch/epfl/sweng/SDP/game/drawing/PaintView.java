@@ -71,16 +71,24 @@ public class PaintView extends View {
         return circleY;
     }
 
-    public boolean getDraw() {
-        return draw;
-    }
-
     public void setCircleX(float circleX) {
         this.circleX = circleX;
     }
 
     public void setCircleY(float circleY) {
         this.circleY = circleY;
+    }
+
+    public int getCircleRadius() {
+        return circleRadius;
+    }
+
+    public void setCircleRadius(int circleRadius) {
+        this.circleRadius = circleRadius;
+    }
+
+    public boolean getDraw() {
+        return draw;
     }
 
     public void setDraw(boolean draw) {

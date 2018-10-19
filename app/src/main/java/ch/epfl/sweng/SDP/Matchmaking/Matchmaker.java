@@ -8,6 +8,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Matchmaker implements MatchmakingInterface {
@@ -61,11 +67,54 @@ public class Matchmaker implements MatchmakingInterface {
 
     /**
      * join a room.
-     * @param roomId the id of the room.
      */
-    public void joinRoom(String roomId) {
+    public void joinRoom() {
        // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomId).child("users").child("123").setValue("InRoom");
+
+            HttpURLConnection connection = null;
+
+            try {
+                //Create connection
+                URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
+
+              //  connection.setRequestProperty("Content-Length",
+               //         Integer.toString(urlParameters.getBytes().length));
+                connection.setRequestProperty("Content-Language", "en-US");
+
+                connection.setUseCaches(false);
+                connection.setDoOutput(true);
+
+                //Send request
+                DataOutputStream wr = new DataOutputStream(
+                        connection.getOutputStream());
+              //  wr.writeBytes(urlParameters);
+                wr.close();
+
+                //Get Response
+                InputStream is = connection.getInputStream();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+                StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    response.append(line);
+                    response.append('\r');
+                }
+                rd.close();
+                 System.out.println(response.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+             //   return null;
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+
+
     }
 
     /**

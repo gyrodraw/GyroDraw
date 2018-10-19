@@ -12,6 +12,8 @@ import com.google.firebase.FirebaseApp;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ch.epfl.sweng.SDP.Matchmaking.Matchmaker;
+
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     @Override
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         findViewById(R.id.login_button).setOnClickListener(this);
 
         FirebaseApp.initializeApp(this);
+
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null && getDefaultSharedPreferences(getApplicationContext())

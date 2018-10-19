@@ -24,7 +24,7 @@ public class MatchmakerTest {
 
     @Test
     public void joinRoom() {
-        Matchmaker.getInstance().joinRoom("2312");
+        Matchmaker.getInstance().joinRoom();
         assertTrue(true);
 
     }

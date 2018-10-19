@@ -51,6 +51,8 @@ public class HomeActivity extends AppCompatActivity {
             setBackgroundAnimation();
         }
 
+
+
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final Button trophiesButton = findViewById(R.id.trophiesButton);

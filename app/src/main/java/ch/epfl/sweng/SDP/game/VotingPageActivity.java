@@ -116,7 +116,7 @@ public class VotingPageActivity extends Activity {
         setContentView(R.layout.activity_voting_page);
 
         // Get the Database instance and the ranking reference
-        Database database = Database.getInstance();
+        Database database = Database.INSTANCE;
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
         counterRef = database.getReference(PATH + ".timer.observableTime");

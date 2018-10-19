@@ -48,7 +48,6 @@ public class HomeActivity extends Activity {
     private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
 
-    private Database database;
     private DatabaseReference dbRef;
     private DatabaseReference dbRefTimer;
 
@@ -79,7 +78,7 @@ public class HomeActivity extends Activity {
         }
 
         // Testing method
-        database = Database.getInstance();
+        Database database = Database.INSTANCE;
         dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");

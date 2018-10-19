@@ -9,6 +9,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 import android.graphics.Point;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -67,10 +68,10 @@ public class DrawingActivityTest {
         paintView.setCircleY(15);
         paintView.setCircleRadius(12);
         paintView.setDraw(true);
-        assertEquals(paintView.getCircleX()==10,true);
-        assertEquals(paintView.getCircleY()==15, true);
-        assertEquals(paintView.getCircleRadius()==12, true);
-        assertEquals(paintView.getDraw(), true);
+        assertTrue(paintView.getCircleX()==10);
+        assertTrue(paintView.getCircleY()==15);
+        assertTrue(paintView.getCircleRadius()==12);
+        assertTrue(paintView.getDraw());
     }
 
     @Test
@@ -78,6 +79,6 @@ public class DrawingActivityTest {
         Point point = new Point(100, 100);
         paintView.setSizeAndInit(point);
         paintView.setCircleRadius(10);
-        assertEquals(paintView.getCircleX()==40.0, true);
+        assertTrue(paintView.getCircleX()==40.0);
     }
 }

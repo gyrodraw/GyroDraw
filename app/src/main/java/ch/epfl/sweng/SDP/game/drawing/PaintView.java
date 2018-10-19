@@ -30,8 +30,6 @@ public class PaintView extends View {
     private Boolean draw;
     private Bitmap bitmap;
     private Canvas canvas;
-    private LocalDbHandler localDbHandler;
-    private FbStorage fbStorage;
 
     /**
      * Constructor for the view.
@@ -41,9 +39,6 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        localDbHandler = new LocalDbHandler(context, null, 1);
-        fbStorage = new FbStorage();
-        setFocusable(true);
         paint = new Paint();
         paintC = new Paint();
         paint.setColor(Color.RED);
@@ -141,8 +136,10 @@ public class PaintView extends View {
      * Gets called when time for drawing is over.
      * Saves the bitmap in the local DB.
      */
-    public void saveCanvasInDb(){
+    public void saveCanvasInDb(Context context){
         this.draw(canvas);
+        LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
+        FbStorage fbStorage = new FbStorage();
         localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;

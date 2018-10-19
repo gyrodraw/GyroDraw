@@ -26,7 +26,7 @@ public class PaintViewUnitTest {
     public void init(){
         mockContext = Mockito.mock(Context.class);
         mockAttributesSet = Mockito.mock(AttributeSet.class);
-        paintView = new PaintView(mockContext, mockAttributesSet);
+        paintView = new PaintView(mockContext, this.mockAttributesSet);
     }
 
     @Test

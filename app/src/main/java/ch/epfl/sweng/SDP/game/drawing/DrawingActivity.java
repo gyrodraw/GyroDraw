@@ -197,7 +197,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * Saves drawing in database and storage and calls new activity.
      */
     private void stop(){
-        paintView.saveCanvasInDb();
+        paintView.saveCanvasInDb(this);
         // add redirection here
     }
 

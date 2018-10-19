@@ -28,4 +28,8 @@ public class AccountCreationActivity extends Activity {
         launchActivity(HomeActivity.class);
         finish();
     }
+
+    public static Account getAccount() {
+        return new Account(1); // need to be changed with the real account
+    }
 }

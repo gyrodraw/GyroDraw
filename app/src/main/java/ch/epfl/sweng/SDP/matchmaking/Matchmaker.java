@@ -3,39 +3,28 @@ package ch.epfl.sweng.SDP.matchmaking;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
-public class Matchmaker implements MatchmakingInterface {
+/**
+ * Singleton enum responsible for the matchmaking.
+ */
+public enum Matchmaker implements MatchmakingInterface {
+    // Singleton enum
 
-    // Singleton class
-    private static Matchmaker singleInstance = null;
+    INSTANCE;
 
     private DatabaseReference myRef;
 
     /**
-     * Create a singleton Instance.
-     *
-     * @return a singleton instance.
-     */
-    public static Matchmaker getInstance() {
-        if (singleInstance == null) {
-            singleInstance = new Matchmaker();
-        }
-
-        return singleInstance;
-    }
-
-
-    /**
      * Matchmaker init.
      */
-    public Matchmaker() {
-        Database database = Database.getInstance();
-        myRef = database.getReference("rooms");
+    Matchmaker() {
+        myRef = Database.INSTANCE.getReference("rooms");
 
         // Read from the database
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -64,7 +53,8 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public void joinRoom(String roomId) {
         // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomId).child("users").child("123").setValue("InRoom");
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(myRef);
+        builder.addChildren(roomId + ".users.123").build().setValue("InRoom");
     }
 
     /**
@@ -74,6 +64,7 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public void leaveRoom(String roomId) {
         // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        myRef.child(roomId).child("users").child("123").removeValue();
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(myRef);
+        builder.addChildren(roomId + ".users.123").build().removeValue();
     }
 }

@@ -18,6 +18,7 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
@@ -30,8 +31,6 @@ public class AccountCreationActivity extends AppCompatActivity {
     private String username;
     private Account account;
     private View.OnClickListener createAccListener;
-    private Constants constants;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +46,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         };
         createAcc.setOnClickListener(createAccListener);
-        constants = new Constants();
+        account = new Account(new Constants(), null);
     }
 
     /**
@@ -58,7 +57,12 @@ public class AccountCreationActivity extends AppCompatActivity {
         if (username.isEmpty()) {
             usernameTaken.setText("Username must not be empty.");
         } else {
-            checkIfNameIsTakenOrCreateAccount();
+            try{
+                checkIfNameIsTakenOrCreateAccount();
+                gotoHome();
+            } catch (Exception exception){
+                usernameTaken.setText(exception.getMessage());
+            }
         }
     }
 
@@ -66,49 +70,18 @@ public class AccountCreationActivity extends AppCompatActivity {
      * Checks if username is already taken.
      * Else creates a new account.
      */
-    private void checkIfNameIsTakenOrCreateAccount(){
-        constants.getUsersRef().orderByChild("username").equalTo(username)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
-                            usernameTaken.setText("Username already taken.");
-                        }
-                        else {
-                            createAccount();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        usernameTaken.setText(getString(R.string.database_error));
-                    }
-                });
+    private void checkIfNameIsTakenOrCreateAccount()
+            throws IllegalArgumentException, DatabaseException {
+        account.checkIfAccountNameIsFree(username);
+        createAccount();
     }
 
     /**
      * Creates a new account.
      */
-    private void createAccount(){
-        account = new Account(new Constants(), username);
-        constants.getUsersRef().child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .setValue(account, new DatabaseReference.CompletionListener() {
-
-                    @Override
-                    public void onComplete(@Nullable DatabaseError databaseError,
-                                           @NonNull DatabaseReference databaseReference) {
-                        if (databaseError != null) {
-                            usernameTaken.setText(getString(R.string.database_error));
-                        }
-                        else {
-                            getDefaultSharedPreferences(getApplicationContext()).edit()
-                                    .putBoolean("hasAccount", true).apply();
-                            usernameTaken.setText("Success!");
-                            gotoHome();
-                        }
-                    }
-                });
+    private void createAccount() throws IllegalArgumentException,
+                                    DatabaseException{
+            account.registerAccount(this.getApplicationContext());
     }
 
     /**

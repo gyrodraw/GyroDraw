@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.home;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -37,8 +38,6 @@ public class AccountUnitTest {
     @Before
     public void init(){
         mockConstants = Mockito.mock(Constants.class);
-        account = new Account(mockConstants, "123456789");
-        account.setUserId("123456789");
         mockReference = Mockito.mock(DatabaseReference.class);
         mockQuery = Mockito.mock(Query.class);
         when(mockConstants.getUsersRef()).thenReturn(mockReference);
@@ -50,6 +49,9 @@ public class AccountUnitTest {
         doNothing().when(mockReference).setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockReference).removeValue(isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
+
+        account = new Account(mockConstants, "123456789");
+        account.setUserId("123456789");
     }
 
     @Test
@@ -101,6 +103,17 @@ public class AccountUnitTest {
     public void testUpdateUsername(){
         account.updateUsername("987654321");
         assertEquals(account.getUsername(), "987654321");
+    }
+
+    @Test
+    public void testRegisterAccount(){
+        account.registerAccount(Mockito.mock(Context.class));
+    }
+
+    @Test
+    public void testCheckIfUsernameTaken(){
+        account.checkIfAccountNameIsFree("123456789");
+        assertEquals(account.getUsername(), "123456789");
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.auth;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -35,4 +36,12 @@ public class AccountCreationActivityTest {
         onView(withId(R.id.usernameInput)).perform(typeText("Max Muster"), closeSoftKeyboard())
                 .check(matches(withText(R.string.test_name)));
     }
+
+    @Test
+    public void testEmptyUsername() {
+        onView(withId(R.id.usernameButton)).perform(click());
+        onView(withId(R.id.usernameTaken)).check(matches(withText("Username must not be empty.")));
+    }
+
+
 }

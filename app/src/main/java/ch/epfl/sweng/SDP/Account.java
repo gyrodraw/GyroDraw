@@ -1,8 +1,11 @@
 package ch.epfl.sweng.SDP;
 
+import android.content.Context;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -12,6 +15,9 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
+
 /**
  * Class that simulates an account.
  */
@@ -20,7 +26,7 @@ public class Account implements java.io.Serializable {
     private String username;
     private int trophies;
     private int stars;
-    private Constants constants;
+    private DatabaseReference usersRef;
 
     /**
      * Builder for account.
@@ -37,7 +43,7 @@ public class Account implements java.io.Serializable {
      * @param stars int defining current currency
      */
     public Account(Constants constants, String username, int trophies, int stars) {
-        this.constants = constants;
+        this.usersRef = constants.getUsersRef();
         this.userId = constants.getFirebaseUserId();
         this.username = username;
         this.trophies = trophies;
@@ -61,17 +67,36 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * Updates Username to newName.
-     * @param newName new username
-     * @throws IllegalArgumentException if username not available anymore
-     * @throws DatabaseException if problem with firebase
+     * Registers this account in Firebase.
+     * @param context to set hasAccount to true in.
      */
-    public void updateUsername(final String newName)
+    public void registerAccount(final Context context){
+        usersRef.child(userId).setValue(this,
+                new DatabaseReference.CompletionListener() {
+
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError,
+                                           @NonNull DatabaseReference databaseReference)
+                                            throws DatabaseException{
+                        checkForDatabaseError(databaseError);
+                        getDefaultSharedPreferences(context).edit()
+                                .putBoolean("hasAccount", true).apply();
+                    }
+                });
+    }
+
+    /**
+     * Checks in firebase if username already exists.
+     * @param newName username to compare
+     * @throws IllegalArgumentException If username is null or already taken
+     * @throws DatabaseException If something went wrong with database.
+     */
+    public void checkIfAccountNameIsFree(final String newName)
             throws IllegalArgumentException, DatabaseException{
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
         }
-        constants.getUsersRef().orderByChild("username").equalTo(newName)
+        usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
@@ -79,22 +104,31 @@ public class Account implements java.io.Serializable {
                         if(snapshot.exists()) {
                             throw new IllegalArgumentException("Username already taken.");
                         }
-                        else {
-                            constants.databaseRef.child("users").child(userId).child("username")
-                                    .setValue(newName, new DatabaseReference.CompletionListener() {
-
-                                        @Override
-                                        public void onComplete(DatabaseError databaseError,
-                                                               DatabaseReference databaseReference) {
-                                            checkForDatabaseError(databaseError);
-                                        }
-                                    });
-                        }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         throw databaseError.toException();
+                    }
+                });
+    }
+
+    /**
+     * Updates Username to newName.
+     * @param newName new username
+     * @throws IllegalArgumentException if username not available anymore
+     * @throws DatabaseException if problem with firebase
+     */
+    public void updateUsername(final String newName)
+            throws IllegalArgumentException, DatabaseException{
+        checkIfAccountNameIsFree(newName);
+        usersRef.child("users").child(userId).child("username")
+                .setValue(newName, new DatabaseReference.CompletionListener() {
+
+                    @Override
+                    public void onComplete(DatabaseError databaseError,
+                                           DatabaseReference databaseReference) {
+                        checkForDatabaseError(databaseError);
                     }
                 });
         username = newName;
@@ -107,7 +141,7 @@ public class Account implements java.io.Serializable {
      */
     public void changeTrophies(int change) throws DatabaseException {
         final int newTrophies = Math.max(0, trophies + change);
-        constants.getUsersRef().child(userId).child("trophies")
+        usersRef.child(userId).child("trophies")
                 .setValue(newTrophies, createCompletionListener());
         trophies = newTrophies;
     }
@@ -123,7 +157,7 @@ public class Account implements java.io.Serializable {
         if (newStars < 0) {
             throw new IllegalArgumentException("Negative Balance");
         }
-        constants.getUsersRef().child(userId).child("stars")
+        usersRef.child(userId).child("stars")
                 .setValue(newStars, createCompletionListener());
         stars = newStars;
     }
@@ -138,7 +172,7 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        constants.getUsersRef().child(userId).child("friends").child(usernameId)
+        usersRef.child(userId).child("friends").child(usernameId)
                 .setValue(true, createCompletionListener());
     }
 
@@ -152,7 +186,7 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        constants.getUsersRef().child(userId).child("friends").child(usernameId)
+        usersRef.child(userId).child("friends").child(usernameId)
                 .removeValue(createCompletionListener());
     }
 

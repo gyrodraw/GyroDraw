@@ -16,10 +16,8 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,10 +35,18 @@ public class HomeActivityTest {
             };
 
     @Test
-    public void testDrawButtonOpensDrawingActivity() {
+    public void testDrawButtonOpensWaitingPageActivity() {
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
         intended(hasComponent(WaitingPageActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testClickOnLeagueImageOpensLeaguesActivity() {
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.leagueImage)).perform(click());
+        intended(hasComponent(LeaguesActivity.class.getName()));
         Intents.release();
     }
 

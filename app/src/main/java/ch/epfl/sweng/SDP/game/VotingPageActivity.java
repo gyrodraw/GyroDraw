@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game;
 
 import static java.lang.String.format;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -117,7 +116,7 @@ public class VotingPageActivity extends Activity {
         setContentView(R.layout.activity_voting_page);
 
         // Get the Database instance and the ranking reference
-        Database database = Database.getInstance();
+        Database database = Database.INSTANCE;
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
         counterRef = database.getReference(PATH + ".timer.observableTime");
@@ -137,7 +136,7 @@ public class VotingPageActivity extends Activity {
         // Get the players' names
         playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
                 "Player4"}; // hardcoded now, need to be given by the
-                            // server/script or retrieved from database
+        // server/script or retrieved from database
 
         ratings = new int[NUMBER_OF_DRAWINGS];
         ratingBar = findViewById(R.id.ratingBar);
@@ -190,6 +189,7 @@ public class VotingPageActivity extends Activity {
 
     /**
      * Switch the drawing when clicking the button.
+     *
      * @param view View referencing the button
      */
     public void changeImage(View view) {
@@ -281,6 +281,7 @@ public class VotingPageActivity extends Activity {
 
     /**
      * Show the final ranking in a new fragment.
+     *
      * @param view View referencing the button
      */
     public void showFinalRanking(View view) {

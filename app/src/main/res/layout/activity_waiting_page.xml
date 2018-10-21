@@ -21,6 +21,28 @@
         app:layout_constraintVertical_bias="0.903"
         app:srcCompat="@drawable/home_background" />
 
+    <TextView
+        android:id="@+id/roomID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:text="@string/vote"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/waitingAnimationDots"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.52" />
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/waitingAnimationDots"
         android:layout_width="100dp"

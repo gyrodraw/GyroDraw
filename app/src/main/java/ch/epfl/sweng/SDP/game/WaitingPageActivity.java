@@ -13,14 +13,21 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BooleanVariableListener;
+import ch.epfl.sweng.SDP.Matchmaker;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctionsException;
+
+import org.w3c.dom.Text;
 
 import java.util.Locale;
 import java.util.Random;
@@ -31,6 +38,10 @@ public class WaitingPageActivity extends Activity {
         ONE, TWO
     }
 
+    private String roomID = "undefined";
+
+    private BooleanVariableListener isRoomReady = new BooleanVariableListener();
+    private BooleanVariableListener areWordsready = new BooleanVariableListener();
     private static boolean enableWaitingAnimation = true;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
@@ -46,6 +57,8 @@ public class WaitingPageActivity extends Activity {
 
     private DatabaseReference word2Ref;
     private int word2Votes = 0;
+
+
 
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
@@ -101,6 +114,8 @@ public class WaitingPageActivity extends Activity {
                         WordNumber.TWO);
             }
 
+            areWordsready.setBoo(true);
+            /*
             setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                     R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
                     R.id.playersReadyText, R.id.voteText);
@@ -109,7 +124,7 @@ public class WaitingPageActivity extends Activity {
                 setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
             }
 
-            setVisibility(View.GONE, R.id.waitingAnimationDots);
+            setVisibility(View.GONE, R.id.waitingAnimationDots);*/
         }
 
         @Override
@@ -118,11 +133,53 @@ public class WaitingPageActivity extends Activity {
         }
     };
 
+    private void lookingForRoom() {
+        Matchmaker.getInstance().joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Exception e = task.getException();
+                    if (e instanceof FirebaseFunctionsException) {
+                        FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                        FirebaseFunctionsException.Code code = ffe.getCode();
+                        Object details = ffe.getDetails();
+                    }
+                } else {
+                    roomID = task.getResult();
+                    isRoomReady.setBoo(true);
+                }
+            }
+        });
+    }
+
+    private BooleanVariableListener.ChangeListener listenerRoomReady =
+                        new BooleanVariableListener.ChangeListener() {
+        @Override
+        public void onChange() {
+            if(areWordsready.getBoo() && isRoomReady.getBoo()) {
+                ((TextView)findViewById(R.id.roomID)).setText("Room ID: " + roomID);
+                setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                        R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                        R.id.playersReadyText, R.id.voteText, R.id.roomID);
+
+                if (enableWaitingAnimation) {
+                    setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
+                }
+
+                setVisibility(View.GONE, R.id.waitingAnimationDots);
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lookingForRoom();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
+        isRoomReady.setListener(listenerRoomReady);
+        areWordsready.setListener(listenerRoomReady);
+
         Database database = Database.getInstance();
 
         wordsVotesRef = database.getReference(
@@ -130,7 +187,7 @@ public class WaitingPageActivity extends Activity {
 
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                 R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
+                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText, R.id.roomID);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);

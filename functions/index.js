@@ -118,3 +118,58 @@ exports.joinGame = functions.https.onRequest((req, res) => {
     });
   });
 });
+
+/*exports.joinGame2 = functions.https.onCall((data, context) => {
+  console.log("Started method");
+  // Grab the text parameter.
+  const username = data.username;
+  let _roomID;
+  console.log(username);
+  var alreadyJoined = false;
+  // Grab the id of the player
+  // Check if room is already available and join available room
+  return admin.database().ref('realRooms').once('value', (snapshot) => {
+    return snapshot.forEach((roomID) => {
+      return roomID.forEach((user) => {
+        if(user.val() === "undefined" && !alreadyJoined) {
+          const path = "realRooms/" + roomID.key;
+          _roomID = roomID.key;
+          admin.database().ref(path).child(user.key).set(username);
+          alreadyJoined = true;
+        }
+      });
+    });
+  }).then(() => {
+    return _roomID;
+  });
+});*/
+
+exports.joinGame2 = functions.https.onCall((data, context) => {
+  console.log("Started method");
+  // Grab the text parameter.
+  const username = data.username;
+  let _roomID;
+  console.log(username);
+  var alreadyJoined = false;
+
+  return admin.database().ref('realRooms').once('value', (snapshot) => {
+    return snapshot.forEach((roomID) => {
+        console.log(roomID.child("users").numChildren());
+
+        // Check if the room is full or if the user already joined a room
+        if(roomID.child("users").numChildren() < 5 && !alreadyJoined) {
+          const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
+          const path = "realRooms/" + roomID.key;
+          _roomID = roomID.key;
+          if(roomID.hasChild("users")) {
+            admin.database().ref(path).child("users").update({[userCount]:username});
+          } else {
+            admin.database().ref(path).update({"users":{[userCount]:username}});
+          }
+          alreadyJoined = true;
+        }
+    });
+  }).then(() => {
+    return _roomID;
+  });
+});

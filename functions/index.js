@@ -5,6 +5,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const maxPlayers = 5;
+const maxWords = 6;
 var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
 
 admin.initializeApp();
@@ -82,68 +83,6 @@ function functionTimer (seconds, call) {
     });
 }
 
-exports.joinGame = functions.https.onRequest((req, res) => {
-  // Grab the text parameter.
-  const original = req.query.text;
-  // Grab the id of the player
-  // Check if room is already available and join available room
-  return admin.database().ref('rooms').once("value").then(x => {
-    var rooms = x.val();
-    console.log(rooms);
-    for (var room in rooms) {
-      try{
-        if(typeof rooms[room].users !== 'undefined') {
-          console.log(Object.keys(rooms[room].users).length);
-          if (Object.keys(rooms[room].users).length < 5 && rooms[room].playing === false) {
-            if (Object.keys(rooms[room].users).length ===  4) {
-              // set playing to true
-              admin.database().ref('rooms').child(room).child('playing').set(true)
-            }
-            return  admin.database().ref('rooms').child(room).child('users').push().set({
-              name: "fredrik"
-            }).then(() => {
-              return res.status(200).end();
-            });
-          }
-        }
-      }catch(e){
-        console.log('rooms[room].users is undefined');
-      }
-    }
-    return  admin.database().ref('rooms').push().set({
-      playing: false,
-      users: { "42343243" : { name : "fredrik"} }
-    }).then( () => {
-      return res.status(200).end();
-    });
-  });
-});
-
-/*exports.joinGame2 = functions.https.onCall((data, context) => {
-  console.log("Started method");
-  // Grab the text parameter.
-  const username = data.username;
-  let _roomID;
-  console.log(username);
-  var alreadyJoined = false;
-  // Grab the id of the player
-  // Check if room is already available and join available room
-  return admin.database().ref('realRooms').once('value', (snapshot) => {
-    return snapshot.forEach((roomID) => {
-      return roomID.forEach((user) => {
-        if(user.val() === "undefined" && !alreadyJoined) {
-          const path = "realRooms/" + roomID.key;
-          _roomID = roomID.key;
-          admin.database().ref(path).child(user.key).set(username);
-          alreadyJoined = true;
-        }
-      });
-    });
-  }).then(() => {
-    return _roomID;
-  });
-});*/
-
 exports.joinGame2 = functions.https.onCall((data, context) => {
   console.log("Started method");
   // Grab the text parameter.
@@ -162,14 +101,54 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
           const path = "realRooms/" + roomID.key;
           _roomID = roomID.key;
           if(roomID.hasChild("users")) {
-            admin.database().ref(path).child("users").update({[userCount]:username});
+            admin.database().ref(path).child("users").update({[username]:userCount});
           } else {
-            admin.database().ref(path).update({"users":{[userCount]:username}});
+            admin.database().ref(path).update({"users":{[username]:userCount}});
           }
           alreadyJoined = true;
         }
     });
   }).then(() => {
     return _roomID;
+  });
+});
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateTwoRandomNumbers() {
+  const firstNumber = getRandomInt(0, maxWords);
+  let secondNumber = firstNumber;
+
+  while(firstNumber === secondNumber) {
+    secondNumber = getRandomInt(0, maxWords);
+  }
+
+  return [firstNumber, secondNumber];
+}
+
+function addWordsToDatabase(roomID) {
+  const numbers = generateTwoRandomNumbers();
+  return admin.database().ref("words").once('value', (snapshot) => {
+    const word1 = snapshot.child(numbers[0]).val();
+    const word2 = snapshot.child(numbers[1]).val();
+    admin.database().ref("realRooms/" + roomID).update({"words": {[word1]:0,[word2]:0}});
+  });
+
+}
+
+exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}").onWrite((change, context) => {
+  const roomID = change.before.key;
+  return admin.database().ref("realRooms/" + roomID).once('value', (snapshot) => {
+    if(snapshot.hasChild("words") && !snapshot.hasChild("users")) {
+      // Remove the words because the room is empty
+      admin.database().ref("realRooms/" + roomID + "/words").remove();
+    }
+    else if(snapshot.hasChild("users") && !snapshot.hasChild("words")) {
+      // Generate the words
+      addWordsToDatabase(roomID);
+    }
+    return;
   });
 });

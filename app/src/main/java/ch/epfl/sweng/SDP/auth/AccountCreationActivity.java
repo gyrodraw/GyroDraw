@@ -13,6 +13,8 @@ import ch.epfl.sweng.SDP.Constants;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class AccountCreationActivity extends AppCompatActivity {
     private EditText usernameInput;
     private Button createAcc;
@@ -49,7 +51,9 @@ public class AccountCreationActivity extends AppCompatActivity {
             account = new Account(new Constants(), username);
             try{
                 account.checkIfAccountNameIsFree(username);
-                account.registerAccount(this.getApplicationContext());
+                account.registerAccount();
+                getDefaultSharedPreferences(this).edit()
+                        .putBoolean("hasAccount", true).apply();
                 gotoHome();
             } catch (Exception exception){
                 usernameTaken.setText(exception.getMessage());

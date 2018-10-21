@@ -1,31 +1,23 @@
 package ch.epfl.sweng.SDP.home;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.Constants;
-import ch.epfl.sweng.SDP.R;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AccountUnitTest {
@@ -107,7 +99,7 @@ public class AccountUnitTest {
 
     @Test
     public void testRegisterAccount(){
-        account.registerAccount(Mockito.mock(Context.class));
+        account.registerAccount();
     }
 
     @Test

@@ -63,12 +63,9 @@ public class Account implements java.io.Serializable {
 
     /**
      * Registers this account in Firebase.
-     * @param context to set hasAccount to true in.
      */
-    public void registerAccount(final Context context) throws  DatabaseException{
+    public void registerAccount() throws  DatabaseException{
         usersRef.child(userId).setValue(this, createCompletionListener());
-        getDefaultSharedPreferences(context).edit()
-                .putBoolean("hasAccount", true).apply();
     }
 
     /**

@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:alpha="0.6"
+        android:alpha="0.8"
         app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
 

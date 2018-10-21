@@ -121,7 +121,7 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_waiting_page);
         Database database = Database.getInstance();
 
@@ -136,6 +136,9 @@ public class WaitingPageActivity extends Activity {
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                 R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
                 R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
+
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.backgroundAnimation));
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);

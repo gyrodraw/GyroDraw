@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.matchmaking;
 
 public interface MatchmakingInterface {
 

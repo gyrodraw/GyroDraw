@@ -10,11 +10,6 @@ public class League {
     private final int maxTrophies;
 
     private League(String name, int minTrophies, int maxTrophies) {
-        assert name != null : "name is null";
-        assert minTrophies >= 0 : "minTrophies is negative";
-        assert maxTrophies >= 0 : "maxTrophies is negative";
-        assert maxTrophies >= minTrophies : "minTrophies greater than maxTrophies";
-
         this.name = name;
         this.minTrophies = minTrophies;
         this.maxTrophies = maxTrophies;
@@ -27,8 +22,19 @@ public class League {
      * @param minTrophies the minimum number of trophies needed to enter the league
      * @param maxTrophies the maximum number of trophies before passing to the next league
      * @return the desired League
+     * @throws IllegalArgumentException if name is null, if minTrophies or maxTrophies are negative
+     * or if minTrophies is greater than maxTrophies
      */
     public static League createLeague(String name, int minTrophies, int maxTrophies) {
+        if (name == null) {
+            throw new IllegalArgumentException("name is null");
+        } else if (minTrophies < 0) {
+            throw new IllegalArgumentException("minTrophies is negative");
+        } else if (maxTrophies < 0) {
+            throw new IllegalArgumentException("maxTrophies is negative");
+        } else if (minTrophies > maxTrophies) {
+            throw new IllegalArgumentException("minTrophies is greater than maxTrophies");
+        }
         return new League(name, minTrophies, maxTrophies);
     }
 
@@ -39,6 +45,9 @@ public class League {
      * @return true if the league contains the given number of trophies, false otherwise
      */
     public boolean contains(int trophies) {
+        if (trophies < 0) {
+            throw new IllegalArgumentException("trophies is negative");
+        }
         return minTrophies <= trophies && trophies <= maxTrophies;
     }
 

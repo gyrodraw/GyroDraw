@@ -3,7 +3,6 @@ package ch.epfl.sweng.SDP.game;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,10 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctionsException;
 
-import org.w3c.dom.Text;
-
 import java.util.Locale;
 import java.util.Random;
+import java.util.Vector;
 
 public class WaitingPageActivity extends Activity {
 
@@ -41,12 +39,16 @@ public class WaitingPageActivity extends Activity {
     private String roomID = "undefined";
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
-    private BooleanVariableListener areWordsready = new BooleanVariableListener();
+    private BooleanVariableListener areWordsReady = new BooleanVariableListener();
     private static boolean enableWaitingAnimation = true;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static final int WORDS_COUNT = 5;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
+
+    private boolean isWord1Ready = false;
+    private boolean isWord2Ready = false;
 
     private int usersReadyCount = 1;
 
@@ -58,7 +60,10 @@ public class WaitingPageActivity extends Activity {
     private DatabaseReference word2Ref;
     private int word2Votes = 0;
 
+    private String word1 = null;
+    private String word2 = null;
 
+    private Database database;
 
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
@@ -90,41 +95,52 @@ public class WaitingPageActivity extends Activity {
         }
     };
 
+    private final ValueEventListener listenerCountUsers = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            long usersCount = dataSnapshot.getChildrenCount();
+            ((TextView) findViewById(R.id.playersCounterText)).setText(String.valueOf(usersCount));
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
     private final ValueEventListener listenerWords = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Vector<String> words = new Vector<>();
 
-            // Generates two random numbers between 0 and WORDS_COUNT
-            int[] numbers = generateTwoRandomNumbers();
+            for(DataSnapshot snap : dataSnapshot.getChildren()) {
+                words.add(snap.getKey());
+            }
 
-            // Get the words corresponding to the random numbers and update database
-            String word1 = dataSnapshot.child(Integer.toString(numbers[0]))
-                    .getValue(String.class);
+            try {
+                word1 = words.get(0);
+                word2 = words.get(1);
+            } catch (Exception e) {
+                // Throws exception
+            }
+
             if (word1 != null) {
                 word1Ref = wordsVotesRef.child(word1);
                 initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
                         WordNumber.ONE);
+                isWord1Ready = true;
             }
 
-            String word2 = dataSnapshot.child(Integer.toString(numbers[1]))
-                    .getValue(String.class);
             if (word2 != null) {
                 word2Ref = wordsVotesRef.child(word2);
                 initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
                         WordNumber.TWO);
+                isWord2Ready = true;
             }
 
-            areWordsready.setBoo(true);
-            /*
-            setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                    R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                    R.id.playersReadyText, R.id.voteText);
-
-            if (enableWaitingAnimation) {
-                setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
+            if(isWord1Ready && isWord2Ready) {
+                areWordsReady.setBoo(true);
             }
-
-            setVisibility(View.GONE, R.id.waitingAnimationDots);*/
         }
 
         @Override
@@ -146,6 +162,9 @@ public class WaitingPageActivity extends Activity {
                     }
                 } else {
                     roomID = task.getResult();
+                    wordsVotesRef = database.getReference(
+                            TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
+                    wordsVotesRef.addValueEventListener(listenerWords);
                     isRoomReady.setBoo(true);
                 }
             }
@@ -156,7 +175,12 @@ public class WaitingPageActivity extends Activity {
                         new BooleanVariableListener.ChangeListener() {
         @Override
         public void onChange() {
-            if(areWordsready.getBoo() && isRoomReady.getBoo()) {
+            if(areWordsReady.getBoo() && isRoomReady.getBoo()) {
+
+                wordsVotesRef.removeEventListener(listenerWords);
+                DatabaseReference usersCountRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+                usersCountRef.addValueEventListener(listenerCountUsers);
+
                 ((TextView)findViewById(R.id.roomID)).setText("Room ID: " + roomID);
                 setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                         R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
@@ -174,16 +198,12 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        database = Database.getInstance();
         lookingForRoom();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
         isRoomReady.setListener(listenerRoomReady);
-        areWordsready.setListener(listenerRoomReady);
-
-        Database database = Database.getInstance();
-
-        wordsVotesRef = database.getReference(
-                "rooms.432432432.words"); // need to be replaced with a search for a suitable room
+        areWordsReady.setListener(listenerRoomReady);
 
         setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                 R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
@@ -196,13 +216,13 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
-        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
+        //DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
+        //wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,
                                  DatabaseReference dbRef, WordNumber wordNumber) {
-        dbRef.setValue(0);
+        //dbRef.setValue(0);
         dbRef.addListenerForSingleValueEvent(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
@@ -281,10 +301,12 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        Matchmaker.getInstance().leaveRoom(roomID);
+
         if (wordsVotesRef != null) {
             // need to keep the most voted word here, it has to
             // be done by the script not by this class
-            wordsVotesRef.removeValue();
+            //wordsVotesRef.removeValue();
         }
     }
 

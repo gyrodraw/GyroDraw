@@ -51,7 +51,7 @@ public class Matchmaker implements MatchmakingInterface {
     public Matchmaker() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("rooms");
+        myRef = database.getReference("realRooms");
 
         // Read from the database
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {

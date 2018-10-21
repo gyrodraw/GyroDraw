@@ -8,18 +8,25 @@
 
     <ImageView
         android:id="@+id/backgroundImage"
-        android:layout_width="2300dp"
-        android:layout_height="2000dp"
-        android:foregroundGravity="center"
-        android:rotation="315"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="1.0"
+        app:srcCompat="@drawable/home_background"
+        tools:ignore="ContentDescription" />
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.208"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.903"
-        app:srcCompat="@drawable/home_background" />
+    <ImageView
+        android:id="@+id/backgroundAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.6"
+        app:srcCompat="@drawable/background_animation"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/imageWord1"
@@ -32,7 +39,8 @@
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/radioGroup"
-        app:srcCompat="@drawable/word_image" />
+        app:srcCompat="@drawable/word_image"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/imageWord2"
@@ -46,7 +54,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/word_image" />
+        app:srcCompat="@drawable/word_image"
+        tools:ignore="ContentDescription" />
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/radioGroup"
@@ -94,7 +103,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/waitingAnimationSquare"
@@ -107,7 +117,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/playersCounterText"
         app:layout_constraintEnd_toEndOf="@+id/playersCounterText"
         app:layout_constraintStart_toStartOf="@+id/playersCounterText"
-        app:layout_constraintTop_toTopOf="@+id/playersCounterText" />
+        app:layout_constraintTop_toTopOf="@+id/playersCounterText"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/playersReadyText"

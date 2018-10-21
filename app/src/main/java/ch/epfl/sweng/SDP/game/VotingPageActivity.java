@@ -55,6 +55,7 @@ public class VotingPageActivity extends Activity {
     private TextView playerNameView;
 
     private RatingBar ratingBar;
+    private StarAnimationView mAnimationView;
 
     public int[] getRatings() {
         return ratings.clone();
@@ -158,11 +159,20 @@ public class VotingPageActivity extends Activity {
         // until the drawings have been downloaded
         setVisibility(View.INVISIBLE, drawingView, playerNameView);
         initProgressBar();
+
+        mAnimationView = findViewById(R.id.starsAnimation);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAnimationView.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mAnimationView.pause();
         /*if (rankingRef != null) {
             // Remove the ranking reference in the database
             rankingRef.removeValue(); has to be decommented when a method for creating the entries

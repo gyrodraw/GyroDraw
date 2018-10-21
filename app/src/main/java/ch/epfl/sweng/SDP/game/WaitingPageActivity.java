@@ -31,8 +31,6 @@ public class WaitingPageActivity extends Activity {
         ONE, TWO
     }
 
-    private static boolean enableWaitingAnimation = true;
-
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
@@ -103,11 +101,7 @@ public class WaitingPageActivity extends Activity {
 
             setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
                     R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                    R.id.playersReadyText, R.id.voteText);
-
-            if (enableWaitingAnimation) {
-                setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
-            }
+                    R.id.playersReadyText, R.id.voteText,  R.id.waitingAnimationSquare);
 
             setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
@@ -288,14 +282,6 @@ public class WaitingPageActivity extends Activity {
      */
     public int getWord2Votes() {
         return word2Votes;
-    }
-
-    /**
-     * Disables the waiting animation.
-     * Call this method in every WaitingPageActivity test
-     */
-    public static void disableWaitingAnimation() {
-        enableWaitingAnimation = false;
     }
 
     // TODO

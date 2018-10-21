@@ -1,10 +1,10 @@
 package ch.epfl.sweng.SDP.home;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
-public class LeaguesActivity extends AppCompatActivity {
+public class LeaguesActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

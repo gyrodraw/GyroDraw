@@ -8,28 +8,14 @@
     tools:context=".home.HomeActivity">
 
     <ImageView
-        android:id="@+id/backgroundImage"
-        android:layout_width="2300dp"
-        android:layout_height="2000dp"
-        android:foregroundGravity="center"
-        android:rotation="315"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.208"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.903"
-        app:srcCompat="@drawable/home_background" />
-
-    <ImageView
         android:id="@+id/backgroundAnimation"
-        android:layout_width="@dimen/activity_horizontal_margin"
-        android:layout_height="@dimen/activity_vertical_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/background_animation"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/trophiesButton"
@@ -42,7 +28,8 @@
         app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/home_trophies_button" />
+        app:srcCompat="@drawable/home_trophies_button"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/starsButton"
@@ -55,7 +42,8 @@
         app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trophiesButton"
-        app:srcCompat="@drawable/home_stars_button" />
+        app:srcCompat="@drawable/home_stars_button"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/leagueImage"
@@ -67,7 +55,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starsButton"
-        app:srcCompat="@drawable/league_1" />
+        app:srcCompat="@drawable/league_1"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/leagueText"
@@ -93,7 +82,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/draw_button" />
+        app:srcCompat="@drawable/draw_button"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/usernameButton"

@@ -87,23 +87,19 @@
             android:textSize="40sp" />
     </RadioGroup>
 
-    <ch.epfl.sweng.SDP.utils.GifView
+    <ImageView
         android:id="@+id/waitingAnimationDots"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="170dp"
-        android:layout_marginLeft="170dp"
-        android:layout_marginRight="170dp"
-        android:layout_marginStart="170dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ch.epfl.sweng.SDP.utils.GifView
+    <ImageView
         android:id="@+id/waitingAnimationSquare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"

@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
+import static java.lang.String.format;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -137,8 +139,8 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
         DatabaseReference wordsSelectionRef = database
-                .getReference("leagues." + AccountCreationActivity.getAccount().getCurrentLeague()
-                        + "." + WORD_CHILDREN_DB_ID);
+                .getReference(format(Locale.getDefault(), "leagues.%s.%s",
+                        AccountCreationActivity.getAccount().getCurrentLeague(), WORD_CHILDREN_DB_ID));
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
@@ -242,7 +244,7 @@ public class WaitingPageActivity extends Activity {
         ++usersReadyCount;
         TextView usersReady = findViewById(R.id.playersCounterText);
         usersReady.setText(
-                String.format(Locale.getDefault(), "%d/%d", usersReadyCount,
+                format(Locale.getDefault(), "%d/%d", usersReadyCount,
                         NUMBER_OF_PLAYERS_NEEDED));
 
         // We should probably check if the database is ready too

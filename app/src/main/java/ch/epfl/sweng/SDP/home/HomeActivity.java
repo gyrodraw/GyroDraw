@@ -24,8 +24,8 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
-import ch.epfl.sweng.SDP.utils.GifView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -97,6 +97,8 @@ public class HomeActivity extends Activity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.backgroundAnimation));
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);

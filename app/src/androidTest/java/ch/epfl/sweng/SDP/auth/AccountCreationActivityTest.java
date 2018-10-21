@@ -31,7 +31,6 @@ public class AccountCreationActivityTest {
     @Test
     public void testCanOpenHomeActivity() {
         Intents.init();
-        HomeActivity.disableBackgroundAnimation();
         onView(ViewMatchers.withId(R.id.create_account_button)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();

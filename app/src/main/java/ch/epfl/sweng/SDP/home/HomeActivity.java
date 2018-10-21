@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,7 +38,6 @@ public class HomeActivity extends Activity {
 
     private final String user = "aa";
 
-    private static boolean enableBackgroundAnimation = false;
     private static final String TAG = "HomeActivity";
 
     private static final int MAIN_FREQUENCY = 10;
@@ -58,7 +56,7 @@ public class HomeActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Long value = dataSnapshot.getValue(Long.class);
-            if(value == 1) {
+            if (value == 1) {
                 launchActivity(VotingPageActivity.class);
             }
         }
@@ -75,9 +73,6 @@ public class HomeActivity extends Activity {
 
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
-        if (enableBackgroundAnimation) {
-            setBackgroundAnimation();
-        }
 
         // Testing method
         database = Database.getInstance();
@@ -164,13 +159,6 @@ public class HomeActivity extends Activity {
         return toast;
     }
 
-    private void setBackgroundAnimation() {
-        final ImageView backgroundImage = findViewById(R.id.backgroundImage);
-        final Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.background_anim);
-        backgroundAnim.setInterpolator(new LinearInterpolator());
-        backgroundImage.startAnimation(backgroundAnim);
-    }
-
     private void setListener(final View view, final double amplitude, final int frequency) {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -178,8 +166,10 @@ public class HomeActivity extends Activity {
                 int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (id == R.id.drawButton) { ((ImageView) view)
-                                .setImageResource(R.drawable.draw_button_pressed); }
+                        if (id == R.id.drawButton) {
+                            ((ImageView) view)
+                                    .setImageResource(R.drawable.draw_button_pressed);
+                        }
                         pressButton(view);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -255,6 +245,7 @@ public class HomeActivity extends Activity {
     /**
      * Callback function when clicking the voting button.
      * Sets the user ready in the database.
+     *
      * @param view View referencing the button
      */
     public void startVotingPage(View view) {
@@ -276,13 +267,5 @@ public class HomeActivity extends Activity {
         timerRef.child("observableTime").setValue(0);
         timerRef.child("startTimer").setValue(0);
         timerRef.child("usersEndVoting").setValue(0);
-    }
-
-    /**
-     * Disables the background animation.
-     * Call this method in every HomeActivity test
-     */
-    public static void disableBackgroundAnimation() {
-        enableBackgroundAnimation = false;
     }
 }

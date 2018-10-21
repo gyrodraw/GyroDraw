@@ -8,6 +8,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.CountDownLatch;
+
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.Constants;
 import ch.epfl.sweng.SDP.R;
@@ -50,11 +56,26 @@ public class AccountCreationActivity extends AppCompatActivity {
         } else {
             account = new Account(new Constants(), username);
             try{
-                account.checkIfAccountNameIsFree(username);
-                account.registerAccount();
-                getDefaultSharedPreferences(this).edit()
-                        .putBoolean("hasAccount", true).apply();
-                gotoHome();
+                constants.usersRef.orderByChild("username").equalTo(username)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                if(snapshot.exists()) {
+                                    throw new IllegalArgumentException("Username already taken.");
+                                } else {
+                                    account.registerAccount();
+                                    getDefaultSharedPreferences(getApplicationContext()).edit()
+                                            .putBoolean("hasAccount", true).apply();
+                                    gotoHome();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                throw databaseError.toException();
+                            }
+                        });
             } catch (Exception exception){
                 usernameTaken.setText(exception.getMessage());
             }

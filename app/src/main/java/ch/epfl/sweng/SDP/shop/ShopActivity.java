@@ -21,19 +21,9 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
-class BooleanWrapper {
-    private boolean b;
-    BooleanWrapper(boolean b) {
-        this.b = b;
-    }
-    protected void setBoolean(boolean newb) {
-        b = newb;
-    }
-    protected boolean getBoolean() {
-        return b;
-    }
-}
-
+/**
+ * Helper class facilitating getting and synchronizing data from the database.
+ */
 class IntegerWrapper {
     private int i;
     IntegerWrapper(int i) {
@@ -47,6 +37,9 @@ class IntegerWrapper {
     }
 }
 
+/**
+ * Activity allowing the purchase of itmes such as colors.
+ */
 public class ShopActivity extends Activity {
     //to be replaced with whatever we use to store all these refs
     final FirebaseDatabase db = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
@@ -56,9 +49,8 @@ public class ShopActivity extends Activity {
     final DatabaseReference userColorsRef = usersRef.child(FirebaseAuth.getInstance()
             .getCurrentUser().getUid()).child("items").child("colors");
 
-    private final BooleanWrapper b = new BooleanWrapper(false);
-    private final IntegerWrapper stars = new IntegerWrapper(0);
-    private final IntegerWrapper price = new IntegerWrapper(0);
+    private final IntegerWrapper stars = new IntegerWrapper(-1);
+    private final IntegerWrapper price = new IntegerWrapper(-1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +61,10 @@ public class ShopActivity extends Activity {
         setRefresh();
     }
 
+    /**
+     * Accesses the database, gets all the available colors and creates a button in the ScrollView
+     * for each item found.
+     */
     private void getColorsFromDatabase() {
         shopColorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -94,12 +90,22 @@ public class ShopActivity extends Activity {
         });
     }
 
-    private Button initializeButton(String s) {
+    /**
+     * Initializes a button with the text it shows.
+     * @param itemName String to be displayed on the button.
+     * @return Button displaying itemName.
+     */
+    private Button initializeButton(String itemName) {
         Button b = new Button(this);
-        b.setText(s);
+        b.setText(itemName);
         return b;
     }
 
+    /**
+     * Adds an onClickListener to a button, which on Click tries to purchase the item the button
+     * corresponds to.
+     * @param b Button to which a listener is added.
+     */
     private void addOnClickListenerToButton(final Button b) {
         View.OnClickListener onClickListener = new View.OnClickListener() {
 
@@ -111,6 +117,9 @@ public class ShopActivity extends Activity {
         b.setOnClickListener(onClickListener);
     }
 
+    /**
+     * Sets the return button that makes the user return to the HomeActivity.
+     */
     private void setReturn() {
         Button ret = findViewById(R.id.returnFromShop);
         ret.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +131,9 @@ public class ShopActivity extends Activity {
         });
     }
 
+    /**
+     * Sets the button that allows the user to refresh the ShopActivity
+     */
     private void setRefresh() {
         Button refresh = findViewById(R.id.refreshShop);
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -133,12 +145,23 @@ public class ShopActivity extends Activity {
         });
     }
 
-    private void purchaseItem(String s) {
-        alreadyOwned(s, b);
+    /**
+     * Tries to purchase a given item.
+     * @param itemName Item to be purchased.
+     */
+    private void purchaseItem(String itemName) {
+        alreadyOwned(itemName);
     }
 
-    private void alreadyOwned(final String item, final BooleanWrapper b) throws DatabaseException {
-        userColorsRef.orderByKey().equalTo(item).addListenerForSingleValueEvent(
+    /**
+     * Checks if an item is already owned by the user. If not, gets the users current Stars and
+     * the items price, verifies if the user has enough Stars and if so, updates the users
+     * inventory.
+     * @param itemName Item to be purchased.
+     * @throws DatabaseException
+     */
+    private void alreadyOwned(final String itemName) throws DatabaseException {
+        userColorsRef.orderByKey().equalTo(itemName).addListenerForSingleValueEvent(
                 new ValueEventListener() {
 
             @Override
@@ -151,12 +174,12 @@ public class ShopActivity extends Activity {
                     stars.setInt(-1);
                     price.setInt(-1);
                     getStars(stars);
-                    getPrice(price, item);
+                    getPrice(price, itemName);
                     new CountDownTimer(2500, 500) {
                         public void onTick(long millisUntilFinished) {
                             if(stars.getInt() > -1 && price.getInt() > -1) {
                                 this.cancel();
-                                updateUserIf(item);
+                                updateUserIf(itemName);
                             }
                         }
                         public void onFinish() {
@@ -165,7 +188,7 @@ public class ShopActivity extends Activity {
                                 resetShopMessage();
                             }
                             else {
-                                updateUserIf(item);
+                                updateUserIf(itemName);
                             }
                         }
                     }.start();
@@ -179,24 +202,33 @@ public class ShopActivity extends Activity {
         });
     }
 
-    private void updateUserIf(String item) {
+    /**
+     * Updates the users inventory with new Stars and item if he has enough Stars to buy it.
+     * @param itemName Item to be purchased.
+     */
+    private void updateUserIf(String itemName) {
         if(sufficientCurrency(stars.getInt(), price.getInt())) {
-            updateUser(item, stars.getInt() - price.getInt());
+            updateUser(itemName, stars.getInt() - price.getInt());
         }
     }
 
-    private void getStars(final IntegerWrapper i) throws DatabaseException {
+    /**
+     * Accesses the database, and puts the users current stars into the wrapper.
+     * @param starsWrapper Wrapper to retrieve stars from database.
+     * @throws DatabaseException
+     */
+    private void getStars(final IntegerWrapper starsWrapper) throws DatabaseException {
         usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    i.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
+                    starsWrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
                             Integer.MAX_VALUE), Integer.MIN_VALUE));
                 }
                 else {
-                    i.setInt(-1);
+                    starsWrapper.setInt(-1);
                 }
             }
 
@@ -207,18 +239,25 @@ public class ShopActivity extends Activity {
         });
     }
 
-    private void getPrice(final IntegerWrapper i, final String item) throws IllegalArgumentException,
-            DatabaseException {
-        shopColorsRef.child(item).addListenerForSingleValueEvent(new ValueEventListener() {
+    /**
+     * Accesses the database and puts the price of the current item into the wrapper.
+     * @param priceWrapper Wrapper to retrieve price from database.
+     * @param itemName Name if the item whose price we want to get.
+     * @throws IllegalArgumentException
+     * @throws DatabaseException
+     */
+    private void getPrice(final IntegerWrapper priceWrapper, final String itemName)
+            throws IllegalArgumentException, DatabaseException {
+        shopColorsRef.child(itemName).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    i.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
+                    priceWrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
                             Integer.MAX_VALUE), Integer.MIN_VALUE));
                 }
                 else {
-                    i.setInt(-1);
+                    priceWrapper.setInt(-1);
                 }
             }
 
@@ -229,8 +268,13 @@ public class ShopActivity extends Activity {
         });
     }
 
+    /**
+     * Checks if the user has enough currency to buy an item.
+     * @param stars Current stars of user.
+     * @param price Price of the item to purchase.
+     * @return true iff stars >= price.
+     */
     private boolean sufficientCurrency(int stars, int price) {
-        System.out.println(stars + " " + price);
         boolean sufficient = stars > price;
         if (!sufficient) {
             setShopMessage("Not enough stars to purchase item.");
@@ -239,7 +283,13 @@ public class ShopActivity extends Activity {
         return sufficient;
     }
 
-    private void updateUser(String item, int newStars) {
+    /**
+     * Updates the users data in the database, e.g. sets their stars to newStars and adds the item
+     * to their inventory.
+     * @param itemName Name of the item added.
+     * @param newStars New amount of stars after purchase.
+     */
+    private void updateUser(String itemName, int newStars) {
         usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
 
@@ -251,7 +301,7 @@ public class ShopActivity extends Activity {
                 }
             }
         });
-        userColorsRef.child(item).setValue(true, new DatabaseReference.CompletionListener() {
+        userColorsRef.child(itemName).setValue(true, new DatabaseReference.CompletionListener() {
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
@@ -263,11 +313,18 @@ public class ShopActivity extends Activity {
         });
     }
 
+    /**
+     * Sets the shop message.
+     * @param message Message to be displayed.
+     */
     private void setShopMessage(String message) {
         TextView t = findViewById(R.id.shopMessages);
         t.setText(message);
     }
 
+    /**
+     * Sets the shop message to the empty string after 5 seconds.
+     */
     private void resetShopMessage() {
         new CountDownTimer(5000, 5000) {
             public void onTick(long millisUntilFinished) {
@@ -280,12 +337,18 @@ public class ShopActivity extends Activity {
         }.start();
     }
 
+    /**
+     * Closes ShopActivity and returns to the HomeActivity.
+     */
     private void gotoHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Restarts the ShopActivity.
+     */
     private void refreshShop() {
         startActivity(getIntent());
         finish();

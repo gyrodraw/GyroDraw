@@ -156,7 +156,8 @@ public class VotingPageActivity extends Activity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
 
-
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
 
         // Make the drawingView and the playerNameView invisible
         // until the drawings have been downloaded

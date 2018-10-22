@@ -273,7 +273,20 @@ public class ShopActivity extends Activity {
         });
     }
 
-    public void gotoHome() {
+    private void resetShopMessage() {
+        new CountDownTimer(5000, 5000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                TextView t = findViewById(R.id.shopMessages);
+                t.setText("");
+            }
+        }.start();
+    }
+
+    private void gotoHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();

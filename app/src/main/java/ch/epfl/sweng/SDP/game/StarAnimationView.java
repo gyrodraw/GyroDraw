@@ -25,13 +25,13 @@ public class StarAnimationView extends View {
         private float speed;
     }
 
-    private static final int INIT_SPEED = 200;
+    private static final int INIT_SPEED = 0;
     private static final int SEED = 1337;
 
     private final ArrayList<Star> stars = new ArrayList<>();
-    private final Random mRnd = new Random(SEED);
+    private final Random rand = new Random(SEED);
 
-    private TimeAnimator mTimeAnimator;
+    private TimeAnimator timeAnimator;
     private Drawable starDrawable;
 
     private int starSize;
@@ -101,8 +101,8 @@ public class StarAnimationView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mTimeAnimator = new TimeAnimator();
-        mTimeAnimator.setTimeListener(new TimeAnimator.TimeListener() {
+        timeAnimator = new TimeAnimator();
+        timeAnimator.setTimeListener(new TimeAnimator.TimeListener() {
             @Override
             public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
                 if (!ViewCompat.isLaidOut(StarAnimationView.this)) {
@@ -113,16 +113,16 @@ public class StarAnimationView extends View {
                 invalidate();
             }
         });
-        mTimeAnimator.start();
+        timeAnimator.start();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mTimeAnimator.cancel();
-        mTimeAnimator.setTimeListener(null);
-        mTimeAnimator.removeAllListeners();
-        mTimeAnimator = null;
+        timeAnimator.cancel();
+        timeAnimator.setTimeListener(null);
+        timeAnimator.removeAllListeners();
+        timeAnimator = null;
     }
 
     /**
@@ -134,6 +134,7 @@ public class StarAnimationView extends View {
         for (int i = 0; i < stars.size(); i++) {
             Star star = stars.get(i);
             star.y += star.speed * deltaMs / 1000f;
+            star.speed += deltaMs * 2;
 
             // Remove when the star is completely gone
             if (star.y - starSize > height) {
@@ -143,12 +144,12 @@ public class StarAnimationView extends View {
     }
 
     private void initializeStar(Star star) {
-        star.x = width * mRnd.nextFloat();
+        star.x = width * rand.nextFloat();
         // Subtract the size to 0 (the top of the view)
         // to make sure it starts outside of the view bound
         star.y = -starSize;
         // Add a random offset to create a small delay before the star appears again.
-        star.y -= height * mRnd.nextFloat() / 4f;
+        star.y -= height * rand.nextFloat() / 4f;
         star.speed = starSpeed;
     }
 

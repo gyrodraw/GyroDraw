@@ -138,7 +138,7 @@ public class VotingPageActivity extends Activity {
         // Get the players' names
         playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
                 "Player4"}; // hardcoded now, need to be given by the
-                            // server/script or retrieved from database
+        // server/script or retrieved from database
 
         ratings = new int[NUMBER_OF_DRAWINGS];
         ratingBar = findViewById(R.id.ratingBar);

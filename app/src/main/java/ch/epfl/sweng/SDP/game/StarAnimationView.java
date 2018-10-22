@@ -34,8 +34,8 @@ public class StarAnimationView extends View {
     private TimeAnimator mTimeAnimator;
     private Drawable starDrawable;
 
-    private float starSize;
-    private float starSpeed;
+    private int starSize;
+    private int starSpeed;
 
     private int height;
     private int width;
@@ -66,8 +66,8 @@ public class StarAnimationView extends View {
 
     private void init() {
         starDrawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
-        starSize = Math.max(starDrawable.getIntrinsicWidth(), starDrawable.getIntrinsicHeight()) / 2f;
-        starSpeed = INIT_SPEED * getResources().getDisplayMetrics().density;
+        starSize = (int) (Math.max(starDrawable.getIntrinsicWidth(), starDrawable.getIntrinsicHeight()) / 2f);
+        starSpeed = (int) (INIT_SPEED * getResources().getDisplayMetrics().density);
     }
 
     @Override
@@ -79,31 +79,21 @@ public class StarAnimationView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        final int viewHeight = getHeight();
         for (final Star star : stars) {
             // Ignore the star if it's outside of the view bounds
-            if (star.y + starSize < 0 || star.y - starSize > viewHeight) {
+            if (star.y + starSize < 0 || star.y - starSize > height) {
                 continue;
             }
 
-            // Save the current canvas state
             final int save = canvas.save();
-
-            // Move the canvas to the center of the star
             canvas.translate(star.x, star.y);
 
-            // Rotate the canvas based on how far the star has moved
-            final float progress = (star.y + starSize) / viewHeight;
+            final float progress = (star.y + starSize) / height;
             canvas.rotate(360 * progress);
 
-            // Prepare the size
-            final int size = Math.round(starSize);
-            starDrawable.setBounds(-size, -size, size, size);
-
-            // Draw the star to the canvas
+            starDrawable.setBounds(-starSize, -starSize, starSize, starSize);
             starDrawable.draw(canvas);
 
-            // Restore the canvas to it's previous position and rotation
             canvas.restoreToCount(save);
         }
     }
@@ -141,17 +131,13 @@ public class StarAnimationView extends View {
      * @param deltaMs time delta since the last frame, in millis
      */
     private void updateState(float deltaMs) {
-        // Converting to seconds since PX/S constants are easier to understand
-        final float deltaSeconds = deltaMs / 1000f;
+        for (int i = 0; i < stars.size(); i++) {
+            Star star = stars.get(i);
+            star.y += star.speed * deltaMs / 1000f;
 
-        for (final Star star : stars) {
-            // Move the star based on the elapsed time and it's speed
-            star.y += star.speed * deltaSeconds;
-
-            // If the star is completely outside of the view bounds after
-            // updating it's position, recycle it.
+            // Remove when the star is completely gone
             if (star.y - starSize > height) {
-                initializeStar(star);
+                stars.remove(star);
             }
         }
     }

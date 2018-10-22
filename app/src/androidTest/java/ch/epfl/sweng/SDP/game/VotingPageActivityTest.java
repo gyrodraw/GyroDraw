@@ -7,6 +7,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableStarAnimation;
 import static org.hamcrest.Matchers.is;
 
 import android.graphics.drawable.Drawable;
@@ -14,7 +15,6 @@ import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import ch.epfl.sweng.SDP.R;
@@ -27,7 +27,12 @@ public class VotingPageActivityTest {
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
-            new ActivityTestRule<>(VotingPageActivity.class);
+            new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableStarAnimation();
+                }
+            };
 
     @Test
     public void testRatingBarIsVisible() {

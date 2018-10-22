@@ -2,14 +2,13 @@ package ch.epfl.sweng.SDP.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,32 +54,39 @@ public class ShopActivity extends Activity {
     final DatabaseReference dbRef = db.getReference();
     final DatabaseReference usersRef = dbRef.child("users");
     final DatabaseReference shopColorsRef = dbRef.child("items").child("colors");
-    final DatabaseReference userColorsRef = usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("items").child("colors");
+    final DatabaseReference userColorsRef = usersRef.child(FirebaseAuth.getInstance()
+            .getCurrentUser().getUid()).child("items").child("colors");
+
+    private final BooleanWrapper b = new BooleanWrapper(false);
+    private final IntegerWrapper stars = new IntegerWrapper(0);
+    private final IntegerWrapper price = new IntegerWrapper(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<String> shopColors = getColorsFromDatabase(); //does not wait until database responded
-        LinearLayout linearLayout = findViewById(R.id.linearLayout); //why is it null?
-        try {
-            wait(5000);
-        }
-        catch(Exception e) {
-            System.out.println("exception");
-        }
-        if (shopColors.size() < 1) {
-            TextView t = new TextView(this);
-            t.setText("Currently unable to find any shop items.");
-            linearLayout.addView(t);
-        }
-        else {
-            for (String s : shopColors) {
-                Button b = initializeButton(s);
-                addOnClickListenerToButton(b);
-                linearLayout.addView(b);
-            }
-        }
         setContentView(R.layout.shop_activity);
+        final LinearLayout linearLayout = this.findViewById(R.id.linearLayout);
+        final ArrayList<String> shopColors = getColorsFromDatabase();
+        new CountDownTimer(5000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                if (shopColors.size() < 1) {
+                    TextView t = initializeTextView("Currently unable to find any shop items.");
+                    linearLayout.addView(t);
+                }
+                else {
+                    for (String s : shopColors) {
+                        Button b = initializeButton(s);
+                        addOnClickListenerToButton(b);
+                        linearLayout.addView(b);
+                    }
+                }
+            }
+        }.start();
         setReturn();
     }
 
@@ -92,7 +98,6 @@ public class ShopActivity extends Activity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    System.out.println(snapshot.getKey());
                     colors.add(snapshot.getKey());
                 }
             }
@@ -113,6 +118,7 @@ public class ShopActivity extends Activity {
 
     private void addOnClickListenerToButton(final Button b) {
         View.OnClickListener onClickListener = new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 purchaseItem(b.getText().toString());
@@ -121,9 +127,16 @@ public class ShopActivity extends Activity {
         b.setOnClickListener(onClickListener);
     }
 
+    private TextView initializeTextView(String text) {
+        TextView t = new TextView(this);
+        t.setText(text);
+        return t;
+    }
+
     private void setReturn() {
         Button ret = findViewById(R.id.returnFromShop);
         ret.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 gotoHome();
@@ -132,22 +145,47 @@ public class ShopActivity extends Activity {
     }
 
     private void purchaseItem(String s) {
-        final BooleanWrapper b = new BooleanWrapper(false);
-        final IntegerWrapper stars = new IntegerWrapper(0);
-        final IntegerWrapper price = new IntegerWrapper(0);
         alreadyOwned(s, b);
-        getStars(stars);
-        getPrice(price, s);
-        if (!b.getBoolean() && sufficientCurrency(stars.getInt(), price.getInt())) {
-            updateUser(s, stars.getInt() - price.getInt());
-        }
     }
 
-    private void alreadyOwned(String s, final BooleanWrapper b) throws DatabaseException {
-        userColorsRef.orderByKey().equalTo(s).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void alreadyOwned(final String s, final BooleanWrapper b) throws DatabaseException {
+        userColorsRef.orderByKey().equalTo(s).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                b.setBoolean(dataSnapshot.exists());
+                if(dataSnapshot.exists()) {
+                    TextView t = findViewById(R.id.shopMessages);
+                    t.setText("Item already owned.");
+                }
+                else {
+                    stars.setInt(-1);
+                    price.setInt(-1);
+                    getStars(stars);
+                    getPrice(price, s);
+                    new CountDownTimer(2500, 500) {
+                        public void onTick(long millisUntilFinished) {
+                            if(stars.getInt() > -1 && price.getInt() > -1) {
+                                this.cancel();
+                                if(sufficientCurrency(stars.getInt(), price.getInt())) {
+                                    updateUser(s, stars.getInt() - price.getInt());
+                                }
+                            }
+                        }
+                        public void onFinish() {
+                            if(stars.getInt() < 0 || price.getInt() < 0) {
+                                TextView t = findViewById(R.id.shopMessages);
+                                t.setText("Unable to read from database in time.");
+                            }
+                            else {
+                                if(sufficientCurrency(stars.getInt(), price.getInt())) {
+                                    updateUser(s, stars.getInt() - price.getInt());
+                                }
+                            }
+                        }
+                    }.start();
+                }
+                //b.setBoolean(dataSnapshot.exists());
             }
 
             @Override
@@ -158,14 +196,17 @@ public class ShopActivity extends Activity {
     }
 
     private void getStars(final IntegerWrapper i) throws DatabaseException {
-        usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars").addListenerForSingleValueEvent(new ValueEventListener() {
+        usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    i.setInt((int) dataSnapshot.getValue());
+                    i.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
+                            Integer.MAX_VALUE), Integer.MIN_VALUE));
                 }
                 else {
-                    i.setInt(0);
+                    i.setInt(-1);
                 }
             }
 
@@ -176,15 +217,18 @@ public class ShopActivity extends Activity {
         });
     }
 
-    private void getPrice(final IntegerWrapper i, String item) throws IllegalArgumentException, DatabaseException {
+    private void getPrice(final IntegerWrapper i, final String item) throws IllegalArgumentException,
+            DatabaseException {
         shopColorsRef.child(item).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    i.setInt((int) dataSnapshot.getValue());
+                    i.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
+                            Integer.MAX_VALUE), Integer.MIN_VALUE));
                 }
                 else {
-                    throw new IllegalArgumentException("Item does not exist.");
+                    i.setInt(-1);
                 }
             }
 
@@ -196,21 +240,32 @@ public class ShopActivity extends Activity {
     }
 
     private boolean sufficientCurrency(int stars, int price) {
-        return (stars - price) >= 0;
+        System.out.println(stars + " " + price);
+        boolean sufficient = stars > price;
+        if (!sufficient) {
+            TextView t = findViewById(R.id.shopMessages);
+            t.setText("Not enough stars to purchase item.");
+        }
+        return sufficient;
     }
 
     private void updateUser(String item, int newStars) {
-        usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars").setValue(newStars, new DatabaseReference.CompletionListener() {
+        usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars")
+                .setValue(newStars, new DatabaseReference.CompletionListener() {
+
             @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+            public void onComplete(@Nullable DatabaseError databaseError,
+                                   @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
                     throw databaseError.toException();
                 }
             }
         });
         userColorsRef.child(item).setValue(true, new DatabaseReference.CompletionListener() {
+
             @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+            public void onComplete(@Nullable DatabaseError databaseError,
+                                   @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
                     throw databaseError.toException();
                 }

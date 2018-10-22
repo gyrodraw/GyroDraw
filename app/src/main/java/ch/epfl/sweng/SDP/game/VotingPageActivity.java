@@ -167,7 +167,6 @@ public class VotingPageActivity extends Activity {
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
-
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         ratingBar.setOnRatingBarChangeListener(
                 new OnRatingBarChangeListener() {

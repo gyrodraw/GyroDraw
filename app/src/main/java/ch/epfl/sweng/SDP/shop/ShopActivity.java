@@ -71,7 +71,7 @@ public class ShopActivity extends Activity {
         if (shopColors.size() < 1) {
             TextView t = new TextView(this);
             t.setText("Currently unable to find any shop items.");
-            //((LinearLayout)findViewById(R.id.linearLayout)).addView(t);
+            linearLayout.addView(t);
         }
         else {
             for (String s : shopColors) {

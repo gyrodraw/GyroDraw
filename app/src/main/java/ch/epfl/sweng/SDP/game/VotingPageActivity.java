@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game;
 
 import static java.lang.String.format;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -191,6 +190,11 @@ public class VotingPageActivity extends Activity {
     public void startHomeActivity(View view) {
         launchActivity(HomeActivity.class);
         finish();
+    }
+
+    public void animateStars(View v) {
+        StarAnimationView starsAnimation =  findViewById(R.id.starsAnimation);
+        starsAnimation.addStars(5);
     }
 
     /**

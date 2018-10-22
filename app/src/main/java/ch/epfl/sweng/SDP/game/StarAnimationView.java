@@ -9,6 +9,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
@@ -24,18 +25,20 @@ public class StarAnimationView extends View {
         private float speed;
     }
 
-    private static final int BASE_SPEED_DP_PER_S = 200;
-    private static final int COUNT = 32;
+    private static final int INIT_SPEED = 200;
     private static final int SEED = 1337;
 
-    private final Star[] mStars = new Star[COUNT];
+    private final ArrayList<Star> stars = new ArrayList<>();
     private final Random mRnd = new Random(SEED);
 
     private TimeAnimator mTimeAnimator;
-    private Drawable mDrawable;
+    private Drawable starDrawable;
 
     private float starSize;
     private float starSpeed;
+
+    private int height;
+    private int width;
 
     /**
      * @see View#View(Context)
@@ -62,28 +65,22 @@ public class StarAnimationView extends View {
     }
 
     private void init() {
-        mDrawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
-        starSize = Math.max(mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight()) / 2f;
-        starSpeed = BASE_SPEED_DP_PER_S * getResources().getDisplayMetrics().density;
+        starDrawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
+        starSize = Math.max(starDrawable.getIntrinsicWidth(), starDrawable.getIntrinsicHeight()) / 2f;
+        starSpeed = INIT_SPEED * getResources().getDisplayMetrics().density;
     }
 
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         super.onSizeChanged(width, height, oldw, oldh);
-
-        // The starting position is dependent on the size of the view,
-        // which is why the model is initialized here, when the view is measured.
-        for (int i = 0; i < mStars.length; i++) {
-            final Star star = new Star();
-            initializeStar(star, width, height);
-            mStars[i] = star;
-        }
+        this.width = width;
+        this.height = height;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         final int viewHeight = getHeight();
-        for (final Star star : mStars) {
+        for (final Star star : stars) {
             // Ignore the star if it's outside of the view bounds
             if (star.y + starSize < 0 || star.y - starSize > viewHeight) {
                 continue;
@@ -101,10 +98,10 @@ public class StarAnimationView extends View {
 
             // Prepare the size
             final int size = Math.round(starSize);
-            mDrawable.setBounds(-size, -size, size, size);
+            starDrawable.setBounds(-size, -size, size, size);
 
             // Draw the star to the canvas
-            mDrawable.draw(canvas);
+            starDrawable.draw(canvas);
 
             // Restore the canvas to it's previous position and rotation
             canvas.restoreToCount(save);
@@ -146,36 +143,34 @@ public class StarAnimationView extends View {
     private void updateState(float deltaMs) {
         // Converting to seconds since PX/S constants are easier to understand
         final float deltaSeconds = deltaMs / 1000f;
-        final int viewWidth = getWidth();
-        final int viewHeight = getHeight();
 
-        for (final Star star : mStars) {
+        for (final Star star : stars) {
             // Move the star based on the elapsed time and it's speed
             star.y += star.speed * deltaSeconds;
 
             // If the star is completely outside of the view bounds after
             // updating it's position, recycle it.
-            if (star.y - starSize > viewHeight) {
-                initializeStar(star, viewWidth, viewHeight);
+            if (star.y - starSize > height) {
+                initializeStar(star);
             }
         }
     }
 
-    /**
-     * Initialize the given star by randomizing it's position, scale and alpha
-     *
-     * @param star       the star to initialize
-     * @param viewWidth  the view width
-     * @param viewHeight the view height
-     */
-    private void initializeStar(Star star, int viewWidth, int viewHeight) {
-        star.x = viewWidth * mRnd.nextFloat();
+    private void initializeStar(Star star) {
+        star.x = width * mRnd.nextFloat();
         // Subtract the size to 0 (the top of the view)
         // to make sure it starts outside of the view bound
         star.y = -starSize;
-        // Add a random offset to create a small delay before the
-        // star appears again.
-        star.y -= viewHeight * mRnd.nextFloat() / 4f;
+        // Add a random offset to create a small delay before the star appears again.
+        star.y -= height * mRnd.nextFloat() / 4f;
         star.speed = starSpeed;
+    }
+
+    public void addStars(int n) {
+        for (int i = 0; i < n; i++) {
+            final Star star = new Star();
+            initializeStar(star);
+            stars.add(star);
+        }
     }
 }

@@ -17,8 +17,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
@@ -84,8 +82,8 @@ public class ShopActivity extends Activity {
                     }
                 }
                 else {
-                    TextView t = findViewById(R.id.shopMessages);
-                    t.setText("Currently no purchasable items in shop.");
+                    setShopMessage("Currently no purchasable items in shop.");
+                    resetShopMessage();
                 }
             }
 
@@ -111,12 +109,6 @@ public class ShopActivity extends Activity {
             }
         };
         b.setOnClickListener(onClickListener);
-    }
-
-    private TextView initializeTextView(String text) {
-        TextView t = new TextView(this);
-        t.setText(text);
-        return t;
     }
 
     private void setReturn() {
@@ -145,44 +137,39 @@ public class ShopActivity extends Activity {
         alreadyOwned(s, b);
     }
 
-    private void alreadyOwned(final String s, final BooleanWrapper b) throws DatabaseException {
-        userColorsRef.orderByKey().equalTo(s).addListenerForSingleValueEvent(
+    private void alreadyOwned(final String item, final BooleanWrapper b) throws DatabaseException {
+        userColorsRef.orderByKey().equalTo(item).addListenerForSingleValueEvent(
                 new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    TextView t = findViewById(R.id.shopMessages);
-                    t.setText("Item already owned.");
+                    setShopMessage("Item already owned.");
+                    resetShopMessage();
                 }
                 else {
                     stars.setInt(-1);
                     price.setInt(-1);
                     getStars(stars);
-                    getPrice(price, s);
+                    getPrice(price, item);
                     new CountDownTimer(2500, 500) {
                         public void onTick(long millisUntilFinished) {
                             if(stars.getInt() > -1 && price.getInt() > -1) {
                                 this.cancel();
-                                if(sufficientCurrency(stars.getInt(), price.getInt())) {
-                                    updateUser(s, stars.getInt() - price.getInt());
-                                }
+                                updateUserIf(item);
                             }
                         }
                         public void onFinish() {
                             if(stars.getInt() < 0 || price.getInt() < 0) {
-                                TextView t = findViewById(R.id.shopMessages);
-                                t.setText("Unable to read from database in time.");
+                                setShopMessage("Unable to read from database in time.");
+                                resetShopMessage();
                             }
                             else {
-                                if(sufficientCurrency(stars.getInt(), price.getInt())) {
-                                    updateUser(s, stars.getInt() - price.getInt());
-                                }
+                                updateUserIf(item);
                             }
                         }
                     }.start();
                 }
-                //b.setBoolean(dataSnapshot.exists());
             }
 
             @Override
@@ -190,6 +177,12 @@ public class ShopActivity extends Activity {
                 throw databaseError.toException();
             }
         });
+    }
+
+    private void updateUserIf(String item) {
+        if(sufficientCurrency(stars.getInt(), price.getInt())) {
+            updateUser(item, stars.getInt() - price.getInt());
+        }
     }
 
     private void getStars(final IntegerWrapper i) throws DatabaseException {
@@ -240,8 +233,8 @@ public class ShopActivity extends Activity {
         System.out.println(stars + " " + price);
         boolean sufficient = stars > price;
         if (!sufficient) {
-            TextView t = findViewById(R.id.shopMessages);
-            t.setText("Not enough stars to purchase item.");
+            setShopMessage("Not enough stars to purchase item.");
+            resetShopMessage();
         }
         return sufficient;
     }
@@ -270,6 +263,11 @@ public class ShopActivity extends Activity {
         });
     }
 
+    private void setShopMessage(String message) {
+        TextView t = findViewById(R.id.shopMessages);
+        t.setText(message);
+    }
+
     private void resetShopMessage() {
         new CountDownTimer(5000, 5000) {
             public void onTick(long millisUntilFinished) {
@@ -277,8 +275,7 @@ public class ShopActivity extends Activity {
             }
 
             public void onFinish() {
-                TextView t = findViewById(R.id.shopMessages);
-                t.setText("");
+                setShopMessage("");
             }
         }.start();
     }

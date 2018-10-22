@@ -1,8 +1,13 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.auth;
+
+import static ch.epfl.sweng.SDP.home.League.createLeague;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+import ch.epfl.sweng.SDP.home.League;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -11,35 +16,60 @@ import com.google.firebase.database.ValueEventListener;
 
 
 /**
- * Class that simulates an account.
+ * Singleton class that simulates an account.
  */
-public class Account implements java.io.Serializable {
+public class Account {
+
+    private static Account instance = new Account();
+
+    private static final League[] LEAGUES = new League[]{
+            createLeague("league1", 0, 99),
+            createLeague("league2", 100, 199),
+            createLeague("league3", 200, 299)
+    };
+
     private String userId;
     private String username;
+    private String currentLeague;
     private int trophies;
     private int stars;
-    private transient DatabaseReference usersRef;
+    private DatabaseReference usersRef;
+
+    private Account() {
+        if (instance != null) {
+            throw new IllegalStateException("Already instantiated");
+        }
+    }
+
+    public static Account getInstance() {
+        return instance;
+    }
 
     /**
-     * Builder for account.
-     * @param username String defining the preferred username
+     * Setter for account instance which can be called only once. Trophies and stars are initialized
+     * at 0.
+     *
+     * @param username string defining the preferred username
+     * @throws IllegalArgumentException if username is null
      */
-    public Account(ConstantsWrapper constantsWrapper, String username) {
-        this(constantsWrapper, username, 0, 0);
-    }
-  
-    /**
-     * Builder for account.
-     * @param username String defining the preferred username
-     * @param trophies int defining current rating
-     * @param stars int defining current currency
-     */
-    public Account(ConstantsWrapper constantsWrapper, String username, int trophies, int stars) {
+    public void setAccount(ConstantsWrapper constantsWrapper, String username) {
+        if (username == null) {
+            throw new IllegalArgumentException("username is null");
+        }
+
         this.usersRef = constantsWrapper.getUsersRef();
         this.userId = constantsWrapper.getFirebaseUserId();
         this.username = username;
-        this.trophies = trophies;
-        this.stars = stars;
+        this.currentLeague = LEAGUES[0].getName();
+        this.trophies = 0;
+        this.stars = 0;
+    }
+
+    public void refreshAccount() {
+        usersRef = Database.INSTANCE.getReference("users");
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        changeTrophies(0);
+        addStars(0);
     }
 
     public String getUsername() {
@@ -54,19 +84,29 @@ public class Account implements java.io.Serializable {
         return stars;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    // Need to remain in order to have it in the DB automatically
+    public String getCurrentLeague() {
+        return currentLeague;
     }
 
     /**
      * Registers this account in Firebase.
      */
-    public void registerAccount() throws  DatabaseException{
+    public void registerAccount() throws DatabaseException {
         usersRef.child(userId).setValue(this, createCompletionListener());
     }
 
     /**
-     * Checks in firebase if username already exists.
+     * Checks in Firebase if username already exists.
+     *
      * @param newName username to compare
      * @throws IllegalArgumentException If username is null or already taken
      * @throws DatabaseException If something went wrong with database.
@@ -81,7 +121,7 @@ public class Account implements java.io.Serializable {
 
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
+                        if (snapshot.exists()) {
                             throw new IllegalArgumentException("Username already taken.");
                         }
                     }
@@ -94,7 +134,8 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     * Updates Username to newName.
+     * Updates username to newName.
+     *
      * @param newName new username
      * @throws IllegalArgumentException if username not available anymore
      * @throws DatabaseException if problem with firebase
@@ -102,42 +143,89 @@ public class Account implements java.io.Serializable {
     public void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException {
         checkIfAccountNameIsFree(newName);
-        usersRef.child("users").child(userId).child("username")
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(userId + ".username").build()
                 .setValue(newName, createCompletionListener());
         username = newName;
     }
 
     /**
-     * Method that allowes one to change rating (Trophies).
+     * Method that allowes one to change trophies.
+     *
      * @param change modifier of trophies
      * @throws DatabaseException in case write to database fails
      */
-    public void changeTrophies(int change) throws DatabaseException {
-        final int newTrophies = Math.max(0, trophies + change);
-        usersRef.child(userId).child("trophies")
-                .setValue(newTrophies, createCompletionListener());
-        trophies = newTrophies;
+    public void changeTrophies(final int change) throws DatabaseException {
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(userId + ".trophies").build().addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Long value = dataSnapshot.getValue(Long.class);
+                        if (value != null) {
+                            final int newTrophies = Math.max(0, value.intValue() + change);
+                            DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(usersRef);
+                            trophiesBuilder.addChildren(userId + ".trophies").build()
+                                    .setValue(newTrophies, createCompletionListener());
+                            trophies = newTrophies;
+
+                            // Update current league
+                            DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(usersRef);
+                            for (League league : LEAGUES) {
+                                if (league.contains(trophies)) {
+                                    currentLeague = league.getName();
+                                }
+                            }
+                            leagueBuilder.addChildren(userId + ".currentLeague").build()
+                                    .setValue(currentLeague, createCompletionListener());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     /**
      * Method that allows one to add currency (stars).
+     *
      * @param amount positive int
      * @throws IllegalArgumentException in case 'add' is negative
      * @throws DatabaseException in case write to database fails
      */
-    public void addStars(int amount)
+    public void addStars(final int amount)
             throws IllegalArgumentException, DatabaseException {
-        final int newStars = amount + stars;
-        if (newStars < 0) {
-            throw new IllegalArgumentException("Negative Balance");
-        }
-        usersRef.child(userId).child("stars")
-                .setValue(newStars, createCompletionListener());
-        stars = newStars;
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(userId + ".stars").build().addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Long value = dataSnapshot.getValue(Long.class);
+                        if (value != null) {
+                            final int newStars = amount + value.intValue();
+                            if (newStars < 0) {
+                                throw new IllegalArgumentException("Negative Balance");
+                            }
+
+                            DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(usersRef);
+                            starsBuilder.addChildren(userId + ".stars").build()
+                                    .setValue(newStars, createCompletionListener());
+                            stars = newStars;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     /**
      * Method that allows one to add friends.
+     *
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -146,12 +234,14 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        usersRef.child(userId).child("friends").child(usernameId)
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(userId + ".friends." + usernameId).build()
                 .setValue(true, createCompletionListener());
     }
 
     /**
      * Method that allows one to remove friends.
+     *
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -160,12 +250,14 @@ public class Account implements java.io.Serializable {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        usersRef.child(userId).child("friends").child(usernameId)
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(userId + ".friends." + usernameId).build()
                 .removeValue(createCompletionListener());
     }
 
     /**
      * Checks if databaseError occurred.
+     *
      * @param databaseError potenial databaseError
      * @throws DatabaseException in case databaseError is non-null
      */
@@ -178,13 +270,14 @@ public class Account implements java.io.Serializable {
 
     /**
      * Creates a CompletionListener that checks if there was a DatabaseError.
+     *
      * @return CompletionListener
      */
-    private DatabaseReference.CompletionListener createCompletionListener(){
-        return new DatabaseReference.CompletionListener(){
+    private DatabaseReference.CompletionListener createCompletionListener() {
+        return new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
+                    @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
             }
         };

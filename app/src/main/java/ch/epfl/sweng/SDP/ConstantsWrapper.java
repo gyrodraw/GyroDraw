@@ -12,7 +12,7 @@ public class ConstantsWrapper {
     private FirebaseUser firebaseUser;
 
     /**
-     * Defines wrapper for testing interaction with Database.
+     * Defines wrapper for testing interaction with Database. 
      */
     public ConstantsWrapper() {
         usersRef = Database.INSTANCE.getReference("users");

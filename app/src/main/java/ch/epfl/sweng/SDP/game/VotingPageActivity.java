@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import java.util.Locale;
 
 public class VotingPageActivity extends Activity {
@@ -166,6 +168,17 @@ public class VotingPageActivity extends Activity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
 
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(
+                new OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        StarAnimationView starsAnimation = findViewById(R.id.starsAnimation);
+                        starsAnimation.addStars((int) rating);
+                    }
+                }
+        );
+
         initProgressBar();
     }
 
@@ -197,13 +210,9 @@ public class VotingPageActivity extends Activity {
         finish();
     }
 
-    public void animateStars(View v) {
-        StarAnimationView starsAnimation =  findViewById(R.id.starsAnimation);
-        starsAnimation.addStars(5);
-    }
-
     /**
      * Switch the drawing when clicking the button.
+     *
      * @param view View referencing the button
      */
     public void changeImage(View view) {
@@ -295,6 +304,7 @@ public class VotingPageActivity extends Activity {
 
     /**
      * Show the final ranking in a new fragment.
+     *
      * @param view View referencing the button
      */
     public void showFinalRanking(View view) {

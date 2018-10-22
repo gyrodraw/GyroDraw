@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.Constants;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -53,7 +53,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         if (username.isEmpty()) {
             usernameTaken.setText("Username must not be empty.");
         } else {
-            account = new Account(new Constants(), username);
+            account = new Account(new ConstantsWrapper(), username);
             try{
                 Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                         .addListenerForSingleValueEvent(new ValueEventListener() {

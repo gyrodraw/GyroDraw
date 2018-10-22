@@ -24,8 +24,8 @@ public class Account implements java.io.Serializable {
      * Builder for account.
      * @param username String defining the preferred username
      */
-    public Account(Constants constants, String username) {
-        this(constants, username, 0, 0);
+    public Account(ConstantsWrapper constantsWrapper, String username) {
+        this(constantsWrapper, username, 0, 0);
     }
   
     /**
@@ -34,9 +34,9 @@ public class Account implements java.io.Serializable {
      * @param trophies int defining current rating
      * @param stars int defining current currency
      */
-    public Account(Constants constants, String username, int trophies, int stars) {
-        this.usersRef = constants.getUsersRef();
-        this.userId = constants.getFirebaseUserId();
+    public Account(ConstantsWrapper constantsWrapper, String username, int trophies, int stars) {
+        this.usersRef = constantsWrapper.getUsersRef();
+        this.userId = constantsWrapper.getFirebaseUserId();
         this.username = username;
         this.trophies = trophies;
         this.stars = stars;
@@ -72,7 +72,7 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException If something went wrong with database.
      */
     public void checkIfAccountNameIsFree(final String newName)
-            throws IllegalArgumentException, DatabaseException, InterruptedException {
+            throws IllegalArgumentException, DatabaseException {
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
         }
@@ -83,8 +83,6 @@ public class Account implements java.io.Serializable {
                     public void onDataChange(DataSnapshot snapshot) {
                         if(snapshot.exists()) {
                             throw new IllegalArgumentException("Username already taken.");
-                        } else {
-                            registerAccount();
                         }
                     }
 
@@ -102,7 +100,7 @@ public class Account implements java.io.Serializable {
      * @throws DatabaseException if problem with firebase
      */
     public void updateUsername(final String newName)
-            throws IllegalArgumentException, DatabaseException, InterruptedException {
+            throws IllegalArgumentException, DatabaseException {
         checkIfAccountNameIsFree(newName);
         usersRef.child("users").child(userId).child("username")
                 .setValue(newName, createCompletionListener());
@@ -127,7 +125,8 @@ public class Account implements java.io.Serializable {
      * @throws IllegalArgumentException in case 'add' is negative
      * @throws DatabaseException in case write to database fails
      */
-    public void addStars(int amount) throws IllegalArgumentException, DatabaseException {
+    public void addStars(int amount)
+            throws IllegalArgumentException, DatabaseException {
         final int newStars = amount + stars;
         if (newStars < 0) {
             throw new IllegalArgumentException("Negative Balance");

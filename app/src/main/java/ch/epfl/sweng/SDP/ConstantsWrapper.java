@@ -5,19 +5,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Constants {
-    public FirebaseDatabase database;
-    public DatabaseReference databaseRef;
+import ch.epfl.sweng.SDP.firebase.Database;
+
+public class ConstantsWrapper {
     private DatabaseReference usersRef;
     private FirebaseUser firebaseUser;
 
     /**
-     * Defines Constants for Firebase.
+     * Defines wrapper for testing interaction with Database.
      */
-    public Constants() {
-        this.database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
-        this.databaseRef = database.getReference();
-        usersRef = databaseRef.child("users");
+    public ConstantsWrapper() {
+        usersRef = Database.INSTANCE.getReference("users");
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 

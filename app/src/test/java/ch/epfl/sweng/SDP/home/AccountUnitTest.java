@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.content.Context;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -11,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.Constants;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,18 +20,18 @@ import static org.mockito.Mockito.when;
 
 public class AccountUnitTest {
 
-    Constants mockConstants;
+    ConstantsWrapper mockConstantsWrapper;
     DatabaseReference mockReference;
     Query mockQuery;
     Account account;
 
     @Before
     public void init(){
-        mockConstants = Mockito.mock(Constants.class);
+        mockConstantsWrapper = Mockito.mock(ConstantsWrapper.class);
         mockReference = Mockito.mock(DatabaseReference.class);
         mockQuery = Mockito.mock(Query.class);
-        when(mockConstants.getUsersRef()).thenReturn(mockReference);
-        when(mockConstants.getFirebaseUserId()).thenReturn("123456789");
+        when(mockConstantsWrapper.getUsersRef()).thenReturn(mockReference);
+        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
         when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
@@ -42,7 +40,7 @@ public class AccountUnitTest {
         doNothing().when(mockReference).removeValue(isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
 
-        account = new Account(mockConstants, "123456789");
+        account = new Account(mockConstantsWrapper, "123456789");
         account.setUserId("123456789");
     }
 
@@ -51,7 +49,7 @@ public class AccountUnitTest {
         assertEquals(account.getTrophies(), 0);
         assertEquals(account.getStars(), 0);
         assertEquals(account.getUsername(), "123456789");
-        assertEquals(mockConstants.getFirebaseUserId(), "123456789");
+        assertEquals(mockConstantsWrapper.getFirebaseUserId(), "123456789");
     }
 
     @Test

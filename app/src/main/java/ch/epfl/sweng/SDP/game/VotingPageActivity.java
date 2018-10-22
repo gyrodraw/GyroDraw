@@ -160,7 +160,7 @@ public class VotingPageActivity extends Activity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
 
-        if (enableStarAnimation) {
+        if (!enableStarAnimation) {
             setVisibility(View.GONE, R.id.starsAnimation);
         }
 

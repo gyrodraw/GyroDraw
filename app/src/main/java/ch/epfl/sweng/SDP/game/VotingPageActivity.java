@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -155,12 +156,15 @@ public class VotingPageActivity extends Activity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+
 
         // Make the drawingView and the playerNameView invisible
         // until the drawings have been downloaded
         setVisibility(View.INVISIBLE, drawingView, playerNameView);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
+
         initProgressBar();
     }
 

@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * Helper class to upload and download images from Firebase Storage.
  */
-public class FbStorageHandler {
+public class FbStorage {
 
     private static final String TAG = "fbStorageHandler";
     private static final int QUALITY = 20;

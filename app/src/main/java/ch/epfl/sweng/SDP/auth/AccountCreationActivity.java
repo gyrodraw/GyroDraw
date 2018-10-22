@@ -1,31 +1,27 @@
 package ch.epfl.sweng.SDP.auth;
 
-import android.content.Intent;
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+public class AccountCreationActivity extends Activity {
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
-public class AccountCreationActivity extends AppCompatActivity {
     private EditText usernameInput;
     private Button createAcc;
     private TextView usernameTaken;
     private String username;
-    private Account account;
     private View.OnClickListener createAccListener;
 
     @Override
@@ -51,19 +47,19 @@ public class AccountCreationActivity extends AppCompatActivity {
     public void createAccClicked() {
         username = usernameInput.getText().toString();
         if (username.isEmpty()) {
-            usernameTaken.setText("Username must not be empty.");
+            usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            account = new Account(new ConstantsWrapper(), username);
-            try{
+            Account.getInstance().setAccount(new ConstantsWrapper(), username);
+            try {
                 Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                if(snapshot.exists()) {
-                                    usernameTaken.setText("Username already taken, try again");
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    usernameTaken.setText(getString(R.string.usernameAlreadyTaken));
                                 } else {
-                                    account.registerAccount();
+                                    Account.getInstance().registerAccount();
                                     getDefaultSharedPreferences(getThis()).edit()
                                             .putBoolean("hasAccount", true).apply();
                                     gotoHome();
@@ -71,11 +67,11 @@ public class AccountCreationActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
                                 throw databaseError.toException();
                             }
                         });
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 usernameTaken.setText(exception.getMessage());
             }
         }
@@ -83,9 +79,10 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     /**
      * Important for function above.
+     *
      * @return this
      */
-    private AccountCreationActivity getThis(){
+    private AccountCreationActivity getThis() {
         return this;
     }
 
@@ -93,13 +90,7 @@ public class AccountCreationActivity extends AppCompatActivity {
      * Calls HomeActivity.
      */
     public void gotoHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("account", this.account);
-        startActivity(intent);
+        launchActivity(HomeActivity.class);
         finish();
-    }
-
-    public static Account getAccount() {
-        return new Account(1); // need to be changed with the real account
     }
 }

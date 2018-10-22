@@ -151,11 +151,11 @@ public class StarAnimationView extends View {
 
         for (final Star star : mStars) {
             // Move the star based on the elapsed time and it's speed
-            star.y -= star.speed * deltaSeconds;
+            star.y += star.speed * deltaSeconds;
 
             // If the star is completely outside of the view bounds after
             // updating it's position, recycle it.
-            if (star.y + starSize < 0) {
+            if (star.y - starSize > viewHeight) {
                 initializeStar(star, viewWidth, viewHeight);
             }
         }
@@ -175,7 +175,7 @@ public class StarAnimationView extends View {
         star.y = -starSize;
         // Add a random offset to create a small delay before the
         // star appears again.
-        star.y += viewHeight * mRnd.nextFloat() / 4f;
+        star.y -= viewHeight * mRnd.nextFloat() / 4f;
         star.speed = starSpeed;
     }
 }

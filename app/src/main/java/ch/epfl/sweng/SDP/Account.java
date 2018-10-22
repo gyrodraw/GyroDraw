@@ -1,19 +1,13 @@
 package ch.epfl.sweng.SDP;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -24,7 +18,7 @@ public class Account implements java.io.Serializable {
     private String username;
     private int trophies;
     private int stars;
-    private DatabaseReference usersRef;
+    private transient DatabaseReference usersRef;
 
     /**
      * Builder for account.
@@ -72,13 +66,43 @@ public class Account implements java.io.Serializable {
     }
 
     /**
+     * Checks in firebase if username already exists.
+     * @param newName username to compare
+     * @throws IllegalArgumentException If username is null or already taken
+     * @throws DatabaseException If something went wrong with database.
+     */
+    public void checkIfAccountNameIsFree(final String newName)
+            throws IllegalArgumentException, DatabaseException, InterruptedException {
+        if (newName == null) {
+            throw new IllegalArgumentException("Username must not be null");
+        }
+        usersRef.orderByChild("username").equalTo(newName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            throw new IllegalArgumentException("Username already taken.");
+                        } else {
+                            registerAccount();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
+    }
+
+    /**
      * Updates Username to newName.
      * @param newName new username
      * @throws IllegalArgumentException if username not available anymore
      * @throws DatabaseException if problem with firebase
      */
     public void updateUsername(final String newName)
-            throws IllegalArgumentException, DatabaseException {
+            throws IllegalArgumentException, DatabaseException, InterruptedException {
         checkIfAccountNameIsFree(newName);
         usersRef.child("users").child(userId).child("username")
                 .setValue(newName, createCompletionListener());

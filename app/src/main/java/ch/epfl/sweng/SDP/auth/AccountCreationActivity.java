@@ -12,11 +12,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.concurrent.CountDownLatch;
-
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.Constants;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -56,16 +55,16 @@ public class AccountCreationActivity extends AppCompatActivity {
         } else {
             account = new Account(new Constants(), username);
             try{
-                constants.usersRef.orderByChild("username").equalTo(username)
+                Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 if(snapshot.exists()) {
-                                    throw new IllegalArgumentException("Username already taken.");
+                                    usernameTaken.setText("Username already taken, try again");
                                 } else {
                                     account.registerAccount();
-                                    getDefaultSharedPreferences(getApplicationContext()).edit()
+                                    getDefaultSharedPreferences(getThis()).edit()
                                             .putBoolean("hasAccount", true).apply();
                                     gotoHome();
                                 }
@@ -80,6 +79,14 @@ public class AccountCreationActivity extends AppCompatActivity {
                 usernameTaken.setText(exception.getMessage());
             }
         }
+    }
+
+    /**
+     * Important for function above.
+     * @return this
+     */
+    private AccountCreationActivity getThis(){
+        return this;
     }
 
     /**

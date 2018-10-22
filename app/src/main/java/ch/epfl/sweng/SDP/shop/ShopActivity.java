@@ -68,6 +68,7 @@ public class ShopActivity extends Activity {
         setContentView(R.layout.shop_activity);
         getColorsFromDatabase();
         setReturn();
+        setRefresh();
     }
 
     private void getColorsFromDatabase() {
@@ -289,8 +290,7 @@ public class ShopActivity extends Activity {
     }
 
     private void refreshShop() {
-        Intent intent = new Intent(this, ShopActivity.class);
-        startActivity(intent);
+        startActivity(getIntent());
         finish();
     }
 }

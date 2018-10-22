@@ -161,9 +161,11 @@ public class VotingPageActivity extends Activity {
         drawingView = findViewById(R.id.drawing);
 
         if (enableStarAnimation) {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+            setVisibility(View.GONE, R.id.starsAnimation);
         }
+
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
 
         // Make the drawingView and the playerNameView invisible
         // until the drawings have been downloaded

@@ -1,16 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -18,18 +7,26 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 public class AccountUnitTest {
 
-    ConstantsWrapper mockConstantsWrapper;
-    DatabaseReference mockReference;
-    Query mockQuery;
-    Account account;
+    private ConstantsWrapper mockConstantsWrapper;
+    private Account account = Account.getInstance();
 
     @Before
     public void init(){
+        DatabaseReference mockReference = Mockito.mock(DatabaseReference.class);
+        Query mockQuery = Mockito.mock(Query.class);
         mockConstantsWrapper = Mockito.mock(ConstantsWrapper.class);
-        mockReference = Mockito.mock(DatabaseReference.class);
-        mockQuery = Mockito.mock(Query.class);
+
         when(mockConstantsWrapper.getUsersRef()).thenReturn(mockReference);
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
@@ -40,7 +37,7 @@ public class AccountUnitTest {
         doNothing().when(mockReference).removeValue(isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
 
-        account = new Account(mockConstantsWrapper, "123456789");
+        account.setAccount(mockConstantsWrapper, "123456789");
         account.setUserId("123456789");
     }
 
@@ -65,18 +62,6 @@ public class AccountUnitTest {
     @Test
     public void testGetTrophies(){
         assertThat(account.getTrophies(), is(0));
-    }
-
-    @Test
-    public void testChangeTrophies(){
-        account.changeTrophies(20);
-        assertEquals(account.getTrophies(), 20);
-    }
-
-    @Test
-    public void testAddStars(){
-        account.addStars(20);
-        assertEquals(account.getStars(), 20);
     }
 
     @Test
@@ -109,11 +94,6 @@ public class AccountUnitTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNullUsername(){
         account.updateUsername(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddNegativeBalanceStars(){
-        account.addStars(-1000);
     }
 
     @Test(expected = IllegalArgumentException.class)

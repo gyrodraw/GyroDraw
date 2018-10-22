@@ -13,14 +13,14 @@ public class DatabaseTest {
     @Test(expected = IllegalArgumentException.class)
     public void getReferenceWithNullStringShouldFail() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Database database = Database.getInstance();
+        Database database = Database.INSTANCE;
         database.getReference(null);
     }
 
     @Test
     public void getReferenceWithSingleKeyReturnsValidReference() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Database database = Database.getInstance();
+        Database database = Database.INSTANCE;
         DatabaseReference ref = database.getReference("test");
         assertThat(ref.getKey(), is("test"));
     }
@@ -28,7 +28,7 @@ public class DatabaseTest {
     @Test
     public void getReferenceWithMultipleKeysReturnsValidReference() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Database database = Database.getInstance();
+        Database database = Database.INSTANCE;
         DatabaseReference ref = database.getReference("test.tests");
         assertThat(ref.getKey(), is("tests"));
         assertThat(ref.getParent().getKey(), is("test"));
@@ -37,8 +37,8 @@ public class DatabaseTest {
     @Test
     public void getInstanceShouldAlwaysReturnTheSameInstance() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Database database = Database.getInstance();
-        assertThat(Database.getInstance(), is(database));
+        Database database = Database.INSTANCE;
+        assertThat(Database.INSTANCE, is(database));
     }
 
 

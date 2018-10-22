@@ -173,6 +173,9 @@ public class VotingPageActivity extends Activity {
                 new OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        // Locks the rating bar
+                        ratingBar.setIsIndicator(true);
+
                         StarAnimationView starsAnimation = findViewById(R.id.starsAnimation);
                         starsAnimation.addStars((int) rating);
                     }

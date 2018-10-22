@@ -110,6 +110,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/drawing" />
 
-
+    <ch.epfl.sweng.SDP.game.StarAnimationView
+        android:id="@+id/starsAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true" />
 
 </android.support.constraint.ConstraintLayout>

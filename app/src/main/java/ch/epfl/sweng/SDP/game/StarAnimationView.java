@@ -23,6 +23,7 @@ public class StarAnimationView extends View {
         private float x;
         private float y;
         private float speed;
+        private float rotation;
     }
 
     private static final int INIT_SPEED = 0;
@@ -88,8 +89,8 @@ public class StarAnimationView extends View {
             final int save = canvas.save();
             canvas.translate(star.x, star.y);
 
-            final float progress = (star.y + starSize) / height;
-            canvas.rotate(360 * progress);
+            final float progress = (star.y + starSize) / (2 * height);
+            canvas.rotate(star.rotation * 360 * progress);
 
             starDrawable.setBounds(-starSize, -starSize, starSize, starSize);
             starDrawable.draw(canvas);
@@ -125,11 +126,6 @@ public class StarAnimationView extends View {
         timeAnimator = null;
     }
 
-    /**
-     * Progress the animation by moving the stars based on the elapsed time
-     *
-     * @param deltaMs time delta since the last frame, in millis
-     */
     private void updateState(float deltaMs) {
         for (int i = 0; i < stars.size(); i++) {
             Star star = stars.get(i);
@@ -151,8 +147,14 @@ public class StarAnimationView extends View {
         // Add a random offset to create a small delay before the star appears again.
         star.y -= height * rand.nextFloat() / 4f;
         star.speed = starSpeed;
+        star.rotation = rand.nextBoolean() ? -1 : 1;
     }
 
+    /**
+     * Animates the given number of stars.
+     *
+     * @param n The number of stars
+     */
     public void addStars(int n) {
         for (int i = 0; i < n; i++) {
             final Star star = new Star();

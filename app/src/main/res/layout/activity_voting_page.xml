@@ -30,30 +30,24 @@
         app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
 
-    <ch.epfl.sweng.SDP.game.StarAnimationView
-        android:id="@+id/starsAnimation"
-        style="@style/BackGroundImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true" />
-
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="91dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="8dp"
         android:stepSize="1.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drawing"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/playerNameView" />
 
     <ImageView
         android:id="@+id/drawing"
-        android:layout_width="320dp"
-        android:layout_height="323dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="339dp"
+        android:layout_height="412dp"
+        android:layout_marginTop="30dp"
         android:contentDescription="@string/drawing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,55 +57,56 @@
     <TextView
         android:id="@+id/playerNameView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player's name"
+        android:layout_height="31dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/user_name"
+        android:textColor="@color/colorDrawYellow"
+        android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drawing" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
     <Button
         android:id="@+id/buttonChangeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="65dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="8dp"
         android:onClick="changeImage"
         android:text="Change image (testing only)"
-        app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerNameView"
-        app:layout_constraintVertical_bias="0.771" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
     <Button
         android:id="@+id/rankingButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="27dp"
+        android:background="@null"
+        android:gravity="center"
         android:onClick="showFinalRanking"
         android:text="Ranking (testing only)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textColor="@color/colorGrey"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/votingBackgroundAnimation"
+        app:layout_constraintStart_toStartOf="@+id/votingBackgroundAnimation"
+        app:layout_constraintTop_toTopOf="@+id/votingBackgroundAnimation" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="160dp"
         android:layout_marginEnd="169dp"
         android:layout_marginLeft="167dp"
         android:layout_marginRight="169dp"
         android:layout_marginStart="167dp"
-        android:layout_marginTop="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonChangeImage" />
+        app:layout_constraintTop_toBottomOf="@+id/drawing" />
 
     <Button
         android:id="@+id/starAnimationButton"

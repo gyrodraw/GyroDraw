@@ -17,6 +17,8 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,7 +57,6 @@ public class VotingPageActivity extends Activity {
     private TextView playerNameView;
 
     private RatingBar ratingBar;
-    private StarAnimationView mAnimationView;
 
     public int[] getRatings() {
         return ratings.clone();
@@ -155,24 +156,18 @@ public class VotingPageActivity extends Activity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
 
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+
         // Make the drawingView and the playerNameView invisible
         // until the drawings have been downloaded
         setVisibility(View.INVISIBLE, drawingView, playerNameView);
         initProgressBar();
-
-        mAnimationView = findViewById(R.id.starsAnimation);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mAnimationView.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mAnimationView.pause();
         /*if (rankingRef != null) {
             // Remove the ranking reference in the database
             rankingRef.removeValue(); has to be decommented when a method for creating the entries

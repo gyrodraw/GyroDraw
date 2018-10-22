@@ -9,7 +9,7 @@
     tools:context=".game.VotingPageActivity">
 
     <ImageView
-        android:id="@+id/backgroundImage"
+        android:id="@+id/votingBackgroundImage"
         style="@style/BackGroundImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,6 +17,17 @@
         android:layout_centerHorizontal="true"
         android:alpha="1.0"
         app:srcCompat="@drawable/home_background"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/votingBackgroundAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.8"
+        app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
 
     <ch.epfl.sweng.SDP.game.StarAnimationView

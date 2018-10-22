@@ -132,7 +132,7 @@ public class WaitingPageActivity extends Activity {
                 R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
 
         Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);

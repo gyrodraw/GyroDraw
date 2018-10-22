@@ -93,7 +93,7 @@ public class HomeActivity extends Activity {
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+                .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);

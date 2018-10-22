@@ -14,8 +14,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.AccountCreationActivity;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -122,7 +123,7 @@ public class WaitingPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
-        Database database = Database.INSTANCE;
+        final Database database = Database.INSTANCE;
 
         wordsVotesRef = database.getReference(
                 "rooms.LeagueTest.words"); // need to be replaced with a search for a suitable room
@@ -138,10 +139,28 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        DatabaseReference wordsSelectionRef = database
-                .getReference(format(Locale.getDefault(), "leagues.%s.%s",
-                        AccountCreationActivity.getAccount().getCurrentLeague(), WORD_CHILDREN_DB_ID));
-        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
+        Account.getInstance().refreshAccount();
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
+        builder.addChildren("users." + Account.getInstance().getUserId() + ".currentLeague").build().addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String league = dataSnapshot.getValue(String.class);
+                        if (league != null) {
+                            DatabaseReference wordsSelectionRef = database
+                                    .getReference(format(Locale.getDefault(), "leagues.%s.%s",
+                                            league,
+                                            WORD_CHILDREN_DB_ID));
+                            wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
     private void initRadioButton(Button button, String childString,

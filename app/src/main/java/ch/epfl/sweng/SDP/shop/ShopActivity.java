@@ -50,6 +50,7 @@ class IntegerWrapper {
 }
 
 public class ShopActivity extends Activity {
+    //to be replaced with whatever we use to store all these refs
     final FirebaseDatabase db = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
     final DatabaseReference dbRef = db.getReference();
     final DatabaseReference usersRef = dbRef.child("users");
@@ -65,40 +66,25 @@ public class ShopActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_activity);
-        final LinearLayout linearLayout = this.findViewById(R.id.linearLayout);
-        final ArrayList<String> shopColors = getColorsFromDatabase();
-        new CountDownTimer(5000, 1000) {
+        getColorsFromDatabase();
+        setReturn();
+    }
 
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            public void onFinish() {
-                if (shopColors.size() < 1) {
-                    TextView t = initializeTextView("Currently unable to find any shop items.");
-                    linearLayout.addView(t);
-                }
-                else {
-                    for (String s : shopColors) {
-                        Button b = initializeButton(s);
+    private void getColorsFromDatabase() {
+        shopColorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    LinearLayout linearLayout = findViewById(R.id.linearLayout);
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Button b = initializeButton(snapshot.getKey());
                         addOnClickListenerToButton(b);
                         linearLayout.addView(b);
                     }
                 }
-            }
-        }.start();
-        setReturn();
-    }
-
-
-    private ArrayList<String> getColorsFromDatabase() {
-        final ArrayList<String> colors = new ArrayList<>();
-        shopColorsRef.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    colors.add(snapshot.getKey());
+                else {
+                    TextView t = findViewById(R.id.shopMessages);
+                    t.setText("Currently no purchasable items in shop.");
                 }
             }
 
@@ -107,7 +93,6 @@ public class ShopActivity extends Activity {
                 throw databaseError.toException();
             }
         });
-        return colors;
     }
 
     private Button initializeButton(String s) {
@@ -140,6 +125,17 @@ public class ShopActivity extends Activity {
             @Override
             public void onClick(View view) {
                 gotoHome();
+            }
+        });
+    }
+
+    private void setRefresh() {
+        Button refresh = findViewById(R.id.refreshShop);
+        refresh.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                refreshShop();
             }
         });
     }
@@ -288,6 +284,12 @@ public class ShopActivity extends Activity {
 
     private void gotoHome() {
         Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void refreshShop() {
+        Intent intent = new Intent(this, ShopActivity.class);
         startActivity(intent);
         finish();
     }

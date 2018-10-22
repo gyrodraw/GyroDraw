@@ -3,29 +3,12 @@ package ch.epfl.sweng.SDP.firebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Database {
+/**
+ * Singleton wrapper enum over {@link FirebaseDatabase}.
+ */
+public enum Database {
 
-    // Singleton class
-    private static Database instance;
-
-    private final FirebaseDatabase database = FirebaseDatabase
-            .getInstance("https://gyrodraw.firebaseio.com/");
-
-    // Prevent outside creation
-    private Database() {
-    }
-
-    /**
-     * Factory method to create or retrieve the {@link Database} instance.
-     *
-     * @return the Database instance
-     */
-    public static Database getInstance() {
-        if (Database.instance == null) {
-            instance = new Database();
-        }
-        return instance;
-    }
+    INSTANCE;
 
     /**
      * Get and return the {@link DatabaseReference} associated to the given path. The path can be a
@@ -40,38 +23,87 @@ public class Database {
             throw new IllegalArgumentException("path is null");
         }
 
-        String[] keys = path.split("\\.");
-        String root = keys[0];
-        if (keys.length == 1) {
-            return database.getReference(root);
-        } else {
-            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(root);
-            for (int i = 1; i < keys.length; i++) {
-                String key = keys[i];
-                if (key != null) {
-                    builder.addKey(key);
-                }
-            }
-            return builder.build();
-        }
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
+        return builder.addChildren(path).build();
     }
 
-    private class DatabaseReferenceBuilder {
+    /**
+     * Utility builder for {@link DatabaseReference}.
+     */
+    public static class DatabaseReferenceBuilder {
 
         private DatabaseReference ref;
 
-        private DatabaseReferenceBuilder(String root) {
-            assert root != null : "root is null";
-            ref = database.getReference(root);
+        /**
+         * Construct a builder.
+         */
+        public DatabaseReferenceBuilder() {
+            ref = null;
         }
 
-        private DatabaseReferenceBuilder addKey(String key) {
-            assert key != null : "key is null";
-            ref = ref.child(key);
+        /**
+         * Construct a builder starting from the given reference, which will be used as the root.
+         *
+         * @param initialRef the reference used to start building
+         * @throws IllegalArgumentException if the given reference is null
+         */
+        public DatabaseReferenceBuilder(DatabaseReference initialRef) {
+            if (initialRef == null) {
+                throw new IllegalArgumentException("initialRef is null");
+            }
+            ref = initialRef;
+        }
+
+        /**
+         * Add a child to the reference under construction.
+         *
+         * @param childKey the key corresponding to the child
+         * @return the builder
+         * @throws IllegalArgumentException if the given key is null
+         */
+        public DatabaseReferenceBuilder addChild(String childKey) {
+            if (childKey == null) {
+                throw new IllegalArgumentException("childKey is null");
+            }
+
+            if (ref == null) {
+                ref = FirebaseDatabase
+                        .getInstance("https://gyrodraw.firebaseio.com/").getReference(childKey);
+            } else {
+                ref = ref.child(childKey);
+            }
+
             return this;
         }
 
-        private DatabaseReference build() {
+        /**
+         * Add multiple children to the reference under construction.
+         *
+         * @param path the sequence of keys, separated by dots, corresponding to the desired nesting
+         * of children
+         * @return the builder
+         * @throws IllegalArgumentException if the given path is null
+         */
+        public DatabaseReferenceBuilder addChildren(String path) {
+            if (path == null) {
+                throw new IllegalArgumentException("path is null");
+            }
+
+            String[] keys = path.split("\\.");
+            String root = keys[0];
+            if (keys.length == 1) {
+                return addChild(root);
+            } else {
+                for (String key : keys) {
+                    if (key != null) {
+                        addChild(key);
+                    }
+                }
+                return this;
+            }
+        }
+
+        public DatabaseReference build() {
             return ref;
         }
     }

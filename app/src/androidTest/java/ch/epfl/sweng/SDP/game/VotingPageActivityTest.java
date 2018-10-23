@@ -32,8 +32,8 @@ public class VotingPageActivityTest {
             };
 
     @Test
-    public void testRatingBarIsVisible() {
-        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
+    public void testRatingBarIsClickable() {
+        onView(withId(R.id.ratingBar)).check(matches(isClickable()));
     }
 
     @Test

@@ -146,6 +146,7 @@ public class VotingPageActivity extends Activity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 ratingBar.setIsIndicator(true);
+                ratingBar.setAlpha(0.8f);
                 // Store the rating
                 ratings[ratingToSendCounter] = (int) rating;
 

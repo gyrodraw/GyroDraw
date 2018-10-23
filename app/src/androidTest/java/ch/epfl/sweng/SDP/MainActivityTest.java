@@ -10,6 +10,7 @@ import android.app.Instrumentation;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import ch.epfl.sweng.SDP.auth.LoginActivity;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

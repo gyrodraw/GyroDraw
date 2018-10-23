@@ -1,20 +1,22 @@
 package ch.epfl.sweng.SDP;
 
-import android.content.Intent;
-import android.os.Bundle;
-
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.FirebaseApp;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+
 import ch.epfl.sweng.SDP.Matchmaking.Matchmaker;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +28,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // Go to the home if the user has already logged in and created an account
         if (auth.getCurrentUser() != null && getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("hasAccount", false)) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            launchActivity(HomeActivity.class);
             finish();
         }
 
@@ -38,11 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        startLogin();
-    }
-
-    private void startLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        launchActivity(LoginActivity.class);
     }
 }

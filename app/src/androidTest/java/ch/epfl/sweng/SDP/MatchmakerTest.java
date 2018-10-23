@@ -9,29 +9,23 @@ import static org.junit.Assert.assertTrue;
 public class MatchmakerTest {
 
     @Test
-    public void getInstance() {
-        Matchmaker.getInstance();
-        assertTrue(true);
-    }
-
-    @Test
     public void matchMaker() {
-        Matchmaker matchMaker = new Matchmaker();
-        matchMaker.leaveRoom("2312");
+        //Matchmaker matchMaker = new Matchmaker();
+      //  matchMaker.leaveRoom("2312");
         assertTrue(true);
     }
 
 
     @Test
     public void joinRoom() {
-        Matchmaker.getInstance().joinRoom();
+        Matchmaker.INSTANCE.joinRoom("DSAD");
         assertTrue(true);
 
     }
 
     @Test
     public void leaveRoom() {
-        Matchmaker.getInstance().leaveRoom("2312");
+        Matchmaker.INSTANCE.leaveRoom("2312");
         assertTrue(true);
     }
 

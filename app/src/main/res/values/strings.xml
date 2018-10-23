@@ -1,4 +1,12 @@
 <resources>
+
+
+  <string name="create_acc">Create Account:</string>
+  <string name="username">username</string>
+  <string name="enter_username">Enter Username</string>
+  <string name="test_name">Max Muster</string>
+  <string name="username_taken">Username is already taken.</string>
+  <string name="database_error">Database error. Try again.</string>
     <string name="app_name">Gyrodraw</string>
     <string name="no_internet">No Internet connection</string>
     <string name="unknown_error">Unknown error</string>
@@ -15,5 +23,9 @@
     <string name="create_account">Create account</string>
     <string name="user_name">Username</string>
     <string name="cross">X</string>
+    <string name="drawing">Drawing</string>
+    <string name="home">Home</string>
+    <string name="players_ready">Players ready</string>
+    <string name="vote">Vote for what you want to draw</string>
 
 </resources>

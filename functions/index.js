@@ -1,13 +1,87 @@
+// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
+
+// The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin');
+
+const maxPlayers = 5;
+var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
+
 admin.initializeApp();
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+exports.connectedUsers = functions.database.ref('/mockRooms/ABCDE/connectedUsers').onWrite((event) => {
+    return admin.database().ref('/mockRooms/ABCDE/connectedUsers').once("value")
+    .then(snapshot => {
+      checkUsersReady(StateEnum.endVotingPage, 'mockRooms/ABCDE/timer/usersEndVoting', snapshot);
+      checkUsersReady(StateEnum.votingPage, 'mockRooms/ABCDE/timer/startTimer', snapshot);
+      return;
+    });
+});
+
+function checkUsersReady(state, path, snapshot) {
+  let ready = true;
+  snapshot.forEach( (child) => {
+    if(child.val() !== state) {
+      ready = false;
+    }
+  });
+
+  if(ready) {
+    admin.database().ref(path).set(1);
+    if(state === StateEnum.endVotingPage) {
+      admin.database().ref('mockRooms/ABCDE/timer/endTime').set(0);
+    }
+    console.log("Ready");
+  } else {
+    admin.database().ref(path).set(0);
+    console.log("Not ready");
+  }
+}
+
+exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer').onWrite((event) => {
+  return admin.database().ref('/mockRooms/ABCDE/timer/startTimer').once("value")
+  .then(snapshot => {
+    if(snapshot.val() === 1) {
+      console.log("Timer started");
+
+      // Wait in seconds
+      return functionTimer(20,
+            elapsedTime => {
+                admin.database().ref('/mockRooms/ABCDE/timer/observableTime').set(elapsedTime);
+            })
+            .then(totalTime => {
+                return console.log('Timer of ' + totalTime + ' has finished.');
+            })
+            .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+            .then(() => admin.database().ref('/mockRooms/ABCDE/timer/endTime').set(1))
+            .then(() => event.data.ref.remove())
+            .catch(error => console.error(error));
+    }
+    return;
+  })
+});
+
+function functionTimer (seconds, call) {
+    return new Promise((resolve, reject) => {
+        if (seconds > 300) {
+            return;
+        }
+        let interval = setInterval(onInterval, 1000);
+        let elapsedSeconds = 0;
+
+        function onInterval () {
+            if (elapsedSeconds >= seconds) {
+                clearInterval(interval);
+                call(0);
+                resolve(elapsedSeconds);
+                return;
+            }
+            call(seconds - elapsedSeconds);
+            elapsedSeconds++;
+        }
+    });
+}
+
 exports.joinGame = functions.https.onRequest((req, res) => {
   // Grab the text parameter.
   var userId = req.query.userId;
@@ -48,5 +122,4 @@ exports.joinGame = functions.https.onRequest((req, res) => {
       return res.status(200).end();
     });
   });
-
 });

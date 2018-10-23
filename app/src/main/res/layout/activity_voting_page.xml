@@ -104,7 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="TextView"
+        android:text="20"
         android:textColor="@color/colorDrawYellow"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"

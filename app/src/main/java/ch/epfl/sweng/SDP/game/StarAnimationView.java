@@ -9,8 +9,9 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.ArrayList;
 import ch.epfl.sweng.SDP.R;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -18,10 +19,14 @@ import java.util.Random;
  */
 public class StarAnimationView extends View {
 
+    public static final int X_SPEED_COEF = 300;
+    public static final int Y_SPEED_STEP = 20;
+
     private static class Star {
         private float x;
         private float y;
-        private float speed;
+        private float xSpeed;
+        private float ySpeed;
         private float rotation;
     }
 
@@ -135,8 +140,9 @@ public class StarAnimationView extends View {
     private void updateState(float deltaMs) {
         for (int i = 0; i < stars.size(); i++) {
             Star star = stars.get(i);
-            star.y += star.speed * deltaMs / 1000f;
-            star.speed += deltaMs * 2;
+            star.x += star.xSpeed * deltaMs / 1000f;
+            star.y += star.ySpeed * deltaMs / 1000f;
+            star.ySpeed += Y_SPEED_STEP;
 
             // Remove when the star is completely gone
             if (star.y - starSize > height) {
@@ -146,14 +152,15 @@ public class StarAnimationView extends View {
     }
 
     private void initializeStar(Star star) {
-        star.x = width * rand.nextFloat();
+        star.x = width / 2;
         // Subtract the size to 0 (the top of the view)
         // to make sure it starts outside of the view bound
         star.y = -starSize;
         // Add a random offset to create a small delay before the star appears again.
-        star.y -= height * rand.nextFloat() / 4f;
-        star.speed = starSpeed;
+        star.y -= height * rand.nextFloat() / 8f;
         star.rotation = rand.nextBoolean() ? -1 : 1;
+        star.xSpeed = star.rotation * rand.nextFloat() * X_SPEED_COEF;
+        star.ySpeed = starSpeed;
     }
 
     /**

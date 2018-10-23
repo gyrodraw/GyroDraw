@@ -1,11 +1,10 @@
 package ch.epfl.sweng.SDP.game;
 
+import static android.os.SystemClock.sleep;
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import static android.os.SystemClock.sleep;
 import ch.epfl.sweng.SDP.R;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

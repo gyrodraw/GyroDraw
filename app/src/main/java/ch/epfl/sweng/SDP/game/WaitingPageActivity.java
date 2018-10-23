@@ -13,20 +13,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
-import ch.epfl.sweng.SDP.Matchmaker;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.Locale;
@@ -218,7 +219,7 @@ public class WaitingPageActivity extends Activity {
     };
 
     private void lookingForRoom() {
-        Matchmaker.getInstance().joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
+        Matchmaker.INSTANCE.joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()) {
@@ -268,10 +269,11 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = Database.getInstance();
+        database = Database.INSTANCE;
         lookingForRoom();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
+
         isRoomReady.setListener(listenerRoomReady);
         areWordsReady.setListener(listenerRoomReady);
 
@@ -459,7 +461,7 @@ public class WaitingPageActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance().leaveRoom(roomID);
+            Matchmaker.INSTANCE.leaveRoom(roomID);
             removeAllListeners();
             finish();
         }

@@ -10,13 +10,13 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.firebase.FbStorage;
+import ch.epfl.sweng.SDP.LocalDbHandler;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
-
-import ch.epfl.sweng.SDP.firebase.FbStorageHandler;
-import ch.epfl.sweng.SDP.LocalDbHandler;
 
 
 public class PaintView extends View {
@@ -30,8 +30,6 @@ public class PaintView extends View {
     private Boolean draw;
     private Bitmap bitmap;
     private Canvas canvas;
-    private LocalDbHandler localDbHandler;
-    private FbStorageHandler fbStorageHandler;
 
     /**
      * Constructor for the view.
@@ -41,9 +39,6 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        localDbHandler = new LocalDbHandler(context, null, 1);
-        fbStorageHandler = new FbStorageHandler();
-        setFocusable(true);
         paint = new Paint();
         paintC = new Paint();
         paint.setColor(Color.RED);
@@ -71,16 +66,24 @@ public class PaintView extends View {
         return circleY;
     }
 
-    public boolean getDraw() {
-        return draw;
-    }
-
     public void setCircleX(float circleX) {
         this.circleX = circleX;
     }
 
     public void setCircleY(float circleY) {
         this.circleY = circleY;
+    }
+
+    public int getCircleRadius() {
+        return circleRadius;
+    }
+
+    public void setCircleRadius(int circleRadius) {
+        this.circleRadius = circleRadius;
+    }
+
+    public boolean getDraw() {
+        return draw;
     }
 
     public void setDraw(boolean draw) {
@@ -133,14 +136,16 @@ public class PaintView extends View {
      * Gets called when time for drawing is over.
      * Saves the bitmap in the local DB.
      */
-    public void saveCanvasInDb(){
+    public void saveCanvasInDb(Context context){
         this.draw(canvas);
+        LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
+        FbStorage fbStorage = new FbStorage();
         localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child(""+ts+".jpg");
-        fbStorageHandler.sendBitmapToFireBaseStorage(bitmap, imageRef);
+        fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

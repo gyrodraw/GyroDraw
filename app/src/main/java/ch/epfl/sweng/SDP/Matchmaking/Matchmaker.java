@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.Matchmaking;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
@@ -14,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 public class Matchmaker implements MatchmakingInterface {
@@ -69,17 +72,19 @@ public class Matchmaker implements MatchmakingInterface {
      * join a room.
      */
     public void joinRoom() {
-       // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+            FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
             HttpURLConnection connection = null;
 
             try {
                 //Create connection
-                URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame");
+                String urlParameters = "userId=" + URLEncoder.encode(currentFirebaseUser.getUid(), "UTF-8");
+                URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type",
                         "application/x-www-form-urlencoded");
+
 
               //  connection.setRequestProperty("Content-Length",
                //         Integer.toString(urlParameters.getBytes().length));
@@ -91,7 +96,7 @@ public class Matchmaker implements MatchmakingInterface {
                 //Send request
                 DataOutputStream wr = new DataOutputStream(
                         connection.getOutputStream());
-              //  wr.writeBytes(urlParameters);
+               // wr.writeBytes(urlParameters);
                 wr.close();
 
                 //Get Response

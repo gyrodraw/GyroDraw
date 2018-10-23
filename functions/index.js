@@ -10,7 +10,8 @@ admin.initializeApp();
 // });
 exports.joinGame = functions.https.onRequest((req, res) => {
   // Grab the text parameter.
-  const original = req.query.text;
+  var userId = req.query.userId;
+  console.log("userid: " + userId);
   // Grab the id of the player
   // Check if room is already available and join available room
   return admin.database().ref('rooms').once("value").then(x => {
@@ -25,9 +26,11 @@ exports.joinGame = functions.https.onRequest((req, res) => {
               // set playing to true
               admin.database().ref('rooms').child(room).child('playing').set(true)
             }
-            return  admin.database().ref('rooms').child(room).child('users').push().set({
+            // Push new user
+            return  admin.database().ref('rooms').child(room).child('users').child(userId).set({
               name: "fredrik"
             }).then(() => {
+              // return http error true
               return res.status(200).end();
             });
           }
@@ -36,9 +39,11 @@ exports.joinGame = functions.https.onRequest((req, res) => {
         console.log('rooms[room].users is undefined');
       }
     }
+    var o = {  };
+    o[userId] =  { name : "fredrik"};
     return  admin.database().ref('rooms').push().set({
       playing: false,
-      users: { "42343243" : { name : "fredrik"} }
+      users: o
     }).then( () => {
       return res.status(200).end();
     });

@@ -64,6 +64,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                         timerRef.removeEventListener(listenerTimer);
                         launchActivity(VotingPageActivity.class);
                         break;
+                    default:
                 }
             }
         }

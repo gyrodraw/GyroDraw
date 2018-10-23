@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -372,7 +373,7 @@ public class WaitingPageActivity extends Activity {
         super.onPause();
 
         if(!drawingActivityLauched) {
-            Matchmaker.getInstance().leaveRoom(roomID);
+            //Matchmaker.getInstance().leaveRoom(roomID);
         }
 
         if (wordsVotesRef != null) {
@@ -445,5 +446,23 @@ public class WaitingPageActivity extends Activity {
     private void getReadyUsers() {
         // Do stuff with the database
         // Should increment the counter with incrementCounter()
+    }
+
+    private void removeAllListeners() {
+        stateRef.removeEventListener(listenerState);
+        timerRef.removeEventListener(listenerTimer);
+        wordsVotesRef.removeEventListener(listenerWords);
+        word1Ref.removeEventListener(listenerWord1);
+        word2Ref.removeEventListener(listenerWord2);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Matchmaker.getInstance().leaveRoom(roomID);
+            removeAllListeners();
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

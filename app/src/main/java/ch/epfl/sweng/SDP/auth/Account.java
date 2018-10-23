@@ -81,6 +81,9 @@ public class Account {
     }
 
     public String getUsername() {
+        if (username == null) {
+            return "testUsername";
+        }
         return username;
     }
 
@@ -93,6 +96,9 @@ public class Account {
     }
 
     public String getUserId() {
+        if (userId == null) {
+            return "testUserId";
+        }
         return userId;
     }
 

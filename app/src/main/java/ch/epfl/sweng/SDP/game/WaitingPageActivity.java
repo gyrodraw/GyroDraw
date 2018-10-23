@@ -27,11 +27,14 @@ import java.util.Random;
 
 public class WaitingPageActivity extends Activity {
 
+
+
     private enum WordNumber {
         ONE, TWO
     }
 
     private static boolean enableWaitingAnimation = true;
+    private static boolean testing = false;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
@@ -139,7 +142,9 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        Account.getInstance().refreshAccount();
+        if (!testing) {
+            Account.getInstance().refreshAccount();
+        }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         builder.addChildren("users." + Account.getInstance().getUserId() + ".currentLeague").build().addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -302,10 +307,17 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Disables the waiting animation. Call this method in every WaitingPageActivity test
+     * Disables the waiting animation. Call this method in every WaitingPageActivity testing.
      */
     public static void disableWaitingAnimation() {
         enableWaitingAnimation = false;
+    }
+
+    /**
+     * Enables testing correctly. Call this method in every WaitingPageActivity testing.
+     */
+    public static void enableTesting() {
+        testing = true;
     }
 
     // TODO

@@ -11,6 +11,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableWaitingAnimation;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.enableTesting;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -36,6 +37,7 @@ public class WaitingPageActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     disableWaitingAnimation();
+                    enableTesting();
                 }
             };
 

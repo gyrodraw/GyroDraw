@@ -150,11 +150,15 @@ public class VotingPageActivity extends Activity {
         ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                ratingBar.setIsIndicator(true);
                 // Store the rating
                 ratings[ratingToSendCounter] = (int) rating;
 
                 //Send it to the database along with the corresponding player name
                 sendRatingToDatabase(playersNames[ratingToSendCounter]);
+
+                StarAnimationView starsAnimation = findViewById(R.id.starsAnimation);
+                starsAnimation.addStars((int) rating);
             }
         });
         playerNameView = findViewById(R.id.playerNameView);
@@ -173,19 +177,6 @@ public class VotingPageActivity extends Activity {
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
-        ratingBar.setOnRatingBarChangeListener(
-                new OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        // Locks the rating bar
-                        ratingBar.setIsIndicator(true);
-
-                        StarAnimationView starsAnimation = findViewById(R.id.starsAnimation);
-                        starsAnimation.addStars((int) rating);
-                    }
-                }
-        );
 
         initProgressBar();
     }
@@ -302,9 +293,6 @@ public class VotingPageActivity extends Activity {
                 });
 
         ++ratingToSendCounter;
-
-        // Disable the rating bar since the player has already voted for the current drawing
-        ratingBar.setEnabled(false);
     }
 
     /* public for testing only, the users in the database should be already sorted by their ranking

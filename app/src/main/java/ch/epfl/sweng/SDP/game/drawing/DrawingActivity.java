@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
@@ -18,8 +20,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.EventListener;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
 
 
 public class DrawingActivity extends Activity implements SensorEventListener {
@@ -32,13 +44,69 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
+    private String roomID;
+    private String winningWord;
     ToggleButton flyDraw;
+
+    private final Database database = Database.getInstance();
+    private DatabaseReference timerRef;
+    private DatabaseReference stateRef;
+
+    private final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+            if(value != null) {
+                switch(value) {
+                    case 2:
+                        break;
+                    case 3:
+                        timerRef.removeEventListener(listenerTimer);
+                        launchActivity(VotingPageActivity.class);
+                        break;
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
+    private final ValueEventListener listenerTimer = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+
+            if(value != null) {
+                ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        Intent intent = getIntent();
+        roomID = intent.getStringExtra("RoomID");
+        winningWord = intent.getStringExtra("WinningWord");
+
+        ((TextView) findViewById(R.id.winningWord)).setText(winningWord);
+
+        timerRef = database.getReference("realRooms." + roomID + ".timer.observableTime");
+        timerRef.addValueEventListener(listenerTimer);
+        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef.addValueEventListener(listenerState);
 
         speed = 5; //will be passed as variable in future, not hardcoded
         time = 60000; //will be passed as variable in future, not hardcoded
@@ -63,9 +131,9 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         display.getSize(size);
         paintView.setSizeAndInit(size);
 
-        setCountdownTimer();
+        // setCountdownTimer();
 
-        // informes the paintView that it has to be updated
+        // informs the paintView that it has to be updated
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {

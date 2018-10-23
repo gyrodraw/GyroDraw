@@ -32,11 +32,6 @@ public class VotingPageActivityTest {
             };
 
     @Test
-    public void testRatingBarIsClickable() {
-        onView(withId(R.id.ratingBar)).check(matches(isClickable()));
-    }
-
-    @Test
     public void ratingUsingRatingBarShouldBeSaved() {
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
         SystemClock.sleep(1000);

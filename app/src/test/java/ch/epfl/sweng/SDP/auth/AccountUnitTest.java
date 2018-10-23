@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.auth;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -7,8 +7,6 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -62,6 +60,18 @@ public class AccountUnitTest {
     @Test
     public void testGetTrophies(){
         assertThat(account.getTrophies(), is(0));
+    }
+
+    @Test
+    public void testChangeTrophies(){
+        account.changeTrophies(20);
+        //assertEquals(account.getTrophies(), 20);
+    }
+
+    @Test
+    public void testAddStars(){
+        account.addStars(20);
+        //assertEquals(account.getStars(), 20);
     }
 
     @Test

@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -32,6 +33,9 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 
 public class DrawingActivity extends Activity implements SensorEventListener {
@@ -58,11 +62,14 @@ public class DrawingActivity extends Activity implements SensorEventListener {
             Integer value = dataSnapshot.getValue(Integer.class);
             if(value != null) {
                 switch(value) {
-                    case 2:
+                    case GameStates.START_DRAWING_ACTIVITY:
                         break;
-                    case 3:
+                    case GameStates.START_VOTING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
-                        launchActivity(VotingPageActivity.class);
+                        Intent intent = new Intent(getApplicationContext()
+                                                , VotingPageActivity.class);
+                        intent.putExtra("RoomID", roomID);
+                        startActivity(intent);
                         break;
                     default:
                 }
@@ -227,7 +234,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     /**
      * Called when accelerometer changed, circle coordinates are updated.
      *
-     * @param coordinateX coordiate
+     * @param coordinateX coordinate
      * @param coordinateY coordinate
      */
     public void updateValues(float coordinateX, float coordinateY) {
@@ -268,6 +275,22 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private void stop(){
         paintView.saveCanvasInDb(this);
         // add redirection here
+    }
+
+    private void removeAllListeners() {
+        timerRef.removeEventListener(listenerTimer);
+        stateRef.removeEventListener(listenerState);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Matchmaker.INSTANCE.leaveRoom(roomID);
+            removeAllListeners();
+            launchActivity(HomeActivity.class);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

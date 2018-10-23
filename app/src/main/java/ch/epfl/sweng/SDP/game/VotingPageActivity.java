@@ -2,10 +2,12 @@ package ch.epfl.sweng.SDP.game;
 
 import static java.lang.String.format;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,6 +18,8 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,6 +58,8 @@ public class VotingPageActivity extends Activity {
     private TextView playerNameView;
 
     private RatingBar ratingBar;
+
+    private String roomID;
 
     public int[] getRatings() {
         return ratings.clone();
@@ -114,6 +120,9 @@ public class VotingPageActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voting_page);
+
+        Intent intent = getIntent();
+        roomID = intent.getStringExtra("RoomID");
 
         // Get the Database instance and the ranking reference
         Database database = Database.INSTANCE;
@@ -325,5 +334,23 @@ public class VotingPageActivity extends Activity {
         changeDrawing(img, winnerName);
         // buttonChangeImage and rankingButton need to be removed after testing
         setVisibility(View.GONE, R.id.ratingBar, R.id.buttonChangeImage, R.id.rankingButton);
+    }
+
+    private void removeAllListeners() {
+        counterRef.removeEventListener(listenerCounter);
+        endTimeRef.removeEventListener(listenerEndTime);
+        usersRef.removeEventListener(listenerEndUsersVoting);
+        endVotingUsersRef.removeEventListener(listenerEndUsersVoting);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Matchmaker.INSTANCE.leaveRoom(roomID);
+            removeAllListeners();
+            launchActivity(HomeActivity.class);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

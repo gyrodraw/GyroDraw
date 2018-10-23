@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,6 +17,7 @@ import ch.epfl.sweng.SDP.BooleanVariableListener;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -99,13 +99,13 @@ public class WaitingPageActivity extends Activity {
 
             if(state != null) {
                 switch (state) {
-                    case 0:
+                    case GameStates.HOMESTATE:
                         break;
-                    case 1:
+                    case GameStates.CHOOSE_WORDS_TIMER_START:
                         timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
                         break;
-                    case 2:
+                    case GameStates.START_DRAWING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
                         drawingActivityLauched = true;
                         Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
@@ -451,11 +451,15 @@ public class WaitingPageActivity extends Activity {
     }
 
     private void removeAllListeners() {
-        stateRef.removeEventListener(listenerState);
-        timerRef.removeEventListener(listenerTimer);
-        wordsVotesRef.removeEventListener(listenerWords);
-        word1Ref.removeEventListener(listenerWord1);
-        word2Ref.removeEventListener(listenerWord2);
+        try {
+            stateRef.removeEventListener(listenerState);
+            timerRef.removeEventListener(listenerTimer);
+            wordsVotesRef.removeEventListener(listenerWords);
+            word1Ref.removeEventListener(listenerWord1);
+            word2Ref.removeEventListener(listenerWord2);
+        } catch(NullPointerException e) {
+
+        }
     }
 
     @Override

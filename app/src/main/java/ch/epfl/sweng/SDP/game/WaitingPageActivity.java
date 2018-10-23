@@ -1,8 +1,10 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -50,9 +52,14 @@ public class WaitingPageActivity extends Activity {
     private boolean isWord1Ready = false;
     private boolean isWord2Ready = false;
 
+    private boolean drawingActivityLauched = false;
+
     private int usersReadyCount = 1;
 
     private DatabaseReference wordsVotesRef;
+    private DatabaseReference stateRef;
+
+    private DatabaseReference timerRef;
 
     private DatabaseReference word1Ref;
     private int word1Votes = 0;
@@ -62,8 +69,58 @@ public class WaitingPageActivity extends Activity {
 
     private String word1 = null;
     private String word2 = null;
+    private String winningWord = null;
 
     private Database database;
+
+    private final ValueEventListener listenerTimer = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+            TextView waitingTime = findViewById(R.id.waitingTime);
+
+            if(value != null) {
+                waitingTime.setText(String.valueOf(value));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
+    private final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer state = dataSnapshot.getValue(Integer.class);
+
+            if(state != null) {
+                switch (state) {
+                    case 0:
+                        break;
+                    case 1:
+                        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
+                        timerRef.addValueEventListener(listenerTimer);
+                        break;
+                    case 2:
+                        timerRef.removeEventListener(listenerTimer);
+                        drawingActivityLauched = true;
+                        Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
+                        intent.putExtra("RoomID", roomID);
+                        intent.putExtra("WinningWord", winningWord);
+                        startActivity(intent);
+                        break;
+                    default:
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing
+        }
+    };
 
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
@@ -71,6 +128,11 @@ public class WaitingPageActivity extends Activity {
             Long value = dataSnapshot.getValue(Long.class);
             if (value != null) {
                 word1Votes = value.intValue();
+                if(word1Votes >= word2Votes){
+                    winningWord = word1;
+                } else {
+                    winningWord = word2;
+                }
             }
         }
 
@@ -86,6 +148,11 @@ public class WaitingPageActivity extends Activity {
             Long value = dataSnapshot.getValue(Long.class);
             if (value != null) {
                 word2Votes = value.intValue();
+                if(word1Votes >= word2Votes){
+                    winningWord = word1;
+                } else {
+                    winningWord = word2;
+                }
             }
         }
 
@@ -165,6 +232,8 @@ public class WaitingPageActivity extends Activity {
                     wordsVotesRef = database.getReference(
                             TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
                     wordsVotesRef.addValueEventListener(listenerWords);
+                    stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+                    stateRef.addValueEventListener(listenerState);
                     isRoomReady.setBoo(true);
                 }
             }
@@ -301,7 +370,10 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Matchmaker.getInstance().leaveRoom(roomID);
+
+        if(!drawingActivityLauched) {
+            Matchmaker.getInstance().leaveRoom(roomID);
+        }
 
         if (wordsVotesRef != null) {
             // need to keep the most voted word here, it has to

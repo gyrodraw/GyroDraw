@@ -22,6 +22,26 @@
         app:srcCompat="@drawable/home_background" />
 
     <TextView
+        android:id="@+id/waitingTime"
+        android:layout_width="123dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/roomID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <TextView
         android:id="@+id/roomID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -10,6 +10,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -26,7 +27,12 @@ public class HomeActivityTest {
 
     @Rule
     public final ActivityTestRule<HomeActivity> mActivityRule =
-            new ActivityTestRule<>(HomeActivity.class);
+            new ActivityTestRule<HomeActivity>(HomeActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableBackgroundAnimation();
+                }
+            };
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {

@@ -7,7 +7,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableStarAnimation;
+import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.is;
 
 import android.graphics.drawable.Drawable;
@@ -30,7 +30,7 @@ public class VotingPageActivityTest {
             new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    disableStarAnimation();
+                    disableAnimations();
                 }
             };
 

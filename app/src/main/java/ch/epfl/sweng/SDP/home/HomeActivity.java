@@ -51,6 +51,8 @@ public class HomeActivity extends Activity {
     private DatabaseReference dbRef;
     private DatabaseReference dbRefTimer;
 
+    private static boolean enableBackgroundAnimation = true;
+
     // To be removed (for testing purposes only)
     private final ValueEventListener listenerAllReady = new ValueEventListener() {
         @Override
@@ -93,8 +95,10 @@ public class HomeActivity extends Activity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
+        if (enableBackgroundAnimation) {
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
+        }
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
@@ -275,5 +279,12 @@ public class HomeActivity extends Activity {
         timerRef.child("observableTime").setValue(0);
         timerRef.child("startTimer").setValue(0);
         timerRef.child("usersEndVoting").setValue(0);
+    }
+
+    /**
+     * Disables the background animation. Call this method in every HomeActivity test
+     */
+    public static void disableBackgroundAnimation() {
+        enableBackgroundAnimation = false;
     }
 }

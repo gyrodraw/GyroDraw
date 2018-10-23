@@ -60,7 +60,7 @@ public class VotingPageActivity extends Activity {
 
     private RatingBar ratingBar;
 
-    private static boolean enableStarAnimation = true;
+    private static boolean enableAnimations = true;
 
     public int[] getRatings() {
         return ratings.clone();
@@ -160,12 +160,12 @@ public class VotingPageActivity extends Activity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
 
-        if (!enableStarAnimation) {
+        if (!enableAnimations) {
             setVisibility(View.GONE, R.id.starsAnimation);
+        } else {
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
         }
-
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
 
         // Make the drawingView and the playerNameView invisible
         // until the drawings have been downloaded
@@ -359,10 +359,10 @@ public class VotingPageActivity extends Activity {
     }
 
     /**
-     * Disables the stars animation.
+     * Disables the background and stars animation.
      * Call this method in every VotingPageActivity test
      */
-    public static void disableStarAnimation() {
-        enableStarAnimation = false;
+    public static void disableAnimations() {
+        enableAnimations = false;
     }
 }

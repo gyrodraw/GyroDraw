@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.matchmaking;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 
@@ -27,13 +29,11 @@ public enum Matchmaker implements MatchmakingInterface {
 
     private DatabaseReference myRef;
 
-    private final static String userName = "claudio";
-
     /**
      * Matchmaker init.
      */
     Matchmaker() {
-        myRef = Database.INSTANCE.getReference("rooms");
+        myRef = Database.INSTANCE.getReference("realRooms");
 
         // Read from the database
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -60,12 +60,15 @@ public enum Matchmaker implements MatchmakingInterface {
      *
      */
     public Task<String> joinRoom() {
-        // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        ConstantsWrapper constantsWrapper = new ConstantsWrapper();
+
         FirebaseFunctions mFunctions;
         mFunctions = FirebaseFunctions.getInstance();
 
         Map<String, Object> data = new HashMap<>();
-        data.put("username", userName);
+
+        // Pass the ID for the moment
+        data.put("username", constantsWrapper.getFirebaseUserId());
 
         return mFunctions.getHttpsCallable("joinGame2")
                 .call(data)
@@ -88,7 +91,9 @@ public enum Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        myRef.child(roomId).child("users").child(userName).removeValue();
+        ConstantsWrapper constantsWrapper = new ConstantsWrapper();
+
+        myRef.child(roomId).child("users")
+                .child(constantsWrapper.getFirebaseUserId()).removeValue();
     }
 }

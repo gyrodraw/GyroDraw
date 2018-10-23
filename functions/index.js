@@ -8,6 +8,7 @@ const maxPlayers = 5;
 const maxWords = 6;
 const WAITING_TIME = 10;
 var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
+var state = 0;
 
 admin.initializeApp();
 
@@ -90,16 +91,18 @@ function functionTimer (seconds, call) {
         if (seconds > 300) {
             return;
         }
+
         let interval = setInterval(onInterval, 1000);
         let elapsedSeconds = 0;
 
         function onInterval () {
             if (elapsedSeconds >= seconds) {
-                clearInterval(interval);
-                call(0);
-                resolve(elapsedSeconds);
-                return;
+              clearInterval(interval);
+              call(0);
+              resolve(elapsedSeconds);
+              return;
             }
+            
             call(seconds - elapsedSeconds);
             elapsedSeconds++;
         }
@@ -203,6 +206,7 @@ exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}/users
   return admin.database().ref("realRooms/" + roomID).once('value', (snapshot) => {
     if(snapshot.child("users").numChildren() === 1) {
       admin.database().ref("realRooms/" + roomID + "/state").set(0);
+      state = 0;
     }
 
     if(snapshot.hasChild("words") && !snapshot.hasChild("users")) {
@@ -218,48 +222,32 @@ exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}/users
   });
 });
 
+function startTimer(time, roomID,newState) {
+  return functionTimer(WAITING_TIME, elapsedTime => {
+          return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
+      })
+      .then(totalTime => {
+          return console.log('Timer of ' + totalTime + ' has finished.');
+      })
+      .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+      .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
+      .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(newState))
+      //.then(() => event.data.ref.remove())
+      .catch(error => console.error(error));
+}
+
 exports.onStateUpdate = functions.database.ref("realRooms/{roomID}/state").onWrite((change, context) => {
   const roomID = context.params.roomID;
-  const state = change.after.val();
+  state = change.after.val();
   switch(state) {
     case 0:
-        break;
+      break;
     case 1:
-      return functionTimer(WAITING_TIME, elapsedTime => {
-              return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
-          })
-          .then(totalTime => {
-              return console.log('Timer of ' + totalTime + ' has finished.');
-          })
-          .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
-          .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
-          .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(2))
-          //.then(() => event.data.ref.remove())
-          .catch(error => console.error(error));
+      return startTimer(WAITING_TIME, roomID, 2);
     case 2:
-      return functionTimer(15, elapsedTime => {
-              return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
-          })
-          .then(totalTime => {
-              return console.log('Timer of ' + totalTime + ' has finished.');
-          })
-          .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
-          .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
-          .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(3))
-          //.then(() => event.data.ref.remove())
-          .catch(error => console.error(error));
+      return startTimer(10, roomID, 3);
     case 3:
-      return functionTimer(15, elapsedTime => {
-              return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
-          })
-          .then(totalTime => {
-              return console.log('Timer of ' + totalTime + ' has finished.');
-          })
-          .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
-          .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
-          .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(4))
-          //.then(() => event.data.ref.remove())
-          .catch(error => console.error(error));
+      return startTimer(10, roomID, 4);
     default:
       break;
   }

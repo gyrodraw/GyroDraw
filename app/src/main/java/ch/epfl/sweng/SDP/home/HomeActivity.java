@@ -24,6 +24,8 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+import ch.epfl.sweng.SDP.matchmaking.User;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -86,6 +88,13 @@ public class HomeActivity extends Activity {
 
         initUsersDatabase();
 
+
+        User u = new User();
+        u.setName("dude");
+        u.setUsername("monkey");
+        u.uploadUser();
+
+        u.downloadUser();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);

@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +19,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.toIntExact;
+
 public class User implements Serializable {
+
+    private static User singleUser = null;
+
+    public static User getInstance()
+    {
+        if (singleUser == null) {
+            singleUser = new User();
+        }
+
+        return singleUser;
+    }
+
 
     private String name;
     private String username;
@@ -30,7 +47,6 @@ public class User implements Serializable {
     private int trophies;
 
     private ArrayList<String> friends;
-
 
     private DatabaseReference mDatabase;
 
@@ -49,24 +65,25 @@ public class User implements Serializable {
         // Read from the database
         mDatabase.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
 
+
+            @TargetApi(Build.VERSION_CODES.N)
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
                 // Update room
-                System.out.println("FOUNDIT");
 
                 name = (String) map.get("name");
                 name = (String) map.get("username");
                 id = (String) map.get("id");
 
-                stars = (int) map.get("stars");
-                trophies = (int) map.get("trophies");
-                matchesWon = (int) map.get("matchesWon");
-                matchesLost = (int) map.get("matchesLost");
-                matchesPlayed = (int) map.get("matchesPlayed");
-                averageRating = (double) map.get("averageRating");
+                stars = toIntExact( (Long) map.get("stars"));
+                trophies = toIntExact((Long) map.get("trophies"));
+                matchesWon = toIntExact( (Long) map.get("matchesWon"));
+                matchesLost = toIntExact((Long) map.get("matchesLost"));
+                matchesPlayed = toIntExact((Long) map.get("matchesPlayed"));
+                averageRating = toIntExact((Long) map.get("averageRating"));
 
                 Log.d("1",map.toString());
             }

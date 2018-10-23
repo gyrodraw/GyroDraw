@@ -102,6 +102,8 @@ public class HomeActivity extends Activity {
         final ImageView starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
 
+
+
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
@@ -254,6 +256,20 @@ public class HomeActivity extends Activity {
         TextView crossText = profileWindow.findViewById(R.id.crossText);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
+
+        User u = new User("id");
+
+        TextView wonTextView = profileWindow.findViewById(R.id.games_won);
+        wonTextView.setText("Matches won: " + u.getMatchesWon());
+
+        TextView lostTextView = profileWindow.findViewById(R.id.game_lost);
+        lostTextView.setText("Matches lost: " + u.getMatchesLost());
+
+        TextView avgTextView = profileWindow.findViewById(R.id.averageStars);
+        avgTextView.setText("Avrage stars: "  + u.getAverageRating());
+
+        TextView trophiesTextView = profileWindow.findViewById(R.id.maxTrophies);
+        trophiesTextView.setText("Avrage trophies: "  + u.getTrophies());
 
         crossText.setTypeface(typeMuro);
         signOutButton.setTypeface(typeMuro);

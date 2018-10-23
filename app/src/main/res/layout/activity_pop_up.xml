@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/usernamePopUp"
     android:layout_width="352dp"
-    android:layout_height="175dp"
+    android:layout_height="400dp"
     android:layout_gravity="center"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
@@ -44,6 +45,8 @@
         android:id="@+id/signOutButton"
         android:layout_width="390dp"
         android:layout_height="49dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:background="@color/colorGrey"
         android:text="@string/sign_out"
         android:textColor="@color/colorPrimaryDark"
@@ -53,6 +56,53 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.412" />
+        app:layout_constraintVertical_bias="0.678" />
+
+    <TextView
+        android:id="@+id/game_lost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Games lost"
+        android:textColor="@color/colorBlueTrophy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/games_won" />
+
+    <TextView
+        android:id="@+id/averageStars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Average_stars"
+        android:textColor="@color/colorBlueTrophy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_lost" />
+
+    <TextView
+        android:id="@+id/maxTrophies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="maxTrophies"
+        android:textColor="@color/colorBlueTrophy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/averageStars" />
+
+    <TextView
+        android:id="@+id/games_won"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Won games"
+        android:textColor="@color/colorBlueTrophy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

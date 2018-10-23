@@ -97,9 +97,7 @@ public class WaitingPageActivity extends Activity {
                         WordNumber.TWO);
             }
 
-            setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                    R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                    R.id.playersReadyText, R.id.voteText,  R.id.waitingAnimationSquare);
+            setLayoutVisibility(View.VISIBLE);
 
             setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
@@ -124,13 +122,10 @@ public class WaitingPageActivity extends Activity {
                 .into((ImageView) findViewById(R.id.waitingAnimationSquare));
         Glide.with(this).load(R.drawable.waiting_animation_dots)
                 .into((ImageView) findViewById(R.id.waitingAnimationDots));
-
-        setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
-
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+
+        setLayoutVisibility(View.GONE);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
@@ -212,6 +207,12 @@ public class WaitingPageActivity extends Activity {
         final Animation pickWord2 = AnimationUtils.loadAnimation(this, R.anim.pick_word_2);
         pickWord2.setFillAfter(true);
         findViewById(R.id.imageWord2).startAnimation(pickWord2);
+    }
+
+    private void setLayoutVisibility(int visibility) {
+        setVisibility(visibility, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
     }
 
     private void disableButtons() {

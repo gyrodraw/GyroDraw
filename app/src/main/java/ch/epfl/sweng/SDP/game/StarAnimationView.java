@@ -10,12 +10,11 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
+import ch.epfl.sweng.SDP.R;
 import java.util.Random;
 
-import ch.epfl.sweng.SDP.R;
-
 /**
- * Animation of stars when a player votes for the current picture
+ * Animation of stars when a player votes for the current picture.
  */
 public class StarAnimationView extends View {
 
@@ -42,6 +41,8 @@ public class StarAnimationView extends View {
     private int width;
 
     /**
+     * Constructor of the stars animation.
+     *
      * @see View#View(Context)
      */
     public StarAnimationView(Context context) {
@@ -50,6 +51,8 @@ public class StarAnimationView extends View {
     }
 
     /**
+     * Constructor of the stars animation.
+     *
      * @see View#View(Context, AttributeSet)
      */
     public StarAnimationView(Context context, AttributeSet attrs) {
@@ -58,6 +61,8 @@ public class StarAnimationView extends View {
     }
 
     /**
+     * Constructor of the stars animation.
+     *
      * @see View#View(Context, AttributeSet, int)
      */
     public StarAnimationView(Context context, AttributeSet attrs, int defStyle) {
@@ -67,7 +72,8 @@ public class StarAnimationView extends View {
 
     private void init() {
         starDrawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
-        starSize = (int) (Math.max(starDrawable.getIntrinsicWidth(), starDrawable.getIntrinsicHeight()) / 2f);
+        starSize = (int) (Math.max(starDrawable.getIntrinsicWidth(),
+                starDrawable.getIntrinsicHeight()) / 2f);
         starSpeed = (int) (INIT_SPEED * getResources().getDisplayMetrics().density);
     }
 
@@ -153,10 +159,10 @@ public class StarAnimationView extends View {
     /**
      * Animates the given number of stars.
      *
-     * @param n The number of stars
+     * @param number The number of stars
      */
-    public void addStars(int n) {
-        for (int i = 0; i < n; i++) {
+    public void addStars(int number) {
+        for (int i = 0; i < number; i++) {
             final Star star = new Star();
             initializeStar(star);
             stars.add(star);

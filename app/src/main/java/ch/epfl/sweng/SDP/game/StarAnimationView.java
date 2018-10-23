@@ -156,7 +156,7 @@ public class StarAnimationView extends View {
         // Subtract the size to 0 (the top of the view)
         // to make sure it starts outside of the view bound
         star.y = -starSize;
-        // Add a random offset to create a small delay before the star appears again.
+        // Add a random offset to create a small delay before the star appears.
         star.y -= height * rand.nextFloat() / 8f;
         star.rotation = rand.nextBoolean() ? -1 : 1;
         star.xSpeed = star.rotation * rand.nextFloat() * X_SPEED_COEF;
@@ -169,10 +169,17 @@ public class StarAnimationView extends View {
      * @param number The number of stars
      */
     public void addStars(int number) {
-        for (int i = 0; i < number; i++) {
+        for (int i = 0; i < Math.max(number, 5); i++) {
             final Star star = new Star();
             initializeStar(star);
             stars.add(star);
         }
+    }
+
+    /**
+     * Gives the number of stars displayed.
+     */
+    public int getNumStars() {
+        return stars.size();
     }
 }

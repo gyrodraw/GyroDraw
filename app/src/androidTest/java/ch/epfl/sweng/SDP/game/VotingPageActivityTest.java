@@ -10,12 +10,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.is;
 
-import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.content.ContextCompat;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import ch.epfl.sweng.SDP.R;
 import org.junit.Rule;

@@ -34,7 +34,6 @@ public class VotingPageActivity extends Activity {
     private static final int NUMBER_OF_DRAWINGS = 5;
 
     // For the moment it is defined as a constant
-    private static final int WAITING_TIME = 20;
     private static final String PATH = "mockRooms.ABCDE";
     private static final String USER = "aa"; // need to be replaced with the username
 

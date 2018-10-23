@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -333,7 +333,9 @@ public class ShopActivity extends Activity {
      */
     private void resetShopMessage() {
         new CountDownTimer(5000, 5000) {
-            //does nothing on tick, only once the countdown reaches zero action is needed
+            /**
+             * Does nothing on tick, only once the countdown reaches zero action is needed.
+             */
             public void onTick(long millisUntilFinished) {
 
             }

@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 
 const maxPlayers = 5;
 const maxWords = 6;
+const WAITING_TIME = 10;
 var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
 
 admin.initializeApp();
@@ -37,6 +38,28 @@ function checkUsersReady(state, path, snapshot) {
     admin.database().ref(path).set(0);
     console.log("Not ready");
   }
+}
+
+function checkUsersReady2(state, path, snapshot) {
+  let ready = true;
+  snapshot.forEach((child) => {
+    if(child.val() !== state) {
+      ready = false;
+    }
+  });
+
+  if(ready && snapshot.numChildren() >= 2) {
+    admin.database().ref(path + "/state").set(state + 1);
+    /*admin.database().ref(path).child("users").on('value', (snapUsers) => {
+      return snapUsers.forEach((child) => {
+        child.ref.set(state + 1);
+      });
+    });*/
+    console.log("Ready");
+  } else {
+    console.log("Not ready");
+  }
+  return;
 }
 
 exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer').onWrite((event) => {
@@ -83,6 +106,43 @@ function functionTimer (seconds, call) {
     });
 }
 
+exports.joinGame = functions.https.onRequest((req, res) => {
+  // Grab the text parameter.
+  const original = req.query.text;
+  // Grab the id of the player
+  // Check if room is already available and join available room
+  return admin.database().ref('rooms').once("value").then(x => {
+    var rooms = x.val();
+    console.log(rooms);
+    for (var room in rooms) {
+      try{
+        if(typeof rooms[room].users !== 'undefined') {
+          console.log(Object.keys(rooms[room].users).length);
+          if (Object.keys(rooms[room].users).length < 5 && rooms[room].playing === false) {
+            if (Object.keys(rooms[room].users).length ===  4) {
+              // set playing to true
+              admin.database().ref('rooms').child(room).child('playing').set(true)
+            }
+            return  admin.database().ref('rooms').child(room).child('users').push().set({
+              name: "fredrik"
+            }).then(() => {
+              return res.status(200).end();
+            });
+          }
+        }
+      }catch(e){
+        console.log('rooms[room].users is undefined');
+      }
+    }
+    return  admin.database().ref('rooms').push().set({
+      playing: false,
+      users: { "42343243" : { name : "fredrik"} }
+    }).then( () => {
+      return res.status(200).end();
+    });
+  });
+});
+
 exports.joinGame2 = functions.https.onCall((data, context) => {
   console.log("Started method");
   // Grab the text parameter.
@@ -101,9 +161,9 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
           const path = "realRooms/" + roomID.key;
           _roomID = roomID.key;
           if(roomID.hasChild("users")) {
-            admin.database().ref(path).child("users").update({[username]:userCount});
+            admin.database().ref(path).child("users").update({[username]:0});
           } else {
-            admin.database().ref(path).update({"users":{[username]:userCount}});
+            admin.database().ref(path).update({"users":{[username]:0}});
           }
           alreadyJoined = true;
         }
@@ -138,9 +198,13 @@ function addWordsToDatabase(roomID) {
 
 }
 
-exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}").onWrite((change, context) => {
-  const roomID = change.before.key;
+exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}/users").onWrite((change, context) => {
+  const roomID = context.params.roomID;
   return admin.database().ref("realRooms/" + roomID).once('value', (snapshot) => {
+    if(snapshot.child("users").numChildren() === 1) {
+      admin.database().ref("realRooms/" + roomID + "/state").set(0);
+    }
+
     if(snapshot.hasChild("words") && !snapshot.hasChild("users")) {
       // Remove the words because the room is empty
       admin.database().ref("realRooms/" + roomID + "/words").remove();
@@ -149,6 +213,55 @@ exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}").onW
       // Generate the words
       addWordsToDatabase(roomID);
     }
-    return;
+
+    return checkUsersReady2(0, "realRooms/" + roomID, snapshot.child("users"));
   });
+});
+
+exports.onStateUpdate = functions.database.ref("realRooms/{roomID}/state").onWrite((change, context) => {
+  const roomID = context.params.roomID;
+  const state = change.after.val();
+  switch(state) {
+    case 0:
+        break;
+    case 1:
+      return functionTimer(WAITING_TIME, elapsedTime => {
+              return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
+          })
+          .then(totalTime => {
+              return console.log('Timer of ' + totalTime + ' has finished.');
+          })
+          .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+          .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
+          .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(2))
+          //.then(() => event.data.ref.remove())
+          .catch(error => console.error(error));
+    case 2:
+      return functionTimer(15, elapsedTime => {
+              return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
+          })
+          .then(totalTime => {
+              return console.log('Timer of ' + totalTime + ' has finished.');
+          })
+          .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+          .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
+          .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(3))
+          //.then(() => event.data.ref.remove())
+          .catch(error => console.error(error));
+    case 3:
+      return functionTimer(15, elapsedTime => {
+              return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
+          })
+          .then(totalTime => {
+              return console.log('Timer of ' + totalTime + ' has finished.');
+          })
+          .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+          .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
+          .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(4))
+          //.then(() => event.data.ref.remove())
+          .catch(error => console.error(error));
+    default:
+      break;
+  }
+  return 0;
 });

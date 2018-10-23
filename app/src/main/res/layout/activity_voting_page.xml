@@ -34,8 +34,6 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
         android:progressDrawable="@drawable/custom_rating_bar"
         android:stepSize="1.0"
         app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
@@ -47,38 +45,38 @@
         android:id="@+id/drawing"
         android:layout_width="339dp"
         android:layout_height="450dp"
+        android:layout_marginTop="15dp"
         android:contentDescription="@string/drawing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonChangeImage"
+        app:layout_constraintTop_toBottomOf="@+id/timer"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
         android:id="@+id/playerNameView"
         android:layout_width="wrap_content"
         android:layout_height="31dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="@string/user_name"
         android:textColor="@color/colorDrawYellow"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/drawing" />
 
     <Button
         android:id="@+id/buttonChangeImage"
         android:layout_width="wrap_content"
         android:layout_height="27dp"
         android:background="@null"
-        android:gravity="center"
+        android:gravity="start|center"
         android:includeFontPadding="false"
         android:onClick="changeImage"
-        android:text="Change image (testing only)"
+        android:text="Change image"
         android:textColor="@color/colorGrey"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rankingButton" />
 
@@ -87,32 +85,28 @@
         android:layout_width="wrap_content"
         android:layout_height="27dp"
         android:background="@null"
-        android:gravity="center"
+        android:gravity="start|center"
         android:includeFontPadding="false"
         android:onClick="showFinalRanking"
-        android:text="Ranking (testing only)"
+        android:text="Ranking"
         android:textColor="@color/colorGrey"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="300dp"
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="169dp"
-        android:layout_marginLeft="167dp"
-        android:layout_marginRight="169dp"
-        android:layout_marginStart="167dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/playerNameView"
+        android:layout_marginTop="15dp"
+        android:text="TextView"
+        android:textColor="@color/colorDrawYellow"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drawing" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="20" />
 
     <ch.epfl.sweng.SDP.game.StarAnimationView
         android:id="@+id/starsAnimation"

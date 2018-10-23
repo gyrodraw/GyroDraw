@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
@@ -54,10 +53,9 @@ public class VotingPageActivity extends Activity {
 
     private String[] playersNames;
 
-    private ProgressBar progressBar;
     private ImageView drawingView;
     private TextView playerNameView;
-
+    private TextView timer;
     private RatingBar ratingBar;
 
     private static boolean enableAnimations = true;
@@ -70,9 +68,7 @@ public class VotingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-            if (value != null && value != progressBar.getProgress()) {
-                progressBar.setProgress(WAITING_TIME - value);
-            }
+            timer.setText(String.format("%d", value));
         }
 
         @Override
@@ -163,6 +159,7 @@ public class VotingPageActivity extends Activity {
         });
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
+        timer = findViewById(R.id.timer);
 
         if (!enableAnimations) {
             setVisibility(View.GONE, R.id.starsAnimation);
@@ -177,8 +174,7 @@ public class VotingPageActivity extends Activity {
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
-
-        initProgressBar();
+        timer.setTypeface(typeMuro);
     }
 
     @Override
@@ -190,12 +186,6 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
-    }
-
-    private void initProgressBar() {
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setMax(20);
-        progressBar.setProgress(0);
     }
 
     /**

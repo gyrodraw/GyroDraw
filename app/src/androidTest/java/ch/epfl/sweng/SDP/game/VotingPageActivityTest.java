@@ -47,16 +47,6 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void progressBarTest() {
-        Drawable notAnimatedDrawable = ContextCompat.getDrawable(mActivityRule.getActivity(),
-                                        R.drawable.draw_button);
-        ((ProgressBar) mActivityRule.getActivity().findViewById(R.id.progressBar))
-                .setIndeterminateDrawable(notAnimatedDrawable);
-
-        onView(withId(R.id.progressBar)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void changeImageButtonIsClickable() {
         onView(withId(R.id.buttonChangeImage)).check(matches(isClickable()));
         onView(withId(R.id.rankingButton)).perform(click());

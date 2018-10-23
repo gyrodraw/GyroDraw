@@ -46,8 +46,7 @@ public class Account {
     }
 
     /**
-     * Setter for account instance which can be called only once. Trophies and stars are initialized
-     * at 0.
+     * Setter for account instance Trophies and stars are initialized at 0.
      *
      * @param username string defining the preferred username
      * @throws IllegalArgumentException if username is null
@@ -65,9 +64,18 @@ public class Account {
         this.stars = 0;
     }
 
+    /**
+     * Refresh the account, updating uninitialized fields. It has to be called before calling other
+     * methods.
+     */
     public void refreshAccount() {
-        usersRef = Database.INSTANCE.getReference("users");
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (usersRef == null) {
+            usersRef = Database.INSTANCE.getReference("users");
+        }
+        if (userId == null) {
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+
         changeTrophies(0);
         addStars(0);
     }
@@ -164,13 +172,15 @@ public class Account {
                         Long value = dataSnapshot.getValue(Long.class);
                         if (value != null) {
                             final int newTrophies = Math.max(0, value.intValue() + change);
-                            DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(usersRef);
+                            DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(
+                                    usersRef);
                             trophiesBuilder.addChildren(userId + ".trophies").build()
                                     .setValue(newTrophies, createCompletionListener());
                             trophies = newTrophies;
 
                             // Update current league
-                            DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(usersRef);
+                            DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(
+                                    usersRef);
                             for (League league : LEAGUES) {
                                 if (league.contains(trophies)) {
                                     currentLeague = league.getName();
@@ -209,7 +219,8 @@ public class Account {
                                 throw new IllegalArgumentException("Negative Balance");
                             }
 
-                            DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(usersRef);
+                            DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(
+                                    usersRef);
                             starsBuilder.addChildren(userId + ".stars").build()
                                     .setValue(newStars, createCompletionListener());
                             stars = newStars;

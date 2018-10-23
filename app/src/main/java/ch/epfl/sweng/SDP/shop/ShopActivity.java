@@ -6,9 +6,14 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,23 +22,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
 
 /**
  * Helper class facilitating getting and synchronizing data from the database.
  */
 class IntegerWrapper {
-    private int i;
-    IntegerWrapper(int i) {
-        this.i = i;
+
+    private int wrappedInt;
+    IntegerWrapper(int intToWrap) {
+        this.wrappedInt = intToWrap;
     }
-    protected void setInt(int newi) {
-        i = newi;
+
+    protected void setInt(int newInt) {
+        wrappedInt = newInt;
     }
+
     protected int getInt() {
-        return i;
+        return wrappedInt;
     }
 }
 
@@ -72,9 +77,9 @@ public class ShopActivity extends Activity {
                 if(dataSnapshot.exists()) {
                     LinearLayout linearLayout = findViewById(R.id.linearLayout);
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Button b = initializeButton(snapshot.getKey());
-                        addOnClickListenerToButton(b);
-                        linearLayout.addView(b);
+                        Button btn = initializeButton(snapshot.getKey());
+                        addOnClickListenerToButton(btn);
+                        linearLayout.addView(btn);
                     }
                 }
                 else {
@@ -96,25 +101,25 @@ public class ShopActivity extends Activity {
      * @return Button displaying itemName.
      */
     private Button initializeButton(String itemName) {
-        Button b = new Button(this);
-        b.setText(itemName);
-        return b;
+        Button btn = new Button(this);
+        btn.setText(itemName);
+        return btn;
     }
 
     /**
      * Adds an onClickListener to a button, which on Click tries to purchase the item the button
      * corresponds to.
-     * @param b Button to which a listener is added.
+     * @param btn Button to which a listener is added.
      */
-    private void addOnClickListenerToButton(final Button b) {
+    private void addOnClickListenerToButton(final Button btn) {
         View.OnClickListener onClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                purchaseItem(b.getText().toString());
+                purchaseItem(btn.getText().toString());
             }
         };
-        b.setOnClickListener(onClickListener);
+        btn.setOnClickListener(onClickListener);
     }
 
     /**
@@ -132,7 +137,7 @@ public class ShopActivity extends Activity {
     }
 
     /**
-     * Sets the button that allows the user to refresh the ShopActivity
+     * Sets the button that allows the user to refresh the ShopActivity.
      */
     private void setRefresh() {
         Button refresh = findViewById(R.id.refreshShop);
@@ -158,7 +163,7 @@ public class ShopActivity extends Activity {
      * the items price, verifies if the user has enough Stars and if so, updates the users
      * inventory.
      * @param itemName Item to be purchased.
-     * @throws DatabaseException
+     * @throws DatabaseException If read does go wrong.
      */
     private void alreadyOwned(final String itemName) throws DatabaseException {
         userColorsRef.orderByKey().equalTo(itemName).addListenerForSingleValueEvent(
@@ -175,13 +180,15 @@ public class ShopActivity extends Activity {
                     price.setInt(-1);
                     getStars(stars);
                     getPrice(price, itemName);
-                    new CountDownTimer(2500, 500) {
+                    new CountDownTimer(5000, 500) {
+
                         public void onTick(long millisUntilFinished) {
                             if(stars.getInt() > -1 && price.getInt() > -1) {
                                 this.cancel();
                                 updateUserIf(itemName);
                             }
                         }
+
                         public void onFinish() {
                             if(stars.getInt() < 0 || price.getInt() < 0) {
                                 setShopMessage("Unable to read from database in time.");
@@ -215,7 +222,7 @@ public class ShopActivity extends Activity {
     /**
      * Accesses the database, and puts the users current stars into the wrapper.
      * @param starsWrapper Wrapper to retrieve stars from database.
-     * @throws DatabaseException
+     * @throws DatabaseException If read does go wrong.
      */
     private void getStars(final IntegerWrapper starsWrapper) throws DatabaseException {
         usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("stars")
@@ -243,11 +250,10 @@ public class ShopActivity extends Activity {
      * Accesses the database and puts the price of the current item into the wrapper.
      * @param priceWrapper Wrapper to retrieve price from database.
      * @param itemName Name if the item whose price we want to get.
-     * @throws IllegalArgumentException
-     * @throws DatabaseException
+     * @throws DatabaseException If read does go wrong.
      */
     private void getPrice(final IntegerWrapper priceWrapper, final String itemName)
-            throws IllegalArgumentException, DatabaseException {
+            throws DatabaseException {
         shopColorsRef.child(itemName).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -318,8 +324,8 @@ public class ShopActivity extends Activity {
      * @param message Message to be displayed.
      */
     private void setShopMessage(String message) {
-        TextView t = findViewById(R.id.shopMessages);
-        t.setText(message);
+        TextView textView = findViewById(R.id.shopMessages);
+        textView.setText(message);
     }
 
     /**
@@ -327,6 +333,7 @@ public class ShopActivity extends Activity {
      */
     private void resetShopMessage() {
         new CountDownTimer(5000, 5000) {
+            //does nothing on tick, only once the countdown reaches zero action is needed
             public void onTick(long millisUntilFinished) {
 
             }

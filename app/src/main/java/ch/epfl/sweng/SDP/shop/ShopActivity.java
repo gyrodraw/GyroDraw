@@ -22,26 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-/**
- * Helper class facilitating getting and synchronizing data from the database.
- */
-class IntegerWrapper {
-
-    private int wrappedInt;
-    IntegerWrapper(int intToWrap) {
-        this.wrappedInt = intToWrap;
-    }
-
-    protected void setInt(int newInt) {
-        wrappedInt = newInt;
-    }
-
-    protected int getInt() {
-        return wrappedInt;
-    }
-}
-
 /**
  * Activity allowing the purchase of itmes such as colors.
  */
@@ -333,11 +313,10 @@ public class ShopActivity extends Activity {
      */
     private void resetShopMessage() {
         new CountDownTimer(5000, 5000) {
-            /**
-             * Does nothing on tick, only once the countdown reaches zero action is needed.
-             */
             public void onTick(long millisUntilFinished) {
-
+                /**
+                 * Does nothing on tick, only once the countdown reaches zero action is needed.
+                 */
             }
 
             public void onFinish() {

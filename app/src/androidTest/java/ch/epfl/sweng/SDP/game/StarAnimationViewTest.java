@@ -3,8 +3,8 @@ package ch.epfl.sweng.SDP.game;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import ch.epfl.sweng.SDP.R;
 import static android.os.SystemClock.sleep;
+import ch.epfl.sweng.SDP.R;
 
 import org.junit.Rule;
 import org.junit.Test;

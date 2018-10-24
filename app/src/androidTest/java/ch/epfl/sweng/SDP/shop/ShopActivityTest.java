@@ -45,8 +45,8 @@ public class ShopActivityTest {
     private final IntegerWrapper integerWrapper = new IntegerWrapper(-1);
 
     @Rule
-    public final ActivityTestRule<ShopActivity> activityTestRule =
-            new ActivityTestRule<>(ShopActivity.class);
+    public final ActivityTestRule<ShopTestActivity> activityTestRule =
+            new ActivityTestRule<>(ShopTestActivity.class);
 
     @Test
     public void returnIsClickable() {

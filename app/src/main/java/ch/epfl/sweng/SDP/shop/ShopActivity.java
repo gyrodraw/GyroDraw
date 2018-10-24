@@ -27,11 +27,11 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class ShopActivity extends Activity {
     //to be replaced with whatever we use to store all these refs
-    private FirebaseDatabase db;
-    private DatabaseReference dbRef;
-    private DatabaseReference usersRef;
-    private DatabaseReference currentUser;
-    private DatabaseReference shopColorsRef;
+    protected FirebaseDatabase db;
+    protected DatabaseReference dbRef;
+    protected DatabaseReference usersRef;
+    protected DatabaseReference currentUser;
+    protected DatabaseReference shopColorsRef;
 
     private final IntegerWrapper stars = new IntegerWrapper(-1);
     private final IntegerWrapper price = new IntegerWrapper(-1);

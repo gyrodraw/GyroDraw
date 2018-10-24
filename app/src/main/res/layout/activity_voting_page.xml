@@ -1,84 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/votingPageLayout"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context=".game.VotingPageActivity">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/votingPageLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".game.VotingPageActivity">
 
-  <RatingBar
-    android:id="@+id/ratingBar"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="91dp"
-    android:stepSize="1.0"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/drawing"
-    app:layout_constraintVertical_bias="1.0"/>
+    <ImageView
+        android:id="@+id/votingBackgroundImage"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="1.0"
+        app:srcCompat="@drawable/home_background"
+        tools:ignore="ContentDescription" />
 
-  <ImageView
-    android:id="@+id/drawing"
-    android:layout_width="320dp"
-    android:layout_height="302dp"
-    android:layout_marginTop="4dp"
-    android:contentDescription="@string/drawing"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@android:drawable/sym_def_app_icon"/>
-  <TextView
-    android:id="@+id/playerNameView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Player's name"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/drawing"/>
-  <Button
-    android:id="@+id/buttonChangeImage"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="64dp"
-    android:layout_marginBottom="65dp"
-    android:layout_marginStart="72dp"
-    android:layout_marginLeft="72dp"
-    android:onClick="changeImage"
-    android:text="Change image (testing only)"
-    app:layout_constraintBottom_toTopOf="@+id/ratingBar"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/playerNameView"
-    app:layout_constraintVertical_bias="0.771"/>
-  <Button
-    android:id="@+id/rankingButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginLeft="16dp"
-    android:onClick="showFinalRanking"
-    android:text="Ranking (testing only)"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+        android:id="@+id/votingBackgroundAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.8"
+        app:srcCompat="@drawable/background_animation"
+        tools:ignore="ContentDescription" />
 
-  <ProgressBar
-      android:id="@+id/progressBar"
-      style="?android:attr/progressBarStyleHorizontal"
-      android:layout_width="300dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="167dp"
-      android:layout_marginLeft="167dp"
-      android:layout_marginTop="18dp"
-      android:layout_marginEnd="169dp"
-      android:layout_marginRight="169dp"
-      android:layout_marginBottom="160dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.496"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/buttonChangeImage" />
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progressDrawable="@drawable/custom_rating_bar"
+        android:stepSize="1.0"
+        app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playerNameView" />
+
+    <ImageView
+        android:id="@+id/drawing"
+        android:layout_width="339dp"
+        android:layout_height="450dp"
+        android:layout_marginTop="15dp"
+        android:contentDescription="@string/drawing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timer"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <TextView
+        android:id="@+id/playerNameView"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/user_name"
+        android:textColor="@color/colorDrawYellow"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drawing" />
+
+    <Button
+        android:id="@+id/buttonChangeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@null"
+        android:gravity="start|center"
+        android:includeFontPadding="false"
+        android:onClick="changeImage"
+        android:text="Change image"
+        android:textColor="@color/colorGrey"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rankingButton" />
+
+    <Button
+        android:id="@+id/rankingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@null"
+        android:gravity="start|center"
+        android:includeFontPadding="false"
+        android:onClick="showFinalRanking"
+        android:text="Ranking"
+        android:textColor="@color/colorGrey"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="20"
+        android:textColor="@color/colorDrawYellow"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="20" />
+
+    <ch.epfl.sweng.SDP.game.StarAnimationView
+        android:id="@+id/starsAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true" />
 
 </android.support.constraint.ConstraintLayout>

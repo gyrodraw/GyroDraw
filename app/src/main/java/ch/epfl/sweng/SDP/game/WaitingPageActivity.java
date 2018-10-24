@@ -17,11 +17,14 @@ import ch.epfl.sweng.SDP.BooleanVariableListener;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import com.bumptech.glide.Glide;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -208,9 +211,14 @@ public class WaitingPageActivity extends Activity {
                 isWord2Ready = true;
             }
 
+
             if(isWord1Ready && isWord2Ready) {
                 areWordsReady.setBoo(true);
             }
+
+            setLayoutVisibility(View.VISIBLE);
+
+            setVisibility(View.GONE, R.id.waitingAnimationDots);
         }
 
         @Override
@@ -254,9 +262,8 @@ public class WaitingPageActivity extends Activity {
                 usersCountRef.addValueEventListener(listenerCountUsers);
 
                 ((TextView)findViewById(R.id.roomID)).setText("Room ID: " + roomID);
-                setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                        R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                        R.id.playersReadyText, R.id.voteText, R.id.roomID);
+
+                setLayoutVisibility(View.VISIBLE);
 
                 if (enableWaitingAnimation) {
                     setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
@@ -270,17 +277,25 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         database = Database.INSTANCE;
         lookingForRoom();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+        overridePendingTransition(0, 0);
+
         setContentView(R.layout.activity_waiting_page);
 
         isRoomReady.setListener(listenerRoomReady);
         areWordsReady.setListener(listenerRoomReady);
 
-        setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText, R.id.roomID);
+        Glide.with(this).load(R.drawable.waiting_animation_square)
+                .into((ImageView) findViewById(R.id.waitingAnimationSquare));
+        Glide.with(this).load(R.drawable.waiting_animation_dots)
+                .into((ImageView) findViewById(R.id.waitingAnimationDots));
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+
+        setLayoutVisibility(View.GONE);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
@@ -289,8 +304,6 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        //DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
-        //wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,
@@ -361,6 +374,12 @@ public class WaitingPageActivity extends Activity {
         final Animation pickWord2 = AnimationUtils.loadAnimation(this, R.anim.pick_word_2);
         pickWord2.setFillAfter(true);
         findViewById(R.id.imageWord2).startAnimation(pickWord2);
+    }
+
+    private void setLayoutVisibility(int visibility) {
+        setVisibility(visibility, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText, R.id.roomID);
     }
 
     private void disableButtons() {
@@ -434,14 +453,6 @@ public class WaitingPageActivity extends Activity {
      */
     public int getWord2Votes() {
         return word2Votes;
-    }
-
-    /**
-     * Disables the waiting animation.
-     * Call this method in every WaitingPageActivity test
-     */
-    public static void disableWaitingAnimation() {
-        enableWaitingAnimation = false;
     }
 
     // TODO

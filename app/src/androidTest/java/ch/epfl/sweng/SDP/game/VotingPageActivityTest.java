@@ -1,6 +1,13 @@
 package ch.epfl.sweng.SDP.game;
 
-import static android.os.SystemClock.sleep;
+import android.graphics.Canvas;
+import android.os.SystemClock;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.widget.RatingBar;
+
+import ch.epfl.sweng.SDP.R;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -11,13 +18,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.is;
 
-import android.graphics.Canvas;
-import android.os.SystemClock;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.RatingBar;
-import ch.epfl.sweng.SDP.R;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,8 +67,11 @@ public class VotingPageActivityTest {
     public void addStarsHandlesBigNumber() {
         StarAnimationView starsAnimation =  mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
-        starsAnimation.onDraw(new Canvas());
+        starsAnimation.onSizeChanged(100, 100, 100, 100);
+        Canvas canvas = new Canvas();
+        starsAnimation.onDraw(canvas);
         starsAnimation.addStars(1000);
+        starsAnimation.onDraw(canvas);
         assert (5 == starsAnimation.getNumStars());
     }
 
@@ -76,8 +79,11 @@ public class VotingPageActivityTest {
     public void addStarsHandlesNegativeNumber() {
         StarAnimationView starsAnimation =  mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
-        starsAnimation.onDraw(new Canvas());
+        starsAnimation.onSizeChanged(100, 100, 100, 100);
+        Canvas canvas = new Canvas();
+        starsAnimation.onDraw(canvas);
         starsAnimation.addStars(-10);
+        starsAnimation.onDraw(canvas);
         assert (0 == starsAnimation.getNumStars());
     }
 }

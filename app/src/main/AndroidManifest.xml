@@ -44,10 +44,6 @@
         </activity>
         <activity android:name=".game.VotingPageActivity" />
         <activity android:name=".home.LeaguesActivity"></activity>
-        <activity
-            android:name=".ProfilePage"
-            android:label="@string/title_activity_profile_page"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -44,6 +44,7 @@ public class ShopActivityTest {
             new HashSet<>(Arrays.asList("testColor0", "testColor1", "testColor2"));
     private final IntegerWrapper integerWrapper = new IntegerWrapper(-1);
 
+
     @Rule
     public final ActivityTestRule<ShopTestActivity> activityTestRule =
             new ActivityTestRule<>(ShopTestActivity.class);

@@ -57,7 +57,6 @@ public class Matchmaker {
                 // whenever data at this location is updated.
                 HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
                 // Update room
-
                 Log.d("1",map.toString());
             }
 
@@ -69,7 +68,7 @@ public class Matchmaker {
     }
 
     /**
-     * join a room.
+     * Join a room in the database.
      */
     public void joinRoom() {
             FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;

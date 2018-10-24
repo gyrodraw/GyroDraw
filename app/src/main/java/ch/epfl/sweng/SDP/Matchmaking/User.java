@@ -20,18 +20,6 @@ import static java.lang.Math.toIntExact;
 
 public class User implements Serializable {
 
-    private static User singleUser = null;
-
-    public static User getInstance()
-    {
-        if (singleUser == null) {
-            singleUser = new User();
-        }
-
-        return singleUser;
-    }
-
-
     private String name;
     private String username;
     private String id;
@@ -55,6 +43,9 @@ public class User implements Serializable {
         this.id = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
+    /**
+     * Download an object from the database and set the variables of this object.
+     */
     public void downloadUser() {
 
         // Read from the database
@@ -91,6 +82,9 @@ public class User implements Serializable {
 
     }
 
+    /**
+     *  Upload all the variables of this object to the database
+     */
     public void uploadUser() {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();

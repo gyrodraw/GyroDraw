@@ -1,6 +1,5 @@
 *.iml
 .gradle
-app/src/main/java/ch/epfl/sweng/SDP/matchmaking/
 /local.properties
 /.idea/libraries
 /.idea/modules.xml

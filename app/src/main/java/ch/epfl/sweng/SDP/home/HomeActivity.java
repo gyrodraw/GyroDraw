@@ -86,23 +86,21 @@ public class HomeActivity extends Activity {
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
         dbRefTimer.addValueEventListener(listenerAllReady);
 
-        initUsersDatabase();
 
-
+        /*
         User u = new User();
         u.setName("dude");
         u.setUsername("monkey");
         u.uploadUser();
-
         u.downloadUser();
+        */
+        initUsersDatabase();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final ImageView starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
-
-
 
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");

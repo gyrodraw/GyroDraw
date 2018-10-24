@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import ch.epfl.sweng.SDP.Matchmaking.Matchmaker;
+
 public class MatchmakerTest {
 
     @Test

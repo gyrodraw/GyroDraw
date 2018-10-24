@@ -19,7 +19,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class Matchmaker {
+public class Matchmaker implements MatchmakingInterface {
 
 
     private static Matchmaker singleInstance = null;

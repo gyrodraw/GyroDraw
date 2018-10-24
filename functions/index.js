@@ -6,7 +6,9 @@ const admin = require('firebase-admin');
 
 const maxPlayers = 5;
 const maxWords = 6;
-const WAITING_TIME = 10;
+const WAITING_TIME_CHOOSE_WORDS = 10;
+const WAITING_TIME_DRAWING = 10;
+const WAITING_TIME_VOTING = 10;
 var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
 var state = 0;
 
@@ -102,7 +104,7 @@ function functionTimer (seconds, call) {
               resolve(elapsedSeconds);
               return;
             }
-            
+
             call(seconds - elapsedSeconds);
             elapsedSeconds++;
         }
@@ -164,8 +166,14 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
           const path = "realRooms/" + roomID.key;
           _roomID = roomID.key;
           if(roomID.hasChild("users")) {
+            if(roomID.child("users/" + username).exists()) {
+              admin.database().ref(path).child("users/" + username).remove();
+            }
             admin.database().ref(path).child("users").update({[username]:0});
           } else {
+            if(roomID.child("users/" + username).exists()) {
+              admin.database().ref(path).child("users/" + username).remove();
+            }
             admin.database().ref(path).update({"users":{[username]:0}});
           }
           alreadyJoined = true;
@@ -223,7 +231,7 @@ exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}/users
 });
 
 function startTimer(time, roomID,newState) {
-  return functionTimer(WAITING_TIME, elapsedTime => {
+  return functionTimer(time, elapsedTime => {
           return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
       })
       .then(totalTime => {
@@ -232,7 +240,6 @@ function startTimer(time, roomID,newState) {
       .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
       .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
       .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(newState))
-      //.then(() => event.data.ref.remove())
       .catch(error => console.error(error));
 }
 
@@ -243,11 +250,11 @@ exports.onStateUpdate = functions.database.ref("realRooms/{roomID}/state").onWri
     case 0:
       break;
     case 1:
-      return startTimer(WAITING_TIME, roomID, 2);
+      return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, 2);
     case 2:
-      return startTimer(10, roomID, 3);
+      return startTimer(WAITING_TIME_DRAWING, roomID, 3);
     case 3:
-      return startTimer(10, roomID, 4);
+      return startTimer(WAITING_TIME_VOTING, roomID, 4);
     default:
       break;
   }

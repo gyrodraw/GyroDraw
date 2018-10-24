@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.matchmaking;
+package ch.epfl.sweng.SDP.Matchmaking;
 
 import static org.junit.Assert.assertTrue;
 
@@ -8,21 +8,21 @@ public class MatchmakerTest {
 
     @Test
     public void matchMaker() {
-        Matchmaker.INSTANCE.leaveRoom("2312");
+        Matchmaker.getInstance().leaveRoom("2312");
         assertTrue(true);
     }
 
 
     @Test
     public void joinRoom() {
-        Matchmaker.INSTANCE.joinRoom("2312");
+        Matchmaker.getInstance().joinRoom();
         assertTrue(true);
 
     }
 
     @Test
     public void leaveRoom() {
-        Matchmaker.INSTANCE.leaveRoom("2312");
+        Matchmaker.getInstance().leaveRoom("2312");
         assertTrue(true);
     }
 

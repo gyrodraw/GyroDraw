@@ -10,7 +10,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableWaitingAnimation;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -32,12 +31,7 @@ public class WaitingPageActivityTest {
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
-            new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    disableWaitingAnimation();
-                }
-            };
+            new ActivityTestRule<>(WaitingPageActivity.class);
 
     @Test
     public void testRadioButton1() {

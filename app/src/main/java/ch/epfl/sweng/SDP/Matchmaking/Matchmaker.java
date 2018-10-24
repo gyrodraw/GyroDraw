@@ -117,7 +117,6 @@ public class Matchmaker {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         myRef.child(roomId).child("users").child("123").removeValue();
     }
 

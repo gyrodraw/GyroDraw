@@ -255,19 +255,19 @@ public class HomeActivity extends Activity {
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
-        User user = new User("id");
+        User auser = new User("id");
 
         TextView wonTextView = profileWindow.findViewById(R.id.games_won);
-        wonTextView.setText("Matches won: " + user.getMatchesWon());
+        wonTextView.setText("Matches won: " + auser.getMatchesWon());
 
         TextView lostTextView = profileWindow.findViewById(R.id.game_lost);
-        lostTextView.setText("Matches lost: " + user.getMatchesLost());
+        lostTextView.setText("Matches lost: " + auser.getMatchesLost());
 
         TextView avgTextView = profileWindow.findViewById(R.id.averageStars);
-        avgTextView.setText("Avrage stars: "  + user.getAverageRating());
+        avgTextView.setText("Avrage stars: "  + auser.getAverageRating());
 
         TextView trophiesTextView = profileWindow.findViewById(R.id.maxTrophies);
-        trophiesTextView.setText("Avrage trophies: "  + user.getTrophies());
+        trophiesTextView.setText("Avrage trophies: "  + auser.getTrophies());
 
         crossText.setTypeface(typeMuro);
         signOutButton.setTypeface(typeMuro);

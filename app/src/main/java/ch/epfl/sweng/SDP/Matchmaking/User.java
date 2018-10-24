@@ -33,13 +33,14 @@ public class User implements Serializable {
 
     private ArrayList<String> friends;
 
-    private DatabaseReference mDatabase;
+    private DatabaseReference database;
 
     public User(String id) {
         this.id = id;
     }
 
     public User() {
+        database = FirebaseDatabase.getInstance().getReference();
         this.id = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
@@ -49,7 +50,7 @@ public class User implements Serializable {
     public void downloadUser() {
 
         // Read from the database
-        mDatabase.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
 
 
             @TargetApi(Build.VERSION_CODES.N)
@@ -83,13 +84,11 @@ public class User implements Serializable {
     }
 
     /**
-     *  Upload all the variables of this object to the database
+     *  Upload all the variables of this object to the database.
      */
     public void uploadUser() {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mDatabase.child("users").child(id).setValue(this);
+        database.child("users").child(id).setValue(this);
 
     }
 
@@ -128,6 +127,7 @@ public class User implements Serializable {
     public int getStars() {
         return stars;
     }
+
     public void setStars(int stars) {
         this.stars = stars;
     }
@@ -135,6 +135,7 @@ public class User implements Serializable {
     public ArrayList<String> getFriends() {
         return friends;
     }
+
     public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }

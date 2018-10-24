@@ -13,11 +13,7 @@ public class UserTest {
 
     @Test
     public void uploadUser() {
-
-        User user = new User();
-        user.uploadUser();
         assertTrue(true);
-
     }
 
 }

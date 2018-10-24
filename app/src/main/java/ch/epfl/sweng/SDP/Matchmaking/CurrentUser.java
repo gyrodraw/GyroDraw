@@ -7,8 +7,8 @@ public class CurrentUser extends User {
     private static User singleUser = null;
 
     /**
-     * Create and returns a singleton instance of this class
-     * @return singleton
+     * Create and returns a singleton instance of this class.
+     * @return singleton.
      */
     public static User getInstance()
     {

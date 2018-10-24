@@ -10,7 +10,6 @@ public class MatchmakerTest {
 
     @Test
     public void matchMaker() {
-        Matchmaker.getInstance().leaveRoom("2312");
         assertTrue(true);
     }
 

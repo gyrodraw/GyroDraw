@@ -18,6 +18,7 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +44,7 @@ public class VotingPageActivity extends Activity {
     private DatabaseReference endTimeRef;
     private DatabaseReference usersRef;
     private DatabaseReference endVotingUsersRef;
+    private DatabaseReference stateRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short drawingDownloadCounter = 0;
@@ -59,11 +61,32 @@ public class VotingPageActivity extends Activity {
 
     private RatingBar ratingBar;
 
-    private String roomID;
+    private String roomID = "undefined";
 
     public int[] getRatings() {
         return ratings.clone();
     }
+
+    private final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+
+            if(value != null) {
+                switch(value) {
+                    case GameStates.END_VOTING_ACTIVITY:
+                        // Start ranking activity
+                        break;
+                    default:
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     private final ValueEventListener listenerCounter = new ValueEventListener() {
         @Override
@@ -128,14 +151,16 @@ public class VotingPageActivity extends Activity {
         Database database = Database.INSTANCE;
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
-        counterRef = database.getReference(PATH + ".timer.observableTime");
-        endTimeRef = database.getReference(PATH + ".timer.endTime");
-        endVotingUsersRef = database.getReference(PATH + ".timer.usersEndTime");
 
         usersRef = database.getReference(PATH + ".connectedUsers." + USER);
+        counterRef = database.getReference(PATH + ".timer.observableTime");
         counterRef.addValueEventListener(listenerCounter);
+        endTimeRef = database.getReference(PATH + ".timer.endTime");
         endTimeRef.addValueEventListener(listenerEndTime);
+        endVotingUsersRef = database.getReference(PATH + ".timer.usersEndTime");
         endVotingUsersRef.addValueEventListener(listenerEndUsersVoting);
+        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef.addValueEventListener(listenerState);
 
         // Get the drawingIds; hardcoded now, need to be given by the server/script
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",

@@ -40,7 +40,7 @@ public class WaitingPageActivity extends Activity {
         ONE, TWO
     }
 
-    private String roomID = "undefined";
+    private String roomID = null;
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
@@ -168,7 +168,8 @@ public class WaitingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
-            ((TextView) findViewById(R.id.playersCounterText)).setText(String.valueOf(usersCount));
+            ((TextView) findViewById(R.id.playersCounterText)).setText(
+                    String.valueOf(usersCount) + "/5");
         }
 
         @Override
@@ -294,8 +295,7 @@ public class WaitingPageActivity extends Activity {
 
     private void initRadioButton(Button button, String childString,
                                  DatabaseReference dbRef, WordNumber wordNumber) {
-        //dbRef.setValue(0);
-        dbRef.addListenerForSingleValueEvent(
+        dbRef.addValueEventListener(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
         // Display the word on the button

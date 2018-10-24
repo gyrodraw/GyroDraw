@@ -28,7 +28,7 @@ public class LoginActivityTest {
     LoginActivity loginActivity;
 
     /**
-     * Initializes the mock objects.
+     * Initializes the mock objects. 
      */
     @Before
     public void init(){

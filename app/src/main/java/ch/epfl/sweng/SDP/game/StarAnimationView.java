@@ -91,8 +91,9 @@ public class StarAnimationView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for (final Star star : stars) {
+        for (int i = 0; i < stars.size(); i++) {
             // Ignore the star if it's outside of the view bounds
+            Star star = stars.get(i);
             if (star.y + starSize < 0 || star.y - starSize > height) {
                 continue;
             }

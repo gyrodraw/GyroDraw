@@ -56,5 +56,4 @@ public class AccountCreationActivityTest {
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
     }
-
 }

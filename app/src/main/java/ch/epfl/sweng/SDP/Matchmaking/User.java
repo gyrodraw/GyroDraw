@@ -51,7 +51,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public {
+    public User() {
         this.id = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
@@ -182,4 +182,5 @@ public class User implements Serializable {
     public void setAverageRating(double averageRating) {
         this.averageRating = averageRating;
     }
+
 }

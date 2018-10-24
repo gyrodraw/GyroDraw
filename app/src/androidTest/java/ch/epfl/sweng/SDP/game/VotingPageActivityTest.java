@@ -71,6 +71,7 @@ public class VotingPageActivityTest {
         Canvas canvas = new Canvas();
         starsAnimation.onDraw(canvas);
         starsAnimation.addStars(1000);
+        starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assert (5 == starsAnimation.getNumStars());
     }
@@ -83,6 +84,7 @@ public class VotingPageActivityTest {
         Canvas canvas = new Canvas();
         starsAnimation.onDraw(canvas);
         starsAnimation.addStars(-10);
+        starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assert (0 == starsAnimation.getNumStars());
     }

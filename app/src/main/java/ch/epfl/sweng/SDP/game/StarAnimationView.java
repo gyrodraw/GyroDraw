@@ -138,7 +138,12 @@ public class StarAnimationView extends View {
         timeAnimator = null;
     }
 
-    private void updateState(float deltaMs) {
+    /**
+     * Progress the animation by moving the stars based on the elapsed time.
+     *
+     * @param deltaMs time delta since the last frame, in milliseconds
+     */
+    public void updateState(float deltaMs) {
         for (int i = 0; i < stars.size(); i++) {
             Star star = stars.get(i);
             star.x += star.xSpeed * deltaMs / 1000f;

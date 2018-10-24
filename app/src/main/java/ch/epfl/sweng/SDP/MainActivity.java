@@ -12,9 +12,6 @@ import com.google.firebase.FirebaseApp;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
 public class MainActivity extends Activity implements OnClickListener {
 
 

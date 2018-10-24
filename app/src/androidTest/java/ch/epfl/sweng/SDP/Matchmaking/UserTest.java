@@ -1,13 +1,14 @@
-package ch.epfl.sweng.SDP.matchmaking;
+package ch.epfl.sweng.SDP.Matchmaking;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertTrue;
 
 public class UserTest {
 
     @Test
     public void downloadUser() {
+        assertTrue(true);
     }
 
     @Test

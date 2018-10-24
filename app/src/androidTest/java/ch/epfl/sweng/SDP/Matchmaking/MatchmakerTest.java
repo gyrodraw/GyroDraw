@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.matchmaking;
+package ch.epfl.sweng.SDP.Matchmaking;
 
 import static org.junit.Assert.assertTrue;
 

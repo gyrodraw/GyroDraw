@@ -19,7 +19,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class Matchmaker implements MatchmakingInterface {
+public class Matchmaker {
 
 
     private static Matchmaker singleInstance = null;
@@ -73,9 +73,7 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public void joinRoom() {
             FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-
             HttpURLConnection connection = null;
-
             try {
                 //Create connection
                 String urlParameters = "userId=" + URLEncoder.encode(currentFirebaseUser.getUid(), "UTF-8");
@@ -85,9 +83,6 @@ public class Matchmaker implements MatchmakingInterface {
                 connection.setRequestProperty("Content-Type",
                         "application/x-www-form-urlencoded");
 
-
-              //  connection.setRequestProperty("Content-Length",
-               //         Integer.toString(urlParameters.getBytes().length));
                 connection.setRequestProperty("Content-Language", "en-US");
 
                 connection.setUseCaches(false);
@@ -96,7 +91,6 @@ public class Matchmaker implements MatchmakingInterface {
                 //Send request
                 DataOutputStream wr = new DataOutputStream(
                         connection.getOutputStream());
-               // wr.writeBytes(urlParameters);
                 wr.close();
 
                 //Get Response
@@ -109,17 +103,14 @@ public class Matchmaker implements MatchmakingInterface {
                     response.append('\r');
                 }
                 rd.close();
-                 System.out.println(response.toString());
+                 Log.d("1",response.toString());
             } catch (Exception e) {
                 e.printStackTrace();
-             //   return null;
             } finally {
                 if (connection != null) {
                     connection.disconnect();
                 }
             }
-
-
     }
 
     /**

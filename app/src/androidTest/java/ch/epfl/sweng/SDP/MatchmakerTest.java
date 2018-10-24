@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP;
 
 import org.junit.Test;
 
-import ch.epfl.sweng.SDP.matchmaking.*;
+import ch.epfl.sweng.SDP.Matchmaking.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -10,8 +10,6 @@ public class MatchmakerTest {
 
     @Test
     public void matchMaker() {
-        //Matchmaker matchMaker = new Matchmaker();
-      //  matchMaker.leaveRoom("2312");
         assertTrue(true);
     }
 

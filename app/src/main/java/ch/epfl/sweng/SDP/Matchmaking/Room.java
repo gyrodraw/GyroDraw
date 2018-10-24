@@ -10,8 +10,6 @@ public class Room implements Serializable {
     private Boolean playing;
     private ArrayList<String> inRoom;
 
-    public Room() {}
-
     public String getName() {return name;}
     public void getName(String name) {this.name = name;}
 

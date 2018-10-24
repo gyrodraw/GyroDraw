@@ -24,7 +24,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
-import ch.epfl.sweng.SDP.matchmaking.User;
+import ch.epfl.sweng.SDP.Matchmaking.User;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -257,19 +257,19 @@ public class HomeActivity extends Activity {
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
-        User u = new User("id");
+        User user = new User("id");
 
         TextView wonTextView = profileWindow.findViewById(R.id.games_won);
-        wonTextView.setText("Matches won: " + u.getMatchesWon());
+        wonTextView.setText("Matches won: " + user.getMatchesWon());
 
         TextView lostTextView = profileWindow.findViewById(R.id.game_lost);
-        lostTextView.setText("Matches lost: " + u.getMatchesLost());
+        lostTextView.setText("Matches lost: " + user.getMatchesLost());
 
         TextView avgTextView = profileWindow.findViewById(R.id.averageStars);
-        avgTextView.setText("Avrage stars: "  + u.getAverageRating());
+        avgTextView.setText("Avrage stars: "  + user.getAverageRating());
 
         TextView trophiesTextView = profileWindow.findViewById(R.id.maxTrophies);
-        trophiesTextView.setText("Avrage trophies: "  + u.getTrophies());
+        trophiesTextView.setText("Avrage trophies: "  + user.getTrophies());
 
         crossText.setTypeface(typeMuro);
         signOutButton.setTypeface(typeMuro);

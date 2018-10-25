@@ -97,7 +97,7 @@ public class HomeActivityTest {
     public void testCanSignOutAccount() {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.signOutButton)).perform(click());
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
 
     @Test

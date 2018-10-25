@@ -54,33 +54,4 @@ public class FbStorage {
             });
         }
     }
-
-    /**
-     * Retrieve image from Firebase Storage.
-     * @param reference the name of the image
-     * @return the image bitmap
-     */
-    public static Bitmap getBitmapFromFireBaseStorageReference(
-            StorageReference reference, OnSuccessListener onSuccessListener,
-            OnFailureListener onFailureListener){
-        if(reference == null){
-            return null;
-        } else {
-            final long oneMegabyte = 1024 * 1024;
-            final Bitmap[] bitmap = new Bitmap[1];
-            reference.getBytes(oneMegabyte)
-                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    bitmap[0] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    bitmap[0] = null; // Handle any errors
-                }
-            });
-            return bitmap[0];
-        }
-    }
 }

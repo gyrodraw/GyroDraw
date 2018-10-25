@@ -56,21 +56,4 @@ public class FbStorageUnitTest {
                 isA(Integer.class), isA(ByteArrayOutputStream.class))).thenReturn(true);
         FbStorage.sendBitmapToFireBaseStorage(mockBitmap, mockReference);
     }
-
-    @Test
-    public void testGetBitmapFromStorage(){
-        Task<byte[]> mockTask = Mockito.mock(Task.class);
-        when(mockReference.getBytes(isA(Long.class))).thenReturn(mockTask);
-        when(mockTask.addOnSuccessListener(isA(OnSuccessListener.class)))
-                .thenReturn(mockTask);
-        when(mockTask.addOnFailureListener(isA(OnFailureListener.class)))
-                .thenReturn(mockStorageTask);
-
-        assertTrue(FbStorage.getBitmapFromFireBaseStorageReference(mockReference) == null);
-    }
-
-    @Test
-    public void testGetBitmapFromNullStorage(){
-        assertTrue(FbStorage.getBitmapFromFireBaseStorageReference(null)==null);
-    }
 }

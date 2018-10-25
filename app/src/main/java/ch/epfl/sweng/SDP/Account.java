@@ -22,17 +22,19 @@ public class Account implements java.io.Serializable {
 
     /**
      * Builder for account.
+     *
      * @param username String defining the preferred username
      */
     public Account(ConstantsWrapper constantsWrapper, String username) {
         this(constantsWrapper, username, 0, 0);
     }
-  
+
     /**
      * Builder for account.
+     *
      * @param username String defining the preferred username
      * @param trophies int defining current rating
-     * @param stars int defining current currency
+     * @param stars    int defining current currency
      */
     public Account(ConstantsWrapper constantsWrapper, String username, int trophies, int stars) {
         this.usersRef = constantsWrapper.getUsersRef();
@@ -61,15 +63,16 @@ public class Account implements java.io.Serializable {
     /**
      * Registers this account in Firebase.
      */
-    public void registerAccount() throws  DatabaseException{
+    public void registerAccount() throws DatabaseException {
         usersRef.child(userId).setValue(this, createCompletionListener());
     }
 
     /**
      * Checks in firebase if username already exists.
+     *
      * @param newName username to compare
      * @throws IllegalArgumentException If username is null or already taken
-     * @throws DatabaseException If something went wrong with database.
+     * @throws DatabaseException        If something went wrong with database.
      */
     public void checkIfAccountNameIsFree(final String newName)
             throws IllegalArgumentException, DatabaseException {
@@ -81,7 +84,7 @@ public class Account implements java.io.Serializable {
 
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
+                        if (snapshot.exists()) {
                             throw new IllegalArgumentException("Username already taken.");
                         }
                     }
@@ -95,9 +98,10 @@ public class Account implements java.io.Serializable {
 
     /**
      * Updates Username to newName.
+     *
      * @param newName new username
      * @throws IllegalArgumentException if username not available anymore
-     * @throws DatabaseException if problem with firebase
+     * @throws DatabaseException        if problem with firebase
      */
     public void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException {
@@ -109,6 +113,7 @@ public class Account implements java.io.Serializable {
 
     /**
      * Method that allowes one to change rating (Trophies).
+     *
      * @param change modifier of trophies
      * @throws DatabaseException in case write to database fails
      */
@@ -121,9 +126,10 @@ public class Account implements java.io.Serializable {
 
     /**
      * Method that allows one to add currency (stars).
+     *
      * @param amount positive int
      * @throws IllegalArgumentException in case 'add' is negative
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void addStars(int amount)
             throws IllegalArgumentException, DatabaseException {
@@ -138,6 +144,7 @@ public class Account implements java.io.Serializable {
 
     /**
      * Method that allows one to add friends.
+     *
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -152,6 +159,7 @@ public class Account implements java.io.Serializable {
 
     /**
      * Method that allows one to remove friends.
+     *
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws DatabaseException in case write to database fails
      */
@@ -166,6 +174,7 @@ public class Account implements java.io.Serializable {
 
     /**
      * Checks if databaseError occurred.
+     *
      * @param databaseError potenial databaseError
      * @throws DatabaseException in case databaseError is non-null
      */
@@ -178,10 +187,11 @@ public class Account implements java.io.Serializable {
 
     /**
      * Creates a CompletionListener that checks if there was a DatabaseError.
+     *
      * @return CompletionListener
      */
-    private DatabaseReference.CompletionListener createCompletionListener(){
-        return new DatabaseReference.CompletionListener(){
+    private DatabaseReference.CompletionListener createCompletionListener() {
+        return new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
                                    @NonNull DatabaseReference databaseReference) {

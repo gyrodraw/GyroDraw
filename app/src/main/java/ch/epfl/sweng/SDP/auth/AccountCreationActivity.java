@@ -54,13 +54,13 @@ public class AccountCreationActivity extends AppCompatActivity {
             usernameTaken.setText("Username must not be empty.");
         } else {
             account = new Account(new ConstantsWrapper(), username);
-            try{
+            try {
                 Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
-                                if(snapshot.exists()) {
+                                if (snapshot.exists()) {
                                     usernameTaken.setText("Username already taken, try again");
                                 } else {
                                     account.registerAccount();
@@ -75,7 +75,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                                 throw databaseError.toException();
                             }
                         });
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 usernameTaken.setText(exception.getMessage());
             }
         }
@@ -83,9 +83,10 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     /**
      * Important for function above.
+     *
      * @return this
      */
-    private AccountCreationActivity getThis(){
+    private AccountCreationActivity getThis() {
         return this;
     }
 

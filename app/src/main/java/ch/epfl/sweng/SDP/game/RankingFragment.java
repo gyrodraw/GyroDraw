@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.R;
+
 import java.util.Locale;
+
+import ch.epfl.sweng.SDP.R;
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
@@ -27,7 +29,7 @@ public class RankingFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
         // Retrieve the ranking array, passed as argument on instantiation of the class
         ranking = getArguments().getStringArray(RANKING_KEY);

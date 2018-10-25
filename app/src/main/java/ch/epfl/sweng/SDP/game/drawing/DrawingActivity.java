@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
@@ -9,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -22,16 +24,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
 
 public class DrawingActivity extends Activity implements SensorEventListener {
-    private PaintView paintView;
-
     private static final String TAG = "DrawingActivity";
+    private PaintView paintView;
     private int speed;
     private int time;
     private int timeIntervall;
@@ -39,22 +39,29 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private Handler handler;
     private SensorManager sensorManager;
 
+    private ImageView blackButton;
+    private ImageView blueButton;
+    private ImageView greenButton;
+    private ImageView yellowButton;
+    private ImageView redButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        ImageView blackButton = findViewById(R.id.blackButton);
-        blackButton.setColorFilter(Color.BLACK, PorterDuff.Mode.DST_IN);
-        ImageView blueButton = findViewById(R.id.blueButton);
-        blueButton.setColorFilter(Color.BLUE, PorterDuff.Mode.DST_IN);
-        ImageView greenButton = findViewById(R.id.greenButton);
-        greenButton.setColorFilter(Color.GREEN, PorterDuff.Mode.DST_IN);
-        ImageView yellowButton = findViewById(R.id.yellowButton);
-        yellowButton.setColorFilter(Color.YELLOW, PorterDuff.Mode.DST_IN);
-        ImageView redButton = findViewById(R.id.redButton);
-        redButton.setColorFilter(Color.RED, PorterDuff.Mode.DST_IN);
+        blackButton = findViewById(R.id.blackButton);
+        blueButton = findViewById(R.id.blueButton);
+        greenButton = findViewById(R.id.greenButton);
+        yellowButton = findViewById(R.id.yellowButton);
+        redButton = findViewById(R.id.redButton);
+
+        Resources res = getResources();
+        blueButton.setColorFilter(res.getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+        greenButton.setColorFilter(res.getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
+        yellowButton.setColorFilter(res.getColor(R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+        redButton.setColorFilter(res.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
@@ -126,6 +133,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
             public void onFinish() {
                 TextView textView = findViewById(R.id.timeRemaining);
+                textView.setTextSize(20);
                 textView.setText("Time over!");
                 stop();
             }
@@ -233,4 +241,52 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         // add redirection here
     }
 
+    /**
+     * Sets the clicked button to selected and sets the corresponding color
+     *
+     * @param view
+     */
+    public void colorClickHandler(View view) {
+        Resources res = getResources();
+        ((ImageView) view).setImageResource(R.drawable.color_circle_selected);
+
+        switch (view.getId()) {
+            case R.id.blackButton:
+                paintView.setColor(Color.BLACK);
+                blueButton.setImageResource(R.drawable.color_circle);
+                greenButton.setImageResource(R.drawable.color_circle);
+                yellowButton.setImageResource(R.drawable.color_circle);
+                redButton.setImageResource(R.drawable.color_circle);
+                break;
+            case R.id.blueButton:
+                paintView.setColor(res.getColor(R.color.colorBlue));
+                blackButton.setImageResource(R.drawable.color_circle);
+                greenButton.setImageResource(R.drawable.color_circle);
+                yellowButton.setImageResource(R.drawable.color_circle);
+                redButton.setImageResource(R.drawable.color_circle);
+                break;
+            case R.id.greenButton:
+                paintView.setColor(res.getColor(R.color.colorGreen));
+                blackButton.setImageResource(R.drawable.color_circle);
+                blueButton.setImageResource(R.drawable.color_circle);
+                yellowButton.setImageResource(R.drawable.color_circle);
+                redButton.setImageResource(R.drawable.color_circle);
+                break;
+            case R.id.yellowButton:
+                paintView.setColor(res.getColor(R.color.colorYellow));
+                blackButton.setImageResource(R.drawable.color_circle);
+                blueButton.setImageResource(R.drawable.color_circle);
+                greenButton.setImageResource(R.drawable.color_circle);
+                redButton.setImageResource(R.drawable.color_circle);
+                break;
+            case R.id.redButton:
+                paintView.setColor(res.getColor(R.color.colorRed));
+                blackButton.setImageResource(R.drawable.color_circle);
+                blueButton.setImageResource(R.drawable.color_circle);
+                greenButton.setImageResource(R.drawable.color_circle);
+                yellowButton.setImageResource(R.drawable.color_circle);
+                break;
+            default:
+        }
+    }
 }

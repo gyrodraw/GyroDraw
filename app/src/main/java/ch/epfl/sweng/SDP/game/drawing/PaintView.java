@@ -10,13 +10,13 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
-import ch.epfl.sweng.SDP.firebase.FbStorage;
-import ch.epfl.sweng.SDP.LocalDbHandler;
-
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+
+import ch.epfl.sweng.SDP.LocalDbHandler;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
 
 
 public class PaintView extends View {
@@ -41,18 +41,18 @@ public class PaintView extends View {
         super(context, attrs);
         paint = new Paint();
         paintC = new Paint();
-        paint.setColor(Color.RED);
+        paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(10);
+        paint.setStrokeWidth(30);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        paintC.setColor(Color.RED);
+        paintC.setColor(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(10);
+        paintC.setStrokeWidth(30);
 
-        circleRadius = 10; //will be modifiable in future, not hardcoded
-        circleX = 0;
-        circleY = 0;
+        circleRadius = 30; //will be modifiable in future, not hardcoded
+        circleX = getWidth() / 2;
+        circleY = getHeight() / 2;
         draw = false;
         path = new Path();
         path.moveTo(circleX, circleY);
@@ -62,12 +62,12 @@ public class PaintView extends View {
         return circleX;
     }
 
-    public float getCircleY() {
-        return circleY;
-    }
-
     public void setCircleX(float circleX) {
         this.circleX = circleX;
+    }
+
+    public float getCircleY() {
+        return circleY;
     }
 
     public void setCircleY(float circleY) {
@@ -90,16 +90,21 @@ public class PaintView extends View {
         this.draw = draw;
     }
 
+    public void setColor(int color) {
+        paint.setColor(color);
+    }
+
     /**
      * Initializes coordinates of pen and size of bitmap.
      * Creates a bitmap and a canvas.
+     *
      * @param size size of the screen
      */
     public void setSizeAndInit(Point size) {
         circleX = size.x / 2 - circleRadius;
         circleY = size.y / 2 - circleRadius;
         bitmap = Bitmap.createBitmap(size.x,
-                (int)(((float)size.y/size.x)*size.x), Bitmap.Config.ARGB_8888);
+                (int) (((float) size.y / size.x) * size.x), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
     }
 
@@ -119,11 +124,11 @@ public class PaintView extends View {
         canvas.save();
         if (draw) {
             paintC.setStyle(Paint.Style.FILL);
-            paintC.setStrokeWidth(10);
+            paintC.setStrokeWidth(30);
             path.lineTo(circleX, circleY);
         } else {
             paintC.setStyle(Paint.Style.STROKE);
-            paintC.setStrokeWidth(5);
+            paintC.setStrokeWidth(15);
         }
         canvas.drawColor(Color.WHITE);
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
@@ -136,16 +141,16 @@ public class PaintView extends View {
      * Gets called when time for drawing is over.
      * Saves the bitmap in the local DB.
      */
-    public void saveCanvasInDb(Context context){
+    public void saveCanvasInDb(Context context) {
         this.draw(canvas);
         LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
         FbStorage fbStorage = new FbStorage();
         localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         // Create timestamp as name for image. Will include userID in future
-        Long tsLong = System.currentTimeMillis()/1000;
+        Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child(""+ts+".jpg");
+        StorageReference imageRef = storageRef.child("" + ts + ".jpg");
         fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

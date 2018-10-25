@@ -29,6 +29,7 @@ public class LocalDbHandler extends SQLiteOpenHelper {
 
     /**
      * Creates a new database table.
+     *
      * @param db database where to create new table in.
      */
     @Override
@@ -41,7 +42,8 @@ public class LocalDbHandler extends SQLiteOpenHelper {
 
     /**
      * If there exists already a table with this name, which has lower version, drop it.
-     * @param db database to look in
+     *
+     * @param db         database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -53,10 +55,11 @@ public class LocalDbHandler extends SQLiteOpenHelper {
 
     /**
      * Adds a bitmap to the local db.
+     *
      * @param bitmap to insert
      */
     public void addBitmapToDb(Bitmap bitmap, ByteArrayOutputStream bos) {
-        if(bitmap != null) {
+        if (bitmap != null) {
             ByteArrayOutputStream byteArrayOutputStream = bos;
             bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -82,6 +85,7 @@ public class LocalDbHandler extends SQLiteOpenHelper {
 
     /**
      * Retrieves the most recent bitmap from the table.
+     *
      * @return the newest bitmap
      */
     public Bitmap getLatestBitmapFromDb() {

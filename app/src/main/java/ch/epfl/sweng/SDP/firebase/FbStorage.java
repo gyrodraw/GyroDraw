@@ -23,11 +23,12 @@ public class FbStorage {
 
     /**
      * Uploads a given bitmap to Firebase Storage at given StorageReference.
-     * @param bitmap the image to upload
+     *
+     * @param bitmap   the image to upload
      * @param imageRef the name of the image
      */
-    public void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef){
-        if(bitmap != null && imageRef != null) {
+    public void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef) {
+        if (bitmap != null && imageRef != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
             byte[] data = byteArrayOutputStream.toByteArray();
@@ -53,11 +54,12 @@ public class FbStorage {
 
     /**
      * Retrieve image from Firebase Storage.
+     *
      * @param reference the name of the image
      * @return the image bitmap
      */
-    public Bitmap getBitmapFromFireBaseStorageReference(StorageReference reference){
-        if(reference == null){
+    public Bitmap getBitmapFromFireBaseStorageReference(StorageReference reference) {
+        if (reference == null) {
             return null;
         } else {
             final long oneMegabyte = 1024 * 1024;

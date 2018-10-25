@@ -9,10 +9,10 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import ch.epfl.sweng.SDP.R;
-
 import java.util.ArrayList;
 import java.util.Random;
+
+import ch.epfl.sweng.SDP.R;
 
 /**
  * Animation of stars when a player votes for the current picture.
@@ -21,30 +21,16 @@ public class StarAnimationView extends View {
 
     public static final int X_SPEED_COEF = 300;
     public static final int Y_SPEED_STEP = 20;
-
-    private static class Star {
-        private float x;
-        private float y;
-        private float xSpeed;
-        private float ySpeed;
-        private float rotation;
-    }
-
     private static final int INIT_SPEED = 0;
     private static final int SEED = 1337;
-
     private final ArrayList<Star> stars = new ArrayList<>();
     private final Random rand = new Random(SEED);
-
     private TimeAnimator timeAnimator;
     private Drawable starDrawable;
-
     private int starSize;
     private int starSpeed;
-
     private int height;
     private int width;
-
     /**
      * Constructor of the stars animation.
      *
@@ -187,5 +173,13 @@ public class StarAnimationView extends View {
      */
     public int getNumStars() {
         return stars.size();
+    }
+
+    private static class Star {
+        private float x;
+        private float y;
+        private float xSpeed;
+        private float ySpeed;
+        private float rotation;
     }
 }

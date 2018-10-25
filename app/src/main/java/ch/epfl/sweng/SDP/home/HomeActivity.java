@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,12 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -33,26 +25,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class HomeActivity extends Activity {
 
-    private Dialog profileWindow;
-
-    private final String user = "aa";
-
     private static final String TAG = "HomeActivity";
-
     private static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-
     private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
-
-    private DatabaseReference dbRef;
-    private DatabaseReference dbRefTimer;
-
     private static boolean enableBackgroundAnimation = true;
-
+    private final String user = "aa";
     // To be removed (for testing purposes only)
     private final ValueEventListener listenerAllReady = new ValueEventListener() {
         @Override
@@ -68,6 +59,16 @@ public class HomeActivity extends Activity {
             // Does nothing for the moment
         }
     };
+    private Dialog profileWindow;
+    private DatabaseReference dbRef;
+    private DatabaseReference dbRefTimer;
+
+    /**
+     * Disables the background animation. Call this method in every HomeActivity test
+     */
+    public static void disableBackgroundAnimation() {
+        enableBackgroundAnimation = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,6 +233,8 @@ public class HomeActivity extends Activity {
         view.startAnimation(press);
     }
 
+    // To remove, only for testing
+
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
@@ -252,8 +255,6 @@ public class HomeActivity extends Activity {
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
     }
-
-    // To remove, only for testing
 
     /**
      * Callback function when clicking the voting button. Sets the user ready in the database.
@@ -279,12 +280,5 @@ public class HomeActivity extends Activity {
         timerRef.child("observableTime").setValue(0);
         timerRef.child("startTimer").setValue(0);
         timerRef.child("usersEndVoting").setValue(0);
-    }
-
-    /**
-     * Disables the background animation. Call this method in every HomeActivity test
-     */
-    public static void disableBackgroundAnimation() {
-        enableBackgroundAnimation = false;
     }
 }

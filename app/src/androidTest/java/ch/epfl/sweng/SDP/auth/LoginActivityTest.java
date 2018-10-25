@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.auth;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
-import android.widget.TextView;
 
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
@@ -15,11 +14,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
-import ch.epfl.sweng.SDP.R;
-
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -34,10 +30,10 @@ public class LoginActivityTest {
     LoginActivity loginActivity;
 
     /**
-     * Initializes the mock objects. 
+     * Initializes the mock objects.
      */
     @Before
-    public void init(){
+    public void init() {
         mockIntent = Mockito.mock(Intent.class);
         mockIdpResponse = Mockito.mock(IdpResponse.class);
         mockError = Mockito.mock(FirebaseUiException.class);
@@ -47,14 +43,14 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void testSuccessfulLogin(){
+    public void testSuccessfulLogin() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
     }
 
     @Test
-    public void testExistingUser(){
+    public void testExistingUser() {
         getDefaultSharedPreferences(activityRule.getActivity()).edit()
                 .putBoolean("hasAccount", true).apply();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
@@ -73,9 +69,8 @@ public class LoginActivityTest {
     //    assertEquals(((TextView)loginActivity.findViewById(R.id.error_message))
     //          .getText(), "No Internet connection");
     //}
-
     @Test
-    public void testFailedLoginNullResponse(){
+    public void testFailedLoginNullResponse() {
         mockIntent = Mockito.mock(Intent.class);
         mockIdpResponse = null;
         loginActivity.onActivityResult(42, 0, mockIntent);

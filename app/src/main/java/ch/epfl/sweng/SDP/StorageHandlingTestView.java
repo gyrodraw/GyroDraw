@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import ch.epfl.sweng.SDP.firebase.FbStorage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+
+import ch.epfl.sweng.SDP.firebase.FbStorage;
 
 public class StorageHandlingTestView extends AppCompatActivity {
 
@@ -43,6 +44,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
 
     /**
      * Tests case where we want to get from empty database.
+     *
      * @param view button
      */
     public void getFromEmptyDb(View view) {
@@ -51,29 +53,32 @@ public class StorageHandlingTestView extends AppCompatActivity {
 
     /**
      * Tests adding and getting from local db.
+     *
      * @param view button
      */
-    public void addAndRetrieveSuccessfully(View view){
+    public void addAndRetrieveSuccessfully(View view) {
         localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         localDbHandler.getLatestBitmapFromDb();
     }
 
     /**
      * Tests putting and getting from storage.
+     *
      * @param view button
      */
     public void putAndGetFromStorage(View view) {
-        Long tsLong = System.currentTimeMillis()/1000;
+        Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         // Create a reference to "mountains.jpg"
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child(""+ts+".jpg");
-        fbStorage.sendBitmapToFireBaseStorage(bitmap,imageRef);
+        StorageReference imageRef = storageRef.child("" + ts + ".jpg");
+        fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
         fbStorage.getBitmapFromFireBaseStorageReference(imageRef);
     }
 
     /**
      * Tests getting element with null reference from storage.
+     *
      * @param view button
      */
     public void getNullFromStorage(View view) {
@@ -82,9 +87,10 @@ public class StorageHandlingTestView extends AppCompatActivity {
 
     /**
      * Tests if databaes is overwritten with newer version.
+     *
      * @param view button
      */
-    public void overrideDatabase(View view){
+    public void overrideDatabase(View view) {
         localDbHandler = new LocalDbHandler(StorageHandlingTestView.this, null, 2);
     }
 

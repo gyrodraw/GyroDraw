@@ -21,6 +21,8 @@ import ch.epfl.sweng.SDP.firebase.FbStorage;
 
 public class PaintView extends View {
 
+    public static final int DRAW_WIDTH = 30;
+
     private Paint paint;
     private Paint paintC;
     private int circleRadius;
@@ -44,13 +46,13 @@ public class PaintView extends View {
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(30);
+        paint.setStrokeWidth(DRAW_WIDTH);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paintC.setColor(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(30);
+        paintC.setStrokeWidth(DRAW_WIDTH);
 
-        circleRadius = 30; //will be modifiable in future, not hardcoded
+        circleRadius = DRAW_WIDTH; //will be modifiable in future, not hardcoded
         circleX = getWidth() / 2;
         circleY = getHeight() / 2;
         draw = false;
@@ -124,11 +126,11 @@ public class PaintView extends View {
         canvas.save();
         if (draw) {
             paintC.setStyle(Paint.Style.FILL);
-            paintC.setStrokeWidth(30);
+            paintC.setStrokeWidth(DRAW_WIDTH);
             path.lineTo(circleX, circleY);
         } else {
             paintC.setStyle(Paint.Style.STROKE);
-            paintC.setStrokeWidth(15);
+            paintC.setStrokeWidth(DRAW_WIDTH / 2);
         }
         canvas.drawColor(Color.WHITE);
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);

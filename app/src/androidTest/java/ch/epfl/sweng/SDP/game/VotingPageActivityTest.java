@@ -1,13 +1,19 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 import android.widget.RatingBar;
 
+import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -16,8 +22,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.is;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +41,10 @@ public class VotingPageActivityTest {
                     disableAnimations();
                 }
             };
+
+    // Add a monitor for the home activity
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
@@ -87,5 +99,15 @@ public class VotingPageActivityTest {
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assert (0 == starsAnimation.getNumStars());
+    }
+
+    @Test
+    public void startHomeActivityStartsHomeActivity(){
+        mActivityRule.getActivity().startHomeActivity(null);
+        SystemClock.sleep(2000);
+        Activity homeActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 5000);
+        Assert.assertNotNull(homeActivity);
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 }

@@ -12,6 +12,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
+import static junit.framework.TestCase.assertTrue;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -96,9 +97,13 @@ public class HomeActivityTest {
     public void testCanSignOutAccount() {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.signOutButton)).perform(click());
-        SystemClock.sleep(2000);
-        Activity mainActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(mainActivity);
+        assertTrue(mActivityRule.getActivity().isFinishing());
+    }
+
+    @Test
+    public void testCanDeleteAccount() {
+        onView(withId(R.id.usernameButton)).perform(click());
+        onView(withId(R.id.deleteButton)).perform(click());
+        onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
 }

@@ -60,7 +60,9 @@ public class FbStorage {
      * @param reference the name of the image
      * @return the image bitmap
      */
-    public static Bitmap getBitmapFromFireBaseStorageReference(StorageReference reference){
+    public static Bitmap getBitmapFromFireBaseStorageReference(
+            StorageReference reference, OnSuccessListener onSuccessListener,
+            OnFailureListener onFailureListener){
         if(reference == null){
             return null;
         } else {

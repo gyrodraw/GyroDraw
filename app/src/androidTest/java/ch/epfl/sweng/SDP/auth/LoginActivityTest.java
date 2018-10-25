@@ -3,7 +3,6 @@ package ch.epfl.sweng.SDP.auth;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 
 import com.firebase.ui.auth.FirebaseUiException;
@@ -22,8 +21,6 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(JUnit4.class)
@@ -36,6 +33,10 @@ public class LoginActivityTest {
     // Add a monitor for the home activity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(HomeActivity.class.getName(), null, false);
+
+    // Add a monitor for the accountCreation activity
+    private final Instrumentation.ActivityMonitor monitor2 = getInstrumentation()
+            .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
     Intent mockIntent;
     IdpResponse mockIdpResponse;
@@ -63,7 +64,7 @@ public class LoginActivityTest {
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
         Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 5000);
+                .waitForMonitorWithTimeout(monitor, 2000);
         Assert.assertNotNull(homeActivity);
     }
 
@@ -92,8 +93,8 @@ public class LoginActivityTest {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
-        Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(homeActivity);
+        Activity accountCreationActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor2, 2000);
+        Assert.assertNotNull(accountCreationActivity);
     }
 }

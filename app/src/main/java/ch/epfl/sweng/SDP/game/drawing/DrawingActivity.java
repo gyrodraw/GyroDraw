@@ -43,7 +43,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         speed = 5; //will be passed as variable in future, not hardcoded
-        time = 10000; //will be passed as variable in future, not hardcoded
+        time = 60000; //will be passed as variable in future, not hardcoded
         timeInterval = 1000; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

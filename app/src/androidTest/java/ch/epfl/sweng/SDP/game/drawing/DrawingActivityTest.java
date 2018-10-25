@@ -1,12 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
-import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +7,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
+import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -21,13 +22,13 @@ import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -90,26 +91,27 @@ public class DrawingActivityTest {
 
     @Test
     public void testLocalDbHandler(){
-        LocalDbHandler localDbHandler = new LocalDbHandler(activityRule.getActivity(), null, 1);
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
-        Path path = new Path();
-
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(10);
         paint.setStrokeCap(Paint.Cap.ROUND);
 
+        Path path = new Path();
         path.lineTo(50, 50);
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
         canvas.drawPath(path, paint);
         canvas.drawBitmap(bitmap, 0, 0, paint);
 
+        LocalDbHandler localDbHandler =
+                new LocalDbHandler(activityRule.getActivity(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 100);
 
-        bitmap = compressBitmap(bitmap);
+        bitmap = compressBitmap(bitmap, 100);
 
         Bitmap newBitmap = localDbHandler.getLatestBitmapFromDb();
 
@@ -120,9 +122,9 @@ public class DrawingActivityTest {
         }
     }
 
-    private Bitmap compressBitmap(Bitmap bitmap){
+    private Bitmap compressBitmap(Bitmap bitmap, int quality){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         try {
             byteArrayOutputStream.close();

@@ -22,11 +22,17 @@ public class FbStorage {
     private static final int QUALITY = 20;
 
     /**
+     * Hides the public constructor.
+     */
+    private FbStorage(){}
+
+    /**
      * Uploads a given bitmap to Firebase Storage at given StorageReference.
      * @param bitmap the image to upload
      * @param imageRef the name of the image
      */
-    public static void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef){
+    public static void sendBitmapToFireBaseStorage(
+            final Bitmap bitmap, final StorageReference imageRef){
         if(bitmap != null && imageRef != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
@@ -37,6 +43,7 @@ public class FbStorage {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {

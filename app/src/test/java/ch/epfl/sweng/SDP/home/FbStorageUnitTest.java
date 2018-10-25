@@ -23,6 +23,7 @@ import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,6 @@ public class FbStorageUnitTest {
     UploadTask mockUploadTask;
     StorageTask mockStorageTask;
     Bitmap mockBitmap;
-    FbStorage fbStorage;
 
     @Before
     public void init(){
@@ -44,7 +44,6 @@ public class FbStorageUnitTest {
         mockUploadTask = Mockito.mock(UploadTask.class);
         mockBitmap = Mockito.mock(Bitmap.class);
         mockStorageTask = Mockito.mock(StorageTask.class);
-        fbStorage = new FbStorage();
     }
 
     @Test
@@ -54,7 +53,7 @@ public class FbStorageUnitTest {
                 .thenReturn(mockStorageTask);
         when(mockBitmap.compress(isA(Bitmap.CompressFormat.class),
                 isA(Integer.class), isA(ByteArrayOutputStream.class))).thenReturn(true);
-        fbStorage.sendBitmapToFireBaseStorage(mockBitmap, mockReference);
+        FbStorage.sendBitmapToFireBaseStorage(mockBitmap, mockReference);
     }
 
     @Test
@@ -65,5 +64,11 @@ public class FbStorageUnitTest {
                 .thenReturn(mockTask);
         when(mockTask.addOnFailureListener(isA(OnFailureListener.class)))
                 .thenReturn(mockStorageTask);
+        FbStorage.getBitmapFromFireBaseStorageReference(mockReference);
+    }
+
+    @Test
+    public void testGetBitmapFromNullStorage(){
+        assertTrue(FbStorage.getBitmapFromFireBaseStorageReference(null)==null);
     }
 }

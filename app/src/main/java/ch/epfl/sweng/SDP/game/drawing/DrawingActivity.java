@@ -1,7 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,10 +17,13 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
@@ -32,7 +38,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
-    ToggleButton flyDraw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +45,26 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        ImageView blackButton = findViewById(R.id.blackButton);
+        blackButton.setColorFilter(Color.BLACK, PorterDuff.Mode.DST_IN);
+        ImageView blueButton = findViewById(R.id.blueButton);
+        blueButton.setColorFilter(Color.BLUE, PorterDuff.Mode.DST_IN);
+        ImageView greenButton = findViewById(R.id.greenButton);
+        greenButton.setColorFilter(Color.GREEN, PorterDuff.Mode.DST_IN);
+        ImageView yellowButton = findViewById(R.id.yellowButton);
+        yellowButton.setColorFilter(Color.YELLOW, PorterDuff.Mode.DST_IN);
+        ImageView redButton = findViewById(R.id.redButton);
+        redButton.setColorFilter(Color.RED, PorterDuff.Mode.DST_IN);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
+
         speed = 5; //will be passed as variable in future, not hardcoded
         time = 60000; //will be passed as variable in future, not hardcoded
         timeIntervall = 1000; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        flyDraw = findViewById(R.id.flyOrDraw);
         paintView = findViewById(R.id.paintView);
 
         View decorView = getWindow().getDecorView();
@@ -58,10 +76,25 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 
-    final Display display = getWindowManager().getDefaultDisplay();
+        final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
         paintView.setSizeAndInit(size);
+        paintView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        paintView.setDraw(true);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        paintView.setDraw(false);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
 
         setCountdownTimer();
 
@@ -80,9 +113,10 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
     /**
      * Initializes the countdown to a given time.
+     *
      * @return the countdown
      */
-    private CountDownTimer setCountdownTimer(){
+    private CountDownTimer setCountdownTimer() {
         return new CountDownTimer(time, timeIntervall) {
 
             public void onTick(long millisUntilFinished) {
@@ -100,13 +134,12 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     }
 
     /**
-     * Checks if ToggleButton Draw is checked and saves the boolean in paintView.draw.
-     * which enables the user to either fly or draw
+     * Getter of the paint view.
      *
-     * @param view ToggleButton
+     * @return the paint view
      */
-    public void flyOrDraw(View view) {
-        paintView.setDraw(((ToggleButton) view).isChecked());
+    public PaintView getPaintView() {
+        return paintView;
     }
 
     /**
@@ -116,7 +149,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      */
     public void clear(View view) {
         paintView.clear();
-        flyDraw.setChecked(false);
         paintView.setDraw(false);
     }
 
@@ -196,7 +228,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * Gets called when time is over.
      * Saves drawing in database and storage and calls new activity.
      */
-    private void stop(){
+    private void stop() {
         paintView.saveCanvasInDb(this);
         // add redirection here
     }

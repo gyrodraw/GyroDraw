@@ -15,31 +15,47 @@
 
         <ImageView
             android:id="@+id/bucketButton"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/bucket" />
 
         <ImageView
             android:id="@+id/eraserButton"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/eraser" />
 
         <ImageView
             android:id="@+id/pencilButton"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:rotation="180"
             app:srcCompat="@drawable/pencil" />
+
+        <TextView
+            android:id="@+id/timeRemaining"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="20"
+            android:textColor="@color/colorWhite"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.015" />
     </LinearLayout>
 
     <ch.epfl.sweng.SDP.game.drawing.PaintView
@@ -60,48 +76,48 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/whiteButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/circle" />
-
-        <ImageView
             android:id="@+id/blackButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/circle" />
+            app:srcCompat="@drawable/color_circle_selected" />
 
         <ImageView
             android:id="@+id/blueButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/circle" />
+            app:srcCompat="@drawable/color_circle" />
 
         <ImageView
             android:id="@+id/greenButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/circle" />
+            app:srcCompat="@drawable/color_circle" />
+
+        <ImageView
+            android:id="@+id/yellowButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/color_circle" />
 
         <ImageView
             android:id="@+id/redButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/circle" />
+            app:srcCompat="@drawable/color_circle" />
     </LinearLayout>
 </LinearLayout>

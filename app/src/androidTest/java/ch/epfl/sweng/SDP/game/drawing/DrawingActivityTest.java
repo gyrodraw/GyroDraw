@@ -2,8 +2,8 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -38,21 +38,7 @@ public class DrawingActivityTest {
     public void testCanvas() {
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
     }
-
-    @Test
-    public void testDrawToggleReactsCorrectlyToClicking(){
-        onView(withId(R.id.flyOrDraw)).check(matches(isNotChecked()));
-        onView(withId(R.id.flyOrDraw)).perform(click());
-        onView(withId(R.id.flyOrDraw)).check(matches(isChecked()));
-        onView(withId(R.id.flyOrDraw)).perform(click());
-        onView(withId(R.id.flyOrDraw)).check(matches(isNotChecked()));
-    }
-
-    @Test
-    public void testClearButtonIsClickable() {
-        onView(withId(R.id.clearCanvas)).perform(click());
-    }
-
+    
     @Test
     public void testPaintViewFullyDisplayed() {
         onView(withId(R.id.paintView)).perform(click());

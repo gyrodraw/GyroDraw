@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class FbStorage {
 
-    private static final String TAG = "fbStorageHandler";
+    private static final String TAG = "fbStorage";
     private static final int QUALITY = 20;
 
     /**
@@ -41,11 +41,6 @@ public class FbStorage {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     Log.d(TAG, "Upload to Firebase Storage failed.");
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // does nothing for now
                 }
             });
         }

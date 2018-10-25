@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.auth;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 
 import com.firebase.ui.auth.FirebaseUiException;
@@ -32,7 +33,7 @@ public class LoginActivityTest {
     public final ActivityTestRule<LoginActivity> activityRule =
             new ActivityTestRule<>(LoginActivity.class);
 
-    // Add a monitor for the login activity
+    // Add a monitor for the home activity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(HomeActivity.class.getName(), null, false);
 

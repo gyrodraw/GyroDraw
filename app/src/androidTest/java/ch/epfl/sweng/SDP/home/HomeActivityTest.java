@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.home;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -12,12 +13,21 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.android.dx.command.Main;
+
+import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +43,10 @@ public class HomeActivityTest {
                     disableBackgroundAnimation();
                 }
             };
+
+    // Add a monitor for the main activity
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(MainActivity.class.getName(), null, false);
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
@@ -78,11 +92,13 @@ public class HomeActivityTest {
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
 
-    /*@Test
+    @Test
     public void testCanSignOutAccount() {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.signOutButton)).perform(click());
         SystemClock.sleep(2000);
-        intended(hasComponent(MainActivity.class.getName()));
-    }*/
+        Activity mainActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 5000);
+        Assert.assertNotNull(mainActivity);
+    }
 }

@@ -23,8 +23,7 @@ public class LoginActivity extends Activity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 42;
-    private final List<IdpConfig> providers = Collections.singletonList(
-            new GoogleBuilder().build());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +33,8 @@ public class LoginActivity extends Activity {
     }
 
     private void createSignInIntent() {
+        final List<IdpConfig> providers = Collections.singletonList(
+                new GoogleBuilder().build());
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -44,7 +45,7 @@ public class LoginActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
@@ -84,6 +85,7 @@ public class LoginActivity extends Activity {
         // User pressed the back button
         if (response == null) {
             launchActivity(MainActivity.class);
+            finish();
             return;
         }
 

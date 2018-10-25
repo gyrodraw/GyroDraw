@@ -175,7 +175,7 @@ public class StarAnimationView extends View {
      * @param number The number of stars
      */
     public void addStars(int number) {
-        for (int i = 0; i < Math.max(number, 5); i++) {
+        for (int i = 0; i < Math.min(number, 5); i++) {
             final Star star = new Star();
             initializeStar(star);
             stars.add(star);

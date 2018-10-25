@@ -28,6 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -64,7 +65,8 @@ public class FbStorageUnitTest {
                 .thenReturn(mockTask);
         when(mockTask.addOnFailureListener(isA(OnFailureListener.class)))
                 .thenReturn(mockStorageTask);
-        FbStorage.getBitmapFromFireBaseStorageReference(mockReference);
+
+        assertTrue(FbStorage.getBitmapFromFireBaseStorageReference(mockReference) == null);
     }
 
     @Test

@@ -34,8 +34,10 @@ public class FbStorage {
     public static void sendBitmapToFireBaseStorage(
             final Bitmap bitmap, final StorageReference imageRef){
         if(bitmap != null && imageRef != null) {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
+            ByteArrayOutputStream byteArrayOutputStream =
+                    new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,
+                    QUALITY, byteArrayOutputStream);
             byte[] data = byteArrayOutputStream.toByteArray();
             UploadTask uploadTask = imageRef.putBytes(data);
             try {
@@ -64,7 +66,8 @@ public class FbStorage {
         } else {
             final long oneMegabyte = 1024 * 1024;
             final Bitmap[] bitmap = new Bitmap[1];
-            reference.getBytes(oneMegabyte).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            reference.getBytes(oneMegabyte)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     bitmap[0] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

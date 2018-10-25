@@ -1,6 +1,17 @@
 package ch.epfl.sweng.SDP.home;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -12,26 +23,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
-import static junit.framework.TestCase.assertTrue;
-
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.os.SystemClock;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import com.android.dx.command.Main;
-
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
-
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
@@ -44,10 +35,6 @@ public class HomeActivityTest {
                     disableBackgroundAnimation();
                 }
             };
-
-    // Add a monitor for the main activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(MainActivity.class.getName(), null, false);
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {

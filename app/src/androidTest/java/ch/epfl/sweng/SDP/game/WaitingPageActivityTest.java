@@ -50,7 +50,7 @@ public class WaitingPageActivityTest {
                 View.VISIBLE);
         for (int i = 0; i < 4; i++) {
             onView(withId(R.id.incrementButton)).perform(click());
-        } 
+        }
 
         intended(hasComponent(DrawingActivity.class.getName()));
         Intents.release();

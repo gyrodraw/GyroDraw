@@ -91,18 +91,13 @@ public class DrawingActivityTest {
 
     @Test
     public void testLocalDbHandler(){
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(10);
-        paint.setStrokeCap(Paint.Cap.ROUND);
+        Paint paint = initializedPaint();
 
         Path path = new Path();
         path.lineTo(50, 50);
 
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
+        Canvas canvas = initializedCanvas(bitmap, paint, path);
         canvas.drawColor(Color.WHITE);
         canvas.drawPath(path, paint);
         canvas.drawBitmap(bitmap, 0, 0, paint);
@@ -120,6 +115,22 @@ public class DrawingActivityTest {
                 assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
             }
         }
+    }
+
+    private Paint initializedPaint(){
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+        return paint;
+    }
+
+    private Canvas initializedCanvas(Bitmap bitmap, Paint paint, Path path){
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return canvas;
     }
 
     private Bitmap compressBitmap(Bitmap bitmap, int quality){

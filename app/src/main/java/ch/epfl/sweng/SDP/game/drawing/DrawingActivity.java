@@ -33,7 +33,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
-    private LocalDbHandler localDbHandler;
     ToggleButton flyDraw;
 
     @Override
@@ -74,8 +73,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 paintView.invalidate();
             }
         };
-
-        localDbHandler = new LocalDbHandler(this, null, 1);
     }
 
     public Point getSize() {
@@ -201,6 +198,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * Saves drawing in database and storage and calls new activity.
      */
     private void stop(){
+        LocalDbHandler localDbHandler = new LocalDbHandler(this, null, 1);
         paintView.saveCanvasInDb(localDbHandler);
         paintView.saveCanvasInStorage();
         // add redirection here

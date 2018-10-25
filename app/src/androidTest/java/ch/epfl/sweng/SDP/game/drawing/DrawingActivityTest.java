@@ -7,17 +7,27 @@ import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -76,5 +86,49 @@ public class DrawingActivityTest {
         paintView.setSizeAndInit(point);
         paintView.setCircleRadius(10);
         assertTrue(paintView.getCircleX()==40.0);
+    }
+
+    @Test
+    public void testLocalDbHandler(){
+        LocalDbHandler localDbHandler = new LocalDbHandler(activityRule.getActivity(), null, 1);
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        Path path = new Path();
+
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeWidth(10);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+
+        path.lineTo(50, 50);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+
+        localDbHandler.addBitmapToDb(bitmap, 100);
+
+        bitmap = compressBitmap(bitmap);
+
+        Bitmap newBitmap = localDbHandler.getLatestBitmapFromDb();
+
+        for(int i = 0; i < 100; ++i){
+            for(int j = 0; j < 100; ++j){
+                assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
+            }
+        }
+    }
+
+    private Bitmap compressBitmap(Bitmap bitmap){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        try {
+            byteArrayOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
 }

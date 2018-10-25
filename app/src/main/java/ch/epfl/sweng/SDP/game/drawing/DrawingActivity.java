@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 
 
@@ -28,10 +29,11 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private static final String TAG = "DrawingActivity";
     private int speed;
     private int time;
-    private int timeIntervall;
+    private int timeInterval;
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
+    private LocalDbHandler localDbHandler;
     ToggleButton flyDraw;
 
     @Override
@@ -41,8 +43,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         speed = 5; //will be passed as variable in future, not hardcoded
-        time = 60000; //will be passed as variable in future, not hardcoded
-        timeIntervall = 1000; //will be passed as variable in future, not hardcoded
+        time = 10000; //will be passed as variable in future, not hardcoded
+        timeInterval = 1000; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -72,6 +74,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 paintView.invalidate();
             }
         };
+
+        localDbHandler = new LocalDbHandler(this, null, 1);
     }
 
     public Point getSize() {
@@ -83,11 +87,11 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * @return the countdown
      */
     private CountDownTimer setCountdownTimer(){
-        return new CountDownTimer(time, timeIntervall) {
+        return new CountDownTimer(time, timeInterval) {
 
             public void onTick(long millisUntilFinished) {
                 TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText(Long.toString(millisUntilFinished / timeIntervall));
+                textView.setText(Long.toString(millisUntilFinished / timeInterval));
             }
 
             public void onFinish() {
@@ -197,7 +201,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * Saves drawing in database and storage and calls new activity.
      */
     private void stop(){
-        paintView.saveCanvasInDb(this);
+        paintView.saveCanvasInDb(localDbHandler);
+        paintView.saveCanvasInStorage();
         // add redirection here
     }
 

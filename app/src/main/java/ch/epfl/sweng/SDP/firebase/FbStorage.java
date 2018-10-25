@@ -26,7 +26,7 @@ public class FbStorage {
      * @param bitmap the image to upload
      * @param imageRef the name of the image
      */
-    public void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef){
+    public static void sendBitmapToFireBaseStorage(final Bitmap bitmap, final StorageReference imageRef){
         if(bitmap != null && imageRef != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
@@ -51,7 +51,7 @@ public class FbStorage {
      * @param reference the name of the image
      * @return the image bitmap
      */
-    public Bitmap getBitmapFromFireBaseStorageReference(StorageReference reference){
+    public static Bitmap getBitmapFromFireBaseStorageReference(StorageReference reference){
         if(reference == null){
             return null;
         } else {

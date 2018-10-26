@@ -38,7 +38,6 @@ public class LoginActivityTest {
     private final Instrumentation.ActivityMonitor monitor2 = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
-    Intent mockIntent;
     IdpResponse mockIdpResponse;
     FirebaseUiException mockError;
     LoginActivity loginActivity;
@@ -48,39 +47,40 @@ public class LoginActivityTest {
      */
     @Before
     public void init(){
-        mockIntent = Mockito.mock(Intent.class);
         mockIdpResponse = Mockito.mock(IdpResponse.class);
         mockError = Mockito.mock(FirebaseUiException.class);
         loginActivity = activityRule.getActivity();
-        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
-                .thenReturn(mockIdpResponse);
     }
 
     @Test
     public void testExistingUser(){
-        init();
+        Intent mockIntent = Mockito.mock(Intent.class);
+        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
+                .thenReturn(mockIdpResponse);
         getDefaultSharedPreferences(activityRule.getActivity()).edit()
                 .putBoolean("hasAccount", true).apply();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
         loginActivity.onActivityResult(42, -1, mockIntent);
-        assertTrue(loginActivity.isFinishing());
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 2000);
         Assert.assertNotNull(homeActivity);
+        assertTrue(loginActivity.isFinishing());
     }
 
     @Test
     public void testFailedLoginNullResponse(){
-        init();
-        mockIntent = Mockito.mock(Intent.class);
-        mockIdpResponse = null;
+        Intent mockIntent = Mockito.mock(Intent.class);
+        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
+                .thenReturn(null);
         loginActivity.onActivityResult(42, 0, mockIntent);
         assertTrue(loginActivity.isFinishing());
     }
 
     @Test
     public void testSuccessfulLogin(){
-        init();
+        Intent mockIntent = Mockito.mock(Intent.class);
+        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
+                .thenReturn(mockIdpResponse);
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());

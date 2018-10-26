@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -18,9 +17,7 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,32 +90,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-
-        final ViewTreeObserver observer = paintView.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                paintView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                paintView.setSizeAndInit(paintView.getWidth(), paintView.getHeight());
-            }
-        });
-
-        paintView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        paintView.setDraw(true);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        paintView.setDraw(false);
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
-
         setCountdownTimer();
 
         // informes the paintView that it has to be updated
@@ -173,7 +144,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      */
     public void clear(View view) {
         paintView.clear();
-        paintView.setDraw(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -224,8 +194,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         tempX -= coordinateX * speed;
         tempY += coordinateY * speed;
 
-        paintView.setCircleX(tempX);
-        paintView.setCircleY(tempY);
+        paintView.setCircle(tempX, tempY);
     }
 
     /**

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -24,18 +25,23 @@ public class PaintView extends View {
 
     public static final int DRAW_WIDTH = 30;
 
-    private Paint paintC;
-    private int circleRadius;
-    private float circleX = 0;
-    private float circleY = 0;
-    private int color = 0;
-    private Path[] paths = new Path[5];
+    private Boolean draw = false;
+
     private Paint[] colors = new Paint[5];
-    private Boolean draw;
+    private Path path = new Path();
+    private Paint paintC;
+
+
     private Bitmap bitmap;
     private Canvas canvas;
+
+    private float circleX = 0;
+    private float circleY = 0;
+
     private int width;
     private int height;
+    private int circleRadius;
+    private int color = 0;
 
     /**
      * Constructor for the view.
@@ -53,17 +59,11 @@ public class PaintView extends View {
         colors[3] = getPaintWithColor(res.getColor(R.color.colorYellow));
         colors[4] = getPaintWithColor(res.getColor(R.color.colorRed));
 
-        for (int i = 0; i < paths.length; i++) {
-            paths[i] = new Path();
-        }
-
-        paintC = new Paint();
-        paintC.setColor(Color.BLACK);
+        paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
         paintC.setStrokeWidth(DRAW_WIDTH / 2);
 
-        circleRadius = DRAW_WIDTH; //will be modifiable in future, not hardcoded
-        draw = false;
+        circleRadius = DRAW_WIDTH;
     }
 
     private Paint getPaintWithColor(int color) {
@@ -76,20 +76,17 @@ public class PaintView extends View {
         return newPaint;
     }
 
+    public void setCircle(float circleX, float circleY) {
+        this.circleX = sanitizeCoordinate(circleX, width);
+        this.circleY = sanitizeCoordinate(circleY, height);
+    }
+
     public float getCircleX() {
         return circleX;
     }
 
-    public void setCircleX(float circleX) {
-        this.circleX = sanitizeCoordinate(circleX, width);
-    }
-
     public float getCircleY() {
         return circleY;
-    }
-
-    public void setCircleY(float circleY) {
-        this.circleY = sanitizeCoordinate(circleY, height);
     }
 
     public int getCircleRadius() {
@@ -98,14 +95,6 @@ public class PaintView extends View {
 
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
-    }
-
-    public boolean getDraw() {
-        return draw;
-    }
-
-    public void setDraw(boolean draw) {
-        this.draw = draw;
     }
 
     public void setColor(int color) {
@@ -130,27 +119,21 @@ public class PaintView extends View {
     }
 
     /**
-     * Initializes coordinates of pen and size of bitmap.
-     * Creates a bitmap and a canvas.
-     *
-     * @param width  width of the screen
-     * @param height height of the screen
+     * Clears the canvas.
      */
-    public void setSizeAndInit(int width, int height) {
+    public void clear() {
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    }
+
+    @Override
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight);
         this.width = width;
         this.height = height;
         circleX = width / 2;
         circleY = height / 2;
-        bitmap = Bitmap.createBitmap(width,
-                (int) (((float) height / width) * width), Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
-    }
-
-    /**
-     * Clears the canvas.
-     */
-    public void clear() {
-        for (Path path : paths) path.reset();
     }
 
     /**
@@ -160,21 +143,47 @@ public class PaintView extends View {
      */
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.save();
+        super.onDraw(canvas);
+
         if (draw) {
             circleRadius = 3 * DRAW_WIDTH / 4;
-            paths[color].lineTo(circleX, circleY);
         } else {
-            paintC.setStyle(Paint.Style.STROKE);
             circleRadius = DRAW_WIDTH;
         }
+
         canvas.drawColor(Color.WHITE);
-        for (int i = 0; i < paths.length; i++) {
-            canvas.drawPath(paths[i], colors[i]);
-        }
+        canvas.drawBitmap(bitmap, 0, 0, colors[color]);
+        canvas.drawPath(path, colors[color]);
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
-        canvas.restore();
-        paths[color].moveTo(circleX, circleY);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                drawStart();
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                drawEnd();
+                invalidate();
+                break;
+            default:
+        }
+        return true;
+    }
+
+    private void drawStart() {
+        draw = true;
+        path.reset();
+        path.moveTo(circleX, circleY);
+    }
+
+    private void drawEnd() {
+        draw = false;
+        path.lineTo(circleX, circleY);
+        canvas.drawPath(path, colors[color]);
+        path.reset();
     }
 
     /**

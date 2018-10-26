@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -21,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 
 public class PaintView extends View {
 
+    private static final int QUALITY = 20;
     private Paint paint;
     private Paint paintC;
     private int circleRadius;
@@ -136,16 +138,22 @@ public class PaintView extends View {
      * Gets called when time for drawing is over.
      * Saves the bitmap in the local DB.
      */
-    public void saveCanvasInDb(Context context){
+    public void saveCanvasInDb(LocalDbHandler localDbHandler){
         this.draw(canvas);
-        LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
-        FbStorage fbStorage = new FbStorage();
-        localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
+        localDbHandler.addBitmapToDb(bitmap, QUALITY);
+    }
+
+    /**
+     * Gets called when time for drawing is over.
+     * Saves the bitmap in the local DB.
+     */
+    public void saveCanvasInStorage(){
+        this.draw(canvas);
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child(""+ts+".jpg");
-        fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
+        FbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

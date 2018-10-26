@@ -4,6 +4,7 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -75,22 +76,22 @@ public class HomeActivityTest {
 
     @Test
     public void testCrossClosesPopUp() {
-        onView(withId(R.id.usernameButton)).perform(click());
-        onView(withId(R.id.crossText)).perform(click());
-        onView(withId(R.id.usernamePopUp)).check(doesNotExist());
+        openAndClosePopUp(R.id.crossText);
     }
 
     @Test
     public void testCanSignOutAccount() {
-        onView(withId(R.id.usernameButton)).perform(click());
-        onView(withId(R.id.signOutButton)).perform(click());
-        onView(withId(R.id.usernamePopUp)).check(doesNotExist());
+        openAndClosePopUp(R.id.signOutButton);
     }
 
     @Test
     public void testCanDeleteAccount() {
+        openAndClosePopUp(R.id.deleteButton);
+    }
+
+    private void openAndClosePopUp(int view){
         onView(withId(R.id.usernameButton)).perform(click());
-        onView(withId(R.id.deleteButton)).perform(click());
+        onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
 }

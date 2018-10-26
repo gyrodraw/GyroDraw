@@ -54,8 +54,7 @@ public class DrawingActivityTest {
 
     @Test
     public void testInitWorks() {
-        Point point = new Point(100, 100);
-        paintView.setSizeAndInit(point);
+        paintView.setSizeAndInit(100, 100);
         paintView.setCircleRadius(30);
         assertTrue(paintView.getCircleX() == 20.0);
     }

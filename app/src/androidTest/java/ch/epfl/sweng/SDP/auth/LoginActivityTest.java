@@ -58,6 +58,7 @@ public class LoginActivityTest {
 
     @Test
     public void testExistingUser(){
+        init();
         getDefaultSharedPreferences(activityRule.getActivity()).edit()
                 .putBoolean("hasAccount", true).apply();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
@@ -68,20 +69,9 @@ public class LoginActivityTest {
         Assert.assertNotNull(homeActivity);
     }
 
-    /**
-     * Try with Powermock in future.
-     */
-    //@Test
-    //public void testNoInternetConnection(){
-    //    Mockito.when(mockIdpResponse.getError()).thenReturn(mockError);
-    //    Mockito.when(mockError.getErrorCode()).thenReturn(1);
-    //    loginActivity.onActivityResult(42, 0, mockIntent);
-    //    assertEquals(((TextView)loginActivity.findViewById(R.id.error_message))
-    //          .getText(), "No Internet connection");
-    //}
-
     @Test
     public void testFailedLoginNullResponse(){
+        init();
         mockIntent = Mockito.mock(Intent.class);
         mockIdpResponse = null;
         loginActivity.onActivityResult(42, 0, mockIntent);
@@ -90,6 +80,7 @@ public class LoginActivityTest {
 
     @Test
     public void testSuccessfulLogin(){
+        init();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());

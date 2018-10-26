@@ -42,7 +42,8 @@ public class PaintView extends View {
     private int width;
     private int height;
     private int circleRadius;
-    private int color = 0;
+    private int color = 1;
+    private int previousColor = 1;
 
     /**
      * Constructor for the view.
@@ -61,7 +62,7 @@ public class PaintView extends View {
         colors[4] = getPaintWithColor(res.getColor(R.color.colorYellow));
         colors[5] = getPaintWithColor(res.getColor(R.color.colorRed));
 
-        paintC = colors[1];
+        paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
         paintC.setStrokeWidth(DRAW_WIDTH / 2);
 
@@ -101,7 +102,25 @@ public class PaintView extends View {
     }
 
     public void setColor(int color) {
-        this.color = color;
+        if (this.color != 0) {
+            this.color = color;
+        }
+        previousColor = color;
+    }
+
+    public void setPencil() {
+        color = previousColor;
+    }
+
+    public void setEraser() {
+        color = 0;
+        if (isDrawing) {
+            drawEnd();
+        }
+    }
+
+    public void setBucket() {
+
     }
 
     /**
@@ -180,7 +199,9 @@ public class PaintView extends View {
      * Saves the bitmap in the local DB.
      */
     public void saveCanvasInDb(Context context) {
-        drawEnd();
+        if (isDrawing) {
+            drawEnd();
+        }
         canDraw = false;
         LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
         FbStorage fbStorage = new FbStorage();

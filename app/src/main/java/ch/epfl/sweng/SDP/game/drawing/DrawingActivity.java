@@ -217,35 +217,35 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
         switch (view.getId()) {
             case R.id.blackButton:
-                paintView.setColor(0);
+                paintView.setColor(1);
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.blueButton:
-                paintView.setColor(1);
+                paintView.setColor(2);
                 blackButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.greenButton:
-                paintView.setColor(2);
+                paintView.setColor(3);
                 blackButton.setImageResource(R.drawable.color_circle);
                 blueButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.yellowButton:
-                paintView.setColor(3);
+                paintView.setColor(4);
                 blackButton.setImageResource(R.drawable.color_circle);
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.redButton:
-                paintView.setColor(4);
+                paintView.setColor(5);
                 blackButton.setImageResource(R.drawable.color_circle);
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
@@ -263,16 +263,19 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     public void toolClickHandler(View view) {
         switch (view.getId()) {
             case R.id.pencilButton:
+                paintView.setPencil();
                 pencilButton.setImageResource(R.drawable.pencil_selected);
                 eraserButton.setImageResource(R.drawable.eraser);
                 bucketButton.setImageResource(R.drawable.bucket);
                 break;
             case R.id.eraserButton:
+                paintView.setEraser();
                 pencilButton.setImageResource(R.drawable.pencil);
                 eraserButton.setImageResource(R.drawable.eraser_selected);
                 bucketButton.setImageResource(R.drawable.bucket);
                 break;
             case R.id.bucketButton:
+                paintView.setBucket();
                 pencilButton.setImageResource(R.drawable.pencil);
                 eraserButton.setImageResource(R.drawable.eraser);
                 bucketButton.setImageResource(R.drawable.bucket_selected);

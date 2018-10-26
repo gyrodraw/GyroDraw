@@ -83,7 +83,7 @@ public class HomeActivityTest {
     public void testCanSignOutAccount() {
         openAndClosePopUp(R.id.signOutButton);
     }
-
+ 
     @Test
     public void testCanDeleteAccount() {
         openAndClosePopUp(R.id.deleteButton);

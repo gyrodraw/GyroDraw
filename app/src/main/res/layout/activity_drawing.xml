@@ -14,13 +14,15 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/bucketButton"
+            android:id="@+id/pencilButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/bucket" />
+            android:onClick="toolClickHandler"
+            android:rotation="180"
+            app:srcCompat="@drawable/pencil" />
 
         <ImageView
             android:id="@+id/eraserButton"
@@ -29,17 +31,18 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:onClick="toolClickHandler"
             app:srcCompat="@drawable/eraser" />
 
         <ImageView
-            android:id="@+id/pencilButton"
+            android:id="@+id/bucketButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:rotation="180"
-            app:srcCompat="@drawable/pencil" />
+            android:onClick="toolClickHandler"
+            app:srcCompat="@drawable/bucket" />
 
         <TextView
             android:id="@+id/timeRemaining"

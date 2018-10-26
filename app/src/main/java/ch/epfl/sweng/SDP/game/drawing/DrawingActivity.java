@@ -45,6 +45,10 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private ImageView yellowButton;
     private ImageView redButton;
 
+    private ImageView pencilButton;
+    private ImageView eraserButton;
+    private ImageView bucketButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +62,10 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         greenButton = findViewById(R.id.greenButton);
         yellowButton = findViewById(R.id.yellowButton);
         redButton = findViewById(R.id.redButton);
+
+        pencilButton = findViewById(R.id.pencilButton);
+        eraserButton = findViewById(R.id.eraserButton);
+        bucketButton = findViewById(R.id.bucketButton);
 
         Resources res = getResources();
         blueButton.setColorFilter(res.getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
@@ -81,8 +89,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 View.SYSTEM_UI_FLAG_IMMERSIVE);
                         // Set the content to appear under the system bars so that the
                         // content doesn't resize when the system bars hide and show.
-                        // Hide the nav bar and status bar
-
 
         final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
@@ -275,6 +281,32 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
+                break;
+            default:
+        }
+    }
+
+    /**
+     * Sets the clicked button to selected and sets the corresponding color
+     *
+     * @param view
+     */
+    public void toolClickHandler(View view) {
+        switch (view.getId()) {
+            case R.id.pencilButton:
+                pencilButton.setImageResource(R.drawable.pencil_selected);
+                eraserButton.setImageResource(R.drawable.eraser);
+                bucketButton.setImageResource(R.drawable.bucket);
+                break;
+            case R.id.eraserButton:
+                pencilButton.setImageResource(R.drawable.pencil);
+                eraserButton.setImageResource(R.drawable.eraser_selected);
+                bucketButton.setImageResource(R.drawable.bucket);
+                break;
+            case R.id.bucketButton:
+                pencilButton.setImageResource(R.drawable.pencil);
+                eraserButton.setImageResource(R.drawable.eraser);
+                bucketButton.setImageResource(R.drawable.bucket_selected);
                 break;
             default:
         }

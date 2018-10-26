@@ -25,9 +25,10 @@ public class PaintView extends View {
 
     public static final int DRAW_WIDTH = 30;
 
-    private Boolean draw = false;
+    private Boolean canDraw = true;
+    private Boolean isDrawing = false;
 
-    private Paint[] colors = new Paint[5];
+    private Paint[] colors = new Paint[6];
     private Path path = new Path();
     private Paint paintC;
 
@@ -53,13 +54,14 @@ public class PaintView extends View {
         super(context, attrs);
 
         Resources res = getResources();
-        colors[0] = getPaintWithColor(Color.BLACK);
-        colors[1] = getPaintWithColor(res.getColor(R.color.colorBlue));
-        colors[2] = getPaintWithColor(res.getColor(R.color.colorGreen));
-        colors[3] = getPaintWithColor(res.getColor(R.color.colorYellow));
-        colors[4] = getPaintWithColor(res.getColor(R.color.colorRed));
+        colors[0] = getPaintWithColor(Color.WHITE);
+        colors[1] = getPaintWithColor(Color.BLACK);
+        colors[2] = getPaintWithColor(res.getColor(R.color.colorBlue));
+        colors[3] = getPaintWithColor(res.getColor(R.color.colorGreen));
+        colors[4] = getPaintWithColor(res.getColor(R.color.colorYellow));
+        colors[5] = getPaintWithColor(res.getColor(R.color.colorRed));
 
-        paintC = new Paint(Color.BLACK);
+        paintC = colors[1];
         paintC.setStyle(Paint.Style.STROKE);
         paintC.setStrokeWidth(DRAW_WIDTH / 2);
 
@@ -76,17 +78,18 @@ public class PaintView extends View {
         return newPaint;
     }
 
-    public void setCircle(float circleX, float circleY) {
-        this.circleX = sanitizeCoordinate(circleX, width);
-        this.circleY = sanitizeCoordinate(circleY, height);
-    }
-
     public float getCircleX() {
         return circleX;
     }
 
     public float getCircleY() {
         return circleY;
+    }
+
+    public void setCircle(float circleX, float circleY) {
+        this.circleX = sanitizeCoordinate(circleX, width);
+        this.circleY = sanitizeCoordinate(circleY, height);
+        path.lineTo(this.circleX, this.circleY);
     }
 
     public int getCircleRadius() {
@@ -109,13 +112,7 @@ public class PaintView extends View {
      * @return sanitized coordinate
      */
     private float sanitizeCoordinate(float coordinate, float maxBound) {
-        if (coordinate < 0) {
-            return 0;
-        } else if (coordinate > maxBound) {
-            return maxBound;
-        } else {
-            return coordinate;
-        }
+        return Math.max(0, Math.min(coordinate, maxBound));
     }
 
     /**
@@ -123,6 +120,8 @@ public class PaintView extends View {
      */
     public void clear() {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
     }
 
     @Override
@@ -132,55 +131,45 @@ public class PaintView extends View {
         this.height = height;
         circleX = width / 2;
         circleY = height / 2;
-        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
+        clear();
     }
 
-    /**
-     * Draws the path and circle, if draw is set.
-     *
-     * @param canvas to draw on
-     */
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        if (draw) {
-            circleRadius = 3 * DRAW_WIDTH / 4;
-        } else {
-            circleRadius = DRAW_WIDTH;
-        }
-
-        canvas.drawColor(Color.WHITE);
-        canvas.drawBitmap(bitmap, 0, 0, colors[color]);
-        canvas.drawPath(path, colors[color]);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+        if (isDrawing) canvas.drawPath(path, colors[color]);
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                drawStart();
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                drawEnd();
-                invalidate();
-                break;
-            default:
+        if (canDraw) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    drawStart();
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    drawEnd();
+                    invalidate();
+                    break;
+                default:
+            }
         }
         return true;
     }
 
     private void drawStart() {
-        draw = true;
+        isDrawing = true;
+        circleRadius = 3 * DRAW_WIDTH / 4;
         path.reset();
         path.moveTo(circleX, circleY);
     }
 
     private void drawEnd() {
-        draw = false;
+        isDrawing = false;
+        circleRadius = DRAW_WIDTH;
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors[color]);
         path.reset();
@@ -191,7 +180,8 @@ public class PaintView extends View {
      * Saves the bitmap in the local DB.
      */
     public void saveCanvasInDb(Context context) {
-        this.draw(canvas);
+        drawEnd();
+        canDraw = false;
         LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
         FbStorage fbStorage = new FbStorage();
         localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());

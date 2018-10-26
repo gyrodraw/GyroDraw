@@ -73,7 +73,7 @@ public class LoginActivityTest {
         Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
                 .thenReturn(null);
         loginActivity.onActivityResult(42, 0, mockIntent);
-        assertTrue(loginActivity.isFinishing());
+        assertTrue(loginActivity.isFinishing()); 
     }
 
     @Test

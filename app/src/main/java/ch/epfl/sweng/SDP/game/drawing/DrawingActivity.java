@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -86,7 +87,16 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        paintView.setSizeAndInit(size);
+
+        final ViewTreeObserver observer= paintView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (paintView.getHeight() != 0) paintView.setSizeAndInit(paintView.getWidth(), paintView.getHeight());
+                if (observer.isAlive()) observer.removeOnGlobalLayoutListener(this);
+            }
+        });
+
         paintView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -208,28 +218,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         tempX -= coordinateX * speed;
         tempY += coordinateY * speed;
 
-        tempX = sanitizeCoordinate(tempX, size.x);
-        tempY = sanitizeCoordinate(tempY, size.y);
-
         paintView.setCircleX(tempX);
         paintView.setCircleY(tempY);
-    }
-
-    /**
-     * Keep coordinates within screen boundaries.
-     *
-     * @param coordinate coordinate to sanitize
-     * @param maxBound   maximum bound
-     * @return sanitized coordinate
-     */
-    public float sanitizeCoordinate(float coordinate, float maxBound) {
-        if (coordinate < 0) {
-            return 0;
-        } else if (coordinate > maxBound) {
-            return maxBound;
-        } else {
-            return coordinate;
-        }
     }
 
     /**

@@ -26,12 +26,14 @@ public class PaintView extends View {
     private Paint paint;
     private Paint paintC;
     private int circleRadius;
-    private float circleX;
-    private float circleY;
+    private float circleX = 0;
+    private float circleY = 0;
     private Path path;
     private Boolean draw;
     private Bitmap bitmap;
     private Canvas canvas;
+    private int width;
+    private int height;
 
     /**
      * Constructor for the view.
@@ -53,8 +55,6 @@ public class PaintView extends View {
         paintC.setStrokeWidth(DRAW_WIDTH);
 
         circleRadius = DRAW_WIDTH; //will be modifiable in future, not hardcoded
-        circleX = getWidth() / 2;
-        circleY = getHeight() / 2;
         draw = false;
         path = new Path();
         path.moveTo(circleX, circleY);
@@ -65,7 +65,7 @@ public class PaintView extends View {
     }
 
     public void setCircleX(float circleX) {
-        this.circleX = circleX;
+        this.circleX = sanitizeCoordinate(circleX, width);
     }
 
     public float getCircleY() {
@@ -73,7 +73,7 @@ public class PaintView extends View {
     }
 
     public void setCircleY(float circleY) {
-        this.circleY = circleY;
+        this.circleY = sanitizeCoordinate(circleY, height);
     }
 
     public int getCircleRadius() {
@@ -97,16 +97,36 @@ public class PaintView extends View {
     }
 
     /**
+     * Keep coordinates within screen boundaries.
+     *
+     * @param coordinate coordinate to sanitize
+     * @param maxBound   maximum bound
+     * @return sanitized coordinate
+     */
+    private float sanitizeCoordinate(float coordinate, float maxBound) {
+        if (coordinate < 0) {
+            return 0;
+        } else if (coordinate > maxBound) {
+            return maxBound;
+        } else {
+            return coordinate;
+        }
+    }
+
+    /**
      * Initializes coordinates of pen and size of bitmap.
      * Creates a bitmap and a canvas.
      *
-     * @param size size of the screen
+     * @param width width of the screen
+     * @param height height of the screen
      */
-    public void setSizeAndInit(Point size) {
-        circleX = size.x / 2 - circleRadius;
-        circleY = size.y / 2 - circleRadius;
-        bitmap = Bitmap.createBitmap(size.x,
-                (int) (((float) size.y / size.x) * size.x), Bitmap.Config.ARGB_8888);
+    public void setSizeAndInit(int width, int height) {
+        this.width = width;
+        this.height = height;
+        circleX = width / 2;
+        circleY = height / 2;
+        bitmap = Bitmap.createBitmap(width,
+                (int) (((float) height / width) * width), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
     }
 
@@ -122,6 +142,7 @@ public class PaintView extends View {
      *
      * @param canvas to draw on
      */
+    @Override
     public void onDraw(Canvas canvas) {
         canvas.save();
         if (draw) {
@@ -133,8 +154,8 @@ public class PaintView extends View {
             paintC.setStrokeWidth(DRAW_WIDTH / 2);
         }
         canvas.drawColor(Color.WHITE);
-        canvas.drawCircle(circleX, circleY, circleRadius, paintC);
         canvas.drawPath(path, paint);
+        canvas.drawCircle(circleX, circleY, circleRadius, paintC);
         canvas.restore();
         path.moveTo(circleX, circleY);
     }

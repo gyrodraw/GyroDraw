@@ -10,7 +10,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -49,6 +48,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.overridePendingTransition(R.anim.fui_slide_in_right,
+                R.anim.fui_slide_out_left);
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -77,23 +78,22 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
+                View.SYSTEM_UI_FLAG_IMMERSIVE);
                         // Set the content to appear under the system bars so that the
                         // content doesn't resize when the system bars hide and show.
                         // Hide the nav bar and status bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 
         final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
 
-        final ViewTreeObserver observer= paintView.getViewTreeObserver();
+        final ViewTreeObserver observer = paintView.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (paintView.getHeight() != 0) paintView.setSizeAndInit(paintView.getWidth(), paintView.getHeight());
-                if (observer.isAlive()) observer.removeOnGlobalLayoutListener(this);
+                paintView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                paintView.setSizeAndInit(paintView.getWidth(), paintView.getHeight());
             }
         });
 

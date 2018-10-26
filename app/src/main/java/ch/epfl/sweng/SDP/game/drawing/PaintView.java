@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
@@ -25,8 +28,9 @@ public class PaintView extends View {
 
     public static final int DRAW_WIDTH = 30;
 
-    private Boolean canDraw = true;
-    private Boolean isDrawing = false;
+    private boolean canDraw = true;
+    private boolean isDrawing = false;
+    private boolean bucketMode = false;
 
     private Paint[] colors = new Paint[6];
     private Path path = new Path();
@@ -109,18 +113,27 @@ public class PaintView extends View {
     }
 
     public void setPencil() {
+        bucketMode = false;
+        if (isDrawing) {
+            drawEnd();
+        }
         color = previousColor;
     }
 
     public void setEraser() {
-        color = 0;
+        bucketMode = false;
         if (isDrawing) {
             drawEnd();
         }
+        color = 0;
     }
 
     public void setBucket() {
-
+        bucketMode = true;
+        if (isDrawing) {
+            drawEnd();
+        }
+        color = previousColor;
     }
 
     /**
@@ -166,7 +179,11 @@ public class PaintView extends View {
         if (canDraw) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    drawStart();
+                    if (!bucketMode) {
+                        drawStart();
+                    } else {
+                        floodFill();
+                    }
                     invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
@@ -192,6 +209,44 @@ public class PaintView extends View {
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors[color]);
         path.reset();
+    }
+
+    private void floodFill() {
+        Point pt = new Point((int) circleX, (int) circleY);
+
+        int targetColor = bitmap.getPixel(pt.x, pt.y);
+        int replacementColor = colors[color].getColor();
+
+        Queue<Point> q = new LinkedList<>();
+        q.add(pt);
+
+        while (q.size() > 0) {
+            Point n = q.poll();
+            if (bitmap.getPixel(n.x, n.y) != targetColor)
+                continue;
+
+            Point e = new Point(n.x + 1, n.y);
+            while ((n.x > 0) && (bitmap.getPixel(n.x, n.y) == targetColor)) {
+                bitmap.setPixel(n.x, n.y, replacementColor);
+                if ((n.y > 0) && (bitmap.getPixel(n.x, n.y - 1) == targetColor))
+                    q.add(new Point(n.x, n.y - 1));
+                if ((n.y < bitmap.getHeight() - 1)
+                        && (bitmap.getPixel(n.x, n.y + 1) == targetColor))
+                    q.add(new Point(n.x, n.y + 1));
+                n.x--;
+            }
+            while ((e.x < bitmap.getWidth() - 1)
+                    && (bitmap.getPixel(e.x, e.y) == targetColor)) {
+                bitmap.setPixel(e.x, e.y, replacementColor);
+
+                if ((e.y > 0) && (bitmap.getPixel(e.x, e.y - 1) == targetColor))
+                    q.add(new Point(e.x, e.y - 1));
+                if ((e.y < bitmap.getHeight() - 1)
+                        && (bitmap.getPixel(e.x, e.y + 1) == targetColor))
+                    q.add(new Point(e.x, e.y + 1));
+                e.x++;
+            }
+        }
     }
 
     /**

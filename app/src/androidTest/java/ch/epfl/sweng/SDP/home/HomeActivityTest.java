@@ -76,7 +76,7 @@ public class HomeActivityTest {
 
     @Test
     public void testCrossClosesPopUp() {
-        openAndClosePopUp(R.id.crossText);
+        openAndClosePopUp(R.id.crossText); 
     }
 
     @Test

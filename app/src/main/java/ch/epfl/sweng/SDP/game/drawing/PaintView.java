@@ -1,12 +1,12 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.SDP.LocalDbHandler;
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 
 
@@ -23,12 +24,13 @@ public class PaintView extends View {
 
     public static final int DRAW_WIDTH = 30;
 
-    private Paint paint;
     private Paint paintC;
     private int circleRadius;
     private float circleX = 0;
     private float circleY = 0;
-    private Path path;
+    private int color = 0;
+    private Path[] paths = new Path[5];
+    private Paint[] colors = new Paint[5];
     private Boolean draw;
     private Bitmap bitmap;
     private Canvas canvas;
@@ -43,21 +45,35 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        paint = new Paint();
+
+        Resources res = getResources();
+        colors[0] = getPaintWithColor(Color.BLACK);
+        colors[1] = getPaintWithColor(res.getColor(R.color.colorBlue));
+        colors[2] = getPaintWithColor(res.getColor(R.color.colorGreen));
+        colors[3] = getPaintWithColor(res.getColor(R.color.colorYellow));
+        colors[4] = getPaintWithColor(res.getColor(R.color.colorRed));
+
+        for (int i = 0; i < paths.length; i++) {
+            paths[i] = new Path();
+        }
+
         paintC = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(DRAW_WIDTH);
-        paint.setStrokeCap(Paint.Cap.ROUND);
         paintC.setColor(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(DRAW_WIDTH);
+        paintC.setStrokeWidth(DRAW_WIDTH / 2);
 
         circleRadius = DRAW_WIDTH; //will be modifiable in future, not hardcoded
         draw = false;
-        path = new Path();
-        path.moveTo(circleX, circleY);
+    }
+
+    private Paint getPaintWithColor(int color) {
+        Paint newPaint = new Paint();
+        newPaint.setColor(color);
+        newPaint.setStyle(Paint.Style.STROKE);
+        newPaint.setStrokeJoin(Paint.Join.ROUND);
+        newPaint.setStrokeWidth(DRAW_WIDTH);
+        newPaint.setStrokeCap(Paint.Cap.ROUND);
+        return newPaint;
     }
 
     public float getCircleX() {
@@ -93,7 +109,7 @@ public class PaintView extends View {
     }
 
     public void setColor(int color) {
-        paint.setColor(color);
+        this.color = color;
     }
 
     /**
@@ -117,7 +133,7 @@ public class PaintView extends View {
      * Initializes coordinates of pen and size of bitmap.
      * Creates a bitmap and a canvas.
      *
-     * @param width width of the screen
+     * @param width  width of the screen
      * @param height height of the screen
      */
     public void setSizeAndInit(int width, int height) {
@@ -134,7 +150,7 @@ public class PaintView extends View {
      * Clears the canvas.
      */
     public void clear() {
-        path.reset();
+        for (Path path : paths) path.reset();
     }
 
     /**
@@ -146,18 +162,19 @@ public class PaintView extends View {
     public void onDraw(Canvas canvas) {
         canvas.save();
         if (draw) {
-            paintC.setStyle(Paint.Style.FILL);
-            paintC.setStrokeWidth(DRAW_WIDTH);
-            path.lineTo(circleX, circleY);
+            circleRadius = 3 * DRAW_WIDTH / 4;
+            paths[color].lineTo(circleX, circleY);
         } else {
             paintC.setStyle(Paint.Style.STROKE);
-            paintC.setStrokeWidth(DRAW_WIDTH / 2);
+            circleRadius = DRAW_WIDTH;
         }
         canvas.drawColor(Color.WHITE);
-        canvas.drawPath(path, paint);
+        for (int i = 0; i < paths.length; i++) {
+            canvas.drawPath(paths[i], colors[i]);
+        }
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
         canvas.restore();
-        path.moveTo(circleX, circleY);
+        paths[color].moveTo(circleX, circleY);
     }
 
     /**

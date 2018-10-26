@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.graphics.Point;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -15,6 +14,7 @@ import ch.epfl.sweng.SDP.R;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -56,6 +56,6 @@ public class DrawingActivityTest {
     public void testInitWorks() {
         paintView.setSizeAndInit(100, 100);
         paintView.setCircleRadius(30);
-        assertTrue(paintView.getCircleX() == 20.0);
+        assertEquals(50, paintView.getCircleX());
     }
 }

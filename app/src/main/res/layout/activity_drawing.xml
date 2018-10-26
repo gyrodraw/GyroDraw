@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             android:rotation="180"
-            app:srcCompat="@drawable/pencil" />
+            app:srcCompat="@drawable/pencil_selected" />
 
         <ImageView
             android:id="@+id/eraserButton"

@@ -248,35 +248,35 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
         switch (view.getId()) {
             case R.id.blackButton:
-                paintView.setColor(Color.BLACK);
+                paintView.setColor(0);
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.blueButton:
-                paintView.setColor(res.getColor(R.color.colorBlue));
+                paintView.setColor(1);
                 blackButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.greenButton:
-                paintView.setColor(res.getColor(R.color.colorGreen));
+                paintView.setColor(2);
                 blackButton.setImageResource(R.drawable.color_circle);
                 blueButton.setImageResource(R.drawable.color_circle);
                 yellowButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.yellowButton:
-                paintView.setColor(res.getColor(R.color.colorYellow));
+                paintView.setColor(3);
                 blackButton.setImageResource(R.drawable.color_circle);
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);
                 redButton.setImageResource(R.drawable.color_circle);
                 break;
             case R.id.redButton:
-                paintView.setColor(res.getColor(R.color.colorRed));
+                paintView.setColor(4);
                 blackButton.setImageResource(R.drawable.color_circle);
                 blueButton.setImageResource(R.drawable.color_circle);
                 greenButton.setImageResource(R.drawable.color_circle);

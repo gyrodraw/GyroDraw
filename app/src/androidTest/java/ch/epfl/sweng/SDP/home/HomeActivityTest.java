@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.LoadingScreen;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -41,7 +42,7 @@ public class HomeActivityTest {
     public void testDrawButtonOpensWaitingPageActivity() {
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
-        intended(hasComponent(WaitingPageActivity.class.getName()));
+        intended(hasComponent(LoadingScreen.class.getName()));
         Intents.release();
     }
 

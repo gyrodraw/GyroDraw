@@ -28,6 +28,7 @@ public enum Matchmaker implements MatchmakingInterface {
     INSTANCE;
 
     private DatabaseReference myRef;
+    private static ConstantsWrapper constantsWrapper = new ConstantsWrapper();
 
     /**
      * Matchmaker init.
@@ -60,8 +61,6 @@ public enum Matchmaker implements MatchmakingInterface {
      *
      */
     public Task<String> joinRoom() {
-        ConstantsWrapper constantsWrapper = new ConstantsWrapper();
-
         FirebaseFunctions mFunctions;
         mFunctions = FirebaseFunctions.getInstance();
 
@@ -91,8 +90,6 @@ public enum Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        ConstantsWrapper constantsWrapper = new ConstantsWrapper();
-
         myRef.child(roomId).child("users")
                 .child(constantsWrapper.getFirebaseUserId()).removeValue();
     }

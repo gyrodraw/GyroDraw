@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.firebase.FbStorage;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
-
-import ch.epfl.sweng.SDP.firebase.FbStorage;
 
 public class StorageHandlingTestView extends AppCompatActivity {
 

@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.home;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,6 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,15 +33,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class HomeActivity extends Activity {
 

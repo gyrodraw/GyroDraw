@@ -100,6 +100,11 @@ public class PaintView extends View {
         this.circleRadius = circleRadius;
     }
 
+    /**
+     * Selects the ith color of the color list.
+     *
+     * @param color index of the color
+     */
     public void setColor(int color) {
         if (this.color != colors.length - 1) {
             this.color = color;
@@ -107,6 +112,9 @@ public class PaintView extends View {
         previousColor = color;
     }
 
+    /**
+     * Selects the pencil tool.
+     */
     public void setPencil() {
         bucketMode = false;
         if (isDrawing) {
@@ -115,6 +123,9 @@ public class PaintView extends View {
         color = previousColor;
     }
 
+    /**
+     * Selects the eraser tool.
+     */
     public void setEraser() {
         bucketMode = false;
         if (isDrawing) {
@@ -123,6 +134,9 @@ public class PaintView extends View {
         color = colors.length - 1;
     }
 
+    /**
+     * Selects the bucket tool.
+     */
     public void setBucket() {
         bucketMode = true;
         if (isDrawing) {
@@ -132,7 +146,7 @@ public class PaintView extends View {
     }
 
     /**
-     * Keep coordinates within screen boundaries.
+     * Keeps coordinates within screen boundaries.
      *
      * @param coordinate coordinate to sanitize
      * @param maxBound   maximum bound
@@ -198,10 +212,10 @@ public class PaintView extends View {
     }
 
     private int colorToGrey(int color) {
-        int R = (color >> 16) & 0xff;
-        int G = (color >> 8) & 0xff;
-        int B = (color) & 0xff;
-        int mean = (R + G + B) / 3;
+        int red = (color >> 16) & 0xff;
+        int green = (color >> 8) & 0xff;
+        int blue = (color) & 0xff;
+        int mean = (red + green + blue) / 3;
         return Color.argb(0xff, mean, mean, mean);
     }
 

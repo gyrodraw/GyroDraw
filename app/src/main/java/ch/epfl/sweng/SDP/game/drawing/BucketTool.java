@@ -127,7 +127,7 @@ public class BucketTool {
         int lFillLoc = x;
         int pxIdx = (width * y) + x;
 
-        while (true) {
+        do {
             pixels[pxIdx] = fillColor;
             pixelsChecked[pxIdx] = true;
 
@@ -135,19 +135,14 @@ public class BucketTool {
             pxIdx--;
 
             // Exit loop if we're at edge of bitmap or color area
-            if (lFillLoc < 0 || (pixelsChecked[pxIdx]) || !CheckPixel(pxIdx)) {
-                break;
-            }
-        }
+        } while (!(lFillLoc < 0 || (pixelsChecked[pxIdx]) || !CheckPixel(pxIdx)));
 
         lFillLoc++;
-
         // Find right edge of color area
         int rFillLoc = x;
-
         pxIdx = (width * y) + x;
 
-        while (true) {
+        do {
             pixels[pxIdx] = fillColor;
             pixelsChecked[pxIdx] = true;
 
@@ -155,13 +150,9 @@ public class BucketTool {
             pxIdx++;
 
             // Exit loop if we're at edge of bitmap or color area
-            if (rFillLoc >= width || pixelsChecked[pxIdx] || !CheckPixel(pxIdx)) {
-                break;
-            }
-        }
+        } while (!(rFillLoc >= width || pixelsChecked[pxIdx] || !CheckPixel(pxIdx)));
 
         rFillLoc--;
-
         // Add range to queue
         FloodFillRange r = new FloodFillRange(lFillLoc, rFillLoc, y);
         ranges.offer(r);

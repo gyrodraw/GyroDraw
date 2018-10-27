@@ -42,7 +42,7 @@ public class PaintView extends View {
     private int width;
     private int height;
     private int circleRadius;
-    private int color = 1;
+    private int color = 0;
     private int previousColor = 1;
 
     /**
@@ -169,12 +169,13 @@ public class PaintView extends View {
         if (isDrawing) {
             canvas.drawPath(path, colors[color]);
         }
-        paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX,circleY) + Color.BLACK));
+        paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX, circleY) + Color.BLACK));
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // Draw only if the time is not over
         if (canDraw) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -182,7 +183,8 @@ public class PaintView extends View {
                         drawStart();
                     } else {
                         path.moveTo(circleX, circleY);
-                        new BucketTool(bitmap, bitmap.getPixel(circleX,circleY),
+                        // Apply the flood fill algorithm
+                        new BucketTool(bitmap, bitmap.getPixel(circleX, circleY),
                                 colors[color].getColor()).floodFill(circleX, circleY);
                     }
                     break;
@@ -198,8 +200,8 @@ public class PaintView extends View {
 
     private int colorToGrey(int color) {
         int R = (color >> 16) & 0xff;
-        int G = (color >>  8) & 0xff;
-        int B = (color      ) & 0xff;
+        int G = (color >> 8) & 0xff;
+        int B = (color) & 0xff;
         int mean = (R + G + B) / 3;
         return Color.argb(0xff, mean, mean, mean);
     }

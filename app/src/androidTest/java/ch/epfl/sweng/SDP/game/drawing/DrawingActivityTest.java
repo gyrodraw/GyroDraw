@@ -11,6 +11,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -102,7 +103,8 @@ public class DrawingActivityTest {
     @Test
     public void testFloodFill() {
         int[] source = { Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE };
-        Bitmap bitmap = Bitmap.createBitmap(source,2, 2, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(source,2, 2, Bitmap.Config.ARGB_8888)
+                .copy(Bitmap.Config.ARGB_8888, true);
         new BucketTool(bitmap, Color.BLACK, Color.YELLOW).floodFill(0, 0);
         assertEquals(Color.YELLOW, bitmap.getPixel(0, 0));
         assertEquals(Color.YELLOW, bitmap.getPixel(1, 0));
@@ -126,6 +128,7 @@ public class DrawingActivityTest {
 
     @Test
     public void testPencilTool() {
+        SystemClock.sleep(2000);
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(paintView.getColor(),
@@ -134,6 +137,7 @@ public class DrawingActivityTest {
 
     @Test
     public void testEraserTool() {
+        SystemClock.sleep(2000);
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(Color.WHITE,

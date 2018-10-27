@@ -11,18 +11,17 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.ByteArrayOutputStream;
-
 public class PaintView extends View {
 
-    public static final int DRAW_WIDTH = 30;
+    private static final int DRAW_WIDTH = 30;
+    private static final int QUALITY = 20;
 
     private boolean canDraw = true;
     private boolean isDrawing = false;
@@ -243,22 +242,31 @@ public class PaintView extends View {
     }
 
     /**
-     * Gets called when time for drawing is over.
-     * Saves the bitmap in the local DB.
+     * Saves the bitmap in the local database.
      */
-    public void saveCanvasInDb(Context context) {
+    public void saveCanvasInDb(LocalDbHandler localDbHandler) {
         if (isDrawing) {
             drawEnd();
         }
         canDraw = false;
-        LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
-        FbStorage fbStorage = new FbStorage();
-        localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
+        localDbHandler.addBitmapToDb(bitmap, QUALITY);
+    }
+
+    /**
+     * Gets called when time for drawing is over.
+     * Saves the bitmap in firebase.
+     */
+    public void saveCanvasInStorage() {
+        if (isDrawing) {
+            drawEnd();
+        }
+        canDraw = false;
+
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("" + ts + ".jpg");
-        fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
+        FbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

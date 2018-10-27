@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,17 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class AccountCreationActivity extends AppCompatActivity {
     private EditText usernameInput;
@@ -54,30 +54,26 @@ public class AccountCreationActivity extends AppCompatActivity {
             usernameTaken.setText("Username must not be empty.");
         } else {
             account = new Account(new ConstantsWrapper(), username);
-            try {
-                Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
+            Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    usernameTaken.setText("Username already taken, try again");
-                                } else {
-                                    account.registerAccount();
-                                    getDefaultSharedPreferences(getThis()).edit()
-                                            .putBoolean("hasAccount", true).apply();
-                                    gotoHome();
-                                }
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                usernameTaken.setText("Username already taken, try again");
+                            } else {
+                                account.registerAccount();
+                                getDefaultSharedPreferences(getThis()).edit()
+                                        .putBoolean("hasAccount", true).apply();
+                                gotoHome();
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                throw databaseError.toException();
-                            }
-                        });
-            } catch (Exception exception) {
-                usernameTaken.setText(exception.getMessage());
-            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            throw databaseError.toException();
+                        }
+                    });
         }
     }
 

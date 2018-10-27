@@ -18,7 +18,6 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_TIMESTAMP = "timestamp";
     private static final String COLUMN_IMAGE = "image";
-    private static final int QUALITY = 20;
 
     /**
      * Helper class to save images in local database.
@@ -58,10 +57,10 @@ public class LocalDbHandler extends SQLiteOpenHelper {
      *
      * @param bitmap to insert
      */
-    public void addBitmapToDb(Bitmap bitmap, ByteArrayOutputStream bos) {
+    public void addBitmapToDb(Bitmap bitmap, int quality) {
         if (bitmap != null) {
-            ByteArrayOutputStream byteArrayOutputStream = bos;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             try {
                 byteArrayOutputStream.close();

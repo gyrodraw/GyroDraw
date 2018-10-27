@@ -75,16 +75,22 @@ public class HomeActivityTest {
 
     @Test
     public void testCrossClosesPopUp() {
-        onView(withId(R.id.usernameButton)).perform(click());
-        onView(withId(R.id.crossText)).perform(click());
-        onView(withId(R.id.usernamePopUp)).check(doesNotExist());
+        openAndClosePopUp(R.id.crossText);
     }
 
-    /*@Test
+    @Test
     public void testCanSignOutAccount() {
+        openAndClosePopUp(R.id.signOutButton);
+    }
+
+    @Test
+    public void testCanDeleteAccount() {
+        openAndClosePopUp(R.id.deleteButton);
+    }
+
+    private void openAndClosePopUp(int view) {
         onView(withId(R.id.usernameButton)).perform(click());
-        onView(withId(R.id.signOutButton)).perform(click());
-        SystemClock.sleep(2000);
-        intended(hasComponent(MainActivity.class.getName()));
-    }*/
+        onView(withId(view)).perform(click());
+        onView(withId(R.id.usernamePopUp)).check(doesNotExist());
+    }
 }

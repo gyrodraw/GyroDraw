@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,13 +31,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class DrawingActivityTest {
     @Rule
     public final ActivityTestRule<DrawingActivity> activityRule =
-            new ActivityTestRule<>(DrawingActivity.class);
+            new ActivityTestRule<DrawingActivity>(DrawingActivity.class){
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("RoomID", "0123457890");
+                    intent.putExtra("WinningWord", "word1Mock");
+
+                    return intent;
+                }
+            };
 
     private PaintView paintView;
 

@@ -18,6 +18,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
@@ -45,8 +46,6 @@ public class WaitingPageActivity extends Activity {
 
     private String roomID = null;
 
-    private BooleanVariableListener isRoomReady = new BooleanVariableListener();
-    private BooleanVariableListener areWordsReady = new BooleanVariableListener();
     private static boolean enableWaitingAnimation = true;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
@@ -54,16 +53,13 @@ public class WaitingPageActivity extends Activity {
     private static final int WORDS_COUNT = 5;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
 
-    private boolean isWord1Ready = false;
-    private boolean isWord2Ready = false;
-
     private boolean drawingActivityLauched = false;
 
     private int usersReadyCount = 1;
 
+    private DatabaseReference usersCountRef;
     private DatabaseReference wordsVotesRef;
     private DatabaseReference stateRef;
-
     private DatabaseReference timerRef;
 
     private DatabaseReference word1Ref;
@@ -130,13 +126,15 @@ public class WaitingPageActivity extends Activity {
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Long value = dataSnapshot.getValue(Long.class);
-            if (value != null) {
-                word1Votes = value.intValue();
-                if(word1Votes >= word2Votes){
-                    winningWord = word1;
-                } else {
-                    winningWord = word2;
+            if(dataSnapshot.getValue(Long.class) != null) {
+                Long value = dataSnapshot.getValue(Long.class);
+                if (value != null) {
+                    word1Votes = value.intValue();
+                    if (word1Votes >= word2Votes) {
+                        winningWord = word1;
+                    } else {
+                        winningWord = word2;
+                    }
                 }
             }
         }
@@ -150,13 +148,15 @@ public class WaitingPageActivity extends Activity {
     private final ValueEventListener listenerWord2 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Long value = dataSnapshot.getValue(Long.class);
-            if (value != null) {
-                word2Votes = value.intValue();
-                if(word1Votes >= word2Votes){
-                    winningWord = word1;
-                } else {
-                    winningWord = word2;
+            if(dataSnapshot.getValue(Long.class) != null) {
+                Long value = dataSnapshot.getValue(Long.class);
+                if (value != null) {
+                    word2Votes = value.intValue();
+                    if (word1Votes >= word2Votes) {
+                        winningWord = word1;
+                    } else {
+                        winningWord = word2;
+                    }
                 }
             }
         }
@@ -181,121 +181,41 @@ public class WaitingPageActivity extends Activity {
         }
     };
 
-    private final ValueEventListener listenerWords = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Vector<String> words = new Vector<>();
-
-            for(DataSnapshot snap : dataSnapshot.getChildren()) {
-                words.add(snap.getKey());
-            }
-
-            try {
-                word1 = words.get(0);
-                word2 = words.get(1);
-            } catch (Exception e) {
-                // Throws exception
-            }
-
-            if (word1 != null) {
-                word1Ref = wordsVotesRef.child(word1);
-                initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
-                        WordNumber.ONE);
-                isWord1Ready = true;
-            }
-
-            if (word2 != null) {
-                word2Ref = wordsVotesRef.child(word2);
-                initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
-                        WordNumber.TWO);
-                isWord2Ready = true;
-            }
-
-
-            if(isWord1Ready && isWord2Ready) {
-                areWordsReady.setBoo(true);
-            }
-
-            setLayoutVisibility(View.VISIBLE);
-
-            setVisibility(View.GONE, R.id.waitingAnimationDots);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
-
-    private void lookingForRoom() {
-        Matchmaker.INSTANCE.joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()) {
-                    Exception e = task.getException();
-                    if (e instanceof FirebaseFunctionsException) {
-                        FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                        FirebaseFunctionsException.Code code = ffe.getCode();
-                        Object details = ffe.getDetails();
-                    }
-                } else {
-                    roomID = task.getResult();
-                    wordsVotesRef = database.getReference(
-                            TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
-                    wordsVotesRef.addValueEventListener(listenerWords);
-                    stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
-                    stateRef.addValueEventListener(listenerState);
-                    isRoomReady.setBoo(true);
-                }
-            }
-        });
-    }
-
-    private BooleanVariableListener.ChangeListener listenerRoomReady =
-                        new BooleanVariableListener.ChangeListener() {
-        @Override
-        public void onChange() {
-            if(areWordsReady.getBoo() && isRoomReady.getBoo()) {
-
-                wordsVotesRef.removeEventListener(listenerWords);
-                DatabaseReference usersCountRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
-                usersCountRef.addValueEventListener(listenerCountUsers);
-
-                ((TextView)findViewById(R.id.roomID)).setText("Room ID: " + roomID);
-
-                setLayoutVisibility(View.VISIBLE);
-
-                if (enableWaitingAnimation) {
-                    setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
-                }
-
-                setVisibility(View.GONE, R.id.waitingAnimationDots);
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         database = Database.INSTANCE;
-        lookingForRoom();
 
         overridePendingTransition(0, 0);
 
         setContentView(R.layout.activity_waiting_page);
 
-        isRoomReady.setListener(listenerRoomReady);
-        areWordsReady.setListener(listenerRoomReady);
+        Intent intent = getIntent();
+        roomID = intent.getStringExtra("roomID");
+        word1 = intent.getStringExtra("word1");
+        word2 = intent.getStringExtra("word2");
 
         Glide.with(this).load(R.drawable.waiting_animation_square)
                 .into((ImageView) findViewById(R.id.waitingAnimationSquare));
-        Glide.with(this).load(R.drawable.waiting_animation_dots)
-                .into((ImageView) findViewById(R.id.waitingAnimationDots));
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
 
-        setLayoutVisibility(View.GONE);
+        wordsVotesRef = database.getReference(
+                TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
+
+        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+        stateRef.addValueEventListener(listenerState);
+
+        usersCountRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        usersCountRef.addValueEventListener(listenerCountUsers);
+        word1Ref = wordsVotesRef.child(word1);
+        word2Ref = wordsVotesRef.child(word2);
+
+        initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
+                WordNumber.ONE);
+        initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
+                WordNumber.TWO);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
@@ -303,6 +223,7 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.roomID)).setText("Room ID: " + roomID);
 
     }
 
@@ -393,10 +314,6 @@ public class WaitingPageActivity extends Activity {
     protected void onPause() {
         super.onPause();
 
-        if(!drawingActivityLauched) {
-            //Matchmaker.getInstance().leaveRoom(roomID);
-        }
-
         if (wordsVotesRef != null) {
             // need to keep the most voted word here, it has to
             // be done by the script not by this class
@@ -422,7 +339,9 @@ public class WaitingPageActivity extends Activity {
 
         // We should probably check if the database is ready too
         if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            launchActivity(DrawingActivity.class);
+            Intent intent = new Intent(this, DrawingActivity.class);
+            intent.putExtra("RoomID", roomID);
+            startActivity(intent);
         }
     }
 
@@ -465,7 +384,6 @@ public class WaitingPageActivity extends Activity {
         try {
             stateRef.removeEventListener(listenerState);
             timerRef.removeEventListener(listenerTimer);
-            wordsVotesRef.removeEventListener(listenerWords);
             word1Ref.removeEventListener(listenerWord1);
             word2Ref.removeEventListener(listenerWord2);
         } catch(NullPointerException e) {
@@ -478,6 +396,7 @@ public class WaitingPageActivity extends Activity {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Matchmaker.INSTANCE.leaveRoom(roomID);
             removeAllListeners();
+            launchActivity(HomeActivity.class);
             finish();
         }
         return super.onKeyDown(keyCode, event);

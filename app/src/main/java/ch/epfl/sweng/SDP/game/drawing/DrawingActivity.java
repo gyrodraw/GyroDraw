@@ -22,6 +22,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.util.ArrayUtils;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
@@ -36,11 +38,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private Handler handler;
     private SensorManager sensorManager;
 
-    private ImageView blackButton;
-    private ImageView blueButton;
-    private ImageView greenButton;
-    private ImageView yellowButton;
-    private ImageView redButton;
+    private ImageView[] colorButtons;
 
     private ImageView pencilButton;
     private ImageView eraserButton;
@@ -54,21 +52,19 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        blackButton = findViewById(R.id.blackButton);
-        blueButton = findViewById(R.id.blueButton);
-        greenButton = findViewById(R.id.greenButton);
-        yellowButton = findViewById(R.id.yellowButton);
-        redButton = findViewById(R.id.redButton);
+        colorButtons = new ImageView[]{findViewById(R.id.blackButton),
+                findViewById(R.id.blueButton), findViewById(R.id.greenButton),
+                findViewById(R.id.yellowButton), findViewById(R.id.redButton)};
 
         pencilButton = findViewById(R.id.pencilButton);
         eraserButton = findViewById(R.id.eraserButton);
         bucketButton = findViewById(R.id.bucketButton);
 
         Resources res = getResources();
-        blueButton.setColorFilter(res.getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
-        greenButton.setColorFilter(res.getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
-        yellowButton.setColorFilter(res.getColor(R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
-        redButton.setColorFilter(res.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
+        colorButtons[1].setColorFilter(res.getColor(R.color.colorBlue), PorterDuff.Mode.SRC_ATOP);
+        colorButtons[2].setColorFilter(res.getColor(R.color.colorGreen), PorterDuff.Mode.SRC_ATOP);
+        colorButtons[3].setColorFilter(res.getColor(R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+        colorButtons[4].setColorFilter(res.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
@@ -84,8 +80,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE);
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
+        // Set the content to appear under the system bars so that the
+        // content doesn't resize when the system bars hide and show.
 
         final Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
@@ -206,57 +202,26 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     }
 
     /**
-     * Sets the clicked button to selected and sets the corresponding color
+     * Sets the clicked button to selected and sets the corresponding color.
      *
-     * @param view
+     * @param view the clicked view
      */
     public void colorClickHandler(View view) {
-        ((ImageView) view).setImageResource(R.drawable.color_circle_selected);
+        int index = ArrayUtils.indexOf(colorButtons, view);
+        paintView.setColor(index);
+        colorButtons[index].setImageResource(R.drawable.color_circle_selected);
 
-        switch (view.getId()) {
-            case R.id.blackButton:
-                paintView.setColor(1);
-                blueButton.setImageResource(R.drawable.color_circle);
-                greenButton.setImageResource(R.drawable.color_circle);
-                yellowButton.setImageResource(R.drawable.color_circle);
-                redButton.setImageResource(R.drawable.color_circle);
-                break;
-            case R.id.blueButton:
-                paintView.setColor(2);
-                blackButton.setImageResource(R.drawable.color_circle);
-                greenButton.setImageResource(R.drawable.color_circle);
-                yellowButton.setImageResource(R.drawable.color_circle);
-                redButton.setImageResource(R.drawable.color_circle);
-                break;
-            case R.id.greenButton:
-                paintView.setColor(3);
-                blackButton.setImageResource(R.drawable.color_circle);
-                blueButton.setImageResource(R.drawable.color_circle);
-                yellowButton.setImageResource(R.drawable.color_circle);
-                redButton.setImageResource(R.drawable.color_circle);
-                break;
-            case R.id.yellowButton:
-                paintView.setColor(4);
-                blackButton.setImageResource(R.drawable.color_circle);
-                blueButton.setImageResource(R.drawable.color_circle);
-                greenButton.setImageResource(R.drawable.color_circle);
-                redButton.setImageResource(R.drawable.color_circle);
-                break;
-            case R.id.redButton:
-                paintView.setColor(5);
-                blackButton.setImageResource(R.drawable.color_circle);
-                blueButton.setImageResource(R.drawable.color_circle);
-                greenButton.setImageResource(R.drawable.color_circle);
-                yellowButton.setImageResource(R.drawable.color_circle);
-                break;
-            default:
+        for (int i = 0; i < colorButtons.length; i++) {
+            if (i != index) {
+                colorButtons[i].setImageResource(R.drawable.color_circle);
+            }
         }
     }
 
     /**
-     * Sets the clicked button to selected and sets the corresponding color
+     * Sets the clicked button to selected and sets the corresponding color.
      *
-     * @param view
+     * @param view the clicked view
      */
     public void toolClickHandler(View view) {
         switch (view.getId()) {

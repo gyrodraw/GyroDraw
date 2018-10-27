@@ -55,12 +55,12 @@ public class PaintView extends View {
         super(context, attrs);
 
         Resources res = getResources();
-        colors[0] = getPaintWithColor(Color.WHITE);
-        colors[1] = getPaintWithColor(Color.BLACK);
-        colors[2] = getPaintWithColor(res.getColor(R.color.colorBlue));
-        colors[3] = getPaintWithColor(res.getColor(R.color.colorGreen));
-        colors[4] = getPaintWithColor(res.getColor(R.color.colorYellow));
-        colors[5] = getPaintWithColor(res.getColor(R.color.colorRed));
+        colors[0] = getPaintWithColor(Color.BLACK);
+        colors[1] = getPaintWithColor(res.getColor(R.color.colorBlue));
+        colors[2] = getPaintWithColor(res.getColor(R.color.colorGreen));
+        colors[3] = getPaintWithColor(res.getColor(R.color.colorYellow));
+        colors[4] = getPaintWithColor(res.getColor(R.color.colorRed));
+        colors[5] = getPaintWithColor(Color.WHITE);
 
         paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
@@ -102,7 +102,7 @@ public class PaintView extends View {
     }
 
     public void setColor(int color) {
-        if (this.color != 0) {
+        if (this.color != colors.length - 1) {
             this.color = color;
         }
         previousColor = color;
@@ -121,7 +121,7 @@ public class PaintView extends View {
         if (isDrawing) {
             drawEnd();
         }
-        color = 0;
+        color = colors.length - 1;
     }
 
     public void setBucket() {

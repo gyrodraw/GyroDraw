@@ -100,7 +100,7 @@ public class BucketTool {
             int upY = range.Y - 1;
             int downY = range.Y + 1;
 
-            for (int i = range.startX; i <= range.endX; i++) {
+            for (int i = range.startX; i <= range.endX; i++, downPxIdx++, upPxIdx++) {
                 // Start fill upwards
                 if (range.Y > 0 && (!pixelsChecked[upPxIdx])
                         && CheckPixel(upPxIdx))
@@ -110,9 +110,6 @@ public class BucketTool {
                 if (range.Y < (height - 1) && (!pixelsChecked[downPxIdx])
                         && CheckPixel(downPxIdx))
                     LinearFill(i, downY);
-
-                downPxIdx++;
-                upPxIdx++;
             }
         }
 

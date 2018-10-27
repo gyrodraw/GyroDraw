@@ -95,9 +95,7 @@ public class BucketTool {
         FloodFillRange range;
 
         while (ranges.size() > 0) {
-            // Get next range off the queue
             range = ranges.remove();
-
             // Check above and below each pixel in the floodfill range
             int downPxIdx = (width * (range.y + 1)) + range.startX;
             int upPxIdx = (width * (range.y - 1)) + range.startX;
@@ -117,7 +115,6 @@ public class BucketTool {
                 }
             }
         }
-
         image.setPixels(pixels, 0, width, 0, 0, width, height);
     }
 

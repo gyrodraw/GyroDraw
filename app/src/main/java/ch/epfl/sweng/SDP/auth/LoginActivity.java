@@ -1,10 +1,17 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
@@ -15,12 +22,6 @@ import com.firebase.ui.auth.IdpResponse;
 import java.util.Collections;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class LoginActivity extends Activity {
 

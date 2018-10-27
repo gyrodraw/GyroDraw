@@ -14,6 +14,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
@@ -96,6 +97,55 @@ public class DrawingActivityTest {
                 assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
             }
         }
+    }
+
+    @Test
+    public void testFloodFill() {
+        int[] source = { Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE };
+        Bitmap bitmap = Bitmap.createBitmap(source,2, 2, Bitmap.Config.ARGB_8888);
+        new BucketTool(bitmap, Color.BLACK, Color.YELLOW).floodFill(0, 0);
+        assertEquals(Color.YELLOW, bitmap.getPixel(0, 0));
+        assertEquals(Color.YELLOW, bitmap.getPixel(1, 0));
+        assertEquals(Color.YELLOW, bitmap.getPixel(0, 1));
+        assertEquals(Color.WHITE, bitmap.getPixel(1, 1));
+    }
+
+    @Test
+    public void testColorButtons() {
+        onView(ViewMatchers.withId(R.id.blackButton)).perform(click());
+        assertEquals(Color.BLACK, paintView.getColor());
+        onView(ViewMatchers.withId(R.id.blueButton)).perform(click());
+        assertEquals(R.color.colorBlue, paintView.getColor());
+        onView(ViewMatchers.withId(R.id.greenButton)).perform(click());
+        assertEquals(R.color.colorGreen, paintView.getColor());
+        onView(ViewMatchers.withId(R.id.yellowButton)).perform(click());
+        assertEquals(R.color.colorYellow, paintView.getColor());
+        onView(ViewMatchers.withId(R.id.redButton)).perform(click());
+        assertEquals(R.color.colorRed, paintView.getColor());
+    }
+
+    @Test
+    public void testPencilTool() {
+        onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
+        assertEquals(paintView.getColor(),
+                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+    }
+
+    @Test
+    public void testEraserTool() {
+        onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
+        assertEquals(Color.WHITE,
+                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+    }
+
+    @Test
+    public void testBucketTool() {
+        onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
+        assertEquals(paintView.getColor(),
+                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
     }
 
     private Paint initializedPaint(){

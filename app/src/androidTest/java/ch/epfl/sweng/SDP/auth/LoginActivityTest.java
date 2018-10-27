@@ -79,6 +79,7 @@ public class LoginActivityTest {
     //    assertEquals(((TextView)loginActivity.findViewById(R.id.error_message))
     //          .getText(), "No Internet connection");
     //}
+
     @Test
     public void testFailedLoginNullResponse() {
         mockIntent = Mockito.mock(Intent.class);

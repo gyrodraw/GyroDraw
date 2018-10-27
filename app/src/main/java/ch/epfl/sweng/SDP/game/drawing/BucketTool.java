@@ -24,38 +24,14 @@ public class BucketTool {
         setTargetColor(targetColor);
     }
 
-    public int getTargetColor() {
-        return Color.rgb(startColor[0], startColor[1], startColor[2]);
-    }
-
     private void setTargetColor(int targetColor) {
         startColor[0] = Color.red(targetColor);
         startColor[1] = Color.green(targetColor);
         startColor[2] = Color.blue(targetColor);
     }
 
-    public int getFillColor() {
-        return fillColor;
-    }
-
     private void setFillColor(int value) {
         fillColor = value;
-    }
-
-    public int[] getTolerance() {
-        return tolerance;
-    }
-
-    public void setTolerance(int[] value) {
-        tolerance = value;
-    }
-
-    public void setTolerance(int value) {
-        tolerance = new int[]{value, value, value};
-    }
-
-    public Bitmap getImage() {
-        return image;
     }
 
     private void useImage(Bitmap img) {

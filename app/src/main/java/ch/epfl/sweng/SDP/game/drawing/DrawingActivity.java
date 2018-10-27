@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -16,7 +15,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -34,7 +32,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private int speed;
     private int time;
     private int timeInterval;
-    private Point size;
     private Handler handler;
     private SensorManager sensorManager;
 
@@ -83,9 +80,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         // Set the content to appear under the system bars so that the
         // content doesn't resize when the system bars hide and show.
 
-        final Display display = getWindowManager().getDefaultDisplay();
-        size = new Point();
-        display.getSize(size);
         setCountdownTimer();
 
         // informes the paintView that it has to be updated
@@ -95,10 +89,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 paintView.invalidate();
             }
         };
-    }
-
-    public Point getSize() {
-        return size;
     }
 
     /**
@@ -120,15 +110,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 stop();
             }
         }.start();
-    }
-
-    /**
-     * Getter of the paint view.
-     *
-     * @return the paint view
-     */
-    public PaintView getPaintView() {
-        return paintView;
     }
 
     /**

@@ -11,12 +11,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class PaintView extends View {
 
@@ -77,6 +77,10 @@ public class PaintView extends View {
         return newPaint;
     }
 
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
     public int getCircleX() {
         return circleX;
     }
@@ -105,6 +109,15 @@ public class PaintView extends View {
 
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
+    }
+
+    /**
+     * Returns the value of the the current color.
+     *
+     * @return the value of the current color
+     */
+    public int getColor() {
+        return colors[color].getColor();
     }
 
     /**
@@ -261,7 +274,6 @@ public class PaintView extends View {
             drawEnd();
         }
         canDraw = false;
-
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();

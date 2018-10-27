@@ -90,7 +90,7 @@ public class PaintView extends View {
     public void setCircle(int circleX, int circleY) {
         this.circleX = sanitizeCoordinate(circleX, width);
         this.circleY = sanitizeCoordinate(circleY, height);
-        path.lineTo(this.circleX, this.circleY);
+        if (isDrawing) path.lineTo(this.circleX, this.circleY);
     }
 
     public int getCircleRadius() {
@@ -166,7 +166,10 @@ public class PaintView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(bitmap, 0, 0, null);
-        if (isDrawing) canvas.drawPath(path, colors[color]);
+        if (isDrawing) {
+            canvas.drawPath(path, colors[color]);
+        }
+        paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX,circleY) + Color.BLACK));
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
     }
 
@@ -178,6 +181,7 @@ public class PaintView extends View {
                     if (!bucketMode) {
                         drawStart();
                     } else {
+                        path.moveTo(circleX, circleY);
                         new BucketTool(bitmap, bitmap.getPixel(circleX,circleY),
                                 colors[color].getColor()).floodFill(circleX, circleY);
                     }
@@ -190,6 +194,14 @@ public class PaintView extends View {
             invalidate();
         }
         return true;
+    }
+
+    private int colorToGrey(int color) {
+        int R = (color >> 16) & 0xff;
+        int G = (color >>  8) & 0xff;
+        int B = (color      ) & 0xff;
+        int mean = (R + G + B) / 3;
+        return Color.argb(0xff, mean, mean, mean);
     }
 
     private void drawStart() {

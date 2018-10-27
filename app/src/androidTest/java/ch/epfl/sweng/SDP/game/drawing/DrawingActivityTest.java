@@ -53,6 +53,6 @@ public class DrawingActivityTest {
     public void testSetCircleWorks() {
         paintView.setCircle(30, -10);
         assertEquals(30, paintView.getCircleX());
-        assertEquals(0, paintView.getCircleY());
+        assertEquals(1, paintView.getCircleY());
     }
 }

@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,8 +15,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
@@ -36,12 +33,11 @@ public class PaintView extends View {
     private Path path = new Path();
     private Paint paintC;
 
-
     private Bitmap bitmap;
     private Canvas canvas;
 
-    private float circleX = 0;
-    private float circleY = 0;
+    private int circleX = 0;
+    private int circleY = 0;
 
     private int width;
     private int height;
@@ -91,7 +87,7 @@ public class PaintView extends View {
         return circleY;
     }
 
-    public void setCircle(float circleX, float circleY) {
+    public void setCircle(int circleX, int circleY) {
         this.circleX = sanitizeCoordinate(circleX, width);
         this.circleY = sanitizeCoordinate(circleY, height);
         path.lineTo(this.circleX, this.circleY);
@@ -143,7 +139,7 @@ public class PaintView extends View {
      * @param maxBound   maximum bound
      * @return sanitized coordinate
      */
-    private float sanitizeCoordinate(float coordinate, float maxBound) {
+    private int sanitizeCoordinate(int coordinate, int maxBound) {
         return Math.max(0, Math.min(coordinate, maxBound));
     }
 
@@ -182,7 +178,11 @@ public class PaintView extends View {
                     if (!bucketMode) {
                         drawStart();
                     } else {
-                        floodFill();
+                        BucketTool filler = new BucketTool(bitmap);
+                        filler.setTargetColor(bitmap.getPixel(circleX,circleY));
+                        filler.setFillColor(colors[color].getColor());
+                        filler.floodFill(circleX, circleY);
+                        bitmap = filler.getImage();
                     }
                     invalidate();
                     break;
@@ -209,44 +209,6 @@ public class PaintView extends View {
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors[color]);
         path.reset();
-    }
-
-    private void floodFill() {
-        Point pt = new Point((int) circleX, (int) circleY);
-
-        int targetColor = bitmap.getPixel(pt.x, pt.y);
-        int replacementColor = colors[color].getColor();
-
-        Queue<Point> q = new LinkedList<>();
-        q.add(pt);
-
-        while (q.size() > 0) {
-            Point n = q.poll();
-            if (bitmap.getPixel(n.x, n.y) != targetColor)
-                continue;
-
-            Point e = new Point(n.x + 1, n.y);
-            while ((n.x > 0) && (bitmap.getPixel(n.x, n.y) == targetColor)) {
-                bitmap.setPixel(n.x, n.y, replacementColor);
-                if ((n.y > 0) && (bitmap.getPixel(n.x, n.y - 1) == targetColor))
-                    q.add(new Point(n.x, n.y - 1));
-                if ((n.y < bitmap.getHeight() - 1)
-                        && (bitmap.getPixel(n.x, n.y + 1) == targetColor))
-                    q.add(new Point(n.x, n.y + 1));
-                n.x--;
-            }
-            while ((e.x < bitmap.getWidth() - 1)
-                    && (bitmap.getPixel(e.x, e.y) == targetColor)) {
-                bitmap.setPixel(e.x, e.y, replacementColor);
-
-                if ((e.y > 0) && (bitmap.getPixel(e.x, e.y - 1) == targetColor))
-                    q.add(new Point(e.x, e.y - 1));
-                if ((e.y < bitmap.getHeight() - 1)
-                        && (bitmap.getPixel(e.x, e.y + 1) == targetColor))
-                    q.add(new Point(e.x, e.y + 1));
-                e.x++;
-            }
-        }
     }
 
     /**

@@ -42,19 +42,15 @@ public class DrawingActivityTest {
 
     @Test
     public void testPaintViewGettersSetters() {
-        paintView.setCircleX(10);
-        paintView.setCircleY(15);
+        paintView.setCircle(10, 15);
         paintView.setCircleRadius(12);
-        paintView.setDraw(true);
         assertTrue(paintView.getCircleX() == 10);
         assertTrue(paintView.getCircleY() == 15);
         assertTrue(paintView.getCircleRadius() == 12);
-        assertTrue(paintView.getDraw());
     }
 
     @Test
     public void testInitWorks() {
-        paintView.setSizeAndInit(100, 100);
         paintView.setCircleRadius(30);
         assertEquals(50.0, paintView.getCircleX());
     }

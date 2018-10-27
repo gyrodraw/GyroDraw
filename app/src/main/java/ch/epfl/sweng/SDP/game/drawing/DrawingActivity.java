@@ -194,7 +194,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         tempX -= coordinateX * speed;
         tempY += coordinateY * speed;
 
-        paintView.setCircle(tempX, tempY);
+        paintView.setCircle((int) tempX, (int) tempY);
     }
 
     /**
@@ -212,7 +212,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * @param view
      */
     public void colorClickHandler(View view) {
-        Resources res = getResources();
         ((ImageView) view).setImageResource(R.drawable.color_circle_selected);
 
         switch (view.getId()) {

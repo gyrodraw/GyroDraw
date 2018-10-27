@@ -1,5 +1,13 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -7,12 +15,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import android.graphics.Point;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -76,5 +87,61 @@ public class DrawingActivityTest {
         paintView.setSizeAndInit(point);
         paintView.setCircleRadius(10);
         assertTrue(paintView.getCircleX()==40.0);
+    }
+
+    @Test
+    public void testLocalDbHandler(){
+        Paint paint = initializedPaint();
+
+        Path path = new Path();
+        path.lineTo(50, 50);
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = initializedCanvas(bitmap, paint, path);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+
+        LocalDbHandler localDbHandler =
+                new LocalDbHandler(activityRule.getActivity(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap, 100);
+
+        bitmap = compressBitmap(bitmap, 100);
+
+        Bitmap newBitmap = localDbHandler.getLatestBitmapFromDb();
+
+        for(int i = 0; i < 100; ++i){
+            for(int j = 0; j < 100; ++j){
+                assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
+            }
+        }
+    }
+
+    private Paint initializedPaint(){
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+        return paint;
+    }
+
+    private Canvas initializedCanvas(Bitmap bitmap, Paint paint, Path path){
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return canvas;
+    }
+
+    private Bitmap compressBitmap(Bitmap bitmap, int quality){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        try {
+            byteArrayOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
 }

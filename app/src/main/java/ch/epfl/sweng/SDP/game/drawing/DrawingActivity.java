@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.EventListener;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
@@ -44,7 +45,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private static final String TAG = "DrawingActivity";
     private int speed;
     private int time;
-    private int timeIntervall;
+    private int timeInterval;
     private Point size;
     private Handler handler;
     private SensorManager sensorManager;
@@ -118,7 +119,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
         speed = 5; //will be passed as variable in future, not hardcoded
         time = 60000; //will be passed as variable in future, not hardcoded
-        timeIntervall = 1000; //will be passed as variable in future, not hardcoded
+        timeInterval = 1000; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -159,11 +160,11 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * @return the countdown
      */
     private CountDownTimer setCountdownTimer(){
-        return new CountDownTimer(time, timeIntervall) {
+        return new CountDownTimer(time, timeInterval) {
 
             public void onTick(long millisUntilFinished) {
                 TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText(Long.toString(millisUntilFinished / timeIntervall));
+                textView.setText(Long.toString(millisUntilFinished / timeInterval));
             }
 
             public void onFinish() {
@@ -273,7 +274,9 @@ public class DrawingActivity extends Activity implements SensorEventListener {
      * Saves drawing in database and storage and calls new activity.
      */
     private void stop(){
-        paintView.saveCanvasInDb(this);
+        LocalDbHandler localDbHandler = new LocalDbHandler(this, null, 1);
+        paintView.saveCanvasInDb(localDbHandler);
+        paintView.saveCanvasInStorage();
         // add redirection here
     }
 

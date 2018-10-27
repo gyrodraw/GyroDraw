@@ -54,30 +54,26 @@ public class AccountCreationActivity extends AppCompatActivity {
             usernameTaken.setText("Username must not be empty.");
         } else {
             account = new Account(new ConstantsWrapper(), username);
-            try{
-                Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
+            Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                if(snapshot.exists()) {
-                                    usernameTaken.setText("Username already taken, try again");
-                                } else {
-                                    account.registerAccount();
-                                    getDefaultSharedPreferences(getThis()).edit()
-                                            .putBoolean("hasAccount", true).apply();
-                                    gotoHome();
-                                }
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if(snapshot.exists()) {
+                                usernameTaken.setText("Username already taken, try again");
+                            } else {
+                                account.registerAccount();
+                                getDefaultSharedPreferences(getThis()).edit()
+                                        .putBoolean("hasAccount", true).apply();
+                                gotoHome();
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                throw databaseError.toException();
-                            }
-                        });
-            } catch (Exception exception){
-                usernameTaken.setText(exception.getMessage());
-            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            throw databaseError.toException();
+                        }
+                    });
         }
     }
 

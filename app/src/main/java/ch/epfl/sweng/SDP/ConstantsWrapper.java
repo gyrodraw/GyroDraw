@@ -24,6 +24,10 @@ public class ConstantsWrapper {
     }
 
     public String getFirebaseUserId(){
-        return firebaseUser.getUid();
+        if(firebaseUser != null)
+            return firebaseUser.getUid();
+        else
+            // Needed for testing for now
+            return "Undefined";
     }
 }

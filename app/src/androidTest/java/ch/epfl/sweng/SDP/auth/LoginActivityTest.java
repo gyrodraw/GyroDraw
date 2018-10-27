@@ -30,12 +30,8 @@ public class LoginActivityTest {
     public final ActivityTestRule<LoginActivity> activityRule =
             new ActivityTestRule<>(LoginActivity.class);
 
-    // Add a monitor for the home activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
-
     // Add a monitor for the accountCreation activity
-    private final Instrumentation.ActivityMonitor monitor2 = getInstrumentation()
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
     IdpResponse mockIdpResponse;
@@ -51,24 +47,6 @@ public class LoginActivityTest {
         mockError = Mockito.mock(FirebaseUiException.class);
         loginActivity = activityRule.getActivity();
     }
-
-    /*
-    Fails on Travis for some reason...
-     */
-    //@Test
-    //public void testExistingUser(){
-    //    Intent mockIntent = Mockito.mock(Intent.class);
-    //    Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
-    //            .thenReturn(mockIdpResponse);
-    //    getDefaultSharedPreferences(activityRule.getActivity()).edit()
-    //            .putBoolean("hasAccount", true).apply();
-    //    Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
-    //    loginActivity.onActivityResult(42, -1, mockIntent);
-    //    Activity homeActivity = getInstrumentation()
-    //            .waitForMonitorWithTimeout(monitor, 2000);
-    //    Assert.assertNotNull(homeActivity);
-    //    assertTrue(loginActivity.isFinishing());
-    //}
 
     @Test
     public void testFailedLoginNullResponse(){
@@ -88,7 +66,7 @@ public class LoginActivityTest {
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
         Activity accountCreationActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor2, 2000);
+                .waitForMonitorWithTimeout(monitor, 2000);
         Assert.assertNotNull(accountCreationActivity);
     }
 }

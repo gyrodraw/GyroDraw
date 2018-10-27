@@ -125,7 +125,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 stop();
             }
         }.start();
-
     }
 
     /**

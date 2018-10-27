@@ -11,6 +11,11 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,11 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Locale;
 import java.util.Random;
-
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 
 public class WaitingPageActivity extends Activity {
 

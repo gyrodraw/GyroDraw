@@ -31,6 +31,7 @@ public class StarAnimationView extends View {
     private int starSpeed;
     private int height;
     private int width;
+
     /**
      * Constructor of the stars animation.
      *

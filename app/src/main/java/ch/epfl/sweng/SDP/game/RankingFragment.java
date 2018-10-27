@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.R;
+
 import java.util.Locale;
 
-import ch.epfl.sweng.SDP.R;
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.

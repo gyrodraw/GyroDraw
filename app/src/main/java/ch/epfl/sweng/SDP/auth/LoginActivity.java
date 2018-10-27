@@ -22,7 +22,6 @@ import com.firebase.ui.auth.IdpResponse;
 import java.util.Collections;
 import java.util.List;
 
-
 public class LoginActivity extends Activity {
 
     private static final String TAG = "LoginActivity";

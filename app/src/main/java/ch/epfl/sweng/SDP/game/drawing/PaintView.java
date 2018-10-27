@@ -86,10 +86,18 @@ public class PaintView extends View {
         return circleY;
     }
 
+    /**
+     * Sets the circle position.
+     *
+     * @param circleX the x position
+     * @param circleY the y position
+     */
     public void setCircle(int circleX, int circleY) {
         this.circleX = sanitizeCoordinate(circleX, width);
         this.circleY = sanitizeCoordinate(circleY, height);
-        if (isDrawing) path.lineTo(this.circleX, this.circleY);
+        if (isDrawing) {
+            path.lineTo(this.circleX, this.circleY);
+        }
     }
 
     public int getCircleRadius() {
@@ -103,7 +111,7 @@ public class PaintView extends View {
     /**
      * Selects the ith color of the color list.
      *
-     * @param color index of the color
+     * @param color the index of the color
      */
     public void setColor(int color) {
         if (this.color != colors.length - 1) {

@@ -24,7 +24,11 @@ public class BucketTool {
         setTargetColor(targetColor);
     }
 
-    public void setTargetColor(int targetColor) {
+    public int getTargetColor() {
+        return Color.rgb(startColor[0], startColor[1], startColor[2]);
+    }
+
+    private void setTargetColor(int targetColor) {
         startColor[0] = Color.red(targetColor);
         startColor[1] = Color.green(targetColor);
         startColor[2] = Color.blue(targetColor);
@@ -34,7 +38,7 @@ public class BucketTool {
         return fillColor;
     }
 
-    public void setFillColor(int value) {
+    private void setFillColor(int value) {
         fillColor = value;
     }
 
@@ -87,7 +91,7 @@ public class BucketTool {
             startColor[2] = startPixel & 0xff;
         }
 
-        LinearFill(x, y);
+        linearFill(x, y);
         FloodFillRange range;
 
         while (ranges.size() > 0) {
@@ -95,21 +99,22 @@ public class BucketTool {
             range = ranges.remove();
 
             // Check above and below each pixel in the floodfill range
-            int downPxIdx = (width * (range.Y + 1)) + range.startX;
-            int upPxIdx = (width * (range.Y - 1)) + range.startX;
-            int upY = range.Y - 1;
-            int downY = range.Y + 1;
+            int downPxIdx = (width * (range.y + 1)) + range.startX;
+            int upPxIdx = (width * (range.y - 1)) + range.startX;
+            int upY = range.y - 1;
+            int downY = range.y + 1;
 
             for (int i = range.startX; i <= range.endX; i++, downPxIdx++, upPxIdx++) {
                 // Start fill upwards
-                if (range.Y > 0 && (!pixelsChecked[upPxIdx])
-                        && CheckPixel(upPxIdx))
-                    LinearFill(i, upY);
+                if (range.y > 0 && (!pixelsChecked[upPxIdx]) && checkPixel(upPxIdx)) {
+                    linearFill(i, upY);
+                }
 
                 // Start fill downwards
-                if (range.Y < (height - 1) && (!pixelsChecked[downPxIdx])
-                        && CheckPixel(downPxIdx))
-                    LinearFill(i, downY);
+                if (range.y < (height - 1) && (!pixelsChecked[downPxIdx])
+                        && checkPixel(downPxIdx)) {
+                    linearFill(i, downY);
+                }
             }
         }
 
@@ -122,44 +127,45 @@ public class BucketTool {
      * @param x the starting x
      * @param y the starting y
      */
-    private void LinearFill(int x, int y) {
+    private void linearFill(int x, int y) {
         // Find left edge of color area
-        int lFillLoc = x;
+        int leftFillLoc = x;
         int pxIdx = (width * y) + x;
 
         do {
             pixels[pxIdx] = fillColor;
             pixelsChecked[pxIdx] = true;
 
-            lFillLoc--;
+            leftFillLoc--;
             pxIdx--;
 
             // Exit loop if we're at edge of bitmap or color area
-        } while (!(lFillLoc < 0 || (pixelsChecked[pxIdx]) || !CheckPixel(pxIdx)));
+        }
+        while (!(leftFillLoc < 0 || (pixelsChecked[pxIdx]) || !checkPixel(pxIdx)));
 
-        lFillLoc++;
+        leftFillLoc++;
         // Find right edge of color area
-        int rFillLoc = x;
+        int rightFillLoc = x;
         pxIdx = (width * y) + x;
 
         do {
             pixels[pxIdx] = fillColor;
             pixelsChecked[pxIdx] = true;
 
-            rFillLoc++;
+            rightFillLoc++;
             pxIdx++;
 
             // Exit loop if we're at edge of bitmap or color area
-        } while (!(rFillLoc >= width || pixelsChecked[pxIdx] || !CheckPixel(pxIdx)));
+        }
+        while (!(rightFillLoc >= width || pixelsChecked[pxIdx] || !checkPixel(pxIdx)));
 
-        rFillLoc--;
+        rightFillLoc--;
         // Add range to queue
-        FloodFillRange r = new FloodFillRange(lFillLoc, rFillLoc, y);
-        ranges.offer(r);
+        ranges.offer(new FloodFillRange(leftFillLoc, rightFillLoc, y));
     }
 
     // Sees if a pixel is within the color tolerance range.
-    private boolean CheckPixel(int px) {
+    private boolean checkPixel(int px) {
         int red = (pixels[px] >>> 16) & 0xff;
         int green = (pixels[px] >>> 8) & 0xff;
         int blue = pixels[px] & 0xff;
@@ -168,19 +174,20 @@ public class BucketTool {
                 && red <= (startColor[0] + tolerance[0])
                 && green >= (startColor[1] - tolerance[1])
                 && green <= (startColor[1] + tolerance[1])
-                && blue >= (startColor[2] - tolerance[2]) && blue <= (startColor[2] + tolerance[2]));
+                && blue >= (startColor[2] - tolerance[2])
+                && blue <= (startColor[2] + tolerance[2]));
     }
 
     // Represents a linear range to be filled and branched from.
     private class FloodFillRange {
         private int startX;
         private int endX;
-        private int Y;
+        private int y;
 
         private FloodFillRange(int startX, int endX, int y) {
             this.startX = startX;
             this.endX = endX;
-            this.Y = y;
+            this.y = y;
         }
     }
 }

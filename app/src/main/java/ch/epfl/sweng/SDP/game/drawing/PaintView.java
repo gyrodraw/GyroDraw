@@ -79,11 +79,11 @@ public class PaintView extends View {
         return newPaint;
     }
 
-    public float getCircleX() {
+    public int getCircleX() {
         return circleX;
     }
 
-    public float getCircleY() {
+    public int getCircleY() {
         return circleY;
     }
 
@@ -140,7 +140,7 @@ public class PaintView extends View {
      * @return sanitized coordinate
      */
     private int sanitizeCoordinate(int coordinate, int maxBound) {
-        return Math.max(0, Math.min(coordinate, maxBound));
+        return Math.max(1, Math.min(coordinate, maxBound - 1));
     }
 
     /**
@@ -178,20 +178,16 @@ public class PaintView extends View {
                     if (!bucketMode) {
                         drawStart();
                     } else {
-                        BucketTool filler = new BucketTool(bitmap);
-                        filler.setTargetColor(bitmap.getPixel(circleX,circleY));
-                        filler.setFillColor(colors[color].getColor());
-                        filler.floodFill(circleX, circleY);
-                        bitmap = filler.getImage();
+                        new BucketTool(bitmap, bitmap.getPixel(circleX,circleY),
+                                colors[color].getColor()).floodFill(circleX, circleY);
                     }
-                    invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
                     drawEnd();
-                    invalidate();
                     break;
                 default:
             }
+            invalidate();
         }
         return true;
     }

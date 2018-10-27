@@ -70,7 +70,7 @@ public class BucketTool {
         width = img.getWidth();
         height = img.getHeight();
 
-        image = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(image);
         canvas.drawBitmap(img, 0, 0, null);
 
@@ -94,7 +94,7 @@ public class BucketTool {
     protected void prepare() {
         // Called before starting flood-fill
         pixelsChecked = new boolean[pixels.length];
-        ranges = new LinkedList<FloodFillRange>();
+        ranges = new LinkedList<>();
     }
 
     // Fills the specified point on the bitmap with the currently selected fill

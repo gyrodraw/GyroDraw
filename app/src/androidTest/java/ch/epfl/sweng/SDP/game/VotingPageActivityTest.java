@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
@@ -39,6 +40,14 @@ public class VotingPageActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     disableAnimations();
+                }
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("RoomID", "0123457890");
+
+                    return intent;
                 }
             };
 

@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -10,28 +11,54 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
+
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
-            new ActivityTestRule<>(WaitingPageActivity.class);
+            new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("roomID", "0123457890");
+                    intent.putExtra("word1", "word1Mock");
+                    intent.putExtra("word2", "word2Mock");
+
+                    return intent;
+                }
+            };
 
     @Test
     public void testRadioButton1() {
@@ -53,6 +80,7 @@ public class WaitingPageActivityTest {
         }
 
         intended(hasComponent(DrawingActivity.class.getName()));
+        Espresso.pressBack();
         Intents.release();
     }
 

@@ -38,10 +38,10 @@ public class LoginActivityTest {
     private final Instrumentation.ActivityMonitor monitor2 = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
-    Intent mockIntent;
-    IdpResponse mockIdpResponse;
-    FirebaseUiException mockError;
-    LoginActivity loginActivity;
+    private Intent mockIntent;
+    private IdpResponse mockIdpResponse;
+    private FirebaseUiException mockError;
+    private LoginActivity loginActivity;
 
     /**
      * Initializes the mock objects.

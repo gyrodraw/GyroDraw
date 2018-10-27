@@ -1,9 +1,8 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.content.Intent;
 import android.os.Bundle;
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;

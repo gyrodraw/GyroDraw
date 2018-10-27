@@ -18,11 +18,11 @@ import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 import org.junit.Before;
 import org.junit.Rule;

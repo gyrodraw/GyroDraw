@@ -22,12 +22,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.util.ArrayUtils;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 
+import com.google.android.gms.common.util.ArrayUtils;
 
 public class DrawingActivity extends Activity implements SensorEventListener {
     private static final String TAG = "DrawingActivity";

@@ -14,7 +14,7 @@ public class Room implements Serializable {
         return name;
     }
 
-    public void getName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -30,7 +30,7 @@ public class Room implements Serializable {
         return playing;
     }
 
-    public void getPlaying(Boolean playing) {
+    public void setPlaying(Boolean playing) {
         this.playing = playing;
     }
 

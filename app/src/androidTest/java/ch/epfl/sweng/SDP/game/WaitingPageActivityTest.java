@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -12,12 +13,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -27,8 +30,14 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
@@ -43,8 +52,27 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.concurrent.TimeUnit;
+
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {
+
+    private static final String ROOM_ID_TEST = "0123457890";
+    private Integer stateToBeChecked;
+    private static final Integer correctValue = 1;
+    private final ValueEventListener stateListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue(Integer.class) != null) {
+                stateToBeChecked = dataSnapshot.getValue(Integer.class);
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
@@ -58,7 +86,7 @@ public class WaitingPageActivityTest {
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra("roomID", "0123457890");
+                    intent.putExtra("roomID", ROOM_ID_TEST);
                     intent.putExtra("word1", "word1Mock");
                     intent.putExtra("word2", "word2Mock");
 
@@ -76,7 +104,7 @@ public class WaitingPageActivityTest {
         clickButtonsTest(R.id.buttonWord2);
     }
 
-    @Test
+    /*@Test
     public void testButtonIncreasePeople() {
         Intents.init();
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
@@ -88,7 +116,7 @@ public class WaitingPageActivityTest {
         intended(hasComponent(DrawingActivity.class.getName()));
         Espresso.pressBack();
         Intents.release();
-    }
+    }*/
 
     @Test
     public void isButtonWord1Visible() {
@@ -215,5 +243,34 @@ public class WaitingPageActivityTest {
     @Ignore
     public void waitForVisibility(final View view, final int visibility) {
         Espresso.registerIdlingResources(new ViewVisibilityIdlingResource(view, visibility));
+    }
+
+    /*@Test
+    public void testStateChange() {
+        //clearUsersRoom();
+        Database database = Database.INSTANCE;
+        DatabaseReference roomRef = database.getReference("realRooms." + ROOM_ID_TEST + ".users");
+        //DatabaseReference stateRef = roomRef.child("state");
+        //stateRef.addValueEventListener(stateListener);
+        roomRef.child("mock1Person").setValue(0);
+        roomRef.child("mock2Person").setValue(0);
+
+        //onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+
+        boolean isSame = false;
+
+        if(stateToBeChecked > 0) {
+            isSame = true;
+        }
+
+        assertEquals(isSame, true);
+        //clearUsersRoom();
+    }*/
+
+    @Ignore
+    public void clearUsersRoom() {
+        Database database = Database.INSTANCE;
+        DatabaseReference usersRef = database.getReference("realRooms." + ROOM_ID_TEST);
+        usersRef.child("users").removeValue();
     }
 }

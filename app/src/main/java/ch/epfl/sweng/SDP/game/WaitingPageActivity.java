@@ -299,12 +299,6 @@ public class WaitingPageActivity extends Activity {
         findViewById(R.id.imageWord2).startAnimation(pickWord2);
     }
 
-    private void setLayoutVisibility(int visibility) {
-        setVisibility(visibility, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText, R.id.roomID);
-    }
-
     private void disableButtons() {
         Button b1 = findViewById(R.id.buttonWord1);
         b1.setEnabled(false);
@@ -345,17 +339,6 @@ public class WaitingPageActivity extends Activity {
             intent.putExtra("RoomID", roomID);
             startActivity(intent);
         }
-    }
-
-    private int[] generateTwoRandomNumbers() {
-        Random rand = new Random();
-        int number1 = rand.nextInt(WORDS_COUNT);
-        int number2 = number1;
-        while (number1 == number2) {
-            number2 = rand.nextInt(WORDS_COUNT);
-        }
-
-        return new int[]{number1, number2};
     }
 
     /**

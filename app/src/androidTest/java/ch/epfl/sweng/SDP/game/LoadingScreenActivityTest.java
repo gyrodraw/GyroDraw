@@ -56,6 +56,5 @@ public class LoadingScreenActivityTest {
 
         mock.lookingForRoom();
         verify(mock, atLeastOnce()).lookingForRoom();
-
     }
 }

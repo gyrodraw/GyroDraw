@@ -4,8 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import android.support.test.InstrumentationRegistry;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
+
 import org.junit.Test;
 
 public class DatabaseTest {

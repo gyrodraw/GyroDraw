@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import com.google.firebase.FirebaseApp;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends Activity implements OnClickListener {

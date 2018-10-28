@@ -60,12 +60,13 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
-            if(value != null) {
-                switch(value) {
-                    case GameStates.START_DRAWING_ACTIVITY:
+            Integer state = dataSnapshot.getValue(Integer.class);
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case START_DRAWING_ACTIVITY:
                         break;
-                    case GameStates.START_VOTING_ACTIVITY:
+                    case START_VOTING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext()
                                                 , VotingPageActivity.class);

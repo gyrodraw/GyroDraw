@@ -75,11 +75,12 @@ public class VotingPageActivity extends Activity {
     private final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
+            Integer state = dataSnapshot.getValue(Integer.class);
 
-            if(value != null) {
-                switch(value) {
-                    case GameStates.END_VOTING_ACTIVITY:
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case END_VOTING_ACTIVITY:
                         // Start ranking activity
                         break;
                     default:

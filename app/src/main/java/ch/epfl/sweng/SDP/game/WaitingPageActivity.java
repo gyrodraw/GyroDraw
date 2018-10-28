@@ -95,16 +95,16 @@ public class WaitingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
-
             if(state != null) {
-                switch (state) {
-                    case GameStates.HOMESTATE:
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch (stateEnum) {
+                    case HOMESTATE:
                         break;
-                    case GameStates.CHOOSE_WORDS_TIMER_START:
+                    case CHOOSE_WORDS_TIMER_START:
                         timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
                         break;
-                    case GameStates.START_DRAWING_ACTIVITY:
+                    case START_DRAWING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
                         drawingActivityLauched = true;
                         Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);

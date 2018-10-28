@@ -1,9 +1,20 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-public class GameStates {
-    public final static int HOMESTATE = 0;
-    public final static int CHOOSE_WORDS_TIMER_START = 1;
-    public final static int START_DRAWING_ACTIVITY = 2;
-    public final static int START_VOTING_ACTIVITY = 3;
-    public final static int END_VOTING_ACTIVITY = 4;
+public enum GameStates {
+    HOMESTATE, CHOOSE_WORDS_TIMER_START, START_DRAWING_ACTIVITY,
+    START_VOTING_ACTIVITY, END_VOTING_ACTIVITY;
+
+    public static GameStates convertValueIntoState(int value) {
+        GameStates state;
+        switch(value) {
+            case 0: state = HOMESTATE; break;
+            case 1: state = CHOOSE_WORDS_TIMER_START; break;
+            case 2: state = START_DRAWING_ACTIVITY; break;
+            case 3: state = START_VOTING_ACTIVITY; break;
+            case 4: state = END_VOTING_ACTIVITY; break;
+            default: state = HOMESTATE ; break;
+        }
+
+        return state;
+    }
 }

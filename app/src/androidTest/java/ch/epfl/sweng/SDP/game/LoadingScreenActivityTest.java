@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.intent.Intents;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -45,16 +47,13 @@ public class LoadingScreenActivityTest {
     @Test
     public void drawableMatchTest() {
         Intents.init();
-        onView(withId(R.id.waitingBackgroundAnimation)).perform(click());
-        onView(withId(R.id.waitingAnimationDots)).perform(click());
-        onView(withId(R.id.waitingBackgroundImage)).perform(click());
-
-        onView(withId(R.id.waitingBackgroundAnimation)).check(matches(isDisplayed()));
-        onView(withId(R.id.waitingAnimationDots)).check(matches(isDisplayed()));
-        onView(withId(R.id.waitingBackgroundImage)).check(matches(isDisplayed()));
-
+        Espresso.pressBack();
+        intended(hasComponent(HomeActivity.class.getName()));
+        onView(withId(R.id.drawButton)).perform(click());
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
         intended(hasComponent(WaitingPageActivity.class.getName()));
+
         Intents.release();
     }
 

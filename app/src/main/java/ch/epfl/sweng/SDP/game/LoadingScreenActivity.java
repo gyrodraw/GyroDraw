@@ -172,4 +172,10 @@ public class LoadingScreenActivity extends Activity {
     public static void setOnTest() {
         isTesting = true;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hasLeft = false;
+    }
 }

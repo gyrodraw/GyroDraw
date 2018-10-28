@@ -68,8 +68,6 @@ public class LoginActivity extends Activity {
     private void handleSuccessfulSignIn(IdpResponse response) {
         assert response != null;
 
-        // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); for Till
-
         if (response.isNewUser() || !getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("hasAccount", false)) {
             // New user or a user who signed in but not created an account

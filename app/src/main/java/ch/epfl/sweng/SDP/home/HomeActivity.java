@@ -21,6 +21,7 @@ import android.widget.Toast;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Connection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
@@ -197,8 +198,12 @@ public class HomeActivity extends Activity {
     private void listenerEventSelector(final View view, int id) {
         switch (id) {
             case R.id.drawButton:
-                ((ImageView) view).setImageResource(R.drawable.draw_button);
-                launchActivity(WaitingPageActivity.class);
+                if(Connection.isOnline(this)) {
+                    ((ImageView) view).setImageResource(R.drawable.draw_button);
+                    launchActivity(WaitingPageActivity.class);
+                } else {
+                    Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG);
+                }
                 break;
             case R.id.leagueImage:
                 showLeagues();

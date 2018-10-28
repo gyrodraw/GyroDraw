@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.matchmaking;
 
 import android.util.Log;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,8 +20,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class Matchmaker {
+public class Matchmaker implements MatchmakingInterface {
 
+    public boolean testing = false;
 
     private static Matchmaker singleInstance = null;
     // static method to create instance of Singleton class
@@ -44,6 +46,8 @@ public class Matchmaker {
      *  Matchmaker init.
      */
     public Matchmaker() {
+
+        FirebaseApp.initializeApp()
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("rooms");
@@ -71,12 +75,17 @@ public class Matchmaker {
     /**
      * join a room.
      */
-    public void joinRoom() {
-            FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+    public Boolean joinRoom() {
+             String currentFirebaseUser;
+            if (!testing) {
+                 currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            }
+            currentFirebaseUser = "TEST_USER";
             HttpURLConnection connection = null;
             try {
+
                 //Create connection
-                String urlParameters = "userId=" + URLEncoder.encode(currentFirebaseUser.getUid(), "UTF-8");
+                String urlParameters = "userId=" + URLEncoder.encode(currentFirebaseUser, "UTF-8");
                 URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
@@ -103,7 +112,7 @@ public class Matchmaker {
                     response.append('\r');
                 }
                 rd.close();
-                 Log.d("1",response.toString());
+                Log.d("1",response.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -111,15 +120,21 @@ public class Matchmaker {
                     connection.disconnect();
                 }
             }
+        return true;
     }
+
+
 
     /**
      * leave a room.
      * @param roomId the id of the room.
      */
-    public void leaveRoom(String roomId) {
-        // FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+    public Boolean leaveRoom(String roomId) {
+        if (testing) {
+            return true;
+        }
         myRef.child(roomId).child("users").child("123").removeValue();
+        return true;
     }
 
 

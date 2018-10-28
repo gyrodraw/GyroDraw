@@ -25,6 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.LoadingScreen.disableLoadingAnimations;
+import static ch.epfl.sweng.SDP.game.LoadingScreen.setOnTest;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
 @RunWith(AndroidJUnit4.class)
@@ -37,6 +38,7 @@ public class HomeActivityTest {
                 protected void beforeActivityLaunched() {
                     disableBackgroundAnimation();
                     disableLoadingAnimations();
+                    setOnTest();
                 }
             };
 

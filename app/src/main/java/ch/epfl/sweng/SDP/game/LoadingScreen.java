@@ -33,6 +33,7 @@ public class LoadingScreen extends AppCompatActivity {
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
     private static boolean enableWaitingAnimation = true;
+    private static boolean isTesting = false;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -104,7 +105,10 @@ public class LoadingScreen extends AppCompatActivity {
         setContentView(R.layout.activity_loading_screen);
 
         database = Database.INSTANCE;
-        lookingForRoom();
+
+        if(!isTesting) {
+            lookingForRoom();
+        }
 
         overridePendingTransition(0, 0);
 
@@ -142,5 +146,9 @@ public class LoadingScreen extends AppCompatActivity {
 
     public static void disableLoadingAnimations() {
         enableWaitingAnimation = false;
+    }
+
+    public static void setOnTest() {
+        isTesting = true;
     }
 }

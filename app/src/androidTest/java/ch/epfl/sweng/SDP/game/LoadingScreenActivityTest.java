@@ -50,7 +50,7 @@ public class LoadingScreenActivityTest {
     }
 
     @Test
-    public void testFunctions() {
+    public void testLookingForRoom() {
         LoadingScreenActivity mock = Mockito.mock(LoadingScreenActivity.class);
         doNothing().when(mock).lookingForRoom();
 

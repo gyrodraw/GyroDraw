@@ -1,12 +1,10 @@
 package ch.epfl.sweng.SDP.firebase;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -24,16 +22,18 @@ public class FbStorage {
     /**
      * Hides the public constructor.
      */
-    private FbStorage(){}
+    private FbStorage() {
+    }
 
     /**
      * Uploads a given bitmap to Firebase Storage at given StorageReference.
-     * @param bitmap the image to upload
+     *
+     * @param bitmap   the image to upload
      * @param imageRef the name of the image
      */
     public static void sendBitmapToFireBaseStorage(
-            final Bitmap bitmap, final StorageReference imageRef){
-        if(bitmap != null && imageRef != null) {
+            final Bitmap bitmap, final StorageReference imageRef) {
+        if (bitmap != null && imageRef != null) {
             ByteArrayOutputStream byteArrayOutputStream =
                     new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG,

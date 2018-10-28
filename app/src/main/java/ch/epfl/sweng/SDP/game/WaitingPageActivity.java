@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -20,29 +21,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.Locale;
 import java.util.Random;
 
 public class WaitingPageActivity extends Activity {
 
-    private enum WordNumber {
-        ONE, TWO
-    }
-
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-
     private int usersReadyCount = 1;
-
     private DatabaseReference wordsVotesRef;
-
     private DatabaseReference word1Ref;
     private int word1Votes = 0;
-
-    private DatabaseReference word2Ref;
-    private int word2Votes = 0;
-
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -57,22 +48,7 @@ public class WaitingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-
-    private final ValueEventListener listenerWord2 = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Long value = dataSnapshot.getValue(Long.class);
-            if (value != null) {
-                word2Votes = value.intValue();
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
-
+    private DatabaseReference word2Ref;
     private final ValueEventListener listenerWords = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -100,6 +76,21 @@ public class WaitingPageActivity extends Activity {
             setLayoutVisibility(View.VISIBLE);
 
             setVisibility(View.GONE, R.id.waitingAnimationDots);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
+    private int word2Votes = 0;
+    private final ValueEventListener listenerWord2 = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Long value = dataSnapshot.getValue(Long.class);
+            if (value != null) {
+                word2Votes = value.intValue();
+            }
         }
 
         @Override
@@ -232,9 +223,6 @@ public class WaitingPageActivity extends Activity {
         }
     }
 
-    // Now it is public in order to use it as a button for testing, should be reverted to private
-    // afterwards
-
     /**
      * Increment the number of players logged in the room. This method exists only for testing
      * purposes.
@@ -253,6 +241,9 @@ public class WaitingPageActivity extends Activity {
             launchActivity(DrawingActivity.class);
         }
     }
+
+    // Now it is public in order to use it as a button for testing, should be reverted to private
+    // afterwards
 
     private int[] generateTwoRandomNumbers() {
         Random rand = new Random();
@@ -287,5 +278,9 @@ public class WaitingPageActivity extends Activity {
     private void getReadyUsers() {
         // Do stuff with the database
         // Should increment the counter with incrementCounter()
+    }
+
+    private enum WordNumber {
+        ONE, TWO
     }
 }

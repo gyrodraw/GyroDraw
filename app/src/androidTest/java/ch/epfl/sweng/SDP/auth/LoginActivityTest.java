@@ -34,17 +34,15 @@ public class LoginActivityTest {
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
-    IdpResponse mockIdpResponse;
-    FirebaseUiException mockError;
-    LoginActivity loginActivity;
+    private IdpResponse mockIdpResponse;
+    private LoginActivity loginActivity;
 
     /**
-     * Initializes the mock objects. 
+     * Initializes the mock objects.
      */
     @Before
-    public void init(){
+    public void init() {
         mockIdpResponse = Mockito.mock(IdpResponse.class);
-        mockError = Mockito.mock(FirebaseUiException.class);
         loginActivity = activityRule.getActivity();
     }
 

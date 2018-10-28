@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,19 +23,23 @@ import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.Vector;
 
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
-public class LoadingScreen extends AppCompatActivity {
+public class LoadingScreenActivity extends Activity {
 
     private String roomID = null;
+    private static final String TAG = "LoadingScreenActivity";
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;
+    private static boolean hasLeft = false;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -78,6 +84,7 @@ public class LoadingScreen extends AppCompatActivity {
                 word2 = words.get(1);
             } catch (Exception e) {
                 // Throws exception
+                Log.e(TAG, "Error when getting the words");
             }
 
             if (word1 != null) {
@@ -124,7 +131,7 @@ public class LoadingScreen extends AppCompatActivity {
 
     }
 
-    private void lookingForRoom() {
+    protected void lookingForRoom() {
         Matchmaker.INSTANCE.joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -135,13 +142,27 @@ public class LoadingScreen extends AppCompatActivity {
                     }
                 } else {
                     roomID = task.getResult();
-                    wordsVotesRef = database.getReference(
-                            TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
-                    wordsVotesRef.addValueEventListener(listenerWords);
-                    isRoomReady.setBoo(true);
+                    if(hasLeft) {
+                        Matchmaker.INSTANCE.leaveRoom(roomID);
+                        finish();
+                    } else {
+                        wordsVotesRef = database.getReference(
+                                TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
+                        wordsVotesRef.addValueEventListener(listenerWords);
+                        isRoomReady.setBoo(true);
+                    }
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            hasLeft = true;
+            launchActivity(HomeActivity.class);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public static void disableLoadingAnimations() {

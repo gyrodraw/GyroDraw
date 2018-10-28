@@ -4,15 +4,13 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.LoadingScreen;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -24,8 +22,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sweng.SDP.game.LoadingScreen.disableLoadingAnimations;
-import static ch.epfl.sweng.SDP.game.LoadingScreen.setOnTest;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
 @RunWith(AndroidJUnit4.class)
@@ -46,7 +44,7 @@ public class HomeActivityTest {
     public void testDrawButtonOpensWaitingPageActivity() {
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
-        intended(hasComponent(LoadingScreen.class.getName()));
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
         Intents.release();
     }
 

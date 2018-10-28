@@ -21,9 +21,8 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.LoadingScreen;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -198,7 +197,7 @@ public class HomeActivity extends Activity {
         switch (id) {
             case R.id.drawButton:
                 ((ImageView) view).setImageResource(R.drawable.draw_button);
-                launchActivity(LoadingScreen.class);
+                launchActivity(LoadingScreenActivity.class);
                 break;
             case R.id.leagueImage:
                 showLeagues();

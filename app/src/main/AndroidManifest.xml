@@ -43,7 +43,7 @@
         </activity>
         <activity android:name=".game.VotingPageActivity" />
         <activity android:name=".home.LeaguesActivity"></activity>
-        <activity android:name=".game.LoadingScreen"></activity>
+        <activity android:name=".game.LoadingScreenActivity"></activity>
     </application>
 
 </manifest>

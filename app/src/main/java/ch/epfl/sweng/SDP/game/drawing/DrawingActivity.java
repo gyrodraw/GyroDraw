@@ -156,25 +156,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         return size;
     }
 
-    /**
-     * Initializes the countdown to a given time.
-     * @return the countdown
-     */
-    private CountDownTimer setCountdownTimer(){
-        return new CountDownTimer(time, timeInterval) {
-
-            public void onTick(long millisUntilFinished) {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText(Long.toString(millisUntilFinished / timeInterval));
-            }
-
-            public void onFinish() {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText("Time over!");
-                stop();
-            }
-        }.start();
-
+    public void setSize(Point size) {
+        this.size = size;
     }
 
     /**

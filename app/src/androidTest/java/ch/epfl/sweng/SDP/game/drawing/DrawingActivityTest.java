@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -91,6 +92,14 @@ public class DrawingActivityTest {
         assertTrue(paintView.getCircleY()==15);
         assertTrue(paintView.getCircleRadius()==12);
         assertTrue(paintView.getDraw());
+    }
+
+    @Test
+    public void testGetSize() {
+        Point pointTest = new Point(1,2);
+        activityRule.getActivity().setSize(pointTest);
+        Point point = activityRule.getActivity().getSize();
+        assertEquals(point, pointTest);
     }
 
     @Test

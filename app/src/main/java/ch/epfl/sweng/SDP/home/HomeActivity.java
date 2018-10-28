@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +23,8 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,7 +39,6 @@ public class HomeActivity extends Activity {
 
     private final String user = "aa";
 
-    private static boolean enableBackgroundAnimation = false;
     private static final String TAG = "HomeActivity";
 
     private static final int MAIN_FREQUENCY = 10;
@@ -50,6 +50,8 @@ public class HomeActivity extends Activity {
 
     private DatabaseReference dbRef;
     private DatabaseReference dbRefTimer;
+
+    private static boolean enableBackgroundAnimation = true;
 
     // To be removed (for testing purposes only)
     private final ValueEventListener listenerAllReady = new ValueEventListener() {
@@ -73,9 +75,6 @@ public class HomeActivity extends Activity {
 
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
-        if (enableBackgroundAnimation) {
-            setBackgroundAnimation();
-        }
 
         // Testing method
         Database database = Database.INSTANCE;
@@ -97,6 +96,10 @@ public class HomeActivity extends Activity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
+        if (enableBackgroundAnimation) {
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
+        }
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
@@ -165,13 +168,6 @@ public class HomeActivity extends Activity {
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
         return toast;
-    }
-
-    private void setBackgroundAnimation() {
-        final ImageView backgroundImage = findViewById(R.id.backgroundImage);
-        final Animation backgroundAnim = AnimationUtils.loadAnimation(this, R.anim.background_anim);
-        backgroundAnim.setInterpolator(new LinearInterpolator());
-        backgroundImage.startAnimation(backgroundAnim);
     }
 
     private void setListener(final View view, final double amplitude, final int frequency) {

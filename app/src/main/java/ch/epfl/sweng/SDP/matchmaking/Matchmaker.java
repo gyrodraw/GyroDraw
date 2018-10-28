@@ -47,11 +47,9 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public Matchmaker() {
 
-        FirebaseApp.initializeApp()
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("rooms");
-
+      //  FirebaseDatabase database = FirebaseDatabase.getInstance();
+     //   myRef = database.getReference("rooms");
+/*
         // Read from the database
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -70,6 +68,8 @@ public class Matchmaker implements MatchmakingInterface {
                 // Failed to read value
             }
         });
+
+*/
     }
 
     /**
@@ -112,7 +112,7 @@ public class Matchmaker implements MatchmakingInterface {
                     response.append('\r');
                 }
                 rd.close();
-                Log.d("1",response.toString());
+             //   Log.d("1",response.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -133,7 +133,7 @@ public class Matchmaker implements MatchmakingInterface {
         if (testing) {
             return true;
         }
-        myRef.child(roomId).child("users").child("123").removeValue();
+    //    myRef.child(roomId).child("users").child("123").removeValue();
         return true;
     }
 

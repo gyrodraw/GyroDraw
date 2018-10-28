@@ -4,7 +4,6 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,6 +38,7 @@ public class HomeActivityTest {
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
+
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
         intended(hasComponent(WaitingPageActivity.class.getName()));
@@ -76,20 +76,20 @@ public class HomeActivityTest {
 
     @Test
     public void testCrossClosesPopUp() {
-        openAndClosePopUp(R.id.crossText); 
+        openAndClosePopUp(R.id.crossText);
     }
 
     @Test
     public void testCanSignOutAccount() {
         openAndClosePopUp(R.id.signOutButton);
     }
- 
+
     @Test
     public void testCanDeleteAccount() {
         openAndClosePopUp(R.id.deleteButton);
     }
 
-    private void openAndClosePopUp(int view){
+    private void openAndClosePopUp(int view) {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());

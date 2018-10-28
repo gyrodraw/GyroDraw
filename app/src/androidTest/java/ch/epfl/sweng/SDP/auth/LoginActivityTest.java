@@ -38,16 +38,16 @@ public class LoginActivityTest {
     private final Instrumentation.ActivityMonitor monitor2 = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
-    Intent mockIntent;
-    IdpResponse mockIdpResponse;
-    FirebaseUiException mockError;
-    LoginActivity loginActivity;
+    private Intent mockIntent;
+    private IdpResponse mockIdpResponse;
+    private FirebaseUiException mockError;
+    private LoginActivity loginActivity;
 
     /**
-     * Initializes the mock objects. 
+     * Initializes the mock objects.
      */
     @Before
-    public void init(){
+    public void init() {
         mockIntent = Mockito.mock(Intent.class);
         mockIdpResponse = Mockito.mock(IdpResponse.class);
         mockError = Mockito.mock(FirebaseUiException.class);
@@ -57,7 +57,7 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void testExistingUser(){
+    public void testExistingUser() {
         getDefaultSharedPreferences(activityRule.getActivity()).edit()
                 .putBoolean("hasAccount", true).apply();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
@@ -81,7 +81,7 @@ public class LoginActivityTest {
     //}
 
     @Test
-    public void testFailedLoginNullResponse(){
+    public void testFailedLoginNullResponse() {
         mockIntent = Mockito.mock(Intent.class);
         mockIdpResponse = null;
         loginActivity.onActivityResult(42, 0, mockIntent);
@@ -89,7 +89,7 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void testSuccessfulLogin(){
+    public void testSuccessfulLogin() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());

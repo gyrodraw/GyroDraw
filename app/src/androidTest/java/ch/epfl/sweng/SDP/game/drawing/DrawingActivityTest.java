@@ -146,10 +146,9 @@ public class DrawingActivityTest {
     @Test
     public void testPencilTool() {
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
-        paintView.setCircle(10000000, 10000000);
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(paintView.getColor(), paintView.getBitmap()
-                .getPixel(paintView.getCircleX(), paintView.getCircleY()));
+        assertEquals(Color.WHITE,
+                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
     }
 
     @Test

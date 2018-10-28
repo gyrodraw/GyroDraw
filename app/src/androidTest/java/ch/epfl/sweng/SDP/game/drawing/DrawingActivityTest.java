@@ -145,6 +145,7 @@ public class DrawingActivityTest {
 
     @Test
     public void testPencilTool() {
+        onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(Color.WHITE,
@@ -161,7 +162,7 @@ public class DrawingActivityTest {
 
     @Test
     public void testBucketTool() {
-        paintView.clear();
+        activityRule.getActivity().clear(null);
         onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(paintView.getColor(),

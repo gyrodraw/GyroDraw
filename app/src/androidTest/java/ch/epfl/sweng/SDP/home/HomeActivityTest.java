@@ -38,6 +38,7 @@ public class HomeActivityTest {
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
+
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
         intended(hasComponent(WaitingPageActivity.class.getName()));

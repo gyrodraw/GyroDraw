@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -40,10 +41,12 @@ public class DrawingActivityTest {
             new ActivityTestRule<>(DrawingActivity.class);
 
     private PaintView paintView;
+    private Resources res;
 
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
+        res = activityRule.getActivity().getResources();
     }
 
     @Test
@@ -114,46 +117,45 @@ public class DrawingActivityTest {
 
     @Test
     public void testBlackButton() {
-        paintView.setColor(0);
+        onView(ViewMatchers.withId(R.id.blackButton)).perform(click());
         assertEquals(Color.BLACK, getColorWithMaxAlpha());
     }
 
     @Test
     public void testBlueButton() {
-        paintView.setColor(1);
-        assertEquals(R.color.colorBlue, getColorWithMaxAlpha());
+        onView(ViewMatchers.withId(R.id.blueButton)).perform(click());
+        assertEquals(res.getColor(R.color.colorBlue), getColorWithMaxAlpha());
     }
 
     @Test
     public void testGreenButton() {
-        paintView.setColor(2);
-        assertEquals(R.color.colorGreen, getColorWithMaxAlpha());
+        onView(ViewMatchers.withId(R.id.greenButton)).perform(click());
+        assertEquals(res.getColor(R.color.colorGreen), getColorWithMaxAlpha());
     }
 
     @Test
     public void testYellowButton() {
-        paintView.setColor(3);
-        assertEquals(R.color.colorYellow, getColorWithMaxAlpha());
+        onView(ViewMatchers.withId(R.id.yellowButton)).perform(click());
+        assertEquals(res.getColor(R.color.colorYellow), getColorWithMaxAlpha());
     }
 
     @Test
     public void testRedButton() {
-        paintView.setColor(4);
-        assertEquals(R.color.colorRed, getColorWithMaxAlpha());
+        onView(ViewMatchers.withId(R.id.redButton)).perform(click());
+        assertEquals(res.getColor(R.color.colorRed), getColorWithMaxAlpha());
     }
 
     @Test
     public void testPencilTool() {
-        SystemClock.sleep(2000);
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
+        paintView.setCircle(10000000, 10000000);
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(getColorWithMaxAlpha(),
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+        assertEquals(getColorWithMaxAlpha(), paintView.getBitmap()
+                .getPixel(paintView.getCircleX(), paintView.getCircleY()));
     }
 
     @Test
     public void testEraserTool() {
-        SystemClock.sleep(2000);
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(Color.WHITE,
@@ -169,7 +171,7 @@ public class DrawingActivityTest {
     }
 
     private int getColorWithMaxAlpha() {
-        return 0xFF000000 | (paintView.getColor() & 0xFFFFFF);
+        return 0xFF000000 | paintView.getColor();
     }
 
     private Paint initializedPaint(){

@@ -4,10 +4,15 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class Connection {
+public class CheckConnection {
 
-    private Connection(){}
+    private CheckConnection(){}
 
+    /**
+     * Method to check if device is connected to the internet.
+     * @param context Activity that calls this method
+     * @return true if device is connected
+     */
     public static boolean isOnline(Context context){
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

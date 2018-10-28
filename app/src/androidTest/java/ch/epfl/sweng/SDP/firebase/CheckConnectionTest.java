@@ -2,14 +2,14 @@ package ch.epfl.sweng.SDP.firebase;
 
 import android.support.test.InstrumentationRegistry;
 
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertTrue;
 
-public class ConnectionTest {
+import org.junit.Test;
+
+public class CheckConnectionTest {
 
     @Test
     public void testInternetConnection() {
-        assertTrue(Connection.isOnline(InstrumentationRegistry.getContext()));
+        assertTrue(CheckConnection.isOnline(InstrumentationRegistry.getContext()));
     }
 }

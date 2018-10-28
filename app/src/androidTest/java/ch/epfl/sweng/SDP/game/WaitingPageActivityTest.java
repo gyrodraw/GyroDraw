@@ -88,11 +88,6 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void isButtonWord2Visible() {
-        isViewVisible(R.id.buttonWord2);
-    }
-
-    @Test
     public void isButtonWord1Clickable() {
         isViewClickable(R.id.buttonWord1);
     }

@@ -8,19 +8,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.junit.Before;
 import org.junit.Test;
 
-//import org.mockito.Matchers;
-//import org.mockito.Mockito;
-
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.matchmaking.MatchmakingInterface;
 
-
 import static org.junit.Assert.assertTrue;
-//import static org.mockito.Matchers.anyString;
-//import static org.mockito.Mockito.doNothing;
-//import static org.mockito.Mockito.when;
 
 import android.support.test.InstrumentationRegistry;
 
@@ -38,6 +31,7 @@ public class MatchmakerTest {
 
         Matchmaker.getInstance().testing = true;
 
+        // Use this for mocking purpose
         mockedmatchmaker = new MatchmakingInterface() {
 
             @Override
@@ -56,8 +50,8 @@ public class MatchmakerTest {
     @Test
     public void joinRoom() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Boolean functionReturned = Matchmaker.getInstance().joinRoom();
-        assertTrue(functionReturned);
+        Boolean functionReturnedOK200 = Matchmaker.getInstance().joinRoom();
+        assertTrue(functionReturnedOK200);
     }
 
     @Test

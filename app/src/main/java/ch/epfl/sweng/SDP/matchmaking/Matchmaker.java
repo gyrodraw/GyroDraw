@@ -45,11 +45,11 @@ public class Matchmaker implements MatchmakingInterface {
     /**
      *  Matchmaker init.
      */
-    public Matchmaker() {
+    private Matchmaker() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("rooms");
-/*
+
         // Read from the database
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -60,7 +60,6 @@ public class Matchmaker implements MatchmakingInterface {
                 HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
                 // Update room
 
-                Log.d("1",map.toString());
             }
 
             @Override
@@ -69,14 +68,14 @@ public class Matchmaker implements MatchmakingInterface {
             }
         });
 
-*/
+
     }
 
     /**
      * join a room.
      */
     public Boolean joinRoom() {
-             String currentFirebaseUser = currentFirebaseUser = "TEST_USER";
+            String currentFirebaseUser = currentFirebaseUser = "TEST_USER";
             if (!testing) {
                  currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
             }
@@ -107,12 +106,19 @@ public class Matchmaker implements MatchmakingInterface {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(is));
                 StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
                 String line;
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    // OK
+                return true;
+                    // otherwise, if any other status code is returned, or no status
+                    // code is returned, do stuff in the else block
+                }
+
                 while ((line = rd.readLine()) != null) {
                     response.append(line);
                     response.append('\r');
                 }
                 rd.close();
-             //   Log.d("1",response.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -120,7 +126,7 @@ public class Matchmaker implements MatchmakingInterface {
                     connection.disconnect();
                 }
             }
-        return true;
+        return false;
     }
 
 
@@ -130,8 +136,12 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
+        String currentFirebaseUser = currentFirebaseUser = "TEST_USER";
+        if (!testing) {
+            currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
 
-        myRef.child(roomId).child("users").child("123").removeValue();
+        myRef.child(roomId).child("users").child(currentFirebaseUser).removeValue();
         return true;
     }
 

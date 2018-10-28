@@ -47,8 +47,8 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public Matchmaker() {
 
-      //  FirebaseDatabase database = FirebaseDatabase.getInstance();
-     //   myRef = database.getReference("rooms");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("rooms");
 /*
         // Read from the database
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -76,11 +76,11 @@ public class Matchmaker implements MatchmakingInterface {
      * join a room.
      */
     public Boolean joinRoom() {
-             String currentFirebaseUser;
+             String currentFirebaseUser = currentFirebaseUser = "TEST_USER";
             if (!testing) {
                  currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
             }
-            currentFirebaseUser = "TEST_USER";
+
             HttpURLConnection connection = null;
             try {
 
@@ -130,10 +130,8 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
-        if (testing) {
-            return true;
-        }
-    //    myRef.child(roomId).child("users").child("123").removeValue();
+
+        myRef.child(roomId).child("users").child("123").removeValue();
         return true;
     }
 

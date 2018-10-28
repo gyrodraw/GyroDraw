@@ -11,6 +11,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
@@ -48,6 +49,11 @@ public class WaitingPageActivityTest {
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
+
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableAnimations();
+                }
 
                 @Override
                 protected Intent getActivityIntent() {

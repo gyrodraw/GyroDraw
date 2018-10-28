@@ -46,7 +46,7 @@ public class WaitingPageActivity extends Activity {
 
     private String roomID = null;
 
-    private static boolean enableWaitingAnimation = true;
+    private static boolean enableSquareAnimation = true;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -196,10 +196,12 @@ public class WaitingPageActivity extends Activity {
         word1 = intent.getStringExtra("word1");
         word2 = intent.getStringExtra("word2");
 
-        Glide.with(this).load(R.drawable.waiting_animation_square)
-                .into((ImageView) findViewById(R.id.waitingAnimationSquare));
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        if(enableSquareAnimation) {
+            Glide.with(this).load(R.drawable.waiting_animation_square)
+                    .into((ImageView) findViewById(R.id.waitingAnimationSquare));
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        }
 
         wordsVotesRef = database.getReference(
                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
@@ -400,5 +402,9 @@ public class WaitingPageActivity extends Activity {
             finish();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public static void disableAnimations() {
+        enableSquareAnimation = false;
     }
 }

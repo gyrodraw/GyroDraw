@@ -111,10 +111,12 @@ public class LoadingScreen extends AppCompatActivity {
         isRoomReady.setListener(listenerRoomReady);
         areWordsReady.setListener(listenerRoomReady);
 
-        Glide.with(this).load(R.drawable.waiting_animation_dots)
-                .into((ImageView) findViewById(R.id.waitingAnimationDots));
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        if(enableWaitingAnimation) {
+            Glide.with(this).load(R.drawable.waiting_animation_dots)
+                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        }
 
     }
 
@@ -136,5 +138,9 @@ public class LoadingScreen extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static void disableLoadingAnimations() {
+        enableWaitingAnimation = false;
     }
 }

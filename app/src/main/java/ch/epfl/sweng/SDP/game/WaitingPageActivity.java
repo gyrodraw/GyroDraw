@@ -126,7 +126,7 @@ public class WaitingPageActivity extends Activity {
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue(Long.class) != null) {
+            try {
                 Long value = dataSnapshot.getValue(Long.class);
                 if (value != null) {
                     word1Votes = value.intValue();
@@ -136,6 +136,8 @@ public class WaitingPageActivity extends Activity {
                         winningWord = word2;
                     }
                 }
+            } catch(Exception e) {
+
             }
         }
 
@@ -148,7 +150,7 @@ public class WaitingPageActivity extends Activity {
     private final ValueEventListener listenerWord2 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue(Long.class) != null) {
+            try {
                 Long value = dataSnapshot.getValue(Long.class);
                 if (value != null) {
                     word2Votes = value.intValue();
@@ -158,6 +160,8 @@ public class WaitingPageActivity extends Activity {
                         winningWord = word2;
                     }
                 }
+            } catch(Exception e) {
+
             }
         }
 

@@ -51,8 +51,8 @@ public class LoadingScreenActivityTest {
 
     @Test
     public void testLookingForRoom() {
-        LoadingScreenActivity mock = Mockito.mock(LoadingScreenActivity.class);
-        doNothing().when(mock).lookingForRoom();
+        LoadingScreenActivity mock = Mockito.spy(mActivityRule.getActivity());
+        //doNothing().when(mock).lookingForRoom();
 
         mock.lookingForRoom();
         verify(mock, atLeastOnce()).lookingForRoom();

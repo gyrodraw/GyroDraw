@@ -104,7 +104,7 @@ public class WaitingPageActivityTest {
         clickButtonsTest(R.id.buttonWord2);
     }
 
-    /*@Test
+    @Test
     public void testButtonIncreasePeople() {
         Intents.init();
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
@@ -116,7 +116,7 @@ public class WaitingPageActivityTest {
         intended(hasComponent(DrawingActivity.class.getName()));
         Espresso.pressBack();
         Intents.release();
-    }*/
+    }
 
     @Test
     public void isButtonWord1Visible() {
@@ -255,7 +255,7 @@ public class WaitingPageActivityTest {
         roomRef.child("mock1Person").setValue(0);
         roomRef.child("mock2Person").setValue(0);
 
-        //onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
 
         boolean isSame = false;
 
@@ -265,12 +265,12 @@ public class WaitingPageActivityTest {
 
         assertEquals(isSame, true);
         //clearUsersRoom();
-    }*/
+    }
 
     @Ignore
     public void clearUsersRoom() {
         Database database = Database.INSTANCE;
         DatabaseReference usersRef = database.getReference("realRooms." + ROOM_ID_TEST);
         usersRef.child("users").removeValue();
-    }
+    }*/
 }

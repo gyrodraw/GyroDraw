@@ -41,28 +41,7 @@ public class Matchmaker implements MatchmakingInterface {
      *  Matchmaker init.
      */
     private Matchmaker(ConstantsWrapper constantsWrapper) {
-
         this.constantsWrapper = constantsWrapper;
-        this.reference = constantsWrapper.getReference("rooms");
-
-        // Read from the database
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated;
-                // Update room
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
-
-
     }
 
     /**
@@ -70,7 +49,7 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public Boolean joinRoom() {
 
-            Boolean successful = false;
+        Boolean successful = false;
         HttpURLConnection connection = null;
 
         try {
@@ -91,7 +70,6 @@ public class Matchmaker implements MatchmakingInterface {
                     // code is returned, do stuff in the else block
                 }
             } catch (Exception e) {
-                successful = false;
                 e.printStackTrace();
             } finally {
                 if (connection != null) {

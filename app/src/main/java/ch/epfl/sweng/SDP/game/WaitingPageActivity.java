@@ -107,7 +107,9 @@ public class WaitingPageActivity extends Activity {
                         timerRef.addValueEventListener(listenerTimer);
                         break;
                     case START_DRAWING_ACTIVITY:
-                        timerRef.removeEventListener(listenerTimer);
+                        if(timerRef != null) {
+                            timerRef.removeEventListener(listenerTimer);
+                        }
                         launchDrawingActivity();
                         break;
                     default:

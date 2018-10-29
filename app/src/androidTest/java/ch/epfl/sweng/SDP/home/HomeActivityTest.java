@@ -5,6 +5,9 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -7,19 +7,17 @@ import com.google.firebase.database.DatabaseReference;
 import ch.epfl.sweng.SDP.firebase.Database;
 
 public class ConstantsWrapper {
-    private DatabaseReference usersRef;
     private FirebaseUser firebaseUser;
 
     /**
      * Defines wrapper for testing interaction with Database.
      */
     public ConstantsWrapper() {
-        usersRef = Database.INSTANCE.getReference("users");
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public DatabaseReference getUsersRef() {
-        return usersRef;
+    public DatabaseReference getReference(String path) {
+        return Database.INSTANCE.getReference(path);
     }
 
 

@@ -385,7 +385,7 @@ public class VotingPageActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             if(roomID != null) {
-                Matchmaker.INSTANCE.leaveRoom(roomID);
+                Matchmaker.getInstance().leaveRoom(roomID);
             }
             removeAllListeners();
             launchActivity(HomeActivity.class);

@@ -135,7 +135,7 @@ public class LoadingScreenActivity extends Activity {
     }
 
     protected void lookingForRoom() {
-        Matchmaker.INSTANCE.joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
+        Matchmaker.getInstance().joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()) {
@@ -146,7 +146,7 @@ public class LoadingScreenActivity extends Activity {
                 } else {
                     roomID = task.getResult();
                     if(hasLeft) {
-                        Matchmaker.INSTANCE.leaveRoom(roomID);
+                        Matchmaker.getInstance().leaveRoom(roomID);
                         finish();
                     } else {
                         wordsVotesRef = database.getReference(

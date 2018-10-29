@@ -1,15 +1,16 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import ch.epfl.sweng.SDP.ConstantsWrapper;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -18,9 +19,9 @@ import static org.mockito.Mockito.when;
 
 public class MatchmakerTest {
 
-    ConstantsWrapper mockConstantsWrapper;
-    DatabaseReference mockReference;
-    Task mockTask;
+    private ConstantsWrapper mockConstantsWrapper;
+    private DatabaseReference mockReference;
+    private Task mockTask;
 
     /**
      * Setup up all the mocks.

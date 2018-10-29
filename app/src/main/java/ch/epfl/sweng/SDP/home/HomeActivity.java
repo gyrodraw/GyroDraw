@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.home;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -32,8 +34,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class HomeActivity extends Activity {
 

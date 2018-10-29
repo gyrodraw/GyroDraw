@@ -9,12 +9,11 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-
 /**
  * Class that simulates an account.
  */
 public class Account implements java.io.Serializable {
-    
+
     private String userId;
     private String username;
     private int trophies;

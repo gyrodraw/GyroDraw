@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import com.google.firebase.database.DatabaseReference;
-
 import ch.epfl.sweng.SDP.ConstantsWrapper;
+
+import com.google.firebase.database.DatabaseReference;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

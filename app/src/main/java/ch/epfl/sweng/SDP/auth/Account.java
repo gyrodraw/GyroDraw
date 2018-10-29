@@ -4,10 +4,8 @@ import static ch.epfl.sweng.SDP.home.League.createLeague;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -20,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Account {
 
-    private static Account instance = new Account();
+    private static Account instance = null;
 
     private static final League[] LEAGUES = new League[]{
             createLeague("league1", 0, 99),
@@ -35,25 +33,9 @@ public class Account {
     private int stars;
     private DatabaseReference usersRef;
 
-    private Account() {
+    private Account(ConstantsWrapper constantsWrapper, String username) {
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
-        }
-    }
-
-    public static Account getInstance() {
-        return instance;
-    }
-
-    /**
-     * Setter for account instance Trophies and stars are initialized at 0.
-     *
-     * @param username string defining the preferred username
-     * @throws IllegalArgumentException if username is null
-     */
-    public void setAccount(ConstantsWrapper constantsWrapper, String username) {
-        if (username == null) {
-            throw new IllegalArgumentException("username is null");
         }
 
         this.usersRef = constantsWrapper.getUsersRef();
@@ -65,19 +47,46 @@ public class Account {
     }
 
     /**
-     * Refresh the account, updating uninitialized fields. It has to be called before calling other
-     * methods.
+     * Create an account instance. Trophies and stars are initialized at 0.
+     *
+     * @param username string defining the preferred username
+     * @throws IllegalArgumentException if username is null
+     * @throws IllegalStateException if the account was already instantiated
      */
-    public void refreshAccount() {
-        if (usersRef == null) {
-            usersRef = Database.INSTANCE.getReference("users");
-        }
-        if (userId == null) {
-            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public static void createAccount(ConstantsWrapper constantsWrapper, String username) {
+        if (username == null) {
+            throw new IllegalArgumentException("username is null");
         }
 
-        changeTrophies(0);
-        addStars(0);
+        instance = new Account(constantsWrapper, username);
+    }
+
+    public static Account getInstance() {
+        if (instance == null) {
+            createAccount(new ConstantsWrapper(), "");
+        }
+
+        return instance;
+    }
+
+//    /**
+//     * Refresh the account, updating uninitialized fields. It has to be called before calling other
+//     * methods.
+//     */
+//    public void refreshAccount() {
+//        if (usersRef == null) {
+//            usersRef = Database.INSTANCE.getReference("users");
+//        }
+//        if (userId == null) {
+//            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        }
+//
+//        changeTrophies(0);
+//        addStars(0);
+//    }
+
+    public void setUsersRef(DatabaseReference usersRef) {
+        this.usersRef = usersRef;
     }
 
     public String getUsername() {
@@ -87,12 +96,24 @@ public class Account {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public int getTrophies() {
         return trophies;
     }
 
+    public void setTrophies(int trophies) {
+        this.trophies = trophies;
+    }
+
     public int getStars() {
         return stars;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 
     public String getUserId() {
@@ -106,9 +127,13 @@ public class Account {
         this.userId = userId;
     }
 
-    // Need to remain in order to have it in the DB automatically
+
     public String getCurrentLeague() {
         return currentLeague;
+    }
+
+    public void setCurrentLeague(String currentLeague) {
+        this.currentLeague = currentLeague;
     }
 
     /**

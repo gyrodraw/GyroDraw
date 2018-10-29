@@ -90,7 +90,7 @@ public class VotingPageActivity extends Activity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            throw databaseError.toException();
         }
     };
 

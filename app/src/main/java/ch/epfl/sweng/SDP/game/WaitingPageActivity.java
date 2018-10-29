@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -40,6 +41,8 @@ import java.util.Vector;
 
 public class WaitingPageActivity extends Activity {
 
+    private static final String TAG = "WaitingPageActivity";
+
     private enum WordNumber {
         ONE, TWO
     }
@@ -50,10 +53,7 @@ public class WaitingPageActivity extends Activity {
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static final int WORDS_COUNT = 5;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-
-    private boolean drawingActivityLauched = false;
 
     private int usersReadyCount = 1;
 
@@ -87,7 +87,7 @@ public class WaitingPageActivity extends Activity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            throw databaseError.toException();
         }
     };
 
@@ -101,7 +101,8 @@ public class WaitingPageActivity extends Activity {
                     case HOMESTATE:
                         break;
                     case CHOOSE_WORDS_TIMER_START:
-                        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
+                        timerRef = database.getReference(TOP_ROOM_NODE_ID + "."
+                                + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
                         break;
                     case START_DRAWING_ACTIVITY:
@@ -115,7 +116,7 @@ public class WaitingPageActivity extends Activity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing
+            throw databaseError.toException();
         }
     };
 
@@ -130,7 +131,7 @@ public class WaitingPageActivity extends Activity {
                             new String[]{word1, word2});
                 }
             } catch(Exception e) {
-
+                Log.e(TAG, "Value is not ready");
             }
         }
 
@@ -151,7 +152,7 @@ public class WaitingPageActivity extends Activity {
                             new String[]{word1, word2});
                 }
             } catch(Exception e) {
-
+                Log.e(TAG, "Value is not ready");
             }
         }
 
@@ -171,7 +172,7 @@ public class WaitingPageActivity extends Activity {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            throw databaseError.toException();
         }
     };
 
@@ -224,7 +225,6 @@ public class WaitingPageActivity extends Activity {
     }
 
     protected void launchDrawingActivity() {
-        drawingActivityLauched = true;
         Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
         intent.putExtra("RoomID", roomID);
         intent.putExtra("WinningWord", winningWord);
@@ -240,6 +240,13 @@ public class WaitingPageActivity extends Activity {
         button.setText(childString);
     }
 
+    /**
+     * Get the words that receives the larger amount of votes.
+     * @param word1Votes Votes for the word 1
+     * @param word2Votes Votes for the word 2
+     * @param words Array containing the words
+     * @return Returns the winning word.
+     */
     public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
         String winningWord = words[1];
         if(word1Votes >= word2Votes) {
@@ -323,7 +330,6 @@ public class WaitingPageActivity extends Activity {
         if (wordsVotesRef != null) {
             // need to keep the most voted word here, it has to
             // be done by the script not by this class
-            //wordsVotesRef.removeValue();
         }
     }
 
@@ -381,7 +387,7 @@ public class WaitingPageActivity extends Activity {
         try {
             timerRef.removeEventListener(listenerTimer);
         } catch(NullPointerException e) {
-
+            Log.e(TAG, "Timer listener not initialized");
         }
         stateRef.removeEventListener(listenerState);
         word1Ref.removeEventListener(listenerWord1);

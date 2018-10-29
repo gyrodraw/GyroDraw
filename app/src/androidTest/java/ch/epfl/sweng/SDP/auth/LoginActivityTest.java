@@ -56,18 +56,6 @@ public class LoginActivityTest {
                 .thenReturn(mockIdpResponse);
     }
 
-    /*@Test
-    public void testExistingUser(){
-        getDefaultSharedPreferences(activityRule.getActivity()).edit()
-                .putBoolean("hasAccount", true).apply();
-        Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
-        loginActivity.onActivityResult(42, -1, mockIntent);
-        assertTrue(loginActivity.isFinishing());
-        Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 2000);
-        Assert.assertNotNull(homeActivity);
-    }*/
-
     /**
      * Try with Powermock in future.
      */

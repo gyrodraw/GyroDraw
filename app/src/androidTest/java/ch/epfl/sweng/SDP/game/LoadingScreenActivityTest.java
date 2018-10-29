@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -62,7 +63,7 @@ public class LoadingScreenActivityTest {
 
     @Test
     public void testWordsReady() {
-        Vector<String> words = new Vector<String>();
+        ArrayList<String> words = new ArrayList<>();
         mActivityRule.getActivity().areWordsReady(words);
     }
 

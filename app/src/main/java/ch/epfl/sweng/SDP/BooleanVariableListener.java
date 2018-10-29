@@ -12,6 +12,11 @@ public class BooleanVariableListener {
         return boo;
     }
 
+    /**
+     * Set our boolean variable and if a listener is attached
+     * call the respective onChange method.
+     * @param boo Value to be set.
+     */
     public void setBoo(boolean boo) {
         this.boo = boo;
         if (listener != null) {

@@ -66,8 +66,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 switch(stateEnum) {
                     case START_VOTING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
-                        Intent intent = new Intent(getApplicationContext()
-                                                , VotingPageActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),
+                                VotingPageActivity.class);
                         intent.putExtra("RoomID", roomID);
                         startActivity(intent);
                         break;
@@ -139,6 +139,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         display.getSize(size);
         paintView.setSizeAndInit(size);
 
+        // Previous mock timer
         // setCountdownTimer();
 
         // informs the paintView that it has to be updated

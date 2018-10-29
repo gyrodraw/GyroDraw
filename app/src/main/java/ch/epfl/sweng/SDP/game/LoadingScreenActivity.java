@@ -21,7 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctionsException;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
@@ -33,13 +33,12 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 public class LoadingScreenActivity extends Activity {
 
     private String roomID = null;
-    private static final String TAG = "LoadingScreenActivity";
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;
-    private static boolean hasLeft = false;
+    private boolean hasLeft = false;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -61,7 +60,8 @@ public class LoadingScreenActivity extends Activity {
                     if(areWordsReady.getBoo() && isRoomReady.getBoo()) {
                         // Start new activity
                         wordsVotesRef.removeEventListener(listenerWords);
-                        Intent intent = new Intent(getApplicationContext(), WaitingPageActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),
+                                WaitingPageActivity.class);
                         intent.putExtra("word1", word1);
                         intent.putExtra("word2", word2);
                         intent.putExtra("roomID", roomID);
@@ -73,7 +73,7 @@ public class LoadingScreenActivity extends Activity {
     private final ValueEventListener listenerWords = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Vector<String> words = new Vector<>();
+            ArrayList<String> words = new ArrayList<>();
 
             for(DataSnapshot snap : dataSnapshot.getChildren()) {
                 words.add(snap.getKey());
@@ -90,7 +90,7 @@ public class LoadingScreenActivity extends Activity {
         }
     };
 
-    protected boolean areWordsReady(Vector<String> words) {
+    protected boolean areWordsReady(ArrayList<String> words) {
         try {
             word1 = words.get(0);
             word2 = words.get(1);

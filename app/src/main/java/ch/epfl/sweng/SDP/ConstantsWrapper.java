@@ -23,11 +23,17 @@ public class ConstantsWrapper {
         return usersRef;
     }
 
+    /**
+     * Get the ID of the connected user.
+     * @return Returns the ID of the user or Undefined if its null
+     */
     public String getFirebaseUserId(){
-        if(firebaseUser != null)
+        if(firebaseUser != null) {
             return firebaseUser.getUid();
-        else
+        }
+        else {
             // Needed for testing for now
             return "Undefined";
+        }
     }
 }

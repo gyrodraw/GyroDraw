@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.Matchmaking;
+package ch.epfl.sweng.SDP.matchmaking;
 
 import org.junit.Before;
 import org.junit.Test;

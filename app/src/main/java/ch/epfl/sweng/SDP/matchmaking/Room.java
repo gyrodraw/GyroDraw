@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.Matchmaking;
+package ch.epfl.sweng.SDP.matchmaking;
 
 import java.io.Serializable;
 import java.util.ArrayList;

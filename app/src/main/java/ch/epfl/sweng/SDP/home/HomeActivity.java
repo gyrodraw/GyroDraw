@@ -24,7 +24,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
-import ch.epfl.sweng.SDP.Matchmaking.User;
+import ch.epfl.sweng.SDP.matchmaking.User;
 
 
 import com.bumptech.glide.Glide;

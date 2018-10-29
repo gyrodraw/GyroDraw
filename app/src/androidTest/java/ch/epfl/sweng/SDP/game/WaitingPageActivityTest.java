@@ -30,6 +30,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -59,6 +61,8 @@ public class WaitingPageActivityTest {
 
     private static final String ROOM_ID_TEST = "0123457890";
 
+    private DataSnapshot dataSnapshotMock;
+
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
@@ -78,6 +82,11 @@ public class WaitingPageActivityTest {
                     return intent;
                 }
             };
+
+    @Before
+    public void init() {
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+    }
 
     /**
      * Perform action of waiting for a specific time.
@@ -225,12 +234,23 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void testLaunchingDrawingActivity() {
+    public void testOnState1Change() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(1);
+        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+    }
+
+    @Test
+    public void testOnState2Change() {
         Intents.init();
-        mActivityRule.getActivity().launchDrawingActivity();
+
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
+        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+
         intended(hasComponent(DrawingActivity.class.getName()));
+        Espresso.pressBack();
         Intents.release();
     }
+
 
     /**
      * Check if the view is displayed.

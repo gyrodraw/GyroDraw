@@ -11,6 +11,7 @@ import android.view.View;
 import com.google.firebase.database.DataSnapshot;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,6 +50,12 @@ public class LoadingScreenActivityTest {
 
             };
 
+    /*@Test
+    public void testWordsReady() {
+        ArrayList<String> words = new ArrayList<>();
+        mActivityRule.getActivity().areWordsReady(words);
+    }*/
+
     @Test
     public void drawableMatchTest() {
         Intents.init();
@@ -57,15 +64,9 @@ public class LoadingScreenActivityTest {
         onView(withId(R.id.drawButton)).perform(click());
         intended(hasComponent(LoadingScreenActivity.class.getName()));
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+
         intended(hasComponent(WaitingPageActivity.class.getName()));
-
         Intents.release();
-    }
-
-    @Test
-    public void testWordsReady() {
-        ArrayList<String> words = new ArrayList<>();
-        mActivityRule.getActivity().areWordsReady(words);
     }
 
     /**

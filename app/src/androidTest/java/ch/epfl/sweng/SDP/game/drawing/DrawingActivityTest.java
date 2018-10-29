@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,7 +10,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -18,6 +22,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,6 +30,7 @@ import java.io.IOException;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +43,10 @@ public class DrawingActivityTest {
     @Rule
     public final ActivityTestRule<DrawingActivity> activityRule =
             new ActivityTestRule<>(DrawingActivity.class);
+
+    // Add a monitor for the drawing activity
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(DrawingActivity.class.getName(), null, false);
 
     private PaintView paintView;
     private Resources res;
@@ -167,6 +177,14 @@ public class DrawingActivityTest {
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(paintView.getColor(),
                 paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+    }
+
+    @Test
+    public void testPressBackNothingHappens(){
+        pressBack();
+        Activity drawingActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 1000);
+        Assert.assertNotNull(drawingActivity);
     }
 
     private Paint initializedPaint(){

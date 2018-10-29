@@ -12,20 +12,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Locale;
 import java.util.Random;
 
@@ -129,27 +125,12 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
-        builder.addChildren("users." + Account.getInstance().getUserId() + ".currentLeague").build().addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String league = dataSnapshot.getValue(String.class);
-                        if (league != null) {
-                            DatabaseReference wordsSelectionRef = database
-                                    .getReference(format(Locale.getDefault(), "leagues.%s.%s",
-                                            league,
-                                            WORD_CHILDREN_DB_ID));
-                            wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+        // Select the words based on the user current league
+        DatabaseReference wordsSelectionRef = database
+                .getReference(format(Locale.getDefault(), "leagues.%s.%s",
+                        Account.getInstance(this).getCurrentLeague(),
+                        WORD_CHILDREN_DB_ID));
+        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
 
     private void initRadioButton(Button button, String childString,

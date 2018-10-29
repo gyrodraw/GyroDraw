@@ -56,7 +56,9 @@ public class Matchmaker implements MatchmakingInterface {
 
         try {
                 //Create connection
-                String urlParameters = "userId=" + URLEncoder.encode(constantsWrapper.getFirebaseUserId(), "UTF-8");
+
+                String userId = constantsWrapper.getFirebaseUserId();
+                String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
                 URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
                 connection = createConnection(url);
 

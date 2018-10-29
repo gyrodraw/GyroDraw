@@ -34,7 +34,7 @@ public class MatchmakerTest {
     Task mockTask;
 
     /**
-     * Setup up all the mocks
+     * Setup up all the mocks.
      */
     @Before
     public void init(){
@@ -44,7 +44,8 @@ public class MatchmakerTest {
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.removeValue()).thenReturn(mockTask);
         when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
-        doNothing().when(mockReference).addListenerForSingleValueEvent(isA(ValueEventListener.class));
+        final ValueEventListener valueEventClass = isA(ValueEventListener.class);
+        doNothing().when(mockReference).addListenerForSingleValueEvent(valueEventClass);
     }
 
     @Test

@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
@@ -22,16 +23,18 @@ public class AccountUnitTest {
     private ConstantsWrapper mockConstantsWrapper;
     private Context mockContext;
     private Account mockAccount;
+    private DatabaseReference mockReference;
+    private Query mockQuery;
 
     @Before
     public void init() {
-        mockConstantsWrapper = Mockito.mock(ConstantsWrapper.class);
-        mockContext = Mockito.mock(Context.class);
-        mockAccount = Mockito.mock(Account.class);
-        DatabaseReference mockReference = Mockito.mock(DatabaseReference.class);
-        Query mockQuery = Mockito.mock(Query.class);
+        mockConstantsWrapper = mock(ConstantsWrapper.class);
+        mockContext = mock(Context.class);
+        mockAccount = mock(Account.class);
+        mockReference = mock(DatabaseReference.class);
+        mockQuery = mock(Query.class);
 
-        when(mockConstantsWrapper.getUsersRef()).thenReturn(mockReference);
+        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
 
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);

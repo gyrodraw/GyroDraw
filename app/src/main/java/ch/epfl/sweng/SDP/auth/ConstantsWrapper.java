@@ -6,22 +6,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 public class ConstantsWrapper {
-    private DatabaseReference usersRef;
-    private FirebaseUser firebaseUser;
 
     /**
      * Defines wrapper for testing interaction with Database.
      */
     public ConstantsWrapper() {
-        usersRef = Database.INSTANCE.getReference("users");
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        // This constructor does nothing.
     }
 
-    public DatabaseReference getUsersRef() {
-        return usersRef;
+    public DatabaseReference getReference(String path) {
+        return Database.INSTANCE.getReference(path);
     }
 
     public String getFirebaseUserId() {
-        return firebaseUser.getUid();
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 }

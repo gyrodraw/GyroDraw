@@ -47,7 +47,7 @@ public class Account {
         }
 
         this.localDbHandler = new LocalDbHandlerForAccount(context, null, 1);
-        this.usersRef = constantsWrapper.getUsersRef();
+        this.usersRef = constantsWrapper.getReference("users");
         this.userId = constantsWrapper.getFirebaseUserId();
         this.username = username;
         this.currentLeague = LEAGUES[0].getName();

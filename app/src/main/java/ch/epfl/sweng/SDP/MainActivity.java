@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends Activity implements OnClickListener {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +22,6 @@ public class MainActivity extends Activity implements OnClickListener {
         findViewById(R.id.login_button).setOnClickListener(this);
 
         FirebaseApp.initializeApp(this);
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         // Go to the home if the user has already logged in and created an account
@@ -30,8 +30,6 @@ public class MainActivity extends Activity implements OnClickListener {
             launchActivity(HomeActivity.class);
             finish();
         }
-
-
     }
 
     @Override

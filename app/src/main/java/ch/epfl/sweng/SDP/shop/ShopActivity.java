@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * Activity allowing the purchase of itmes such as colors.
+ * Activity allowing the purchase of items such as colors.
  */
 public class ShopActivity extends Activity {
     //to be replaced with whatever we use to store all these refs
@@ -71,6 +71,7 @@ public class ShopActivity extends Activity {
      * Accesses the database, gets all the available colors and creates a button in the ScrollView
      * for each item found.
      * @param shopColorsReference  Reference to where colors are stored in shop.
+     * @param textView TextView to display user relevant messages.
      */
     protected void getColorsFromDatabase(DatabaseReference shopColorsReference,
                                          final TextView textView) {
@@ -127,9 +128,10 @@ public class ShopActivity extends Activity {
 
     /**
      * Sets the return button that makes the user return to the HomeActivity.
+     * @param ret Button which on clicked should return to the HomeActivity.
      */
-    protected void setReturn(Button btn) {
-        btn.setOnClickListener(new View.OnClickListener() {
+    protected void setReturn(Button ret) {
+        ret.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -140,6 +142,7 @@ public class ShopActivity extends Activity {
 
     /**
      * Sets the button that allows the user to refresh the ShopActivity.
+     * @param refresh Button which on clicked should refresh the current activity.
      */
     protected void setRefresh(Button refresh) {
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +168,7 @@ public class ShopActivity extends Activity {
      * inventory.
      * @param itemName Item to be purchased.
      * @param userColorsReference Reference to where the colors of current user are stored.
+     * @param textView TextView to display user relevant messages.
      * @throws DatabaseException If read does go wrong.
      */
     private void alreadyOwned(final String itemName, DatabaseReference userColorsReference,
@@ -195,7 +199,8 @@ public class ShopActivity extends Activity {
 
                         public void onFinish() {
                             if(stars.getInt() < 0 || price.getInt() < 0) {
-                                setTextViewMessage(textView, "Unable to read from database in time.");
+                                setTextViewMessage(textView,
+                                        "Unable to read from database in time.");
                                 resetTextViewMessage(textView, delayToClear);
                             }
                             else {
@@ -213,9 +218,11 @@ public class ShopActivity extends Activity {
         });
     }
 
+
     /**
      * Updates the users inventory with new Stars and item if he has enough Stars to buy it.
      * @param itemName Item to be purchased.
+     * @param textView TextView to display user relevant messages.
      */
     private void updateUserIf(String itemName, TextView textView) {
         if(sufficientCurrency(stars.getInt(), price.getInt())) {
@@ -234,7 +241,7 @@ public class ShopActivity extends Activity {
      * @param userStarsReference Reference to where the stars of the current user are stored.
      * @throws DatabaseException If read does go wrong.
      */
-    private void getStars(final IntegerWrapper starsWrapper, DatabaseReference userStarsReference)
+    protected void getStars(final IntegerWrapper starsWrapper, DatabaseReference userStarsReference)
             throws DatabaseException {
         userStarsReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -257,7 +264,7 @@ public class ShopActivity extends Activity {
      * @param shopColorsReference Reference to where colors are stored in shop.
      * @throws DatabaseException If read does go wrong.
      */
-    private void getPrice(final IntegerWrapper priceWrapper, final String itemName,
+    protected void getPrice(final IntegerWrapper priceWrapper, final String itemName,
                           DatabaseReference shopColorsReference) throws DatabaseException {
         shopColorsReference.child(itemName).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -312,33 +319,50 @@ public class ShopActivity extends Activity {
      * @param newStars New amount of stars after purchase.
      * @param currentUserRef Reference to the current user in database.
      */
-    private void updateUser(String itemName, int newStars, DatabaseReference currentUserRef,
+    protected void updateUser(String itemName, int newStars, DatabaseReference currentUserRef,
                             final TextView textView) {
-        currentUserRef.child("stars")
-                .setValue(newStars, new DatabaseReference.CompletionListener() {
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    throw databaseError.toException();
-                }
-            }
-        });
-        currentUserRef.child("items").child("colors").child(itemName)
-                .setValue(true, new DatabaseReference.CompletionListener() {
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    throw databaseError.toException();
-                }
-            }
-        });
+        updateUserStars(newStars, currentUserRef.child("stars"));
+        addUserItem(currentUserRef.child("items").child("colors").child(itemName));
         setTextViewMessage(textView, "Purchase successful.");
         resetTextViewMessage(textView, delayToClear);
     }
+
+    /**
+     * Updates the users stars after a purchase.
+     * @param newStars New amount of stars the user posesses.
+     * @param currentUserStarsRef Reference to where the users stars are stored in the database.
+     */
+    protected void updateUserStars(int newStars, DatabaseReference currentUserStarsRef) {
+        currentUserStarsRef.setValue(newStars, new DatabaseReference.CompletionListener() {
+
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError,
+                                           @NonNull DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            throw databaseError.toException();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Adds an item to a users database account after a purchase.
+     * @param currentUserSpecificItem Reference to where the users items are stored in the
+     *                                database.
+     */
+    protected void addUserItem(DatabaseReference currentUserSpecificItem) {
+        currentUserSpecificItem.setValue(true, new DatabaseReference.CompletionListener() {
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError,
+                                   @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    throw databaseError.toException();
+                }
+            }
+        });
+    }
+
 
     /**
      * Sets the message of a TextView.

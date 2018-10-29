@@ -1,9 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.support.test.espresso.intent.Intents;
 import android.widget.Button;
 import static android.support.test.espresso.Espresso.onView;
@@ -22,6 +20,8 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,8 +29,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
-import static org.mockito.Mockito.mock;
+import java.util.HashMap;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import ch.epfl.sweng.SDP.R;
@@ -40,27 +49,51 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 public class ShopActivityTest {
     private final int delay = 500;
     private long stars = 0;
+    private final int newStars = 500;
     private final String testString = "testString";
+    private final String color1 = "red";
+
+    private HashMap<String, Boolean> userColors = new HashMap<>();
 
 
     @Mock
-    DataSnapshot trueSnapshot;
+    private DataSnapshot trueSnapshot;
+    @Mock
+    private DataSnapshot existingStarsSnapshot;
+    @Mock
+    private DataSnapshot nonExistentSnapshot;
 
-    DataSnapshot falseSnapshot;
-    DataSnapshot existingStarsSnapshot;
-    DataSnapshot existingPriceSnapshot;
-    DataSnapshot nonexistingSnapshot;
+    @Mock
+    private DatabaseReference currentUserRef;
+    @Mock
+    private DatabaseReference currentUserStarsRef;
+    @Mock
+    private DatabaseReference currentUserItemsRef;
+    @Mock
+    private DatabaseReference currentUserColorsRef;
+    @Mock
+    private DatabaseReference currentUserSpecificColorRef;
+
+    @Mock
+    private Query ownedItemsQuery;
 
     @Before
     public void setup() {
+        //Initialize mocked objects.
         MockitoAnnotations.initMocks(this);
-        existingStarsSnapshot = mock(DataSnapshot.class);
-        nonexistingSnapshot = mock(DataSnapshot.class);
-        when(trueSnapshot.exists()).thenReturn(true);
-        when(trueSnapshot.getValue()).thenReturn(true);
+
         when(existingStarsSnapshot.exists()).thenReturn(true);
         when(existingStarsSnapshot.getValue()).thenReturn(stars);
-        when(nonexistingSnapshot.exists()).thenReturn(false);
+
+        when(nonExistentSnapshot.exists()).thenReturn(false);
+
+        when(trueSnapshot.exists()).thenReturn(true);
+        when(trueSnapshot.getValue()).thenReturn(true);
+
+        when(currentUserRef.child("items")).thenReturn(currentUserItemsRef);
+
+        when(currentUserItemsRef.child("colors")).thenReturn(currentUserColorsRef);
+        when(currentUserColorsRef.child(anyString())).thenReturn(currentUserSpecificColorRef);
     }
 
     @Rule
@@ -145,7 +178,7 @@ public class ShopActivityTest {
     @Test
     public void wrapDataSnapshotValueWorksWithNonExisting() {
         IntegerWrapper wrapper = new IntegerWrapper(0);
-        activityTestRule.getActivity().wrapDataSnapshotValue(wrapper, nonexistingSnapshot);
+        activityTestRule.getActivity().wrapDataSnapshotValue(wrapper, nonExistentSnapshot);
         assertEquals(-1, wrapper.getInt());
     }
 
@@ -188,4 +221,31 @@ public class ShopActivityTest {
         Intents.release();
     }
 
+    @Test
+    public void updateUserStarsWorksCorrectly() {
+        when(currentUserStarsRef.setValue(anyInt(), any())).thenAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                stars = invocation.getArgument(0);
+                assertEquals(newStars, stars);
+                return null;
+            }
+        });
+        activityTestRule.getActivity().updateUserStars(newStars, currentUserStarsRef);
+    }
+
+    @Test
+    public void addUserItemWorksCorrectly() {
+        when(currentUserSpecificColorRef.setValue(eq(true), any()))
+                .thenAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                userColors.clear();
+                userColors.put(color1, true);
+                assertEquals(true, userColors.get(color1));
+                return null;
+            }
+        });
+        activityTestRule.getActivity().addUserItem(currentUserSpecificColorRef);
+    }
 }

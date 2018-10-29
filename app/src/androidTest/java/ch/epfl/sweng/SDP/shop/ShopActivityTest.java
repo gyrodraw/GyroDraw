@@ -6,7 +6,9 @@ import android.os.Looper;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
+
 import android.support.test.espresso.intent.Intents;
+
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -49,7 +51,6 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
 
 import org.mockito.invocation.InvocationOnMock;
-
 import org.mockito.stubbing.Answer;
 
 @RunWith(AndroidJUnit4.class)

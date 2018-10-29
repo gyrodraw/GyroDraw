@@ -24,9 +24,6 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 import com.bumptech.glide.Glide;
 
 import com.google.firebase.database.DataSnapshot;
@@ -34,11 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import com.google.firebase.functions.FirebaseFunctionsException;
-
 import java.util.Locale;
-import java.util.Random;
-import java.util.Vector;
 
 public class WaitingPageActivity extends Activity {
 
@@ -92,7 +85,7 @@ public class WaitingPageActivity extends Activity {
         }
     };
 
-    private final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);

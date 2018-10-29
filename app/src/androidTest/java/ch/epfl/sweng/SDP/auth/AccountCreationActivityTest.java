@@ -54,12 +54,4 @@ public class AccountCreationActivityTest {
                 .perform(typeText("Max Muster"), closeSoftKeyboard())
                 .check(matches(withText(R.string.test_name)));
     }
-
-    @Test
-    public void testGotoHome() {
-        Intents.init();
-        activityRule.getActivity().gotoHome();
-        assertTrue(activityRule.getActivity().isFinishing());
-        Intents.release();
-    }
 }

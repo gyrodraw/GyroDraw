@@ -36,10 +36,6 @@ public class AccountCreationActivityTest {
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
 
-    // Add a monitor for the homeActivity activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
-
     @Test
     public void testCreateAccIsClickable() {
         onView(ViewMatchers.withId(R.id.createAcc)).check(matches(isClickable()));
@@ -63,9 +59,6 @@ public class AccountCreationActivityTest {
     public void testGotoHome() {
         Intents.init();
         activityRule.getActivity().gotoHome();
-        Activity homeAcivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 2000);
-        Assert.assertNotNull(homeAcivity);
         assertTrue(activityRule.getActivity().isFinishing());
         Intents.release();
     }

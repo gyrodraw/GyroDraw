@@ -13,5 +13,7 @@ public class BaseActivity extends Activity {
      * Prevents the user from pressing the back button.
      */
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        // Does nothing in here because we want to disable back button
+    }
 }

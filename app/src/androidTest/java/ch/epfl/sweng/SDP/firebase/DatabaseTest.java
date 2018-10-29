@@ -36,11 +36,30 @@ public class DatabaseTest {
         assertThat(ref.getParent().getKey(), is("test"));
     }
 
-    @Test
-    public void getInstanceShouldAlwaysReturnTheSameInstance() {
+    @Test(expected = IllegalArgumentException.class)
+    public void getDatabaseReferenceBuilderWithNullReference(){
+        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
+        new Database.DatabaseReferenceBuilder(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addNullChild() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         Database database = Database.INSTANCE;
-        assertThat(Database.INSTANCE, is(database));
+        DatabaseReference ref = database.getReference("test.tests");
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder =
+                new Database.DatabaseReferenceBuilder(null);
+        databaseReferenceBuilder.addChild(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addNullChildren() {
+        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
+        Database database = Database.INSTANCE;
+        DatabaseReference ref = database.getReference("test.tests");
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder =
+                new Database.DatabaseReferenceBuilder(null);
+        databaseReferenceBuilder.addChildren(null);
     }
 
 

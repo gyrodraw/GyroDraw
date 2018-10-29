@@ -78,10 +78,10 @@ public class WaitingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-            TextView waitingTime = findViewById(R.id.waitingTime);
 
             if(value != null) {
-                waitingTime.setText(String.valueOf(value));
+                ((TextView) findViewById(R.id.waitingTime))
+                        .setText(String.valueOf(value));
             }
         }
 
@@ -130,11 +130,8 @@ public class WaitingPageActivity extends Activity {
                 Long value = dataSnapshot.getValue(Long.class);
                 if (value != null) {
                     word1Votes = value.intValue();
-                    if (word1Votes >= word2Votes) {
-                        winningWord = word1;
-                    } else {
-                        winningWord = word2;
-                    }
+                    winningWord = getWinningWord(word1Votes, word2Votes,
+                            new String[]{word1, word2});
                 }
             } catch(Exception e) {
 
@@ -154,11 +151,8 @@ public class WaitingPageActivity extends Activity {
                 Long value = dataSnapshot.getValue(Long.class);
                 if (value != null) {
                     word2Votes = value.intValue();
-                    if (word1Votes >= word2Votes) {
-                        winningWord = word1;
-                    } else {
-                        winningWord = word2;
-                    }
+                    winningWord = getWinningWord(word1Votes, word2Votes,
+                            new String[]{word1, word2});
                 }
             } catch(Exception e) {
 
@@ -240,6 +234,14 @@ public class WaitingPageActivity extends Activity {
 
         // Display the word on the button
         button.setText(childString);
+    }
+
+    public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
+        String winningWord = words[1];
+        if(word1Votes >= word2Votes) {
+            winningWord = words[0];
+        }
+        return winningWord;
     }
 
     /**
@@ -361,12 +363,6 @@ public class WaitingPageActivity extends Activity {
      */
     public int getWord2Votes() {
         return word2Votes;
-    }
-
-    // TODO
-    private void getReadyUsers() {
-        // Do stuff with the database
-        // Should increment the counter with incrementCounter()
     }
 
     private void removeAllListeners() {

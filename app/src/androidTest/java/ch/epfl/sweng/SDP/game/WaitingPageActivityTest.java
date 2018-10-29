@@ -39,6 +39,7 @@ import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import org.hamcrest.Matcher;
@@ -59,20 +60,6 @@ public class WaitingPageActivityTest {
 
     private static final String ROOM_ID_TEST = "0123457890";
     private Integer stateToBeChecked;
-    private static final Integer correctValue = 1;
-    private final ValueEventListener stateListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue(Integer.class) != null) {
-                stateToBeChecked = dataSnapshot.getValue(Integer.class);
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    };
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
@@ -181,6 +168,30 @@ public class WaitingPageActivityTest {
 
         onView(withId(R.id.incrementButton)).perform(click());
         onView(withId(R.id.playersCounterText)).check(matches(withText("3/5")));
+    }
+
+    @Test
+    public void pressBackTest() {
+        Intents.init();
+        Espresso.pressBack();
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void getWinningWordTest() {
+        String[] words = {"cat", "dog"};
+        String winningWord = WaitingPageActivity.getWinningWord(2,1,
+                words);
+        assertEquals("cat", winningWord);
+
+        winningWord = WaitingPageActivity.getWinningWord(2,2,
+                words);
+        assertEquals("cat", winningWord);
+
+        winningWord = WaitingPageActivity.getWinningWord(2,3,
+                words);
+        assertEquals("dog", winningWord);
     }
 
     /**

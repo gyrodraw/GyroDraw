@@ -22,6 +22,4 @@ public class DatabaseUnitTest {
         Database.DatabaseReferenceBuilder builder = new Database.DatabaseReferenceBuilder();
         builder.addChildren(null);
     }
-
-
 }

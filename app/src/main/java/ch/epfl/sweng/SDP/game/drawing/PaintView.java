@@ -10,7 +10,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import ch.epfl.sweng.SDP.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import com.google.firebase.storage.FirebaseStorage;

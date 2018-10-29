@@ -20,7 +20,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.R;
 import com.google.android.gms.common.util.ArrayUtils;
 

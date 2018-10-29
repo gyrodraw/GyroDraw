@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -45,6 +45,7 @@ public class HomeActivity extends Activity {
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
     private final String user = "aa";
+
     // To be removed (for testing purposes only)
     private final ValueEventListener listenerAllReady = new ValueEventListener() {
         @Override
@@ -79,7 +80,7 @@ public class HomeActivity extends Activity {
         profileWindow = new Dialog(this);
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
-        localDb.retrieveAccount(Account.getInstance());
+        localDb.retrieveAccount(Account.getInstance(this));
 
         // Testing method
         Database database = Database.INSTANCE;

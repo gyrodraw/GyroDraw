@@ -1,10 +1,9 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.firebase;
 
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
-import ch.epfl.sweng.SDP.firebase.FbStorage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;

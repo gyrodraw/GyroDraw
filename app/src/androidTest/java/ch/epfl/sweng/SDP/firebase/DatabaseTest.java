@@ -1,12 +1,12 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import android.support.test.InstrumentationRegistry;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import org.junit.Test;
 
@@ -36,12 +36,28 @@ public class DatabaseTest {
         assertThat(ref.getParent().getKey(), is("test"));
     }
 
-    @Test
-    public void getInstanceShouldAlwaysReturnTheSameInstance() {
+    @Test(expected = IllegalArgumentException.class)
+    public void getDatabaseReferenceBuilderWithNullReference() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Database database = Database.INSTANCE;
-        assertThat(Database.INSTANCE, is(database));
+        new Database.DatabaseReferenceBuilder(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void addNullChild() {
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder = init();
+        databaseReferenceBuilder.addChild(null);
+    }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void addNullChildren() {
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder = init();
+        databaseReferenceBuilder.addChildren(null);
+    }
+
+    private Database.DatabaseReferenceBuilder init() {
+        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
+        Database database = Database.INSTANCE;
+        DatabaseReference ref = database.getReference("test.tests");
+        return new Database.DatabaseReferenceBuilder(ref);
+    }
 }

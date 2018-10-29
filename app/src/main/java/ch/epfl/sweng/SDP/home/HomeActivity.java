@@ -199,7 +199,7 @@ public class HomeActivity extends BaseActivity {
     private void listenerEventSelector(final View view, int id) {
         switch (id) {
             case R.id.drawButton:
-                if(CheckConnection.isOnline(this)) {
+                if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(WaitingPageActivity.class);
                 } else {

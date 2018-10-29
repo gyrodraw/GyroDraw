@@ -6,29 +6,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 public class LeagueUnitTest {
-    private static final String NAME = "test";
+    private static final String NAME = "league1";
 
-    private final League league = League.createLeague(NAME, 0, 99);
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateLeagueNullName() {
-        League.createLeague(null,0,99);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateLeagueNegativeMinTrophies() {
-        League.createLeague("test",-42,99);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateLeagueNegativeMaxTrophies() {
-        League.createLeague("test",0,-42);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateLeagueMinTrophiesGreaterThanMaxTrophies() {
-        League.createLeague("test",100,99);
-    }
+    private final League league = League.createLeague1();
 
     @Test
     public void testContainsOnLowerBound() {

@@ -10,32 +10,38 @@ public class League {
     private final int maxTrophies;
 
     private League(String name, int minTrophies, int maxTrophies) {
+        assert name != null: "name is null";
+        assert minTrophies >= 0: "minTrophies is negative";
+        assert maxTrophies >= 0: "maxTrophies is negative";
+        assert minTrophies <= maxTrophies: "minTrophies is greater than maxTrophies";
+
         this.name = name;
         this.minTrophies = minTrophies;
         this.maxTrophies = maxTrophies;
     }
 
     /**
-     * Create a {@link League}.
-     *
-     * @param name the name of the league
-     * @param minTrophies the minimum number of trophies needed to enter the league
-     * @param maxTrophies the maximum number of trophies before passing to the next league
-     * @return the desired League
-     * @throws IllegalArgumentException if name is null, if minTrophies or maxTrophies are negative
-     * or if minTrophies is greater than maxTrophies
+     * Create League 1.
+     * @return the desired league.
      */
-    public static League createLeague(String name, int minTrophies, int maxTrophies) {
-        if (name == null) {
-            throw new IllegalArgumentException("name is null");
-        } else if (minTrophies < 0) {
-            throw new IllegalArgumentException("minTrophies is negative");
-        } else if (maxTrophies < 0) {
-            throw new IllegalArgumentException("maxTrophies is negative");
-        } else if (minTrophies > maxTrophies) {
-            throw new IllegalArgumentException("minTrophies is greater than maxTrophies");
-        }
-        return new League(name, minTrophies, maxTrophies);
+    public static League createLeague1() {
+        return new League("league1", 0, 99);
+    }
+
+    /**
+     * Create League 2.
+     * @return the desired league.
+     */
+    public static League createLeague2() {
+        return new League("league2", 100, 199);
+    }
+
+    /**
+     * Create League 3.
+     * @return the desired league.
+     */
+    public static League createLeague3() {
+        return new League("league3", 200, 299);
     }
 
     /**

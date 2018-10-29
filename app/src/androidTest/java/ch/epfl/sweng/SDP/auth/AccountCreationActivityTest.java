@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -10,12 +11,16 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertTrue;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +35,10 @@ public class AccountCreationActivityTest {
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
+
+    // Add a monitor for the homeActivity activity
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Test
     public void testCreateAccIsClickable() {
@@ -54,7 +63,10 @@ public class AccountCreationActivityTest {
     public void testGotoHome() {
         Intents.init();
         activityRule.getActivity().gotoHome();
-        intended(hasComponent(HomeActivity.class.getName()));
+        Activity homeAcivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 2000);
+        Assert.assertNotNull(homeAcivity);
+        assertTrue(activityRule.getActivity().isFinishing());
         Intents.release();
     }
 }

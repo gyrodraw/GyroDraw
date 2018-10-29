@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import ch.epfl.sweng.SDP.ConstantsWrapper;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,7 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import ch.epfl.sweng.SDP.ConstantsWrapper;
 
 public class Matchmaker implements MatchmakingInterface {
 

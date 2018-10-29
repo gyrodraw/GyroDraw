@@ -3,12 +3,12 @@ package ch.epfl.sweng.SDP.shop;
 import android.os.CountDownTimer;
 import android.os.Looper;
 
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
+import android.support.test.espresso.intent.Intents;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
-import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
@@ -34,19 +34,21 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.runner.RunWith;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.when;
+
+import org.mockito.invocation.InvocationOnMock;
 
 import org.mockito.stubbing.Answer;
 
@@ -197,11 +199,15 @@ public class ShopActivityTest {
     @Test
     public void resetTextViewMessageWorks() {
         Looper.prepare();
-        final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        final TextView textView = new TextView(activityTestRule
+                .getActivity().getApplicationContext());
         activityTestRule.getActivity().setTextViewMessage(textView, testString);
         activityTestRule.getActivity().resetTextViewMessage(textView, delay);
         new CountDownTimer(delay, delay) {
             public void onTick(long millisUntilFinished) {
+                /**
+                 * Comment for the sake of CodeClimate.
+                 */
             }
 
             public void onFinish() {

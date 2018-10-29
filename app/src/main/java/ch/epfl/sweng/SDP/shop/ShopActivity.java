@@ -33,6 +33,8 @@ public class ShopActivity extends Activity {
     protected DatabaseReference currentUser;
     protected DatabaseReference shopColorsRef;
 
+    private final String colors = "colors";
+
     private final int delayToClear = 5000;
 
     private TextView shopTextView;
@@ -51,7 +53,7 @@ public class ShopActivity extends Activity {
         usersRef = dbRef.child("users");
         currentUser = usersRef.child(FirebaseAuth.getInstance()
                 .getCurrentUser().getUid());
-        shopColorsRef = dbRef.child("items").child("colors");
+        shopColorsRef = dbRef.child("items").child(colors);
     }
 
     @Override
@@ -159,7 +161,7 @@ public class ShopActivity extends Activity {
      * @param itemName Item to be purchased.
      */
     protected void purchaseItem(String itemName) {
-        alreadyOwned(itemName, currentUser.child("items").child("colors"), shopTextView);
+        alreadyOwned(itemName, currentUser.child("items").child(colors), shopTextView);
     }
 
     /**
@@ -266,7 +268,8 @@ public class ShopActivity extends Activity {
      */
     protected void getPrice(final IntegerWrapper priceWrapper, final String itemName,
                           DatabaseReference shopColorsReference) throws DatabaseException {
-        shopColorsReference.child(itemName).addListenerForSingleValueEvent(new ValueEventListener() {
+        shopColorsReference.child(itemName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -322,7 +325,7 @@ public class ShopActivity extends Activity {
     protected void updateUser(String itemName, int newStars, DatabaseReference currentUserRef,
                             final TextView textView) {
         updateUserStars(newStars, currentUserRef.child("stars"));
-        addUserItem(currentUserRef.child("items").child("colors").child(itemName));
+        addUserItem(currentUserRef.child("items").child(colors).child(itemName));
         setTextViewMessage(textView, "Purchase successful.");
         resetTextViewMessage(textView, delayToClear);
     }

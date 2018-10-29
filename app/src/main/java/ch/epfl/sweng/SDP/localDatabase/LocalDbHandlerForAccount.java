@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.local_database;
+package ch.epfl.sweng.SDP.localDatabase;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -55,6 +55,11 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     * Save the given account in the local database.
+     *
+     * @param account the account to be saved
+     */
     public void saveAccount(Account account) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_USER_ID, account.getUserId());
@@ -68,6 +73,12 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    /**
+     * Retrieve the account data stored in the local database and update the given account with it.
+     *
+     * @param account the account to be updated
+     */
     public void retrieveAccount(Account account) {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
 

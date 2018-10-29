@@ -17,16 +17,16 @@ public enum GameStates {
                 break;
             case 1:
                 state = CHOOSE_WORDS_TIMER_START;
-                    break;
+                break;
             case 2:
                 state = START_DRAWING_ACTIVITY;
-                    break;
+                break;
             case 3:
                 state = START_VOTING_ACTIVITY;
-                    break;
+                break;
             case 4:
                 state = END_VOTING_ACTIVITY;
-                    break;
+                break;
             default:
                 state = HOMESTATE;
         }

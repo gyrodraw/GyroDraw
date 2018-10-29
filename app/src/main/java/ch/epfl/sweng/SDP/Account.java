@@ -38,7 +38,7 @@ public class Account implements java.io.Serializable {
      * @param stars    int defining current currency
      */
     public Account(ConstantsWrapper constantsWrapper, String username, int trophies, int stars) {
-        this.usersRef = constantsWrapper.getUsersRef();
+        this.usersRef = constantsWrapper.getReference("users");
         this.userId = constantsWrapper.getFirebaseUserId();
         this.username = username;
         this.trophies = trophies;

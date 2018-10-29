@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -21,22 +22,24 @@ import java.net.URLEncoder;
 
 import java.util.HashMap;
 
+import ch.epfl.sweng.SDP.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.CheckConnection;
+
 public class Matchmaker implements MatchmakingInterface {
 
-    public boolean testing = false;
-
+    private ConstantsWrapper constantsWrapper;
     private static Matchmaker singleInstance = null;
     // static method to create instance of Singleton class
-    private DatabaseReference myRef;
+    private DatabaseReference reference;
 
     /**
      *  Create a singleton Instance.
      * @return returns a singleton instance.
      */
-    public static Matchmaker getInstance()
+    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper)
     {
         if (singleInstance == null) {
-            singleInstance = new Matchmaker();
+            singleInstance = new Matchmaker(constantsWrapper);
         }
 
         return singleInstance;
@@ -46,13 +49,13 @@ public class Matchmaker implements MatchmakingInterface {
     /**
      *  Matchmaker init.
      */
-    private Matchmaker() {
+    private Matchmaker(ConstantsWrapper constantsWrapper) {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("rooms");
+        this.constantsWrapper = constantsWrapper;
+        this.reference = constantsWrapper.getReference("rooms");
 
         // Read from the database
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -75,28 +78,15 @@ public class Matchmaker implements MatchmakingInterface {
      * join a room.
      */
     public Boolean joinRoom() {
-            String currentFirebaseUser = currentFirebaseUser = "TEST_USER";
-            if (!testing) {
-                 currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            }
 
             Boolean successful = false;
+        HttpURLConnection connection = null;
 
-            HttpURLConnection connection = null;
-            try {
-
+        try {
                 //Create connection
-                String urlParameters = "userId=" + URLEncoder.encode(currentFirebaseUser, "UTF-8");
+                String urlParameters = "userId=" + URLEncoder.encode(constantsWrapper.getFirebaseUserId(), "UTF-8");
                 URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type",
-                        "application/x-www-form-urlencoded");
-
-                connection.setRequestProperty("Content-Language", "en-US");
-
-                connection.setUseCaches(false);
-                connection.setDoOutput(true);
+                connection = createConnection(url);
 
                 //Send request
                 DataOutputStream wr = new DataOutputStream(
@@ -131,19 +121,29 @@ public class Matchmaker implements MatchmakingInterface {
         return successful;
     }
 
+    /**
+     * Creates a connection.
+     * @return set up connection
+     */
+    private HttpURLConnection createConnection(URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded");
 
+        connection.setRequestProperty("Content-Language", "en-US");
+
+        connection.setUseCaches(false);
+        connection.setDoOutput(true);
+        return connection;
+    }
 
     /**
      * leave a room.
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
-        String currentFirebaseUser = "TEST_USER";
-        if (!testing) {
-            currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        }
-
-        myRef.child(roomId).child("users").child(currentFirebaseUser).removeValue();
+        reference.child(roomId).child("users").child(constantsWrapper.getFirebaseUserId()).removeValue();
         return true;
     }
 

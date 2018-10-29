@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.matchmaking.MatchmakingInterface;
 
 import static org.junit.Assert.assertTrue;
 

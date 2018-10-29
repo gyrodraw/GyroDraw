@@ -41,28 +41,8 @@ public class Matchmaker implements MatchmakingInterface {
      *  Matchmaker init.
      */
     private Matchmaker(ConstantsWrapper constantsWrapper) {
-
         this.constantsWrapper = constantsWrapper;
         this.reference = constantsWrapper.getReference("rooms");
-
-        // Read from the database
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated;
-                // Update room
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
-
-
     }
 
     /**
@@ -84,24 +64,12 @@ public class Matchmaker implements MatchmakingInterface {
                         connection.getOutputStream());
                 wr.close();
 
-                //Get Response
-                InputStream is = connection.getInputStream();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-                StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-                String line;
-
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     // OK
                     successful = true;
                     // otherwise, if any other status code is returned, or no status
                     // code is returned, do stuff in the else block
                 }
-
-                while ((line = rd.readLine()) != null) {
-                    response.append(line);
-                    response.append('\r');
-                }
-                rd.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -134,7 +102,10 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
-        reference.child(roomId).child("users").child(constantsWrapper.getFirebaseUserId()).removeValue();
+        reference.child(roomId)
+                .child("users")
+                .child(constantsWrapper.getFirebaseUserId())
+                .removeValue();
         return true;
     }
 

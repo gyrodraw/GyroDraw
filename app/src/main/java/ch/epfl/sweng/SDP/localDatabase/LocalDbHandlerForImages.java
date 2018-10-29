@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.local_database;
 
 import android.content.ContentValues;
 import android.content.Context;

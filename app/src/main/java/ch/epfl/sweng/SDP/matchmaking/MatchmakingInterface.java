@@ -2,8 +2,7 @@ package ch.epfl.sweng.SDP.matchmaking;
 
 public interface MatchmakingInterface {
 
-    public Boolean joinRoom();
+    Boolean joinRoom();
 
-    public Boolean leaveRoom(String roomId);
-
+    Boolean leaveRoom(String roomId);
 }

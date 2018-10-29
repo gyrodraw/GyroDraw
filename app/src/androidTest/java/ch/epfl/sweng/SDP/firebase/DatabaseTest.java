@@ -1,14 +1,14 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import android.support.test.InstrumentationRegistry;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DatabaseTest {
 
@@ -37,7 +37,7 @@ public class DatabaseTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getDatabaseReferenceBuilderWithNullReference(){
+    public void getDatabaseReferenceBuilderWithNullReference() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         new Database.DatabaseReferenceBuilder(null);
     }
@@ -54,12 +54,10 @@ public class DatabaseTest {
         databaseReferenceBuilder.addChildren(null);
     }
 
-    private Database.DatabaseReferenceBuilder init(){
+    private Database.DatabaseReferenceBuilder init() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         Database database = Database.INSTANCE;
         DatabaseReference ref = database.getReference("test.tests");
         return new Database.DatabaseReferenceBuilder(ref);
     }
-
-
 }

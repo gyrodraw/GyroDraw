@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -34,6 +32,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class HomeActivity extends Activity {
 
@@ -86,7 +86,6 @@ public class HomeActivity extends Activity {
         dbRefTimer.addValueEventListener(listenerAllReady);
 
         initUsersDatabase();
-
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
@@ -199,7 +198,7 @@ public class HomeActivity extends Activity {
     private void listenerEventSelector(final View view, int id) {
         switch (id) {
             case R.id.drawButton:
-                if(CheckConnection.isOnline(this)) {
+                if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(WaitingPageActivity.class);
                 } else {

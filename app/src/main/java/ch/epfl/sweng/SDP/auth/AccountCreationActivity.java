@@ -59,8 +59,7 @@ public class AccountCreationActivity extends Activity {
                                 getDefaultSharedPreferences(getApplicationContext()).edit()
                                         .putBoolean("hasAccount", true).apply();
 
-                                launchActivity(HomeActivity.class);
-                                finish();
+                                gotoHome();
                             }
                         }
 
@@ -70,5 +69,13 @@ public class AccountCreationActivity extends Activity {
                         }
                     });
         }
+    }
+
+    /**
+     * Calls HomeActivity.
+     */
+    public void gotoHome() {
+        launchActivity(HomeActivity.class);
+        finish();
     }
 }

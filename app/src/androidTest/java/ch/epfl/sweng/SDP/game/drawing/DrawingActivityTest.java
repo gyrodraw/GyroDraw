@@ -1,5 +1,11 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,24 +13,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
-
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -86,8 +81,8 @@ public class DrawingActivityTest {
         canvas.drawPath(path, paint);
         canvas.drawBitmap(bitmap, 0, 0, paint);
 
-        LocalDbHandler localDbHandler =
-                new LocalDbHandler(activityRule.getActivity(), null, 1);
+        LocalDbHandlerForImages localDbHandler =
+                new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 100);
 
         bitmap = compressBitmap(bitmap, 100);

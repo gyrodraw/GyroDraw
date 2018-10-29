@@ -14,6 +14,7 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -29,7 +30,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.Locale;
 
-public class VotingPageActivity extends Activity {
+public class VotingPageActivity extends BaseActivity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
 

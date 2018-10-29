@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -22,7 +23,7 @@ import com.firebase.ui.auth.IdpResponse;
 import java.util.Collections;
 import java.util.List;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 42;
@@ -35,6 +36,9 @@ public class LoginActivity extends Activity {
         createSignInIntent();
     }
 
+    /**
+     * Creates signInIntent.
+     */
     private void createSignInIntent() {
         final List<IdpConfig> providers = Collections.singletonList(
                 new GoogleBuilder().build());
@@ -65,6 +69,10 @@ public class LoginActivity extends Activity {
         }
     }
 
+    /**
+     * Handle successful signIn.
+     * @param response contains the response.
+     */
     private void handleSuccessfulSignIn(IdpResponse response) {
         assert response != null;
 
@@ -80,6 +88,10 @@ public class LoginActivity extends Activity {
         }
     }
 
+    /**
+     * Handle failed signIn.
+     * @param response contains the response
+     */
     private void handleFailedSignIn(IdpResponse response) {
         TextView errorMessage = findViewById(R.id.error_message);
 

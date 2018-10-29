@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Locale;
 import java.util.Random;
 
-public class WaitingPageActivity extends Activity {
+public class WaitingPageActivity extends BaseActivity {
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
@@ -128,6 +129,7 @@ public class WaitingPageActivity extends Activity {
         DatabaseReference wordsSelectionRef = database.getReference(WORD_CHILDREN_DB_ID);
         wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
     }
+
 
     private void initRadioButton(Button button, String childString,
                                  DatabaseReference dbRef, WordNumber wordNumber) {

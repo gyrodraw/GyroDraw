@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
@@ -35,7 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
     private static final int MAIN_FREQUENCY = 10;

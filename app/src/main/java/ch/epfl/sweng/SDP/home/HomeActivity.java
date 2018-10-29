@@ -19,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
@@ -76,6 +78,9 @@ public class HomeActivity extends Activity {
         if (enableBackgroundAnimation) {
             setBackgroundAnimation();
         }
+
+        LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
+        localDb.retrieveAccount(Account.getInstance());
 
         // Testing method
         Database database = Database.INSTANCE;

@@ -137,6 +137,7 @@ public class User implements Serializable {
     }
 
     public void setFriends(ArrayList<String> friends) {
+
         this.friends = friends;
     }
 

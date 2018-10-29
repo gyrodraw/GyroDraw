@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -20,58 +19,53 @@ import com.google.firebase.database.ValueEventListener;
 public class AccountCreationActivity extends Activity {
 
     private EditText usernameInput;
-    private Button createAcc;
     private TextView usernameTaken;
-    private String username;
-    private View.OnClickListener createAccListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
+
         usernameInput = this.findViewById(R.id.usernameInput);
-        createAcc = this.findViewById(R.id.createAcc);
-        createAcc.setOnClickListener(createAccListener);
         usernameTaken = this.findViewById(R.id.usernameTaken);
-        createAccListener = new View.OnClickListener() {
+
+        Button createAcc = this.findViewById(R.id.createAcc);
+        createAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createAccClicked();
             }
-        };
-        createAcc.setOnClickListener(createAccListener);
+        });
     }
 
     /**
      * Gets called when user entered username and clicked on create account.
      */
     public void createAccClicked() {
-        username = usernameInput.getText().toString();
+        String username = usernameInput.getText().toString();
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            Account.createAccount(new ConstantsWrapper(), username);
+            Account.createAccount(this, new ConstantsWrapper(), username);
 
             Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
-                                usernameTaken.setText("Username already taken, try again");
+                                usernameTaken.setText(getString(R.string.usernameTaken));
                             } else {
-                                Account.getInstance().registerAccount();
+                                Account.getInstance(getApplicationContext()).registerAccount();
                                 getDefaultSharedPreferences(getApplicationContext()).edit()
                                         .putBoolean("hasAccount", true).apply();
-                                LocalDbHandlerForAccount localDB = new LocalDbHandlerForAccount(
-                                        getApplicationContext(), null, 1);
-                                localDB.saveAccount(Account.getInstance());
+
                                 launchActivity(HomeActivity.class);
                                 finish();
                             }
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
                             throw databaseError.toException();
                         }
                     });

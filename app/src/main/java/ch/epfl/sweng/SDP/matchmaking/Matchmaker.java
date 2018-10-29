@@ -58,7 +58,6 @@ public class Matchmaker {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
                 // Update room
 
             }
@@ -80,6 +79,8 @@ public class Matchmaker {
         if (!testing) {
             currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
+
+        Boolean ok = false;
 
         HttpURLConnection connection = null;
         try {
@@ -110,7 +111,7 @@ public class Matchmaker {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // OK
-                return true;
+                ok = true;
                 // otherwise, if any other status code is returned, or no status
                 // code is returned, do stuff in the else block
             }
@@ -127,7 +128,7 @@ public class Matchmaker {
                 connection.disconnect();
             }
         }
-        return false;
+        return ok;
     }
 
 

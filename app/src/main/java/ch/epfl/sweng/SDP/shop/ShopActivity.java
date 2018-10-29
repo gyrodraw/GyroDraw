@@ -27,18 +27,27 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class ShopActivity extends Activity {
     //to be replaced with whatever we use to store all these refs
-    protected FirebaseDatabase db;
+    protected FirebaseDatabase database;
     protected DatabaseReference dbRef;
     protected DatabaseReference usersRef;
     protected DatabaseReference currentUser;
     protected DatabaseReference shopColorsRef;
 
+    private final int delayToClear = 5000;
+
+    private TextView shopTextView;
+    private Button retFromShop;
+    private Button refresh;
+
     private final IntegerWrapper stars = new IntegerWrapper(-1);
     private final IntegerWrapper price = new IntegerWrapper(-1);
 
+    /**
+     * Not sure if we keep this in the final version.
+     */
     protected void initializeReferences() {
-        db = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
-        dbRef = db.getReference();
+        database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
+        dbRef = database.getReference();
         usersRef = dbRef.child("users");
         currentUser = usersRef.child(FirebaseAuth.getInstance()
                 .getCurrentUser().getUid());
@@ -50,9 +59,12 @@ public class ShopActivity extends Activity {
         super.onCreate(savedInstanceState);
         initializeReferences();
         setContentView(R.layout.shop_activity);
-        getColorsFromDatabase(shopColorsRef);
-        setReturn();
-        setRefresh();
+        shopTextView = findViewById(R.id.shopMessages);
+        getColorsFromDatabase(shopColorsRef, shopTextView);
+        retFromShop = findViewById(R.id.returnFromShop);
+        setReturn(retFromShop);
+        refresh = findViewById(R.id.refreshShop);
+        setRefresh(refresh);
     }
 
     /**
@@ -60,7 +72,8 @@ public class ShopActivity extends Activity {
      * for each item found.
      * @param shopColorsReference  Reference to where colors are stored in shop.
      */
-    protected void getColorsFromDatabase(DatabaseReference shopColorsReference) {
+    protected void getColorsFromDatabase(DatabaseReference shopColorsReference,
+                                         final TextView textView) {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -68,13 +81,13 @@ public class ShopActivity extends Activity {
                     LinearLayout linearLayout = findViewById(R.id.linearLayout);
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Button btn = initializeButton(snapshot.getKey());
-                        addOnClickListenerToButton(btn);
+                        addPurchaseOnClickListenerToButton(btn);
                         linearLayout.addView(btn);
                     }
                 }
                 else {
-                    setShopMessage("Currently no purchasable items in shop.");
-                    resetShopMessage();
+                    setTextViewMessage(textView,"Currently no purchasable items in shop.");
+                    resetTextViewMessage(textView, delayToClear);
                 }
             }
 
@@ -101,7 +114,7 @@ public class ShopActivity extends Activity {
      * corresponds to.
      * @param btn Button to which a listener is added.
      */
-    protected void addOnClickListenerToButton(final Button btn) {
+    protected void addPurchaseOnClickListenerToButton(final Button btn) {
         View.OnClickListener onClickListener = new View.OnClickListener() {
 
             @Override
@@ -115,9 +128,8 @@ public class ShopActivity extends Activity {
     /**
      * Sets the return button that makes the user return to the HomeActivity.
      */
-    private void setReturn() {
-        Button ret = findViewById(R.id.returnFromShop);
-        ret.setOnClickListener(new View.OnClickListener() {
+    protected void setReturn(Button btn) {
+        btn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -129,8 +141,7 @@ public class ShopActivity extends Activity {
     /**
      * Sets the button that allows the user to refresh the ShopActivity.
      */
-    private void setRefresh() {
-        Button refresh = findViewById(R.id.refreshShop);
+    protected void setRefresh(Button refresh) {
         refresh.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -145,7 +156,7 @@ public class ShopActivity extends Activity {
      * @param itemName Item to be purchased.
      */
     protected void purchaseItem(String itemName) {
-        alreadyOwned(itemName, currentUser.child("items").child("colors"));
+        alreadyOwned(itemName, currentUser.child("items").child("colors"), shopTextView);
     }
 
     /**
@@ -156,7 +167,8 @@ public class ShopActivity extends Activity {
      * @param userColorsReference Reference to where the colors of current user are stored.
      * @throws DatabaseException If read does go wrong.
      */
-    private void alreadyOwned(final String itemName, DatabaseReference userColorsReference)
+    private void alreadyOwned(final String itemName, DatabaseReference userColorsReference,
+                              final TextView textView)
             throws DatabaseException {
         userColorsReference.orderByKey().equalTo(itemName).addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -164,8 +176,8 @@ public class ShopActivity extends Activity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    setShopMessage("Item already owned.");
-                    resetShopMessage();
+                    setTextViewMessage(textView,"Item already owned.");
+                    resetTextViewMessage(textView, delayToClear);
                 }
                 else {
                     stars.setInt(-1);
@@ -177,17 +189,17 @@ public class ShopActivity extends Activity {
                         public void onTick(long millisUntilFinished) {
                             if(stars.getInt() > -1 && price.getInt() > -1) {
                                 this.cancel();
-                                updateUserIf(itemName);
+                                updateUserIf(itemName, textView);
                             }
                         }
 
                         public void onFinish() {
                             if(stars.getInt() < 0 || price.getInt() < 0) {
-                                setShopMessage("Unable to read from database in time.");
-                                resetShopMessage();
+                                setTextViewMessage(textView, "Unable to read from database in time.");
+                                resetTextViewMessage(textView, delayToClear);
                             }
                             else {
-                                updateUserIf(itemName);
+                                updateUserIf(itemName, textView);
                             }
                         }
                     }.start();
@@ -205,9 +217,14 @@ public class ShopActivity extends Activity {
      * Updates the users inventory with new Stars and item if he has enough Stars to buy it.
      * @param itemName Item to be purchased.
      */
-    private void updateUserIf(String itemName) {
+    private void updateUserIf(String itemName, TextView textView) {
         if(sufficientCurrency(stars.getInt(), price.getInt())) {
-            updateUser(itemName, stars.getInt() - price.getInt(), currentUser);
+            updateUser(itemName, stars.getInt() - price.getInt(), currentUser,
+                    shopTextView);
+        }
+        else {
+            setTextViewMessage(textView, "Not enough stars to purchase item.");
+            resetTextViewMessage(textView, delayToClear);
         }
     }
 
@@ -223,13 +240,7 @@ public class ShopActivity extends Activity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    starsWrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
-                            Integer.MAX_VALUE), Integer.MIN_VALUE));
-                }
-                else {
-                    starsWrapper.setInt(-1);
-                }
+                wrapDataSnapshotValue(starsWrapper, dataSnapshot);
             }
 
             @Override
@@ -252,13 +263,7 @@ public class ShopActivity extends Activity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    priceWrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
-                            Integer.MAX_VALUE), Integer.MIN_VALUE));
-                }
-                else {
-                    priceWrapper.setInt(-1);
-                }
+                wrapDataSnapshotValue(priceWrapper, dataSnapshot);
             }
 
             @Override
@@ -269,6 +274,27 @@ public class ShopActivity extends Activity {
     }
 
     /**
+     * Extracts the long value of a DataSnapshot and wraps in into an IntegerWrapper, or sets the
+     * value of the IntegerWraper to -1 if any problems occur.
+     * @param wrapper Wrapper that is given value.
+     * @param dataSnapshot Snapshot to extract value from.
+     */
+    public void wrapDataSnapshotValue(final IntegerWrapper wrapper, DataSnapshot dataSnapshot) {
+        if (dataSnapshot.exists()) {
+            try {
+                wrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
+                        Integer.MAX_VALUE), Integer.MIN_VALUE));
+            }
+            catch (Exception e) {
+                wrapper.setInt(-1);
+            }
+        }
+        else {
+            wrapper.setInt(-1);
+        }
+    }
+
+    /**
      * Checks if the user has enough currency to buy an item.
      * @param stars Current stars of user.
      * @param price Price of the item to purchase.
@@ -276,10 +302,6 @@ public class ShopActivity extends Activity {
      */
     protected boolean sufficientCurrency(int stars, int price) {
         boolean sufficient = stars >= price;
-        if (!sufficient) {
-            setShopMessage("Not enough stars to purchase item.");
-            resetShopMessage();
-        }
         return sufficient;
     }
 
@@ -290,7 +312,8 @@ public class ShopActivity extends Activity {
      * @param newStars New amount of stars after purchase.
      * @param currentUserRef Reference to the current user in database.
      */
-    private void updateUser(String itemName, int newStars, DatabaseReference currentUserRef) {
+    private void updateUser(String itemName, int newStars, DatabaseReference currentUserRef,
+                            final TextView textView) {
         currentUserRef.child("stars")
                 .setValue(newStars, new DatabaseReference.CompletionListener() {
 
@@ -313,24 +336,26 @@ public class ShopActivity extends Activity {
                 }
             }
         });
-        setShopMessage("Purchase successful.");
-        resetShopMessage();
+        setTextViewMessage(textView, "Purchase successful.");
+        resetTextViewMessage(textView, delayToClear);
     }
 
     /**
-     * Sets the shop message.
-     * @param message Message to be displayed.
+     * Sets the message of a TextView.
+     * @param textView TextView that should show a certain message.
+     * @param message String to be displayed.
      */
-    private void setShopMessage(String message) {
-        TextView textView = findViewById(R.id.shopMessages);
+    protected void setTextViewMessage(TextView textView, String message) {
         textView.setText(message);
     }
 
     /**
-     * Sets the shop message to the empty string after 5 seconds.
+     * Clears the TextView after a certain delay.
+     * @param textView TextView to be cleared.
+     * @param delay Delay until message is cleared in milliseconds.
      */
-    private void resetShopMessage() {
-        new CountDownTimer(5000, 5000) {
+    protected void resetTextViewMessage(final TextView textView, int delay) {
+        new CountDownTimer(delay, delay) {
             public void onTick(long millisUntilFinished) {
                 /**
                  * Does nothing on tick, only once the countdown reaches zero action is needed.
@@ -338,7 +363,7 @@ public class ShopActivity extends Activity {
             }
 
             public void onFinish() {
-                setShopMessage("");
+                setTextViewMessage(textView, "");
             }
         }.start();
     }
@@ -346,7 +371,7 @@ public class ShopActivity extends Activity {
     /**
      * Closes ShopActivity and returns to the HomeActivity.
      */
-    private void gotoHome() {
+    protected void gotoHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
@@ -355,7 +380,7 @@ public class ShopActivity extends Activity {
     /**
      * Restarts the ShopActivity.
      */
-    private void refreshShop() {
+    protected void refreshShop() {
         startActivity(getIntent());
         finish();
     }

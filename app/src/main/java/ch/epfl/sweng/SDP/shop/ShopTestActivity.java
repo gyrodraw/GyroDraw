@@ -6,8 +6,8 @@ public class ShopTestActivity extends ShopActivity {
 
     @Override
     public void initializeReferences() {
-        db = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
-        dbRef = db.getReference();
+        database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
+        dbRef = database.getReference();
         usersRef = dbRef.child("testUsers");
         currentUser = usersRef.child("testUserOne");
         shopColorsRef = dbRef.child("testItems").child("colors");

@@ -40,7 +40,14 @@ public class LoadingScreenActivityTest {
 
     @Rule
     public final ActivityTestRule<LoadingScreenActivity> mActivityRule =
-            new ActivityTestRule<LoadingScreenActivity>(LoadingScreenActivity.class) {};
+            new ActivityTestRule<LoadingScreenActivity>(LoadingScreenActivity.class) {
+
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableLoadingAnimations();
+                }
+
+            };
 
     @Test
     public void drawableMatchTest() {

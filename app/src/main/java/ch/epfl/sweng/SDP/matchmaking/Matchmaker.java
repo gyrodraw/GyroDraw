@@ -5,11 +5,11 @@ import android.util.Log;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DatabaseError;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -57,8 +57,7 @@ public class Matchmaker implements MatchmakingInterface {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
+                // whenever data at this location is updated;
                 // Update room
 
             }
@@ -80,6 +79,8 @@ public class Matchmaker implements MatchmakingInterface {
             if (!testing) {
                  currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
             }
+
+            Boolean ok = false;
 
             HttpURLConnection connection = null;
             try {
@@ -110,7 +111,7 @@ public class Matchmaker implements MatchmakingInterface {
 
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     // OK
-                return true;
+                    ok = true;
                     // otherwise, if any other status code is returned, or no status
                     // code is returned, do stuff in the else block
                 }
@@ -127,7 +128,7 @@ public class Matchmaker implements MatchmakingInterface {
                     connection.disconnect();
                 }
             }
-        return false;
+        return ok;
     }
 
 
@@ -137,7 +138,7 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
-        String currentFirebaseUser = currentFirebaseUser = "TEST_USER";
+        String currentFirebaseUser = "TEST_USER";
         if (!testing) {
             currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }

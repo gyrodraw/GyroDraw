@@ -356,6 +356,10 @@ public class WaitingPageActivity extends Activity {
         return word1Votes;
     }
 
+    public void setWord1Votes(int votes) {
+        word1Votes = votes;
+    }
+
     /**
      * Getter of the number of votes for word 2.
      *
@@ -365,15 +369,19 @@ public class WaitingPageActivity extends Activity {
         return word2Votes;
     }
 
+    public void setWord2Votes(int votes) {
+        word2Votes = votes;
+    }
+
     private void removeAllListeners() {
         try {
-            stateRef.removeEventListener(listenerState);
             timerRef.removeEventListener(listenerTimer);
-            word1Ref.removeEventListener(listenerWord1);
-            word2Ref.removeEventListener(listenerWord2);
         } catch(NullPointerException e) {
 
         }
+        stateRef.removeEventListener(listenerState);
+        word1Ref.removeEventListener(listenerWord1);
+        word2Ref.removeEventListener(listenerWord2);
     }
 
     @Override

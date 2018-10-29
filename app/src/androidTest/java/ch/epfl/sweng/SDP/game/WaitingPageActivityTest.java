@@ -59,8 +59,7 @@ import java.util.concurrent.TimeUnit;
 public class WaitingPageActivityTest {
 
     private static final String ROOM_ID_TEST = "0123457890";
-    private Integer stateToBeChecked;
-
+    
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
@@ -194,6 +193,15 @@ public class WaitingPageActivityTest {
         assertEquals("dog", winningWord);
     }
 
+    @Test
+    public void testGettersSettersWords() {
+        mActivityRule.getActivity().setWord1Votes(10);
+        assertEquals(10, mActivityRule.getActivity().getWord1Votes());
+
+        mActivityRule.getActivity().setWord2Votes(10);
+        assertEquals(10, mActivityRule.getActivity().getWord2Votes());
+    }
+
     /**
      * Check if the view is displayed.
      *
@@ -255,33 +263,4 @@ public class WaitingPageActivityTest {
     public void waitForVisibility(final View view, final int visibility) {
         Espresso.registerIdlingResources(new ViewVisibilityIdlingResource(view, visibility));
     }
-
-    /*@Test
-    public void testStateChange() {
-        //clearUsersRoom();
-        Database database = Database.INSTANCE;
-        DatabaseReference roomRef = database.getReference("realRooms." + ROOM_ID_TEST + ".users");
-        //DatabaseReference stateRef = roomRef.child("state");
-        //stateRef.addValueEventListener(stateListener);
-        roomRef.child("mock1Person").setValue(0);
-        roomRef.child("mock2Person").setValue(0);
-
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
-
-        boolean isSame = false;
-
-        if(stateToBeChecked > 0) {
-            isSame = true;
-        }
-
-        assertEquals(isSame, true);
-        //clearUsersRoom();
-    }
-
-    @Ignore
-    public void clearUsersRoom() {
-        Database database = Database.INSTANCE;
-        DatabaseReference usersRef = database.getReference("realRooms." + ROOM_ID_TEST);
-        usersRef.child("users").removeValue();
-    }*/
 }

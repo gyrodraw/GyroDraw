@@ -13,8 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,6 +33,9 @@ public class MatchmakerTest {
     DatabaseReference mockReference;
     Task mockTask;
 
+    /**
+     * Setup up all the mocks
+     */
     @Before
     public void init(){
         mockConstantsWrapper = mock(ConstantsWrapper.class);

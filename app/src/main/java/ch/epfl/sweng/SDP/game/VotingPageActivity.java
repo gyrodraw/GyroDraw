@@ -4,18 +4,21 @@ import static java.lang.String.format;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import java.util.Locale;
 
 public class VotingPageActivity extends Activity {
@@ -30,41 +34,17 @@ public class VotingPageActivity extends Activity {
     private static final int NUMBER_OF_DRAWINGS = 5;
 
     // For the moment it is defined as a constant
-    private static final int WAITING_TIME = 20;
     private static final String PATH = "mockRooms.ABCDE";
     private static final String USER = "aa"; // need to be replaced with the username
-
-    private DatabaseReference rankingRef;
-    private DatabaseReference counterRef;
-    private DatabaseReference endTimeRef;
-    private DatabaseReference usersRef;
-    private DatabaseReference endVotingUsersRef;
-
-    private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
-    private short drawingDownloadCounter = 0;
-    private short changeDrawingCounter = 0;
-
-    private int[] ratings;
-    private short ratingToSendCounter = 0;
-
-    private String[] playersNames;
-
-    private ProgressBar progressBar;
-    private ImageView drawingView;
-    private TextView playerNameView;
-
-    private RatingBar ratingBar;
-
-    public int[] getRatings() {
-        return ratings.clone();
-    }
-
-    private final ValueEventListener listenerCounter = new ValueEventListener() {
+    private static boolean enableAnimations = true;
+    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-            if (value != null && value != progressBar.getProgress()) {
-                progressBar.setProgress(WAITING_TIME - value);
+
+            // Check if all the players are ready for the next phase
+            if (value != null && value == 1) {
+                // Start new activity
             }
         }
 
@@ -73,7 +53,10 @@ public class VotingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-
+    private DatabaseReference rankingRef;
+    private DatabaseReference counterRef;
+    private DatabaseReference endTimeRef;
+    private DatabaseReference usersRef;
     private final ValueEventListener listenerEndTime = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -92,16 +75,21 @@ public class VotingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-
-    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
+    private DatabaseReference endVotingUsersRef;
+    private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
+    private short drawingDownloadCounter = 0;
+    private short changeDrawingCounter = 0;
+    private int[] ratings;
+    private short ratingToSendCounter = 0;
+    private String[] playersNames;
+    private ImageView drawingView;
+    private TextView playerNameView;
+    private TextView timer;
+    private final ValueEventListener listenerCounter = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-
-            // Check if all the players are ready for the next phase
-            if (value != null && value == 1) {
-                // Start new activity
-            }
+            timer.setText(String.format("%d", value));
         }
 
         @Override
@@ -109,6 +97,19 @@ public class VotingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
+    private RatingBar ratingBar;
+
+    /**
+     * Disables the background and stars animation.
+     * Call this method in every VotingPageActivity test
+     */
+    public static void disableAnimations() {
+        enableAnimations = false;
+    }
+
+    public int[] getRatings() {
+        return ratings.clone();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,20 +144,36 @@ public class VotingPageActivity extends Activity {
         ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                ratingBar.setIsIndicator(true);
+                ratingBar.setAlpha(0.8f);
                 // Store the rating
                 ratings[ratingToSendCounter] = (int) rating;
 
                 //Send it to the database along with the corresponding player name
                 sendRatingToDatabase(playersNames[ratingToSendCounter]);
+
+                StarAnimationView starsAnimation = findViewById(R.id.starsAnimation);
+                starsAnimation.addStars((int) rating);
             }
         });
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
+        timer = findViewById(R.id.timer);
+
+        if (!enableAnimations) {
+            setVisibility(View.GONE, R.id.starsAnimation);
+        } else {
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+        }
 
         // Make the drawingView and the playerNameView invisible
         // until the drawings have been downloaded
         setVisibility(View.INVISIBLE, drawingView, playerNameView);
-        initProgressBar();
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
+        timer.setTypeface(typeMuro);
     }
 
     @Override
@@ -168,12 +185,6 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
-    }
-
-    private void initProgressBar() {
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setMax(20);
-        progressBar.setProgress(0);
     }
 
     /**
@@ -245,6 +256,9 @@ public class VotingPageActivity extends Activity {
         ++drawingDownloadCounter;
     }
 
+    /* public for testing only, the users in the database should be already sorted by their ranking
+    before calling this */
+
     // Send "playerName" drawing's rating to the database.
     private void sendRatingToDatabase(String playerName) {
         final int rating = ratings[ratingToSendCounter];
@@ -271,13 +285,7 @@ public class VotingPageActivity extends Activity {
                 });
 
         ++ratingToSendCounter;
-
-        // Disable the rating bar since the player has already voted for the current drawing
-        ratingBar.setEnabled(false);
     }
-
-    /* public for testing only, the users in the database should be already sorted by their ranking
-    before calling this */
 
     /**
      * Show the final ranking in a new fragment.

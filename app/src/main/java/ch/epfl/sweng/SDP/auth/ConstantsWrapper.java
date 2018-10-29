@@ -10,7 +10,7 @@ public class ConstantsWrapper {
     private FirebaseUser firebaseUser;
 
     /**
-     * Defines wrapper for testing interaction with Database. 
+     * Defines wrapper for testing interaction with Database.
      */
     public ConstantsWrapper() {
         usersRef = Database.INSTANCE.getReference("users");
@@ -21,7 +21,7 @@ public class ConstantsWrapper {
         return usersRef;
     }
 
-    public String getFirebaseUserId(){
+    public String getFirebaseUserId() {
         return firebaseUser.getUid();
     }
 }

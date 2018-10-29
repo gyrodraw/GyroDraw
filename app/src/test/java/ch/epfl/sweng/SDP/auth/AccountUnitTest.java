@@ -20,9 +20,7 @@ public class AccountUnitTest {
     private Account account = Account.getInstance();
 
     @Before
-    public void init(){
-        DatabaseReference mockReference = Mockito.mock(DatabaseReference.class);
-        Query mockQuery = Mockito.mock(Query.class);
+    public void init() {
         mockConstantsWrapper = Mockito.mock(ConstantsWrapper.class);
 
         when(mockConstantsWrapper.getUsersRef()).thenReturn(mockReference);
@@ -40,7 +38,7 @@ public class AccountUnitTest {
     }
 
     @Test
-    public void testAccountValuesCorrect(){
+    public void testAccountValuesCorrect() {
         assertEquals(account.getTrophies(), 0);
         assertEquals(account.getStars(), 0);
         assertEquals(account.getUsername(), "123456789");
@@ -48,71 +46,76 @@ public class AccountUnitTest {
     }
 
     @Test
-    public void testGetStars(){
+    public void testGetStars() {
         assertThat(account.getStars(), is(0));
     }
 
     @Test
-    public void testGetUsername(){
+    public void testGetUsername() {
         assertThat(account.getUsername(), is("123456789"));
     }
 
     @Test
-    public void testGetTrophies(){
+    public void testGetTrophies() {
         assertThat(account.getTrophies(), is(0));
     }
 
     @Test
-    public void testChangeTrophies(){
+    public void testChangeTrophies() {
         account.changeTrophies(20);
         //assertEquals(account.getTrophies(), 20);
     }
 
     @Test
-    public void testAddStars(){
+    public void testAddStars() {
         account.addStars(20);
         //assertEquals(account.getStars(), 20);
     }
 
     @Test
-    public void testAddFriend(){
+    public void testAddFriend() {
         account.addFriend("EPFLien");
     }
 
     @Test
-    public void testRemoveFriend(){
+    public void testRemoveFriend() {
         account.removeFriend("EPFLien");
     }
 
     @Test
-    public void testUpdateUsername(){
+    public void testUpdateUsername() {
         account.updateUsername("987654321");
         assertEquals(account.getUsername(), "987654321");
     }
 
     @Test
-    public void testRegisterAccount(){
+    public void testRegisterAccount() {
         account.registerAccount();
     }
 
     @Test
-    public void testCheckIfUsernameTaken(){
+    public void testCheckIfUsernameTaken() {
         account.checkIfAccountNameIsFree("123456789");
         assertEquals(account.getUsername(), "123456789");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNullUsername(){
+    public void testNullUsername() {
         account.updateUsername(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testAddNullFriend(){
+    public void testAddNegativeBalanceStars() {
+        account.addStars(-1000);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNullFriend() {
         account.addFriend(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void removeNullFriend(){
+    public void removeNullFriend() {
         account.removeFriend(null);
     }
 }

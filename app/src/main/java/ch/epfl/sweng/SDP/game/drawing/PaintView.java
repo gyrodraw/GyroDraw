@@ -1,35 +1,45 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
-
-import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.LocalDbHandlerForImages;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
-
-
 public class PaintView extends View {
 
-    private Paint paint;
+    private static final int DRAW_WIDTH = 30;
+    private static final int QUALITY = 20;
+
+    private boolean canDraw = true;
+    private boolean isDrawing = false;
+    private boolean bucketMode = false;
+
+    private Paint[] colors = new Paint[6];
+    private Path path = new Path();
     private Paint paintC;
-    private int circleRadius;
-    private float circleX;
-    private float circleY;
-    private Path path;
-    private Boolean draw;
+
     private Bitmap bitmap;
     private Canvas canvas;
+
+    private int circleX = 0;
+    private int circleY = 0;
+
+    private int width;
+    private int height;
+    private int circleRadius;
+    private int color = 0;
+    private int previousColor = 1;
 
     /**
      * Constructor for the view.
@@ -39,39 +49,56 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        paint = new Paint();
-        paintC = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(10);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paintC.setColor(Color.RED);
-        paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(10);
 
-        circleRadius = 10; //will be modifiable in future, not hardcoded
-        circleX = 0;
-        circleY = 0;
-        draw = false;
-        path = new Path();
-        path.moveTo(circleX, circleY);
+        Resources res = getResources();
+        colors[0] = getPaintWithColor(Color.BLACK);
+        colors[1] = getPaintWithColor(res.getColor(R.color.colorBlue));
+        colors[2] = getPaintWithColor(res.getColor(R.color.colorGreen));
+        colors[3] = getPaintWithColor(res.getColor(R.color.colorYellow));
+        colors[4] = getPaintWithColor(res.getColor(R.color.colorRed));
+        colors[5] = getPaintWithColor(Color.WHITE);
+
+        paintC = new Paint(Color.BLACK);
+        paintC.setStyle(Paint.Style.STROKE);
+        paintC.setStrokeWidth(DRAW_WIDTH / 2);
+
+        circleRadius = DRAW_WIDTH;
     }
 
-    public float getCircleX() {
+    private Paint getPaintWithColor(int color) {
+        Paint newPaint = new Paint();
+        newPaint.setColor(color);
+        newPaint.setStyle(Paint.Style.STROKE);
+        newPaint.setStrokeJoin(Paint.Join.ROUND);
+        newPaint.setStrokeWidth(DRAW_WIDTH);
+        newPaint.setStrokeCap(Paint.Cap.ROUND);
+        return newPaint;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public int getCircleX() {
         return circleX;
     }
 
-    public float getCircleY() {
+    public int getCircleY() {
         return circleY;
     }
 
-    public void setCircleX(float circleX) {
-        this.circleX = circleX;
-    }
-
-    public void setCircleY(float circleY) {
-        this.circleY = circleY;
+    /**
+     * Sets the circle position.
+     *
+     * @param circleX the x position
+     * @param circleY the y position
+     */
+    public void setCircle(int circleX, int circleY) {
+        this.circleX = sanitizeCoordinate(circleX, width);
+        this.circleY = sanitizeCoordinate(circleY, height);
+        if (isDrawing) {
+            path.lineTo(this.circleX, this.circleY);
+        }
     }
 
     public int getCircleRadius() {
@@ -82,70 +109,174 @@ public class PaintView extends View {
         this.circleRadius = circleRadius;
     }
 
-    public boolean getDraw() {
-        return draw;
-    }
-
-    public void setDraw(boolean draw) {
-        this.draw = draw;
+    /**
+     * Returns the value of the the current color.
+     *
+     * @return the value of the current color
+     */
+    public int getColor() {
+        return colors[color].getColor();
     }
 
     /**
-     * Initializes coordinates of pen and size of bitmap.
-     * Creates a bitmap and a canvas.
-     * @param size size of the screen
+     * Selects the ith color of the color list.
+     *
+     * @param color the index of the color
      */
-    public void setSizeAndInit(Point size) {
-        circleX = size.x / 2 - circleRadius;
-        circleY = size.y / 2 - circleRadius;
-        bitmap = Bitmap.createBitmap(size.x,
-                (int)(((float)size.y/size.x)*size.x), Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
+    public void setColor(int color) {
+        if (this.color != colors.length - 1) {
+            this.color = color;
+        }
+        previousColor = color;
+    }
+
+    /**
+     * Selects the pencil tool.
+     */
+    public void setPencil() {
+        bucketMode = false;
+        if (isDrawing) {
+            drawEnd();
+        }
+        color = previousColor;
+    }
+
+    /**
+     * Selects the eraser tool.
+     */
+    public void setEraser() {
+        bucketMode = false;
+        if (isDrawing) {
+            drawEnd();
+        }
+        color = colors.length - 1;
+    }
+
+    /**
+     * Selects the bucket tool.
+     */
+    public void setBucket() {
+        bucketMode = true;
+        if (isDrawing) {
+            drawEnd();
+        }
+        color = previousColor;
+    }
+
+    /**
+     * Keeps coordinates within screen boundaries.
+     *
+     * @param coordinate coordinate to sanitize
+     * @param maxBound   maximum bound
+     * @return sanitized coordinate
+     */
+    private int sanitizeCoordinate(int coordinate, int maxBound) {
+        return Math.max(1, Math.min(coordinate, maxBound - 1));
     }
 
     /**
      * Clears the canvas.
      */
     public void clear() {
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+    }
+
+    @Override
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight);
+        this.width = width;
+        this.height = height;
+        circleX = width / 2;
+        circleY = height / 2;
+        clear();
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+        if (isDrawing) {
+            canvas.drawPath(path, colors[color]);
+        }
+        paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX, circleY) + Color.BLACK));
+        canvas.drawCircle(circleX, circleY, circleRadius, paintC);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // Draw only if the time is not over
+        if (canDraw) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!bucketMode) {
+                        drawStart();
+                    } else {
+                        path.moveTo(circleX, circleY);
+                        // Apply the flood fill algorithm
+                        new BucketTool(bitmap, bitmap.getPixel(circleX, circleY),
+                                colors[color].getColor()).floodFill(circleX, circleY);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    drawEnd();
+                    break;
+                default:
+            }
+            invalidate();
+        }
+        return true;
+    }
+
+    private int colorToGrey(int color) {
+        int red = (color >> 16) & 0xff;
+        int green = (color >> 8) & 0xff;
+        int blue = (color) & 0xff;
+        int mean = (red + green + blue) / 3;
+        return Color.argb(0xff, mean, mean, mean);
+    }
+
+    private void drawStart() {
+        isDrawing = true;
+        circleRadius = 3 * DRAW_WIDTH / 4;
+        path.reset();
+        path.moveTo(circleX, circleY);
+    }
+
+    private void drawEnd() {
+        isDrawing = false;
+        circleRadius = DRAW_WIDTH;
+        path.lineTo(circleX, circleY);
+        canvas.drawPath(path, colors[color]);
         path.reset();
     }
 
     /**
-     * Draws the path and circle, if draw is set.
-     *
-     * @param canvas to draw on
+     * Saves the bitmap in the local database.
      */
-    public void onDraw(Canvas canvas) {
-        canvas.save();
-        if (draw) {
-            paintC.setStyle(Paint.Style.FILL);
-            paintC.setStrokeWidth(10);
-            path.lineTo(circleX, circleY);
-        } else {
-            paintC.setStyle(Paint.Style.STROKE);
-            paintC.setStrokeWidth(5);
+    public void saveCanvasInDb(LocalDbHandlerForImages localDbHandler) {
+        if (isDrawing) {
+            drawEnd();
         }
-        canvas.drawColor(Color.WHITE);
-        canvas.drawCircle(circleX, circleY, circleRadius, paintC);
-        canvas.drawPath(path, paint);
-        canvas.restore();
-        path.moveTo(circleX, circleY);
+        canDraw = false;
+        localDbHandler.addBitmapToDb(bitmap, QUALITY);
     }
 
     /**
      * Gets called when time for drawing is over.
-     * Saves the bitmap in the local DB.
+     * Saves the bitmap in firebase.
      */
-    public void saveCanvasInDb(Context context){
-        this.draw(canvas);
-        LocalDbHandlerForImages localDbHandlerForImages = new LocalDbHandlerForImages(context, null, 1);
-        FbStorage fbStorage = new FbStorage();
-        localDbHandlerForImages.addBitmapToDb(bitmap, new ByteArrayOutputStream());
+    public void saveCanvasInStorage() {
+        if (isDrawing) {
+            drawEnd();
+        }
+        canDraw = false;
         // Create timestamp as name for image. Will include userID in future
-        Long tsLong = System.currentTimeMillis()/1000;
+        Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child(""+ts+".jpg");
-        fbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
+        StorageReference imageRef = storageRef.child("" + ts + ".jpg");
+        FbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

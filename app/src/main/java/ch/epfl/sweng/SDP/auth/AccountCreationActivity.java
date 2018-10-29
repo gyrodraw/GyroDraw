@@ -51,50 +51,30 @@ public class AccountCreationActivity extends Activity {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
             Account.createAccount(new ConstantsWrapper(), username);
-            try {
-                Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    usernameTaken.setText(getString(R.string.usernameAlreadyTaken));
-                                } else {
-                                    Account.getInstance().registerAccount();
-                                    getDefaultSharedPreferences(getThis()).edit()
-                                            .putBoolean("hasAccount", true).apply();
-                                    LocalDbHandlerForAccount localDB = new LocalDbHandlerForAccount(
-                                            getApplicationContext(), null, 1);
-                                    localDB.saveAccount(Account.getInstance());
-                                    gotoHome();
-                                }
+            Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                usernameTaken.setText("Username already taken, try again");
+                            } else {
+                                Account.getInstance().registerAccount();
+                                getDefaultSharedPreferences(getApplicationContext()).edit()
+                                        .putBoolean("hasAccount", true).apply();
+                                LocalDbHandlerForAccount localDB = new LocalDbHandlerForAccount(
+                                        getApplicationContext(), null, 1);
+                                localDB.saveAccount(Account.getInstance());
+                                launchActivity(HomeActivity.class);
+                                finish();
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                throw databaseError.toException();
-                            }
-                        });
-            } catch (Exception exception) {
-                usernameTaken.setText(exception.getMessage());
-            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            throw databaseError.toException();
+                        }
+                    });
         }
-    }
-
-    /**
-     * Important for function above.
-     *
-     * @return this
-     */
-    private AccountCreationActivity getThis() {
-        return this;
-    }
-
-    /**
-     * Calls HomeActivity.
-     */
-    public void gotoHome() {
-        launchActivity(HomeActivity.class);
-        finish();
     }
 }

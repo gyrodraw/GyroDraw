@@ -7,15 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -23,8 +26,7 @@ public class LoginActivity extends Activity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 42;
-    private final List<IdpConfig> providers = Collections.singletonList(
-            new GoogleBuilder().build());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,8 @@ public class LoginActivity extends Activity {
     }
 
     private void createSignInIntent() {
+        final List<IdpConfig> providers = Collections.singletonList(
+                new GoogleBuilder().build());
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -44,7 +48,7 @@ public class LoginActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
@@ -82,6 +86,7 @@ public class LoginActivity extends Activity {
         // User pressed the back button
         if (response == null) {
             launchActivity(MainActivity.class);
+            finish();
             return;
         }
 

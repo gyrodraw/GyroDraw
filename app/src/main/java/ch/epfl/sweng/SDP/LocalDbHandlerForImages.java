@@ -18,7 +18,6 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_TIMESTAMP = "timestamp";
     private static final String COLUMN_IMAGE = "image";
-    private static final int QUALITY = 20;
 
     /**
      * Helper class to save images in local database.
@@ -29,6 +28,7 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     /**
      * Creates a new database table.
+     *
      * @param db database where to create new table in.
      */
     @Override
@@ -41,7 +41,8 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     /**
      * If there exists already a table with this name, which has lower version, drop it.
-     * @param db database to look in
+     *
+     * @param db         database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -53,12 +54,13 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     /**
      * Adds a bitmap to the local db.
+     *
      * @param bitmap to insert
      */
-    public void addBitmapToDb(Bitmap bitmap, ByteArrayOutputStream bos) {
-        if(bitmap != null) {
-            ByteArrayOutputStream byteArrayOutputStream = bos;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
+    public void addBitmapToDb(Bitmap bitmap, int quality) {
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             try {
                 byteArrayOutputStream.close();
@@ -82,6 +84,7 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     /**
      * Retrieves the most recent bitmap from the table.
+     *
      * @return the newest bitmap
      */
     public Bitmap getLatestBitmapFromDb() {

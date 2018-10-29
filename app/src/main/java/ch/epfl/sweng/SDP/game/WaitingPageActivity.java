@@ -12,44 +12,32 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.Locale;
 import java.util.Random;
 
 public class WaitingPageActivity extends Activity {
 
-
-
-    private enum WordNumber {
-        ONE, TWO
-    }
-
-    private static boolean enableWaitingAnimation = true;
-    private static boolean testing = false;
-
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final int WORDS_COUNT = 5;
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-
     private int usersReadyCount = 1;
-
     private DatabaseReference wordsVotesRef;
-
     private DatabaseReference word1Ref;
     private int word1Votes = 0;
-
-    private DatabaseReference word2Ref;
-    private int word2Votes = 0;
-
     private final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -64,22 +52,7 @@ public class WaitingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-
-    private final ValueEventListener listenerWord2 = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Long value = dataSnapshot.getValue(Long.class);
-            if (value != null) {
-                word2Votes = value.intValue();
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
-
+    private DatabaseReference word2Ref;
     private final ValueEventListener listenerWords = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -104,15 +77,24 @@ public class WaitingPageActivity extends Activity {
                         WordNumber.TWO);
             }
 
-            setVisibility(View.VISIBLE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                    R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                    R.id.playersReadyText, R.id.voteText);
-
-            if (enableWaitingAnimation) {
-                setVisibility(View.VISIBLE, R.id.waitingAnimationSquare);
-            }
+            setLayoutVisibility(View.VISIBLE);
 
             setVisibility(View.GONE, R.id.waitingAnimationDots);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
+    private int word2Votes = 0;
+    private final ValueEventListener listenerWord2 = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Long value = dataSnapshot.getValue(Long.class);
+            if (value != null) {
+                word2Votes = value.intValue();
+            }
         }
 
         @Override
@@ -124,16 +106,21 @@ public class WaitingPageActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_waiting_page);
         final Database database = Database.INSTANCE;
 
         wordsVotesRef = database.getReference(
                 "rooms.LeagueTest.words"); // need to be replaced with a search for a suitable room
 
-        setVisibility(View.GONE, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
-                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
-                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
+        Glide.with(this).load(R.drawable.waiting_animation_square)
+                .into((ImageView) findViewById(R.id.waitingAnimationSquare));
+        Glide.with(this).load(R.drawable.waiting_animation_dots)
+                .into((ImageView) findViewById(R.id.waitingAnimationDots));
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+
+        setLayoutVisibility(View.GONE);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
@@ -235,6 +222,12 @@ public class WaitingPageActivity extends Activity {
         findViewById(R.id.imageWord2).startAnimation(pickWord2);
     }
 
+    private void setLayoutVisibility(int visibility) {
+        setVisibility(visibility, R.id.buttonWord1, R.id.buttonWord2, R.id.radioGroup,
+                R.id.incrementButton, R.id.playersCounterText, R.id.imageWord1, R.id.imageWord2,
+                R.id.playersReadyText, R.id.waitingAnimationSquare, R.id.voteText);
+    }
+
     private void disableButtons() {
         Button b1 = findViewById(R.id.buttonWord1);
         b1.setEnabled(false);
@@ -251,9 +244,6 @@ public class WaitingPageActivity extends Activity {
             wordsVotesRef.removeValue();
         }
     }
-
-    // Now it is public in order to use it as a button for testing, should be reverted to private
-    // afterwards
 
     /**
      * Increment the number of players logged in the room. This method exists only for testing
@@ -273,6 +263,9 @@ public class WaitingPageActivity extends Activity {
             launchActivity(DrawingActivity.class);
         }
     }
+
+    // Now it is public in order to use it as a button for testing, should be reverted to private
+    // afterwards
 
     private int[] generateTwoRandomNumbers() {
         Random rand = new Random();
@@ -303,23 +296,13 @@ public class WaitingPageActivity extends Activity {
         return word2Votes;
     }
 
-    /**
-     * Disables the waiting animation. Call this method in every WaitingPageActivity testing.
-     */
-    public static void disableWaitingAnimation() {
-        enableWaitingAnimation = false;
-    }
-
-    /**
-     * Enables testing correctly. Call this method in every WaitingPageActivity testing.
-     */
-    public static void enableTesting() {
-        testing = true;
-    }
-
     // TODO
     private void getReadyUsers() {
         // Do stuff with the database
         // Should increment the counter with incrementCounter()
+    }
+
+    private enum WordNumber {
+        ONE, TWO
     }
 }

@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
+
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityTest {
 
@@ -50,11 +51,10 @@ public class AccountCreationActivityTest {
     }
 
     @Test
-    public void testGotoHome(){
+    public void testGotoHome() {
         Intents.init();
         activityRule.getActivity().gotoHome();
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
     }
-
 }

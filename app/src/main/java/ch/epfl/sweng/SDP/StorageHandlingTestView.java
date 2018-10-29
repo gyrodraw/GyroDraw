@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 
 public class StorageHandlingTestView extends AppCompatActivity {
 
-    LocalDbHandler localDbHandler;
+    LocalDbHandlerForImages localDbHandlerForImages;
     FbStorage fbStorage;
     private Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
     private Canvas canvas = new Canvas(bitmap);
@@ -28,7 +28,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storagehandlingtest);
-        localDbHandler = new LocalDbHandler(StorageHandlingTestView.this, null, 1);
+        localDbHandlerForImages = new LocalDbHandlerForImages(StorageHandlingTestView.this, null, 1);
         fbStorage = new FbStorage();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
@@ -46,7 +46,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * @param view button
      */
     public void getFromEmptyDb(View view) {
-        localDbHandler.getLatestBitmapFromDb();
+        localDbHandlerForImages.getLatestBitmapFromDb();
     }
 
     /**
@@ -54,8 +54,8 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * @param view button
      */
     public void addAndRetrieveSuccessfully(View view){
-        localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
-        localDbHandler.getLatestBitmapFromDb();
+        localDbHandlerForImages.addBitmapToDb(bitmap, new ByteArrayOutputStream());
+        localDbHandlerForImages.getLatestBitmapFromDb();
     }
 
     /**
@@ -85,7 +85,7 @@ public class StorageHandlingTestView extends AppCompatActivity {
      * @param view button
      */
     public void overrideDatabase(View view){
-        localDbHandler = new LocalDbHandler(StorageHandlingTestView.this, null, 2);
+        localDbHandlerForImages = new LocalDbHandlerForImages(StorageHandlingTestView.this, null, 2);
     }
 
 }

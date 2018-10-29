@@ -80,7 +80,7 @@ public class Matchmaker implements MatchmakingInterface {
                  currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
             }
 
-            Boolean ok = false;
+            Boolean successful = false;
 
             HttpURLConnection connection = null;
             try {
@@ -111,7 +111,7 @@ public class Matchmaker implements MatchmakingInterface {
 
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     // OK
-                    ok = true;
+                    successful = true;
                     // otherwise, if any other status code is returned, or no status
                     // code is returned, do stuff in the else block
                 }
@@ -128,7 +128,7 @@ public class Matchmaker implements MatchmakingInterface {
                     connection.disconnect();
                 }
             }
-        return ok;
+        return successful;
     }
 
 

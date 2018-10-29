@@ -42,6 +42,7 @@ public class Matchmaker implements MatchmakingInterface {
      */
     private Matchmaker(ConstantsWrapper constantsWrapper) {
         this.constantsWrapper = constantsWrapper;
+        this.reference = constantsWrapper.getReference("rooms");
     }
 
     /**
@@ -101,7 +102,10 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
-        reference.child(roomId).child("users").child(constantsWrapper.getFirebaseUserId()).removeValue();
+        reference.child(roomId)
+                .child("users")
+                .child(constantsWrapper.getFirebaseUserId())
+                .removeValue();
         return true;
     }
 

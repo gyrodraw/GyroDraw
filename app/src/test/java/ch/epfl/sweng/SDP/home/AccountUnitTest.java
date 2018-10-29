@@ -30,7 +30,7 @@ public class AccountUnitTest {
         mockConstantsWrapper = Mockito.mock(ConstantsWrapper.class);
         mockReference = Mockito.mock(DatabaseReference.class);
         mockQuery = Mockito.mock(Query.class);
-        when(mockConstantsWrapper.getUsersRef()).thenReturn(mockReference);
+        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);

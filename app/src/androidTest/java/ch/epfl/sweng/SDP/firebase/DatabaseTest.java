@@ -44,22 +44,23 @@ public class DatabaseTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addNullChild() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        Database database = Database.INSTANCE;
-        DatabaseReference ref = database.getReference("test.tests");
         Database.DatabaseReferenceBuilder databaseReferenceBuilder =
-                new Database.DatabaseReferenceBuilder(ref);
+                init();
         databaseReferenceBuilder.addChild(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addNullChildren() {
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder =
+                init();
+        databaseReferenceBuilder.addChildren(null);
+    }
+
+    private Database.DatabaseReferenceBuilder init(){
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         Database database = Database.INSTANCE;
         DatabaseReference ref = database.getReference("test.tests");
-        Database.DatabaseReferenceBuilder databaseReferenceBuilder =
-                new Database.DatabaseReferenceBuilder(ref);
-        databaseReferenceBuilder.addChildren(null);
+        return new Database.DatabaseReferenceBuilder(ref);
     }
 
 

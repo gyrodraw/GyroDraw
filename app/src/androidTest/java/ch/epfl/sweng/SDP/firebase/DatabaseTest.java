@@ -48,7 +48,7 @@ public class DatabaseTest {
         Database database = Database.INSTANCE;
         DatabaseReference ref = database.getReference("test.tests");
         Database.DatabaseReferenceBuilder databaseReferenceBuilder =
-                new Database.DatabaseReferenceBuilder(null);
+                new Database.DatabaseReferenceBuilder(ref);
         databaseReferenceBuilder.addChild(null);
     }
 
@@ -58,7 +58,7 @@ public class DatabaseTest {
         Database database = Database.INSTANCE;
         DatabaseReference ref = database.getReference("test.tests");
         Database.DatabaseReferenceBuilder databaseReferenceBuilder =
-                new Database.DatabaseReferenceBuilder(null);
+                new Database.DatabaseReferenceBuilder(ref);
         databaseReferenceBuilder.addChildren(null);
     }
 

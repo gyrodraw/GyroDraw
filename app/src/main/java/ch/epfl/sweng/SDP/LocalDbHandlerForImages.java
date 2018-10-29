@@ -11,7 +11,7 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class LocalDbHandler extends SQLiteOpenHelper {
+public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "myImages.db";
     private static final String TABLE_NAME = "myImages";
@@ -23,7 +23,7 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     /**
      * Helper class to save images in local database.
      */
-    public LocalDbHandler(Context context, SQLiteDatabase.CursorFactory factory, int dbVersion) {
+    public LocalDbHandlerForImages(Context context, SQLiteDatabase.CursorFactory factory, int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 

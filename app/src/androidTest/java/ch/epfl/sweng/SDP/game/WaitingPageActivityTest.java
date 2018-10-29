@@ -59,7 +59,7 @@ import java.util.concurrent.TimeUnit;
 public class WaitingPageActivityTest {
 
     private static final String ROOM_ID_TEST = "0123457890";
-    
+
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
@@ -200,6 +200,14 @@ public class WaitingPageActivityTest {
 
         mActivityRule.getActivity().setWord2Votes(10);
         assertEquals(10, mActivityRule.getActivity().getWord2Votes());
+    }
+
+    @Test
+    public void testLaunchingDrawingActivity() {
+        Intents.init();
+        mActivityRule.getActivity().launchDrawingActivity();
+        intended(hasComponent(DrawingActivity.class.getName()));
+        Intents.release();
     }
 
     /**

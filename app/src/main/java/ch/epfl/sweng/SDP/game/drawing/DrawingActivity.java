@@ -64,8 +64,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
             if(state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch(stateEnum) {
-                    case START_DRAWING_ACTIVITY:
-                        break;
                     case START_VOTING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext()

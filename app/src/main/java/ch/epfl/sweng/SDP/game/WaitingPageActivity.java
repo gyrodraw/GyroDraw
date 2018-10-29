@@ -107,10 +107,7 @@ public class WaitingPageActivity extends Activity {
                     case START_DRAWING_ACTIVITY:
                         timerRef.removeEventListener(listenerTimer);
                         drawingActivityLauched = true;
-                        Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
-                        intent.putExtra("RoomID", roomID);
-                        intent.putExtra("WinningWord", winningWord);
-                        startActivity(intent);
+                        launchDrawingActivity();
                         break;
                     default:
                 }
@@ -225,6 +222,14 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.roomID)).setText("Room ID: " + roomID);
 
+    }
+
+    protected void launchDrawingActivity() {
+        drawingActivityLauched = true;
+        Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
+        intent.putExtra("RoomID", roomID);
+        intent.putExtra("WinningWord", winningWord);
+        startActivity(intent);
     }
 
     private void initRadioButton(Button button, String childString,

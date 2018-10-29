@@ -2,26 +2,28 @@ package ch.epfl.sweng.SDP.matchmaking;
 
 import android.support.test.InstrumentationRegistry;
 
+import ch.epfl.sweng.SDP.Account;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.matchmaking.MatchmakingInterface;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import ch.epfl.sweng.SDP.matchmaking.MatchmakingInterface;
 
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
 
 
 

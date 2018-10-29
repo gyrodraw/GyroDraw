@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
 import ch.epfl.sweng.SDP.R;
@@ -41,6 +42,7 @@ import java.util.Vector;
 
 public class WaitingPageActivity extends Activity {
 
+
     private static final String TAG = "WaitingPageActivity";
 
     private enum WordNumber {
@@ -54,7 +56,6 @@ public class WaitingPageActivity extends Activity {
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-
     private int usersReadyCount = 1;
 
     private DatabaseReference usersCountRef;
@@ -175,6 +176,7 @@ public class WaitingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -333,9 +335,6 @@ public class WaitingPageActivity extends Activity {
         }
     }
 
-    // Now it is public in order to use it as a button for testing, should be reverted to private
-    // afterwards
-
     /**
      * Increment the number of players logged in the room. This method exists only for testing
      * purposes.
@@ -408,4 +407,5 @@ public class WaitingPageActivity extends Activity {
     public static void disableAnimations() {
         enableSquareAnimation = false;
     }
+
 }

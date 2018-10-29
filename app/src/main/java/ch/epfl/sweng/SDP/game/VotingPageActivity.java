@@ -295,6 +295,9 @@ public class VotingPageActivity extends Activity {
         ++drawingDownloadCounter;
     }
 
+    /* public for testing only, the users in the database should be already sorted by their ranking
+    before calling this */
+
     // Send "playerName" drawing's rating to the database.
     private void sendRatingToDatabase(String playerName) {
         final int rating = ratings[ratingToSendCounter];
@@ -322,9 +325,6 @@ public class VotingPageActivity extends Activity {
 
         ++ratingToSendCounter;
     }
-
-    /* public for testing only, the users in the database should be already sorted by their ranking
-    before calling this */
 
     /**
      * Show the final ranking in a new fragment.

@@ -30,11 +30,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -54,6 +49,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.concurrent.TimeUnit;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+
 
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {
@@ -79,6 +78,29 @@ public class WaitingPageActivityTest {
                     return intent;
                 }
             };
+
+    /**
+     * Perform action of waiting for a specific time.
+     */
+    @Ignore
+    public static ViewAction waitFor(final long millis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isRoot();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Wait for " + millis + " milliseconds.";
+            }
+
+            @Override
+            public void perform(UiController uiController, final View view) {
+                uiController.loopMainThreadForAtLeast(millis);
+            }
+        };
+    }
 
     @Test
     public void testRadioButton1() {
@@ -134,8 +156,8 @@ public class WaitingPageActivityTest {
         onView(withId(R.id.buttonWord2)).perform(click());
         onView(withId(R.id.buttonWord2)).perform(click());
 
-        assert(mActivityRule.getActivity().getWord1Votes() == 1);
-        assert(mActivityRule.getActivity().getWord2Votes() == 0);
+        assert (mActivityRule.getActivity().getWord1Votes() == 1);
+        assert (mActivityRule.getActivity().getWord2Votes() == 0);
     }
 
     @Test
@@ -148,8 +170,8 @@ public class WaitingPageActivityTest {
         onView(withId(R.id.buttonWord1)).perform(click());
         onView(withId(R.id.buttonWord1)).perform(click());
 
-        assert(mActivityRule.getActivity().getWord1Votes() == 0);
-        assert(mActivityRule.getActivity().getWord2Votes() == 1);
+        assert (mActivityRule.getActivity().getWord1Votes() == 0);
+        assert (mActivityRule.getActivity().getWord2Votes() == 1);
     }
 
     @Test
@@ -242,29 +264,6 @@ public class WaitingPageActivityTest {
         waitForVisibility(mActivityRule.getActivity().findViewById(id),
                 View.VISIBLE);
         onView(withId(id)).perform(click());
-    }
-
-    /**
-     * Perform action of waiting for a specific time.
-     */
-    @Ignore
-    public static ViewAction waitFor(final long millis) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isRoot();
-            }
-
-            @Override
-            public String getDescription() {
-                return "Wait for " + millis + " milliseconds.";
-            }
-
-            @Override
-            public void perform(UiController uiController, final View view) {
-                uiController.loopMainThreadForAtLeast(millis);
-            }
-        };
     }
 
     @Ignore

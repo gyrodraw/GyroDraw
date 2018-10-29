@@ -42,6 +42,7 @@ public class HomeActivityTest {
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
+
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
         intended(hasComponent(LoadingScreenActivity.class.getName()));
@@ -79,20 +80,20 @@ public class HomeActivityTest {
 
     @Test
     public void testCrossClosesPopUp() {
-        openAndClosePopUp(R.id.crossText); 
+        openAndClosePopUp(R.id.crossText);
     }
 
     @Test
     public void testCanSignOutAccount() {
         openAndClosePopUp(R.id.signOutButton);
     }
- 
+
     @Test
     public void testCanDeleteAccount() {
         openAndClosePopUp(R.id.deleteButton);
     }
 
-    private void openAndClosePopUp(int view){
+    private void openAndClosePopUp(int view) {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());

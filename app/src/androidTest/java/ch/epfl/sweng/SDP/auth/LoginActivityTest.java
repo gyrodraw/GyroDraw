@@ -30,59 +30,41 @@ public class LoginActivityTest {
     public final ActivityTestRule<LoginActivity> activityRule =
             new ActivityTestRule<>(LoginActivity.class);
 
-    // Add a monitor for the home activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
-
     // Add a monitor for the accountCreation activity
-    private final Instrumentation.ActivityMonitor monitor2 = getInstrumentation()
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
-    Intent mockIntent;
-    IdpResponse mockIdpResponse;
-    FirebaseUiException mockError;
-    LoginActivity loginActivity;
+    private IdpResponse mockIdpResponse;
+    private LoginActivity loginActivity;
 
     /**
-     * Initializes the mock objects. 
+     * Initializes the mock objects.
      */
     @Before
-    public void init(){
-        mockIntent = Mockito.mock(Intent.class);
+    public void init() {
         mockIdpResponse = Mockito.mock(IdpResponse.class);
-        mockError = Mockito.mock(FirebaseUiException.class);
         loginActivity = activityRule.getActivity();
-        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
-                .thenReturn(mockIdpResponse);
     }
-
-    /**
-     * Try with Powermock in future.
-     */
-    //@Test
-    //public void testNoInternetConnection(){
-    //    Mockito.when(mockIdpResponse.getError()).thenReturn(mockError);
-    //    Mockito.when(mockError.getErrorCode()).thenReturn(1);
-    //    loginActivity.onActivityResult(42, 0, mockIntent);
-    //    assertEquals(((TextView)loginActivity.findViewById(R.id.error_message))
-    //          .getText(), "No Internet connection");
-    //}
 
     @Test
     public void testFailedLoginNullResponse(){
-        mockIntent = Mockito.mock(Intent.class);
-        mockIdpResponse = null;
+        Intent mockIntent = Mockito.mock(Intent.class);
+        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
+                .thenReturn(null);
         loginActivity.onActivityResult(42, 0, mockIntent);
         assertTrue(loginActivity.isFinishing());
     }
 
     @Test
     public void testSuccessfulLogin(){
+        Intent mockIntent = Mockito.mock(Intent.class);
+        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
+                .thenReturn(mockIdpResponse);
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
         Activity accountCreationActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor2, 2000);
+                .waitForMonitorWithTimeout(monitor, 2000);
         Assert.assertNotNull(accountCreationActivity);
     }
 }

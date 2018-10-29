@@ -2,15 +2,12 @@ package ch.epfl.sweng.SDP.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
@@ -18,7 +15,9 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class AccountCreationActivity extends AppCompatActivity {
     private EditText usernameInput;
@@ -59,7 +58,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
+                            if (snapshot.exists()) {
                                 usernameTaken.setText("Username already taken, try again");
                             } else {
                                 account.registerAccount();
@@ -79,9 +78,10 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     /**
      * Important for function above.
+     *
      * @return this
      */
-    private AccountCreationActivity getThis(){
+    private AccountCreationActivity getThis() {
         return this;
     }
 

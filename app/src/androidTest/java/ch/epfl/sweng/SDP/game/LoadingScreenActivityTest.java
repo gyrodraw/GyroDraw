@@ -8,6 +8,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+
 import org.hamcrest.Matcher;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -15,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.SDP.R;
@@ -55,6 +58,12 @@ public class LoadingScreenActivityTest {
         intended(hasComponent(WaitingPageActivity.class.getName()));
 
         Intents.release();
+    }
+
+    @Test
+    public void testWordsReady() {
+        Vector<String> words = new Vector<String>();
+        mActivityRule.getActivity().areWordsReady(words);
     }
 
     /**

@@ -79,23 +79,7 @@ public class LoadingScreenActivity extends Activity {
                 words.add(snap.getKey());
             }
 
-            try {
-                word1 = words.get(0);
-                word2 = words.get(1);
-            } catch (Exception e) {
-                // Throws exception
-                Log.e(TAG, "Error when getting the words");
-            }
-
-            if (word1 != null) {
-                isWord1Ready = true;
-            }
-
-            if (word2 != null) {
-                isWord2Ready = true;
-            }
-
-            if(isWord1Ready && isWord2Ready) {
+            if(areWordsReady(words)) {
                 areWordsReady.setBoo(true);
             }
         }
@@ -105,6 +89,25 @@ public class LoadingScreenActivity extends Activity {
             throw databaseError.toException();
         }
     };
+
+    protected boolean areWordsReady(Vector<String> words) {
+        try {
+            word1 = words.get(0);
+            word2 = words.get(1);
+        } catch (Exception e) {
+            // Values not ready
+        }
+
+        if (word1 != null) {
+            isWord1Ready = true;
+        }
+
+        if (word2 != null) {
+            isWord2Ready = true;
+        }
+
+        return (isWord1Ready && isWord2Ready);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

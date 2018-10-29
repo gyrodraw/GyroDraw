@@ -44,15 +44,13 @@ public class DatabaseTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addNullChild() {
-        Database.DatabaseReferenceBuilder databaseReferenceBuilder =
-                init();
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder = init();
         databaseReferenceBuilder.addChild(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addNullChildren() {
-        Database.DatabaseReferenceBuilder databaseReferenceBuilder =
-                init();
+        Database.DatabaseReferenceBuilder databaseReferenceBuilder = init();
         databaseReferenceBuilder.addChildren(null);
     }
 

@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import ch.epfl.sweng.SDP.firebase.FbStorage;
-import ch.epfl.sweng.SDP.LocalDbHandler;
+import ch.epfl.sweng.SDP.LocalDbHandlerForImages;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -138,9 +138,9 @@ public class PaintView extends View {
      */
     public void saveCanvasInDb(Context context){
         this.draw(canvas);
-        LocalDbHandler localDbHandler = new LocalDbHandler(context, null, 1);
+        LocalDbHandlerForImages localDbHandlerForImages = new LocalDbHandlerForImages(context, null, 1);
         FbStorage fbStorage = new FbStorage();
-        localDbHandler.addBitmapToDb(bitmap, new ByteArrayOutputStream());
+        localDbHandlerForImages.addBitmapToDb(bitmap, new ByteArrayOutputStream());
         // Create timestamp as name for image. Will include userID in future
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();

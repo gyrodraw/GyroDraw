@@ -70,7 +70,7 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public Boolean joinRoom() {
 
-            Boolean successful = false;
+        Boolean successful = false;
         HttpURLConnection connection = null;
 
         try {

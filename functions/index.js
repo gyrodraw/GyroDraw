@@ -102,7 +102,7 @@ exports.joinGame = functions.https.onRequest((req, res) => {
             }
             // Push new user
             return  admin.database().ref('rooms').child(room).child('users').child(userId).set({
-              name: "fredrik"
+              id: userId
             }).then(() => {
               // return http error true
               return res.status(200).end();
@@ -114,7 +114,7 @@ exports.joinGame = functions.https.onRequest((req, res) => {
       }
     }
     var o = {  };
-    o[userId] =  { name : "fredrik"};
+    o[userId] =  { id : userId };
     return  admin.database().ref('rooms').push().set({
       playing: false,
       users: o

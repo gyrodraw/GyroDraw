@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -49,7 +50,7 @@ public class AccountCreationActivity extends Activity {
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            Account.getInstance().setAccount(new ConstantsWrapper(), username);
+            Account.createAccount(new ConstantsWrapper(), username);
             try {
                 Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -62,6 +63,9 @@ public class AccountCreationActivity extends Activity {
                                     Account.getInstance().registerAccount();
                                     getDefaultSharedPreferences(getThis()).edit()
                                             .putBoolean("hasAccount", true).apply();
+                                    LocalDbHandlerForAccount localDB = new LocalDbHandlerForAccount(
+                                            getApplicationContext(), null, 1);
+                                    localDB.saveAccount(Account.getInstance());
                                     gotoHome();
                                 }
                             }

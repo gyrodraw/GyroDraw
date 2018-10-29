@@ -142,9 +142,6 @@ public class WaitingPageActivity extends Activity {
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
 
-        if (!testing) {
-            Account.getInstance().refreshAccount();
-        }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         builder.addChildren("users." + Account.getInstance().getUserId() + ".currentLeague").build().addListenerForSingleValueEvent(
                 new ValueEventListener() {

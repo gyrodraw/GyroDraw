@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class AccountUnitTest {
@@ -70,6 +71,32 @@ public class AccountUnitTest {
         mockDbHandler.retrieveAccount(Account.getInstance(mockContext));
         assertThat(Account.getInstance(mockContext).getUsername(), is("123456789"));
 
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNullUsername() {
+        Account.createAccount(mockContext, mockConstantsWrapper, null);
+    }
+
+    @Test
+    public void testSetTrophies() {
+        Account.getInstance(mockContext).setTrophies(1);
+    }
+
+    @Test
+    public void testSetStars() {
+        Account.getInstance(mockContext).setStars(1);
+    }
+
+    @Test
+    public void testSetCurrentLeague() {
+        Account.getInstance(mockContext).setCurrentLeague("test");
+    }
+
+    @Test
+    public void testSetUsersRef() {
+        DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
+        Account.getInstance(mockContext).setUsersRef(databaseReference);
     }
 
     @Test

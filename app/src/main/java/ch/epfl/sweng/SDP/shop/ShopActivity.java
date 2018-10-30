@@ -269,12 +269,15 @@ public class ShopActivity extends Activity {
      */
     protected void getPrice(DatabaseReference shopColorsReference, final String itemName,
                             final IntegerWrapper priceWrapper) throws DatabaseException {
+        if(shopColorsReference == null || itemName == null) {
+            throw new NullPointerException();
+        }
         shopColorsReference.child(itemName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                wrapDataSnapshotValue(dataSnapshot, priceWrapper);
+                    wrapDataSnapshotValue(dataSnapshot, priceWrapper);
             }
 
             @Override

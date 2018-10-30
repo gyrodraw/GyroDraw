@@ -7,6 +7,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 
+import android.provider.ContactsContract;
 import android.renderscript.Sampler;
 import android.support.test.espresso.intent.Intents;
 
@@ -43,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -66,13 +68,12 @@ public class ShopActivityTest {
     private int stars;
     private final int validNewStars = 1000;
     private final int invalidNewStars = -1000;
+    private long price = 500;
     private final long longInt = 500;
     private final String testString = "testString";
     private final String color0 = "black";
 
     private HashMap<String, Boolean> userColors = new HashMap<>();
-
-
 
     @Mock
     private DatabaseReference currentUser;
@@ -93,10 +94,11 @@ public class ShopActivityTest {
     private DataSnapshot nonExistant;
     @Mock
     private DataSnapshot longIntegerValueSnapshot;
+    @Mock
+    private DataSnapshot getPriceSnapshot;
 
     @Before
     public void setup() {
-
         //Initialize mocked objects.
         MockitoAnnotations.initMocks(this);
 
@@ -130,23 +132,13 @@ public class ShopActivityTest {
 
         when(shopColors.child(anyString())).thenReturn(shopColorsSpecificColor);
 
-
-        /**
-         * doAnswer(new Answer<Void>() {
-         *
-         *             @Override
-         *             public Void answer(InvocationOnMock invocation) {
-         *
-         *                 return null;
-         *             }
-         *         }).when(shopColorsSpecificColor.addListenerForSingleValueEvent(any(ValueEventListener.class).onDataChange(isA(DataSnapshot.class))));
-         */
-
         when(nonExistant.exists()).thenReturn(false);
 
         when(longIntegerValueSnapshot.exists()).thenReturn(true);
         when(longIntegerValueSnapshot.getValue()).thenReturn(longInt);
 
+        when(getPriceSnapshot.exists()).thenReturn(true);
+        when(getPriceSnapshot.getValue()).thenReturn(price);
     }
 
     @Rule
@@ -232,7 +224,46 @@ public class ShopActivityTest {
 
     @Test
     public void getPriceWorks() {
+        doAnswer(new Answer<Void>() {
 
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                IntegerWrapper wrapper = new IntegerWrapper(0);
+                activityTestRule.getActivity().wrapDataSnapshotValue(getPriceSnapshot, wrapper);
+                assertEquals(price, wrapper.getInt());
+                return null;
+            }
+        }).when(shopColorsSpecificColor)
+                .addListenerForSingleValueEvent(any(ValueEventListener.class));
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().getPrice(shopColors, testString, wrapper);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getPriceWorksWithNullReference() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().getPrice(null, testString, wrapper);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getPriceWorksWithNullString() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().getPrice(shopColors, null, wrapper);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getPriceWorksWithNullWrapper() {
+        doAnswer(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                activityTestRule.getActivity()
+                        .wrapDataSnapshotValue(getPriceSnapshot, null);
+                return null;
+            }
+        }).when(shopColorsSpecificColor)
+                .addListenerForSingleValueEvent(any(ValueEventListener.class));
+        activityTestRule.getActivity().getPrice(shopColors, testString, null);
     }
 
     //tests for wrapDataSnapshotValue()
@@ -260,8 +291,8 @@ public class ShopActivityTest {
 
     @Test(expected = NullPointerException.class)
     public void wrapDataSnapshotValueWorksWithNullWrapper() {
-        IntegerWrapper wrapper = new IntegerWrapper(0);
-        activityTestRule.getActivity().wrapDataSnapshotValue(longIntegerValueSnapshot, null);
+        activityTestRule.getActivity()
+                .wrapDataSnapshotValue(longIntegerValueSnapshot, null);
     }
 
     //tests for sufficientCurrency()
@@ -394,7 +425,8 @@ public class ShopActivityTest {
 
     @Test
     public void resetTextViewMessageWorksWithZeroDelay() {
-        final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        final TextView textView = new TextView(activityTestRule
+                .getActivity().getApplicationContext());
         textView.setText(testString);
         assertEquals(testString, textView.getText());
         activityTestRule.getActivity().resetTextViewMessage(textView, delayZero);

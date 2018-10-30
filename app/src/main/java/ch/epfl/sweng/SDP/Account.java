@@ -119,7 +119,7 @@ public class Account implements java.io.Serializable {
             throws IllegalArgumentException, DatabaseException {
         checkIfAccountNameIsFree(newName);
         // is this code really working?
-        usersRef.child("users").child(userId).child("username")
+        usersRef.child(userId).child("username")
                 .setValue(newName, createCompletionListener());
         username = newName;
     }
@@ -259,5 +259,17 @@ public class Account implements java.io.Serializable {
 
     }
 
+
+    public int getMatchesWon() {
+        return matchesWon;
+    }
+
+    public int getMatchesLost() {
+        return matchesLost;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
 
 }

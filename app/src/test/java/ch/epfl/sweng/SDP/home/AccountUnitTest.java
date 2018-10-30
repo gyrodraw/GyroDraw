@@ -37,6 +37,7 @@ public class AccountUnitTest {
         when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
         doNothing().when(mockReference).setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockReference).setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
+        doNothing().when(mockReference).setValue(isA(String.class), isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockReference).removeValue(isA(DatabaseReference.CompletionListener.class));
         doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
 
@@ -125,4 +126,5 @@ public class AccountUnitTest {
     public void removeNullFriend() {
         account.removeFriend(null);
     }
+
 }

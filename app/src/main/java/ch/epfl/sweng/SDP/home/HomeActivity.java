@@ -18,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
@@ -249,7 +251,7 @@ public class HomeActivity extends Activity {
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
-        User auser = new User("id");
+        Account auser = new Account(new ConstantsWrapper(), this.user);
 
         TextView wonTextView = profileWindow.findViewById(R.id.games_won);
         wonTextView.setText("Matches won: " + auser.getMatchesWon());

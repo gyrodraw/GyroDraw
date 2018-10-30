@@ -179,5 +179,6 @@ public class AccountUnitTest {
     @Test(expected = IllegalArgumentException.class)
     public void removeNullFriend() {
         account.removeFriend(null);
+    }
 
 }

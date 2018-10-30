@@ -162,7 +162,7 @@ public class ShopActivity extends Activity {
      * @param itemName Item to be purchased.
      */
     protected void purchaseItem(String itemName) {
-        alreadyOwned(itemName, currentUser.child(items).child(colors), shopTextView);
+        alreadyOwned(currentUser.child(items).child(colors), itemName, shopTextView);
     }
 
     /**
@@ -174,7 +174,7 @@ public class ShopActivity extends Activity {
      * @param textView TextView to display user relevant messages.
      * @throws DatabaseException If read does go wrong.
      */
-    private void alreadyOwned(final String itemName, DatabaseReference userColorsReference,
+    private void alreadyOwned(DatabaseReference userColorsReference, final String itemName,
                               final TextView textView)
             throws DatabaseException {
         userColorsReference.orderByKey().equalTo(itemName).addListenerForSingleValueEvent(

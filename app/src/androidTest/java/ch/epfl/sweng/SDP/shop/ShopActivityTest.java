@@ -224,8 +224,9 @@ public class ShopActivityTest {
     //tests for updateUserIf()
 
     @Test
-    public void updateUserIfWorksIfEnoughStars() {
-        //final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+    public void updateUserIfWorksIfSufficientStars() {
+        //CalledFromWrongRootException
+        //TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
         //activityTestRule.getActivity().updateUserIf(currentUser, testString, textView,
         //        1000, 0);
         //assertEquals("Purchase successful.", textView.getText());

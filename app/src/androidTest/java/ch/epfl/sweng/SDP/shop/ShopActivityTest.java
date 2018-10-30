@@ -42,6 +42,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -319,6 +320,7 @@ public class ShopActivityTest {
 
     //tests for getStars()
 
+    @Ignore
     @Test
     public void getStarsWorks() {
         doAnswer(new Answer<Void>() {
@@ -335,12 +337,14 @@ public class ShopActivityTest {
         activityTestRule.getActivity().getStars(currentUserStars, wrapper);
     }
 
+    @Ignore
     @Test(expected = NullPointerException.class)
     public void getStarsWorksWithNullReference() {
         IntegerWrapper wrapper = new IntegerWrapper(0);
         activityTestRule.getActivity().getStars(null, wrapper);
     }
 
+    @Ignore
     @Test(expected = NullPointerException.class)
     public void getStarsWorksWithNullWrapper() {
         doAnswer(new Answer<Void>() {
@@ -358,6 +362,7 @@ public class ShopActivityTest {
 
     //tests for getPrice()
 
+    @Ignore
     @Test
     public void getPriceWorks() {
         doAnswer(new Answer<Void>() {
@@ -375,18 +380,21 @@ public class ShopActivityTest {
         activityTestRule.getActivity().getPrice(shopColors, testString, wrapper);
     }
 
+    @Ignore
     @Test(expected = NullPointerException.class)
     public void getPriceWorksWithNullReference() {
         IntegerWrapper wrapper = new IntegerWrapper(0);
         activityTestRule.getActivity().getPrice(null, testString, wrapper);
     }
 
+    @Ignore
     @Test(expected = NullPointerException.class)
     public void getPriceWorksWithNullString() {
         IntegerWrapper wrapper = new IntegerWrapper(0);
         activityTestRule.getActivity().getPrice(shopColors, null, wrapper);
     }
 
+    @Ignore
     @Test(expected = NullPointerException.class)
     public void getPriceWorksWithNullWrapper() {
         doAnswer(new Answer<Void>() {

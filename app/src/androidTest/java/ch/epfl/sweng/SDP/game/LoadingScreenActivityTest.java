@@ -50,20 +50,20 @@ public class LoadingScreenActivityTest {
 
             };
 
-    @Test
+   /* @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
         mActivityRule.getActivity().areWordsReady(words);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testActivityLoadingStartsWaitingPage() {
         //Espresso.pressBack();
         //intended(hasComponent(HomeActivity.class.getName()));
         //onView(withId(R.id.drawButton)).perform(click());
         //intended(hasComponent(LoadingScreenActivity.class.getName()));
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
-    }
+    }*/
 
     /**
      * Perform action of waiting for a specific time.

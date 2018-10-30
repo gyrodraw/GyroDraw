@@ -42,6 +42,15 @@ public class Account implements java.io.Serializable {
         this(constantsWrapper, username, 0, 0);
     }
 
+    /**
+     *
+     * Offline init method.
+     *
+     * @param trophies number of trophies.
+     * @param stars number of stars.
+     * @param matchesLost number of matches lost.
+     * @param matchesWon number of matches won.
+     */
     public Account(int trophies, int stars, int matchesLost, int matchesWon) {
         this.trophies = trophies;
         this.stars = stars;

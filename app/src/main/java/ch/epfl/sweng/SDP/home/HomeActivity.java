@@ -77,7 +77,6 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
 
@@ -87,7 +86,6 @@ public class HomeActivity extends Activity {
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
         dbRefTimer.addValueEventListener(listenerAllReady);
-
         initUsersDatabase();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
@@ -241,9 +239,7 @@ public class HomeActivity extends Activity {
         view.startAnimation(press);
     }
 
-    private void showPopup() {
-        profileWindow.setContentView(R.layout.activity_pop_up);
-
+    private void setMuroFont() {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
@@ -270,8 +266,22 @@ public class HomeActivity extends Activity {
         signOutButton.setTypeface(typeMuro);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
         deleteButton.setTypeface(typeMuro);
+    }
+
+    private void showPopup() {
+        profileWindow.setContentView(R.layout.activity_pop_up);
 
         Account userAccount = new Account(1,100,200,1);
+
+        this.setMuroFont();
+
+        TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
+        TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
+        TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
+        TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
+        TextView crossText = profileWindow.findViewById(R.id.crossText);
+        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
+        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
         gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
         gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));
@@ -294,8 +304,6 @@ public class HomeActivity extends Activity {
     public void startVotingPage(View view) {
         // For testing purposes only
         dbRef.child(user).setValue(1);
-        // Commented because of conflicts but can be still useful
-        // launchActivity(VotingPageActivity.class);
     }
 
     // Testing purpose method

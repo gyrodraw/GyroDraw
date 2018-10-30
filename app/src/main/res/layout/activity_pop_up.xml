@@ -21,7 +21,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="@string/profile"
-            android:textColor="@color/colorLightGrey"
+            android:textColor="@color/colorGrey"
             android:textSize="30sp" />
 
         <TextView

@@ -244,7 +244,7 @@ public class HomeActivity extends Activity {
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        //Account userAccount = new Account(new ConstantsWrapper(), this.user);
+        //Account userAccount = new Account(new ConstantsWrapper(), user);
 
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
         TextView gamesWonText = profileWindow.findViewById(R.id.gamesWonText);

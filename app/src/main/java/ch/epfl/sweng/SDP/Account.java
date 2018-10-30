@@ -225,10 +225,26 @@ public class Account implements java.io.Serializable {
     /**
      * Download an object from the database and set the variables of this object.
      */
-    public void downloadUser(ValueEventListener listener) {
+    public void downloadUser() {
 
         // Read from the database
-        usersRef.child(userId).addListenerForSingleValueEvent(listener);
+        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
+                setValues(map);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value, print error
+                Log.d("Account", error.getDetails());
+            }
+        });
 
     }
 
@@ -255,4 +271,5 @@ public class Account implements java.io.Serializable {
     public double getAverageRating() {
         return averageRating;
     }
+
 }

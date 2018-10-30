@@ -123,7 +123,7 @@ public class AccountUnitTest {
 
     @Test
     public void testDownloadUser() {
-        account.downloadUser(new EventListener());
+        account.downloadUser();
     }
 
     @Test
@@ -185,7 +185,5 @@ public class AccountUnitTest {
     public void removeNullFriend() {
         account.removeFriend(null);
     }
-
-
 
 }

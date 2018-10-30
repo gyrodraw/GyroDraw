@@ -50,23 +50,23 @@ public class LoadingScreenActivityTest {
 
             };
 
-    /*@Test
+    @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
         mActivityRule.getActivity().areWordsReady(words);
-    }*/
+    }
 
     @Test
-    public void drawableMatchTest() {
-        //Intents.init();
-        Espresso.pressBack();
-       /* intended(hasComponent(HomeActivity.class.getName()));
-        onView(withId(R.id.drawButton)).perform(click());
-        intended(hasComponent(LoadingScreenActivity.class.getName()));
+    public void testActivityLoadingStartsWaitingPage() {
+        Intents.init();
+        //Espresso.pressBack();
+        //intended(hasComponent(HomeActivity.class.getName()));
+        //onView(withId(R.id.drawButton)).perform(click());
+        //intended(hasComponent(LoadingScreenActivity.class.getName()));
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
 
         intended(hasComponent(WaitingPageActivity.class.getName()));
-        Intents.release();*/
+        Intents.release();
     }
 
     /**

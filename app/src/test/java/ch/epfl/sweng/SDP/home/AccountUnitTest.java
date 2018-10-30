@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.home;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -8,9 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.HashMap;
+
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
+import ch.epfl.sweng.SDP.EventListener;
 
+import static java.lang.Math.toIntExact;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -49,6 +54,9 @@ public class AccountUnitTest {
     public void testAccountValuesCorrect() {
         assertEquals(account.getTrophies(), 0);
         assertEquals(account.getStars(), 0);
+        assertEquals(account.getMatchesLost(), 0);
+        assertEquals(account.getMatchesWon(), 0);
+        assertEquals(account.getAverageRating(), 0,0);
         assertEquals(account.getUsername(), "123456789");
         assertEquals(mockConstantsWrapper.getFirebaseUserId(), "123456789");
     }
@@ -115,7 +123,41 @@ public class AccountUnitTest {
 
     @Test
     public void testDownloadUser() {
-        account.downloadUser();
+        account.downloadUser(new EventListener());
+    }
+
+    @Test
+    public void testSetValues() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", "fred");
+        map.put("id", "fred");
+
+        map.put("stars", (long) 1.0);
+        map.put("trophies", (long)1.0);
+        map.put("matchesWon", (long)1.0);
+        map.put("matchesLost",(long) 1.0);
+        map.put("averageRating", (long)1.0);
+
+        account.setValues(map);
+    }
+
+    @Test
+    public void testEventListener() {
+        EventListener listener = new EventListener();
+        DataSnapshot snap = Mockito.mock(DataSnapshot.class);
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("username", "fred");
+        map.put("id", "fred");
+
+        map.put("stars", (long) 1.0);
+        map.put("trophies", (long)1.0);
+        map.put("matchesWon", (long)1.0);
+        map.put("matchesLost",(long) 1.0);
+        map.put("averageRating", (long)1.0);
+        when(snap.getValue()).thenReturn(map);
+        listener.onDataChange(snap);
+
     }
 
     @Test
@@ -143,5 +185,7 @@ public class AccountUnitTest {
     public void removeNullFriend() {
         account.removeFriend(null);
     }
+
+
 
 }

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -15,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import static java.lang.Math.toIntExact;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that simulates an account.
@@ -223,38 +225,23 @@ public class Account implements java.io.Serializable {
     /**
      * Download an object from the database and set the variables of this object.
      */
-    public void downloadUser() {
+    public void downloadUser(ValueEventListener listener) {
 
         // Read from the database
-        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        usersRef.child(userId).addListenerForSingleValueEvent(listener);
 
+    }
 
-            @TargetApi(Build.VERSION_CODES.N)
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
-                // Update room
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setValues(Map<String, Object> map) {
+        username = (String) map.get("username");
+        userId = (String) map.get("id");
 
-                username = (String) map.get("username");
-                userId = (String) map.get("id");
-
-                stars = toIntExact( (Long) map.get("stars"));
-                trophies = toIntExact((Long) map.get("trophies"));
-                matchesWon = toIntExact( (Long) map.get("matchesWon"));
-                matchesLost = toIntExact((Long) map.get("matchesLost"));
-                averageRating = toIntExact((Long) map.get("averageRating"));
-
-                Log.d("1",map.toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
-
+        stars = toIntExact( (Long) map.get("stars"));
+        trophies = toIntExact((Long) map.get("trophies"));
+        matchesWon = toIntExact( (Long) map.get("matchesWon"));
+        matchesLost = toIntExact((Long) map.get("matchesLost"));
+        averageRating = toIntExact((Long) map.get("averageRating"));
     }
 
     public int getMatchesWon() {

@@ -68,6 +68,18 @@ public class AccountUnitTest {
         assertThat(account.getTrophies(), is(0));
     }
 
+    public void testGetMatchesWon() {
+        assertThat(account.getMatchesWon(), is(0));
+    }
+
+    public void testGetMatchesLost() {
+        assertThat(account.getMatchesLost(), is(0));
+    }
+
+    public void testGetAverageRating() {
+        assertThat(account.getAverageRating(), is(0.0));
+    }
+
     @Test
     public void testChangeTrophies() {
         account.changeTrophies(20);
@@ -99,6 +111,11 @@ public class AccountUnitTest {
     @Test
     public void testRegisterAccount() {
         account.registerAccount();
+    }
+
+    @Test
+    public void testDownloadUser() {
+        account.downloadUser();
     }
 
     @Test

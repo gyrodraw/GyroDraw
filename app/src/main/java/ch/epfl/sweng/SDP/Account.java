@@ -272,7 +272,4 @@ public class Account implements java.io.Serializable {
         return averageRating;
     }
 
-    public int getMatchesPlayed() {
-        return matchesPlayed;
-    }
 }

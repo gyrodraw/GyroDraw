@@ -117,6 +117,7 @@ public class DrawingActivityTest {
         onView(withId(R.id.timeRemaining)).check(matches(withText("5")));
     }
 
+    @Test
     public void testPressBack() {
         Intents.init();
         Espresso.pressBack();

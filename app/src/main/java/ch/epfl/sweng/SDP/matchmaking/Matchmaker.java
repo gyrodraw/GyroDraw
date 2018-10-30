@@ -37,6 +37,7 @@ public class Matchmaker implements MatchmakingInterface {
     private static Matchmaker singleInstance = null;
     // static method to create instance of Singleton class
     private DatabaseReference reference;
+    private DatabaseReference myRef;
 
     /**
      * Create a singleton Instance.
@@ -50,9 +51,6 @@ public class Matchmaker implements MatchmakingInterface {
 
         return singleInstance;
     }
-
-
-    private DatabaseReference myRef;
 
     /**
      * Matchmaker init.

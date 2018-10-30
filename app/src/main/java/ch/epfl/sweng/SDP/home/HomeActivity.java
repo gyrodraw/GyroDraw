@@ -244,39 +244,39 @@ public class HomeActivity extends Activity {
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        //Account userAccount = new Account(new ConstantsWrapper(), this.user);
-
-        TextView profileTextView = profileWindow.findViewById(R.id.profileText);
-        TextView gamesWonText = profileWindow.findViewById(R.id.gamesWonText);
-        TextView gamesLostText = profileWindow.findViewById(R.id.gamesLostText);
-        TextView averageStarsText = profileWindow.findViewById(R.id.averageStarsText);
-        TextView maxTrophiesText = profileWindow.findViewById(R.id.maxTrophiesText);
-        TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
-        TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
-        TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
-        TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
-        TextView crossText = profileWindow.findViewById(R.id.crossText);
-        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
+        Account userAccount = new Account(new ConstantsWrapper(), this.user);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        TextView profileTextView = profileWindow.findViewById(R.id.profileText);
         profileTextView.setTypeface(typeMuro);
+        TextView gamesWonText = profileWindow.findViewById(R.id.gamesWonText);
         gamesWonText.setTypeface(typeMuro);
+        TextView gamesLostText = profileWindow.findViewById(R.id.gamesLostText);
         gamesLostText.setTypeface(typeMuro);
+        TextView averageStarsText = profileWindow.findViewById(R.id.averageStarsText);
         averageStarsText.setTypeface(typeMuro);
+        TextView maxTrophiesText = profileWindow.findViewById(R.id.maxTrophiesText);
         maxTrophiesText.setTypeface(typeMuro);
+        TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
         gamesWonNumber.setTypeface(typeMuro);
+        TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
         gamesLostNumber.setTypeface(typeMuro);
+        TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
         averageStarsNumber.setTypeface(typeMuro);
+        TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
         maxTrophiesNumber.setTypeface(typeMuro);
+        TextView crossText = profileWindow.findViewById(R.id.crossText);
         crossText.setTypeface(typeMuro);
+        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         signOutButton.setTypeface(typeMuro);
+        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
         deleteButton.setTypeface(typeMuro);
 
-        /*wonTextView.setText(userAccount.getMatchesWon());
-        lostTextView.setText(userAccount.getMatchesLost());
-        avgTextView.setText((int) userAccount.getAverageRating());
-        maxTextView.setText(userAccount.getTrophies());*/
+        gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
+        gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));
+        averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
+        maxTrophiesNumber.setText(Integer.toString(userAccount.getTrophies()));
 
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);

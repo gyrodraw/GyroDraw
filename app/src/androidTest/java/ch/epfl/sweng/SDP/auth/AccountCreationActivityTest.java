@@ -8,6 +8,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertNotEquals;
 
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -42,5 +43,13 @@ public class AccountCreationActivityTest {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("Max Muster"), closeSoftKeyboard())
                 .check(matches(withText(R.string.test_name)));
+    }
+
+    @Test
+    public void testCreateAccountWithValidInput() {
+        onView(withId(R.id.usernameInput))
+                .perform(typeText("Max Muster"), closeSoftKeyboard());
+        onView(ViewMatchers.withId(R.id.createAcc)).perform(click());
+        assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
     }
 }

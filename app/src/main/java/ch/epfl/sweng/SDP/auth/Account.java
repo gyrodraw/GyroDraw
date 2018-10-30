@@ -71,6 +71,12 @@ public class Account {
         instance = new Account(context, constantsWrapper, username);
     }
 
+    /**
+     * Get the account instance.
+     *
+     * @param context context calling this method
+     * @return the account instance
+     */
     public static Account getInstance(Context context) {
         if (instance == null) {
             createAccount(context, new ConstantsWrapper(), "");
@@ -217,7 +223,7 @@ public class Account {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        throw databaseError.toException();
                     }
                 });
     }
@@ -255,7 +261,7 @@ public class Account {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        throw databaseError.toException();
                     }
                 });
     }

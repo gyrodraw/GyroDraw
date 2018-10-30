@@ -35,6 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivityTest.waitFor;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -63,8 +64,8 @@ public class LoadingScreenActivityTest {
         //intended(hasComponent(HomeActivity.class.getName()));
         //onView(withId(R.id.drawButton)).perform(click());
         //intended(hasComponent(LoadingScreenActivity.class.getName()));
-        //onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
-        intended(hasComponent(HomeActivity.class.getName()));
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        intended(hasComponent(WaitingPageActivity.class.getName()));
         Intents.release();
     }
 

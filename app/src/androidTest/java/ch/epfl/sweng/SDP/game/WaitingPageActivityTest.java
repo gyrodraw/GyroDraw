@@ -254,13 +254,7 @@ public class WaitingPageActivityTest {
     @Test
     public void testListenerTimer() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
-        mActivityRule.getActivity().runOnUiThread(
-                new Runnable() {
-                    public void run() {
-                        mActivityRule.getActivity().listenerTimer
-                                .onDataChange(dataSnapshotMock);
-                    }
-                });
+        mActivityRule.getActivity().callOnDataChange(dataSnapshotMock);
 
         onView(withId(R.id.waitingTime)).check(matches(withText("5")));
     }

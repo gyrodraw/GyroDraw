@@ -42,8 +42,8 @@ public class ShopActivity extends Activity {
     private Button retFromShop;
     private Button refresh;
 
-    private final IntegerWrapper stars = new IntegerWrapper(-1);
-    private final IntegerWrapper price = new IntegerWrapper(-1);
+    //private final IntegerWrapper stars = new IntegerWrapper(-1);
+    //private final IntegerWrapper price = new IntegerWrapper(-1);
 
     /**
      * Not sure if we keep this in the final version.
@@ -187,16 +187,17 @@ public class ShopActivity extends Activity {
                     resetTextViewMessage(textView, delayToClear);
                 }
                 else {
-                    stars.setInt(-1);
-                    price.setInt(-1);
-                    getStars(stars, currentUser.child("stars"));
+                    final IntegerWrapper stars = new IntegerWrapper(-1);
+                    final IntegerWrapper price = new IntegerWrapper(-1);
+                    getStars(currentUser.child("stars"), stars);
                     getPrice(shopColorsRef, itemName, price);
                     new CountDownTimer(5000, 500) {
 
                         public void onTick(long millisUntilFinished) {
                             if(stars.getInt() > -1 && price.getInt() > -1) {
                                 this.cancel();
-                                updateUserIf(itemName, textView);
+                                updateUserIf(currentUser, itemName, textView,
+                                        stars.getInt(), price.getInt());
                             }
                         }
 
@@ -207,7 +208,8 @@ public class ShopActivity extends Activity {
                                 resetTextViewMessage(textView, delayToClear);
                             }
                             else {
-                                updateUserIf(itemName, textView);
+                                updateUserIf(currentUser, itemName, textView,
+                                        stars.getInt(), price.getInt());
                             }
                         }
                     }.start();
@@ -227,9 +229,10 @@ public class ShopActivity extends Activity {
      * @param itemName Item to be purchased.
      * @param textView TextView to display user relevant messages.
      */
-    private void updateUserIf(String itemName, TextView textView) {
-        if(sufficientCurrency(stars.getInt(), price.getInt())) {
-            updateUser(currentUser, itemName, stars.getInt() - price.getInt(),
+    protected void updateUserIf(DatabaseReference currentUserRef, String itemName,
+                                TextView textView, int stars, int price) {
+        if(sufficientCurrency(stars, price)) {
+            updateUser(currentUserRef, itemName, stars - price,
                     shopTextView);
         }
         else {
@@ -244,8 +247,11 @@ public class ShopActivity extends Activity {
      * @param userStarsReference Reference to where the stars of the current user are stored.
      * @throws DatabaseException If read does go wrong.
      */
-    protected void getStars(final IntegerWrapper starsWrapper, DatabaseReference userStarsReference)
+    protected void getStars(DatabaseReference userStarsReference, final IntegerWrapper starsWrapper)
             throws DatabaseException {
+        if(userStarsReference == null) {
+            throw new NullPointerException();
+        }
         userStarsReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override

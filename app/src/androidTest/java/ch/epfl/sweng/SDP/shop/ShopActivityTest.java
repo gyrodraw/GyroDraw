@@ -65,7 +65,7 @@ import org.mockito.stubbing.Answer;
 public class ShopActivityTest {
     private final int delayZero = 0;
     private final int delay500 = 500;
-    private int stars;
+    private long stars = 500;
     private final int validNewStars = 1000;
     private final int invalidNewStars = -1000;
     private long price = 500;
@@ -96,6 +96,8 @@ public class ShopActivityTest {
     private DataSnapshot longIntegerValueSnapshot;
     @Mock
     private DataSnapshot getPriceSnapshot;
+    @Mock
+    private DataSnapshot getStarsSnapshot;
 
     @Before
     public void setup() {
@@ -139,6 +141,9 @@ public class ShopActivityTest {
 
         when(getPriceSnapshot.exists()).thenReturn(true);
         when(getPriceSnapshot.getValue()).thenReturn(price);
+
+        when(getStarsSnapshot.exists()).thenReturn(true);
+        when(getStarsSnapshot.getValue()).thenReturn(stars);
     }
 
     @Rule
@@ -218,7 +223,61 @@ public class ShopActivityTest {
 
     //tests for updateUserIf()
 
+    @Test
+    public void updateUserIfWorksIfEnoughStars() {
+        //final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        //activityTestRule.getActivity().updateUserIf(currentUser, testString, textView,
+        //        1000, 0);
+        //assertEquals("Purchase successful.", textView.getText());
+    }
+
+    @Test
+    public void updateUserIfWorksWithInsufficientStars() {
+        prepareLooperIfNotExisting();
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity().updateUserIf(currentUser, testString, textView,
+                0, 1000);
+        assertEquals("Not enough stars to purchase item.", textView.getText());
+    }
+
     //tests for getStars()
+
+    @Test
+    public void getStarsWorks() {
+        doAnswer(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                IntegerWrapper wrapper = new IntegerWrapper(0);
+                activityTestRule.getActivity().wrapDataSnapshotValue(getStarsSnapshot, wrapper);
+                assertEquals(stars, wrapper.getInt());
+                return null;
+            }
+        }).when(currentUserStars).addListenerForSingleValueEvent(any(ValueEventListener.class));
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().getStars(currentUserStars, wrapper);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getStarsWorksWithNullReference() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().getStars(null, wrapper);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getStarsWorksWithNullWrapper() {
+        doAnswer(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                activityTestRule.getActivity()
+                        .wrapDataSnapshotValue(getStarsSnapshot, null);
+                return null;
+            }
+        }).when(currentUserStars)
+                .addListenerForSingleValueEvent(any(ValueEventListener.class));
+        activityTestRule.getActivity().getStars(currentUserStars, null);
+    }
 
     //tests for getPrice()
 

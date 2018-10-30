@@ -29,7 +29,6 @@ public class Account implements java.io.Serializable {
 
     private int matchesWon;
     private int matchesLost;
-    private int matchesPlayed;
     private double averageRating;
 
     /**
@@ -245,7 +244,6 @@ public class Account implements java.io.Serializable {
                 trophies = toIntExact((Long) map.get("trophies"));
                 matchesWon = toIntExact( (Long) map.get("matchesWon"));
                 matchesLost = toIntExact((Long) map.get("matchesLost"));
-                matchesPlayed = toIntExact((Long) map.get("matchesPlayed"));
                 averageRating = toIntExact((Long) map.get("averageRating"));
 
                 Log.d("1",map.toString());

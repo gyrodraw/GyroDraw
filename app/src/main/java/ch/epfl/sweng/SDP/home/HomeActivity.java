@@ -88,6 +88,8 @@ public class HomeActivity extends Activity {
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
         dbRefTimer.addValueEventListener(listenerAllReady);
 
+        initUsersDatabase();
+
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);

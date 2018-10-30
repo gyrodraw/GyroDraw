@@ -70,7 +70,8 @@ public class AccountUnitTest {
         mockDbHandler.saveAccount(Account.getInstance(mockContext));
         mockDbHandler.retrieveAccount(Account.getInstance(mockContext));
         assertThat(Account.getInstance(mockContext).getUsername(), is("123456789"));
-
+        LocalDbHandlerForAccount newDbHandler = new LocalDbHandlerForAccount(mockContext, null,
+                2);
     }
 
     @Test(expected = IllegalArgumentException.class)

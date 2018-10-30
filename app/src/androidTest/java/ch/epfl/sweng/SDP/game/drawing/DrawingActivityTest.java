@@ -94,6 +94,8 @@ public class DrawingActivityTest {
                 assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
             }
         }
+
+        LocalDbHandlerForImages newHandler = new LocalDbHandlerForImages(activityRule.getActivity(), null, 2);
     }
 
     @Test

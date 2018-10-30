@@ -132,7 +132,6 @@ public class WaitingPageActivityTest {
         }
 
         intended(hasComponent(DrawingActivity.class.getName()));
-        Espresso.pressBack();
         Intents.release();
     }
 

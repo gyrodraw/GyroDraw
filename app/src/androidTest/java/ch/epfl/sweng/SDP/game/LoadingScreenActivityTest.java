@@ -1,4 +1,4 @@
-/*package ch.epfl.sweng.SDP.game;
+package ch.epfl.sweng.SDP.game;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -36,8 +36,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
 import static junit.framework.Assert.assertTrue;
-*/
-/*@RunWith(AndroidJUnit4.class)
+
+@RunWith(AndroidJUnit4.class)
 public class LoadingScreenActivityTest {
 
     @Rule
@@ -50,26 +50,24 @@ public class LoadingScreenActivityTest {
                 }
 
             };
-*/
+
    /* @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
         mActivityRule.getActivity().areWordsReady(words);
     }*/
 
-    /*@Test
+    @Test
     public void testActivityLoadingStartsWaitingPage() {
-        //Espresso.pressBack();
+        Intents.init();
+        Espresso.pressBack();
         //intended(hasComponent(HomeActivity.class.getName()));
         //onView(withId(R.id.drawButton)).perform(click());
         //intended(hasComponent(LoadingScreenActivity.class.getName()));
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
-    }*/
-
-    /*@Test
-    public void testTrue() {
-        assertTrue(true);
-    }*/
+        //onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
+    }
 
     /**
      * Perform action of waiting for a specific time.
@@ -92,5 +90,5 @@ public class LoadingScreenActivityTest {
                 uiController.loopMainThreadForAtLeast(millis);
             }
         };
-    }
-}*/
+    }*/
+}

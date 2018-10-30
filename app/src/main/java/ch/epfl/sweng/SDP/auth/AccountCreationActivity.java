@@ -58,8 +58,8 @@ public class AccountCreationActivity extends Activity {
                                 Account.getInstance(getApplicationContext()).registerAccount();
                                 getDefaultSharedPreferences(getApplicationContext()).edit()
                                         .putBoolean("hasAccount", true).apply();
-
-                                gotoHome();
+                                launchActivity(HomeActivity.class);
+                                finish();
                             }
                         }
 
@@ -69,13 +69,5 @@ public class AccountCreationActivity extends Activity {
                         }
                     });
         }
-    }
-
-    /**
-     * Calls HomeActivity.
-     */
-    public void gotoHome() {
-        launchActivity(HomeActivity.class);
-        finish();
     }
 }

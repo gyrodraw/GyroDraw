@@ -14,7 +14,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
@@ -238,7 +238,7 @@ public class WaitingPageActivity extends Activity {
 
         // We should probably check if the database is ready too
         if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            launchActivity(DrawingActivity.class);
+            launchActivity(DrawingGameWithTimer.class);
         }
     }
 

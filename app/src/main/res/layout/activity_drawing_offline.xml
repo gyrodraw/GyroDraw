@@ -44,18 +44,14 @@
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/bucket" />
 
-        <TextView
-            android:id="@+id/timeRemaining"
+        <Button
+            android:id="@+id/exit"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/colorWhite"
-            android:textSize="40sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:onClick="exitClick"
+            android:text="exit" />
+
     </LinearLayout>
 
     <ch.epfl.sweng.SDP.game.drawing.PaintView

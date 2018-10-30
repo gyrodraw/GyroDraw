@@ -26,6 +26,8 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingGame;
+import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;

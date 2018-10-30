@@ -35,8 +35,8 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class DrawingActivityTest {
     @Rule
-    public final ActivityTestRule<DrawingActivity> activityRule =
-            new ActivityTestRule<>(DrawingActivity.class);
+    public final ActivityTestRule<DrawingGameWithTimer> activityRule =
+            new ActivityTestRule<>(DrawingGameWithTimer.class);
 
     private PaintView paintView;
     private Resources res;

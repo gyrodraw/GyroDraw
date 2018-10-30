@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -78,7 +78,7 @@ public class WaitingPageActivityTest {
             onView(withId(R.id.incrementButton)).perform(click());
         }
 
-        intended(hasComponent(DrawingActivity.class.getName()));
+        intended(hasComponent(DrawingGameWithTimer.class.getName()));
         Intents.release();
     }
 

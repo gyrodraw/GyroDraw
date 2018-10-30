@@ -134,10 +134,10 @@ public class VotingPageActivityTest {
         assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
-    @Test
+    /*@Test
     public void testStateChange() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
-    }
+    }*/
 
 }

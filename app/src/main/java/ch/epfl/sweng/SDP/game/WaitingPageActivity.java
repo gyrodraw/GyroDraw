@@ -68,7 +68,7 @@ public class WaitingPageActivity extends Activity {
 
     private Database database;
 
-    private final ValueEventListener listenerTimer = new ValueEventListener() {
+    protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);

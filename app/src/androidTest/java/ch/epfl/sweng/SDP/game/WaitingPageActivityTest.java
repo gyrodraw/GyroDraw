@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -249,6 +250,20 @@ public class WaitingPageActivityTest {
         intended(hasComponent(DrawingActivity.class.getName()));
         Espresso.pressBack();
         Intents.release();
+    }
+
+    @Test
+    public void testListenerTimer() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        mActivityRule.getActivity().runOnUiThread(
+                new Runnable() {
+                    public void run() {
+                        mActivityRule.getActivity().listenerTimer
+                                .onDataChange(dataSnapshotMock);
+                    }
+                });
+
+        onView(withId(R.id.waitingTime)).check(matches(withText("5")));
     }
 
 

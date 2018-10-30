@@ -72,7 +72,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
 
-    private final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -97,7 +97,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         }
     };
 
-    private final ValueEventListener listenerTimer = new ValueEventListener() {
+    protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);

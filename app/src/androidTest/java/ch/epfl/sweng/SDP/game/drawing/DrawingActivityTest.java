@@ -13,26 +13,38 @@ import android.graphics.Path;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import android.graphics.Point;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
 
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class DrawingActivityTest {
@@ -52,11 +64,13 @@ public class DrawingActivityTest {
 
     private PaintView paintView;
     private Resources res;
+    private DataSnapshot dataSnapshotMock;
 
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
     }
 
     @Test
@@ -82,6 +96,29 @@ public class DrawingActivityTest {
         paintView.setCircle(30, -10);
         assertEquals(30, paintView.getCircleX());
         assertEquals(1, paintView.getCircleY());
+    }
+
+    @Test
+    public void testStateChange() {
+        Intents.init();
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
+        activityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+
+        intended(hasComponent(VotingPageActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testListenerTimer() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        activityRule.getActivity().runOnUiThread(
+                new Runnable() {
+                    public void run() {
+                        activityRule.getActivity().listenerTimer
+                                .onDataChange(dataSnapshotMock);
+                    }
+                });
+        onView(withId(R.id.waitingTime)).check(matches(withText("5")));
     }
 
     @Test

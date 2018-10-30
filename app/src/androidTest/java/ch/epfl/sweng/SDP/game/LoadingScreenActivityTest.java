@@ -60,7 +60,6 @@ public class LoadingScreenActivityTest {
     @Test
     public void testActivityLoadingStartsWaitingPage() {
         Intents.init();
-        Espresso.pressBack();
         //intended(hasComponent(HomeActivity.class.getName()));
         //onView(withId(R.id.drawButton)).perform(click());
         //intended(hasComponent(LoadingScreenActivity.class.getName()));

@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 /**
  * Activity allowing the purchase of items such as colors.
  */
@@ -82,17 +84,7 @@ public class ShopActivity extends Activity {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Button btn = initializeButton(snapshot.getKey());
-                        addPurchaseOnClickListenerToButton(btn);
-                        layout.addView(btn);
-                    }
-                }
-                else {
-                    setTextViewMessage(textView,"Currently no purchasable items in shop.");
-                    resetTextViewMessage(textView, delayToClear);
-                }
+                extractColorsFromDataSnapshot(dataSnapshot, textView, layout);
             }
 
             @Override
@@ -100,6 +92,30 @@ public class ShopActivity extends Activity {
                 throw databaseError.toException();
             }
         });
+    }
+
+    /**
+     * Tries to extract colors from a snapshot and creates a Button for each.
+     * @param dataSnapshot DataSnapshot from which colors should be extracted.
+     * @param textView TextView for user relevant messages.
+     * @param layout LinearLayout to which buttons are added.
+     */
+    protected void extractColorsFromDataSnapshot(DataSnapshot dataSnapshot, TextView textView,
+                                                 LinearLayout layout) {
+        if (dataSnapshot == null || textView == null || layout == null) {
+            throw new NullPointerException();
+        }
+        if(dataSnapshot.exists()) {
+            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                Button btn = initializeButton(snapshot.getKey());
+                addPurchaseOnClickListenerToButton(btn);
+                layout.addView(btn);
+            }
+        }
+        else {
+            setTextViewMessage(textView,"Currently no purchasable items in shop.");
+            resetTextViewMessage(textView, delayToClear);
+        }
     }
 
     /**

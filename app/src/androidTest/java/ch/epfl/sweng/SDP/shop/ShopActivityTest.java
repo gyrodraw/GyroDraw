@@ -21,6 +21,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
@@ -32,7 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -68,12 +71,15 @@ public class ShopActivityTest {
     private long stars = 500;
     private final int validNewStars = 1000;
     private final int invalidNewStars = -1000;
-    private long price = 500;
+    private long price0 = 500;
+    private long price1 = 1000;
     private final long longInt = 500;
     private final String testString = "testString";
     private final String color0 = "black";
+    private final String color1 = "red";
 
-    private HashMap<String, Boolean> userColors = new HashMap<>();
+    private HashMap<String, Boolean> userColorsMap = new HashMap<>();
+    private List<DataSnapshot> shopColorsList = new ArrayList<>();
 
     @Mock
     private DatabaseReference currentUser;
@@ -98,11 +104,24 @@ public class ShopActivityTest {
     private DataSnapshot getPriceSnapshot;
     @Mock
     private DataSnapshot getStarsSnapshot;
+    @Mock
+    private DataSnapshot getColorsFromDatabaseSnapshot;
+    @Mock
+    private DataSnapshot color0Snapshot;
+    @Mock
+    private DataSnapshot color1Snapshot;
+
+    @Mock
+    private LinearLayout mockedLinearLayout;
+    private List<String> buttonsInMockedLayout = new ArrayList<>();
 
     @Before
     public void setup() {
         //Initialize mocked objects.
         MockitoAnnotations.initMocks(this);
+
+        shopColorsList.add(color0Snapshot);
+        shopColorsList.add(color1Snapshot);
 
         when(currentUser.child("stars")).thenReturn(currentUserStars);
         when(currentUser.child("items")).thenReturn(currentUserItems);
@@ -126,8 +145,8 @@ public class ShopActivityTest {
 
             @Override
             public Void answer(InvocationOnMock invocation) {
-                userColors.put(color0, true);
-                assertTrue(userColors.get(color0));
+                userColorsMap.put(color0, true);
+                assertTrue(userColorsMap.get(color0));
                 return null;
             }
         });
@@ -140,10 +159,26 @@ public class ShopActivityTest {
         when(longIntegerValueSnapshot.getValue()).thenReturn(longInt);
 
         when(getPriceSnapshot.exists()).thenReturn(true);
-        when(getPriceSnapshot.getValue()).thenReturn(price);
+        when(getPriceSnapshot.getValue()).thenReturn(price0);
 
         when(getStarsSnapshot.exists()).thenReturn(true);
         when(getStarsSnapshot.getValue()).thenReturn(stars);
+
+        when(getColorsFromDatabaseSnapshot.exists()).thenReturn(true);
+        when(getColorsFromDatabaseSnapshot.getChildren()).thenReturn(shopColorsList);
+
+        when(color0Snapshot.getKey()).thenReturn(color0);
+        when(color1Snapshot.getKey()).thenReturn(color1);
+
+        doAnswer(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                buttonsInMockedLayout
+                        .add(((Button) invocation.getArgument(0)).getText().toString());
+                return null;
+            }
+        }).when(mockedLinearLayout).addView(any(Button.class));
     }
 
     @Rule
@@ -157,6 +192,47 @@ public class ShopActivityTest {
     //tests for onCreate()
 
     //tests for getColorsFromDatabase()
+
+    //tests for extractColorsFromDataSnapshot()
+
+    @Test
+    public void extractColorsFromDataSnapshotWorks() {
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        buttonsInMockedLayout.clear();
+        activityTestRule.getActivity().extractColorsFromDataSnapshot(getColorsFromDatabaseSnapshot,
+                textView, mockedLinearLayout);
+        assertTrue(buttonsInMockedLayout.contains(color0));
+        assertTrue(buttonsInMockedLayout.contains(color1));
+        assertEquals("", textView.getText());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void extractColorsFromDataSnapshotWorksWithNullSnapshot() {
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity().extractColorsFromDataSnapshot(null, textView,
+                mockedLinearLayout);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void extractColorsFromDataSnapshotWorksWithNullTextView() {
+        activityTestRule.getActivity().extractColorsFromDataSnapshot(getColorsFromDatabaseSnapshot,
+                null, mockedLinearLayout);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void extractColorsFromDataSnapshotWorksWithNullLayout() {
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity().extractColorsFromDataSnapshot(getColorsFromDatabaseSnapshot,
+                textView, null);
+    }
+
+    @Test
+    public void extractColorsFromDataSnapshotWorksWithNonExistant() {
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity().extractColorsFromDataSnapshot(nonExistant,
+                textView, mockedLinearLayout);
+        assertEquals("Currently no purchasable items in shop.", textView.getText());
+    }
 
     //tests for initializeButton()
 
@@ -290,7 +366,7 @@ public class ShopActivityTest {
             public Void answer(InvocationOnMock invocation) {
                 IntegerWrapper wrapper = new IntegerWrapper(0);
                 activityTestRule.getActivity().wrapDataSnapshotValue(getPriceSnapshot, wrapper);
-                assertEquals(price, wrapper.getInt());
+                assertEquals(price0, wrapper.getInt());
                 return null;
             }
         }).when(shopColorsSpecificColor)

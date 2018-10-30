@@ -65,7 +65,8 @@ public class LoadingScreenActivityTest {
         //intended(hasComponent(LoadingScreenActivity.class.getName()));
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
     }*/
-
+    
+    @Test
     public void testTrue() {
         assertTrue(true);
     }

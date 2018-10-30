@@ -89,7 +89,7 @@ public class VotingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-            timer.setText(String.format("%d", value));
+            timer.setText(String.format(Locale.getDefault(),"%d", value));
         }
 
         @Override

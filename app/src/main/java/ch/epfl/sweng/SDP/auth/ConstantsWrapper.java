@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.auth;
 
 import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 public class ConstantsWrapper {
@@ -19,6 +18,9 @@ public class ConstantsWrapper {
     }
 
     public String getFirebaseUserId() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+        return "null";
     }
 }

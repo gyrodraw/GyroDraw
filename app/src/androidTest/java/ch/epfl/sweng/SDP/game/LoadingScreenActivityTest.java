@@ -51,13 +51,13 @@ public class LoadingScreenActivityTest {
 
             };
 
-   /* @Test
+    @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
         mActivityRule.getActivity().areWordsReady(words);
-    }*/
+    }
 
-    @Test
+    /*@Test
     public void testActivityLoadingStartsWaitingPage() {
         Intents.init();
         Espresso.pressBack();
@@ -67,7 +67,7 @@ public class LoadingScreenActivityTest {
         //onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-    }
+    }*/
 
     /**
      * Perform action of waiting for a specific time.

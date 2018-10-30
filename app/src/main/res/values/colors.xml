@@ -3,11 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#232323</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorLightGrey">#787878</color>
+    <color name="colorLightGrey">#696969</color>
     <color name="colorGrey">#494949</color>
     <color name="colorDrawYellow">#E3D26F</color>
     <color name="colorGreenStar">#51BBA1</color>
-    <color name="colorBlueTrophy">#34b9c8</color>
+    <color name="colorBlueTrophy">#34B9C8</color>
     <color name="colorLeague1">#5E5CC6</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlue">#FF157EFB</color>

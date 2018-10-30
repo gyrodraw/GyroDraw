@@ -241,35 +241,42 @@ public class HomeActivity extends Activity {
         view.startAnimation(press);
     }
 
-    // To remove, only for testing
-
     private void showPopup() {
-
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        Account auser = new Account(new ConstantsWrapper(), this.user);
+        //Account userAccount = new Account(new ConstantsWrapper(), this.user);
 
-        TextView wonTextView = profileWindow.findViewById(R.id.games_won);
-        wonTextView.setText("Matches won: " + auser.getMatchesWon());
-
-        TextView lostTextView = profileWindow.findViewById(R.id.game_lost);
-        lostTextView.setText("Matches lost: " + auser.getMatchesLost());
-
-        TextView avgTextView = profileWindow.findViewById(R.id.averageStars);
-        avgTextView.setText("Avrage stars: "  + auser.getAverageRating());
-
-        TextView trophiesTextView = profileWindow.findViewById(R.id.maxTrophies);
-        trophiesTextView.setText("Avrage trophies: "  + auser.getTrophies());
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
+        TextView profileTextView = profileWindow.findViewById(R.id.profileText);
+        TextView gamesWonText = profileWindow.findViewById(R.id.gamesWonText);
+        TextView gamesLostText = profileWindow.findViewById(R.id.gamesLostText);
+        TextView averageStarsText = profileWindow.findViewById(R.id.averageStarsText);
+        TextView maxTrophiesText = profileWindow.findViewById(R.id.maxTrophiesText);
+        TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
+        TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
+        TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
+        TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
         TextView crossText = profileWindow.findViewById(R.id.crossText);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        profileTextView.setTypeface(typeMuro);
+        gamesWonText.setTypeface(typeMuro);
+        gamesLostText.setTypeface(typeMuro);
+        averageStarsText.setTypeface(typeMuro);
+        maxTrophiesText.setTypeface(typeMuro);
+        gamesWonNumber.setTypeface(typeMuro);
+        gamesLostNumber.setTypeface(typeMuro);
+        averageStarsNumber.setTypeface(typeMuro);
+        maxTrophiesNumber.setTypeface(typeMuro);
         crossText.setTypeface(typeMuro);
         signOutButton.setTypeface(typeMuro);
         deleteButton.setTypeface(typeMuro);
+
+        /*wonTextView.setText(userAccount.getMatchesWon());
+        lostTextView.setText(userAccount.getMatchesLost());
+        avgTextView.setText((int) userAccount.getAverageRating());
+        maxTextView.setText(userAccount.getTrophies());*/
 
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);

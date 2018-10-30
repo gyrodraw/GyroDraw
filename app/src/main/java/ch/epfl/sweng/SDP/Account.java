@@ -257,7 +257,6 @@ public class Account implements java.io.Serializable {
 
     }
 
-
     public int getMatchesWon() {
         return matchesWon;
     }
@@ -269,5 +268,4 @@ public class Account implements java.io.Serializable {
     public double getAverageRating() {
         return averageRating;
     }
-
 }

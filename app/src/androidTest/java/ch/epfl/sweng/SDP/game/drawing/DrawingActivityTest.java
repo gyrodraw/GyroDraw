@@ -91,11 +91,22 @@ public class DrawingActivityTest {
 
         for(int i = 0; i < 100; ++i){
             for(int j = 0; j < 100; ++j){
-                assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
+                assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
             }
         }
 
         LocalDbHandlerForImages newHandler = new LocalDbHandlerForImages(activityRule.getActivity(), null, 2);
+        newHandler.addBitmapToDb(bitmap, 100);
+
+        bitmap = compressBitmap(bitmap, 100);
+
+        Bitmap yetAnotherNewBitmap = newHandler.getLatestBitmapFromDb();
+
+        for(int i = 0; i < 100; ++i){
+            for(int j = 0; j < 100; ++j){
+                assertEquals(bitmap.getPixel(i, j), yetAnotherNewBitmap.getPixel(i, j));
+            }
+        }
     }
 
     @Test

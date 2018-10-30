@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game;
+/*package ch.epfl.sweng.SDP.game;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -36,8 +36,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
 import static junit.framework.Assert.assertTrue;
-
-@RunWith(AndroidJUnit4.class)
+*/
+/*@RunWith(AndroidJUnit4.class)
 public class LoadingScreenActivityTest {
 
     @Rule
@@ -50,7 +50,7 @@ public class LoadingScreenActivityTest {
                 }
 
             };
-
+*/
    /* @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
@@ -65,11 +65,11 @@ public class LoadingScreenActivityTest {
         //intended(hasComponent(LoadingScreenActivity.class.getName()));
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
     }*/
-    
-    @Test
+
+    /*@Test
     public void testTrue() {
         assertTrue(true);
-    }
+    }*/
 
     /**
      * Perform action of waiting for a specific time.
@@ -92,5 +92,5 @@ public class LoadingScreenActivityTest {
                 uiController.loopMainThreadForAtLeast(millis);
             }
         };
-    }*/
-}
+    }
+}*/

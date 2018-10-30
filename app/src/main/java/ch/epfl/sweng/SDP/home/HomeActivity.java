@@ -276,20 +276,18 @@ public class HomeActivity extends Activity {
         this.setMuroFont();
 
         TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
-        TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
-        TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
-        TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
-        TextView crossText = profileWindow.findViewById(R.id.crossText);
-        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
-
         gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
+        TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
         gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));
+        TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
         averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
+        TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
         maxTrophiesNumber.setText(Integer.toString(userAccount.getTrophies()));
-
+        TextView crossText = profileWindow.findViewById(R.id.crossText);
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
         setListener(deleteButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

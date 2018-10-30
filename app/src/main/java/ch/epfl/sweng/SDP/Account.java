@@ -43,9 +43,7 @@ public class Account implements java.io.Serializable {
     }
 
     /**
-     *
      * Offline init method.
-     *
      * @param trophies number of trophies.
      * @param stars number of stars.
      * @param matchesLost number of matches lost.

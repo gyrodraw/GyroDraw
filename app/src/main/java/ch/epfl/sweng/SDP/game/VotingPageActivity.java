@@ -73,7 +73,7 @@ public class VotingPageActivity extends Activity {
         return ratings.clone();
     }
 
-    private final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);

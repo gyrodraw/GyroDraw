@@ -21,15 +21,16 @@ import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -47,6 +48,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import org.mockito.Mock;
 
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import org.mockito.MockitoAnnotations;
@@ -62,6 +64,7 @@ public class ShopActivityTest {
     private int stars;
     private final int validNewStars = 1000;
     private final int invalidNewStars = -1000;
+    private final long longInt = 500;
     private final String testString = "testString";
     private final String color0 = "black";
 
@@ -70,14 +73,37 @@ public class ShopActivityTest {
 
 
     @Mock
-    DatabaseReference currentUserStars;
+    private DatabaseReference currentUser;
     @Mock
-    DatabaseReference currentUserSpecificItem;
+    private DatabaseReference currentUserStars;
+    @Mock
+    private DatabaseReference currentUserItems;
+    @Mock
+    private DatabaseReference currentUserColors;
+    @Mock
+    private DatabaseReference currentUserSpecificItem;
+    @Mock
+    private DatabaseReference shopColors;
+    @Mock
+    private DatabaseReference shopColorsSpecificColor;
+
+    @Mock
+    private DataSnapshot nonExistant;
+    @Mock
+    private DataSnapshot longIntegerValueSnapshot;
 
     @Before
     public void setup() {
+
         //Initialize mocked objects.
         MockitoAnnotations.initMocks(this);
+
+        when(currentUser.child("stars")).thenReturn(currentUserStars);
+        when(currentUser.child("items")).thenReturn(currentUserItems);
+
+        when(currentUserItems.child("colors")).thenReturn(currentUserColors);
+
+        when(currentUserColors.child(anyString())).thenReturn(currentUserSpecificItem);
 
         when(currentUserStars.setValue(anyInt(), any())).thenAnswer(new Answer<Void>() {
 
@@ -100,6 +126,15 @@ public class ShopActivityTest {
             }
         });
 
+        when(shopColors.child(anyString())).thenReturn(shopColorsSpecificColor);
+
+        //when(shopColorsSpecificColor.addListenerForSingleValueEvent()).then;
+
+        when(nonExistant.exists()).thenReturn(false);
+
+        when(longIntegerValueSnapshot.exists()).thenReturn(true);
+        when(longIntegerValueSnapshot.getValue()).thenReturn(longInt);
+
     }
 
     @Rule
@@ -116,11 +151,50 @@ public class ShopActivityTest {
 
     //tests for initializeButton()
 
+    @Test
+    public void initializeButtonWorks() {
+        Button btn = activityTestRule.getActivity().initializeButton(testString);
+        assertEquals(testString, btn.getText());
+        assertTrue(btn.isClickable());
+    }
+
     //tests for addPurchaseOnClickListenerToButton()
+
+    @Test
+    public void addPurchaseOnClickListenerToButtonWorks() {
+        Button btn = activityTestRule.getActivity().initializeButton(testString);
+        assertFalse(btn.hasOnClickListeners());
+        activityTestRule.getActivity().addPurchaseOnClickListenerToButton(btn);
+        assertTrue(btn.hasOnClickListeners());
+    }
 
     //tests for setReturn()
 
+    @Test
+    public void setReturnWorks() {
+        Button btn = activityTestRule.getActivity().initializeButton(testString);
+        assertFalse(btn.hasOnClickListeners());
+        activityTestRule.getActivity().setReturn(btn);
+        assertTrue(btn.hasOnClickListeners());
+        Intents.init();
+        btn.performClick();
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
+    }
+
     //tests for setRefresh()
+
+    @Test
+    public void setRefreshWorks() {
+        Button btn = activityTestRule.getActivity().initializeButton(testString);
+        assertFalse(btn.hasOnClickListeners());
+        activityTestRule.getActivity().setRefresh(btn);
+        assertTrue(btn.hasOnClickListeners());
+        Intents.init();
+        btn.performClick();
+        intended(hasComponent(ShopTestActivity.class.getName()));
+        Intents.release();
+    }
 
     //tests for purchaseItem()
 
@@ -132,11 +206,91 @@ public class ShopActivityTest {
 
     //tests for getPrice()
 
+    @Test
+    public void getPriceWorks() {
+
+    }
+
     //tests for wrapDataSnapshotValue()
+
+    @Test
+    public void wrapDataSnapshotValueWorks() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().wrapDataSnapshotValue(longIntegerValueSnapshot, wrapper);
+        assertEquals(longInt, wrapper.getInt());
+    }
+
+    @Test
+    public void wrapDataSnapshotValueWorksWithNonExistantSnapshot() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().wrapDataSnapshotValue(nonExistant, wrapper);
+        assertEquals(-1, wrapper.getInt());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void wrapDataSnapshotValueWorksWithNullSnapshot() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().wrapDataSnapshotValue(null, wrapper);
+        assertEquals(-1, wrapper.getInt());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void wrapDataSnapshotValueWorksWithNullWrapper() {
+        IntegerWrapper wrapper = new IntegerWrapper(0);
+        activityTestRule.getActivity().wrapDataSnapshotValue(longIntegerValueSnapshot, null);
+    }
 
     //tests for sufficientCurrency()
 
+    @Test
+    public void sufficientCurrencyWorks() {
+        assertTrue(activityTestRule.getActivity().sufficientCurrency(1000, 500));
+        assertTrue(activityTestRule.getActivity().sufficientCurrency(500, 500));
+        assertTrue(activityTestRule.getActivity().sufficientCurrency(0, 0));
+        assertFalse(activityTestRule.getActivity().sufficientCurrency(0, 500));
+        assertFalse(activityTestRule.getActivity().sufficientCurrency(-500, -600));
+    }
+
     //tests for updateUser()
+
+    @Test
+    public void updateUserWorks() {
+        prepareLooperIfNotExisting();
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity().updateUser(currentUser, testString, validNewStars, textView);
+        assertEquals("Purchase successful.", textView.getText());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateUserWorksWithNullReference() {
+        prepareLooperIfNotExisting();
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity()
+                .updateUser(null, testString, validNewStars, textView);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateUserWorksWithNullString() {
+        prepareLooperIfNotExisting();
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity()
+                .updateUser(currentUser, null, validNewStars, textView);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void updateUserWorksWithInvalidNewStars() {
+        prepareLooperIfNotExisting();
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity()
+                .updateUser(currentUser, testString, invalidNewStars, textView);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateUserWorksWithNullTextView() {
+        prepareLooperIfNotExisting();
+        activityTestRule.getActivity()
+                .updateUser(currentUser, testString, validNewStars, null);
+    }
 
     //tests for updateUserStars()
 
@@ -194,8 +348,9 @@ public class ShopActivityTest {
 
     @Test
     public void resetTextViewMessageWorks() {
-        Looper.prepare();
-        final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        prepareLooperIfNotExisting();
+        final TextView textView = new TextView(activityTestRule.getActivity()
+                .getApplicationContext());
         textView.setText(testString);
         assertEquals(testString, textView.getText());
         activityTestRule.getActivity().resetTextViewMessage(textView, delay500);
@@ -262,4 +417,11 @@ public class ShopActivityTest {
 
     //retarded tests
 
+
+    //helper methods
+    private void prepareLooperIfNotExisting() {
+        if (Looper.myLooper() == null) {
+            Looper.prepare();
+        }
+    }
 }

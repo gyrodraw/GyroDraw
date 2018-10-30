@@ -190,7 +190,7 @@ public class ShopActivity extends Activity {
                     stars.setInt(-1);
                     price.setInt(-1);
                     getStars(stars, currentUser.child("stars"));
-                    getPrice(price, itemName, shopColorsRef);
+                    getPrice(shopColorsRef, itemName, price);
                     new CountDownTimer(5000, 500) {
 
                         public void onTick(long millisUntilFinished) {
@@ -229,7 +229,7 @@ public class ShopActivity extends Activity {
      */
     private void updateUserIf(String itemName, TextView textView) {
         if(sufficientCurrency(stars.getInt(), price.getInt())) {
-            updateUser(itemName, stars.getInt() - price.getInt(), currentUser,
+            updateUser(currentUser, itemName, stars.getInt() - price.getInt(),
                     shopTextView);
         }
         else {
@@ -250,7 +250,7 @@ public class ShopActivity extends Activity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                wrapDataSnapshotValue(starsWrapper, dataSnapshot);
+                wrapDataSnapshotValue(dataSnapshot, starsWrapper);
             }
 
             @Override
@@ -267,14 +267,14 @@ public class ShopActivity extends Activity {
      * @param shopColorsReference Reference to where colors are stored in shop.
      * @throws DatabaseException If read does go wrong.
      */
-    protected void getPrice(final IntegerWrapper priceWrapper, final String itemName,
-                          DatabaseReference shopColorsReference) throws DatabaseException {
+    protected void getPrice(DatabaseReference shopColorsReference, final String itemName,
+                            final IntegerWrapper priceWrapper) throws DatabaseException {
         shopColorsReference.child(itemName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                wrapDataSnapshotValue(priceWrapper, dataSnapshot);
+                wrapDataSnapshotValue(dataSnapshot, priceWrapper);
             }
 
             @Override
@@ -290,7 +290,10 @@ public class ShopActivity extends Activity {
      * @param wrapper Wrapper that is given value.
      * @param dataSnapshot Snapshot to extract value from.
      */
-    public void wrapDataSnapshotValue(final IntegerWrapper wrapper, DataSnapshot dataSnapshot) {
+    public void wrapDataSnapshotValue(DataSnapshot dataSnapshot, final IntegerWrapper wrapper) {
+        if(wrapper == null) {
+            throw new NullPointerException();
+        }
         if (dataSnapshot.exists()) {
             try {
                 wrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
@@ -312,7 +315,7 @@ public class ShopActivity extends Activity {
      * @return true iff stars >= price.
      */
     protected boolean sufficientCurrency(int stars, int price) {
-        boolean sufficient = stars >= price;
+        boolean sufficient = stars >= 0 && stars >= price;
         return sufficient;
     }
 
@@ -323,8 +326,11 @@ public class ShopActivity extends Activity {
      * @param newStars New amount of stars after purchase.
      * @param currentUserRef Reference to the current user in database.
      */
-    protected void updateUser(String itemName, int newStars, DatabaseReference currentUserRef,
+    protected void updateUser(DatabaseReference currentUserRef, String itemName, int newStars,
                             final TextView textView) {
+        if (itemName == null || textView == null) {
+            throw new NullPointerException();
+        }
         updateUserStars(currentUserRef.child("stars"), newStars);
         addUserItem(currentUserRef.child(items).child(colors).child(itemName));
         setTextViewMessage(textView, "Purchase successful.");

@@ -203,18 +203,8 @@ public class Account {
                             trophiesBuilder.addChildren(userId + ".trophies").build()
                                     .setValue(newTrophies, createCompletionListener());
                             trophies = newTrophies;
-
-                            // Update current league
-                            DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            for (League league : LEAGUES) {
-                                if (league.contains(trophies)) {
-                                    currentLeague = league.getName();
-                                }
-                            }
-
-                            leagueBuilder.addChildren(userId + ".currentLeague").build()
-                                    .setValue(currentLeague, createCompletionListener());
+                            
+                            updateCurrentLeague();
 
                             localDbHandler.saveAccount(instance);
                         }
@@ -225,6 +215,20 @@ public class Account {
                         throw databaseError.toException();
                     }
                 });
+    }
+
+    private void updateCurrentLeague() {
+        // Update current league
+        DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(
+                usersRef);
+        for (League league : LEAGUES) {
+            if (league.contains(trophies)) {
+                currentLeague = league.getName();
+            }
+        }
+
+        leagueBuilder.addChildren(userId + ".currentLeague").build()
+                .setValue(currentLeague, createCompletionListener());
     }
 
     /**

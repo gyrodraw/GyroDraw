@@ -13,9 +13,7 @@ import java.util.HashMap;
 
 import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.EventListener;
 
-import static java.lang.Math.toIntExact;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -143,7 +141,6 @@ public class AccountUnitTest {
 
     @Test
     public void testEventListener() {
-        EventListener listener = new EventListener();
         DataSnapshot snap = Mockito.mock(DataSnapshot.class);
         HashMap<String, Object> map = new HashMap<>();
 
@@ -182,6 +179,5 @@ public class AccountUnitTest {
     @Test(expected = IllegalArgumentException.class)
     public void removeNullFriend() {
         account.removeFriend(null);
-    }
 
 }

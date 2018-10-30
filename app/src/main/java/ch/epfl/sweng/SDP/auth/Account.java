@@ -62,7 +62,7 @@ public class Account {
      * @throws IllegalArgumentException if username is null
      * @throws IllegalStateException if the account was already instantiated
      */
-    static void createAccount(Context context, ConstantsWrapper constantsWrapper,
+    public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
             String username) {
         if (username == null) {
             throw new IllegalArgumentException("username is null");

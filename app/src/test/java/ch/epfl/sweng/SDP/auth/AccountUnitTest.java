@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -15,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class AccountUnitTest {
@@ -54,6 +54,18 @@ public class AccountUnitTest {
         Account.createAccount(mockContext, mockConstantsWrapper, "123456789");
         Account.getInstance(mockContext).setUserId("123456789");
         Account.enableTesting();
+    }
+
+    @Test
+    public void testLocalDb() {
+        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(mockContext, null, 1);
+        LocalDbHandlerForAccount mockDbHandler = mock(LocalDbHandlerForAccount.class);
+        doNothing().when(mockDbHandler).saveAccount(isA(Account.class));
+        doNothing().when(mockDbHandler).retrieveAccount(isA(Account.class));
+        mockDbHandler.saveAccount(Account.getInstance(mockContext));
+        mockDbHandler.retrieveAccount(Account.getInstance(mockContext));
+        assertThat(Account.getInstance(mockContext).getUsername(), is("123456789"));
+
     }
 
     @Test

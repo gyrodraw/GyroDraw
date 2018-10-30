@@ -7,6 +7,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 
+import android.renderscript.Sampler;
 import android.support.test.espresso.intent.Intents;
 
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -49,6 +50,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.Mock;
 
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 import org.mockito.MockitoAnnotations;
@@ -128,7 +130,17 @@ public class ShopActivityTest {
 
         when(shopColors.child(anyString())).thenReturn(shopColorsSpecificColor);
 
-        //when(shopColorsSpecificColor.addListenerForSingleValueEvent()).then;
+
+        /**
+         * doAnswer(new Answer<Void>() {
+         *
+         *             @Override
+         *             public Void answer(InvocationOnMock invocation) {
+         *
+         *                 return null;
+         *             }
+         *         }).when(shopColorsSpecificColor.addListenerForSingleValueEvent(any(ValueEventListener.class).onDataChange(isA(DataSnapshot.class))));
+         */
 
         when(nonExistant.exists()).thenReturn(false);
 
@@ -176,6 +188,12 @@ public class ShopActivityTest {
         assertFalse(btn.hasOnClickListeners());
         activityTestRule.getActivity().setReturn(btn);
         assertTrue(btn.hasOnClickListeners());
+    }
+
+    @Test
+    public void setReturnReturnsToHomeOnClick() {
+        Button btn = activityTestRule.getActivity().initializeButton(testString);
+        activityTestRule.getActivity().setReturn(btn);
         Intents.init();
         btn.performClick();
         intended(hasComponent(HomeActivity.class.getName()));
@@ -190,6 +208,12 @@ public class ShopActivityTest {
         assertFalse(btn.hasOnClickListeners());
         activityTestRule.getActivity().setRefresh(btn);
         assertTrue(btn.hasOnClickListeners());
+    }
+
+    @Test
+    public void setRefreshRefreshesOnClick() {
+        Button btn = activityTestRule.getActivity().initializeButton(testString);
+        activityTestRule.getActivity().setRefresh(btn);
         Intents.init();
         btn.performClick();
         intended(hasComponent(ShopTestActivity.class.getName()));

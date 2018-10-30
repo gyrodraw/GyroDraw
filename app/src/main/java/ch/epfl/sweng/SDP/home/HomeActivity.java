@@ -25,6 +25,7 @@ import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -88,6 +89,7 @@ public class HomeActivity extends Activity {
         initUsersDatabase();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
+        final Button offlineButton = findViewById(R.id.playoffline);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final ImageView starsButton = findViewById(R.id.starsButton);
@@ -108,6 +110,7 @@ public class HomeActivity extends Activity {
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(offlineButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
     }
 
     // Launch the LeaguesActivity.
@@ -219,6 +222,9 @@ public class HomeActivity extends Activity {
                 break;
             case R.id.crossText:
                 profileWindow.dismiss();
+                break;
+            case R.id.playoffline:
+                launchActivity(DrawingActivity.class);
                 break;
             default:
         }

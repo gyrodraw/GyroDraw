@@ -35,6 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class LoadingScreenActivityTest {
@@ -65,10 +66,14 @@ public class LoadingScreenActivityTest {
         onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
     }*/
 
+    public void testTrue() {
+        assertTrue(true);
+    }
+
     /**
      * Perform action of waiting for a specific time.
      */
-    @Ignore
+    /*@Ignore
     public static ViewAction waitFor(final long millis) {
         return new ViewAction() {
             @Override
@@ -86,5 +91,5 @@ public class LoadingScreenActivityTest {
                 uiController.loopMainThreadForAtLeast(millis);
             }
         };
-    }
+    }*/
 }

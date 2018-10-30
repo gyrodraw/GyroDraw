@@ -1,13 +1,20 @@
 package ch.epfl.sweng.SDP;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * Class that simulates an account.
@@ -19,6 +26,11 @@ public class Account implements java.io.Serializable {
     private int trophies;
     private int stars;
     private transient DatabaseReference usersRef;
+
+    private int matchesWon;
+    private int matchesLost;
+    private int matchesPlayed;
+    private double averageRating;
 
     /**
      * Builder for account.
@@ -106,6 +118,7 @@ public class Account implements java.io.Serializable {
     public void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException {
         checkIfAccountNameIsFree(newName);
+        // is this code really working?
         usersRef.child("users").child(userId).child("username")
                 .setValue(newName, createCompletionListener());
         username = newName;
@@ -199,4 +212,52 @@ public class Account implements java.io.Serializable {
             }
         };
     }
+
+    /**
+     *  Upload all the variables of this object to the database.
+     */
+    public void uploadUser() {
+        this.usersRef.child(userId).setValue(this);
+
+    }
+
+    /**
+     * Download an object from the database and set the variables of this object.
+     */
+    public void downloadUser() {
+
+        // Read from the database
+        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+            @TargetApi(Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
+                // Update room
+
+                username = (String) map.get("username");
+                userId = (String) map.get("id");
+
+                stars = toIntExact( (Long) map.get("stars"));
+                trophies = toIntExact((Long) map.get("trophies"));
+                matchesWon = toIntExact( (Long) map.get("matchesWon"));
+                matchesLost = toIntExact((Long) map.get("matchesLost"));
+                matchesPlayed = toIntExact((Long) map.get("matchesPlayed"));
+                averageRating = toIntExact((Long) map.get("averageRating"));
+
+                Log.d("1",map.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
+    }
+
+
 }

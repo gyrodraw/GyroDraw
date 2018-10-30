@@ -121,7 +121,6 @@ public class Account {
         this.userId = userId;
     }
 
-
     public String getCurrentLeague() {
         return currentLeague;
     }

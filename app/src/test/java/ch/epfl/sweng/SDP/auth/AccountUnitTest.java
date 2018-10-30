@@ -42,9 +42,12 @@ public class AccountUnitTest {
 
         when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
 
-        doNothing().when(mockReference).setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference).setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference).removeValue(isA(DatabaseReference.CompletionListener.class));
+        doNothing().when(mockReference)
+                .setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
+        doNothing().when(mockReference)
+                .setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
+        doNothing().when(mockReference)
+                .removeValue(isA(DatabaseReference.CompletionListener.class));
 
         doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
 
@@ -58,7 +61,8 @@ public class AccountUnitTest {
 
     @Test
     public void testLocalDb() {
-        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(mockContext, null, 1);
+        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(mockContext, null,
+                1);
         LocalDbHandlerForAccount mockDbHandler = mock(LocalDbHandlerForAccount.class);
         doNothing().when(mockDbHandler).saveAccount(isA(Account.class));
         doNothing().when(mockDbHandler).retrieveAccount(isA(Account.class));
@@ -77,8 +81,19 @@ public class AccountUnitTest {
     }
 
     @Test
+    public void testCurrentLeague() {
+        assertThat(Account.getInstance(mockContext).getCurrentLeague(), is("league1"));
+    }
+
+    @Test
     public void testGetStars() {
-        assertThat(Account.getInstance(mockContext).getStars(), is(0));
+        assertThat(Account.getInstance(mockContext).getStars(),
+                is(0));
+    }
+
+    @Test
+    public void testGetUserId() {
+        assertThat(Account.getInstance(mockContext).getUserId(), is("123456789"));
     }
 
     @Test

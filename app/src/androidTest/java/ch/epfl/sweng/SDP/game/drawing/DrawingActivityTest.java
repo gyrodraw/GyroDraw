@@ -118,7 +118,7 @@ public class DrawingActivityTest {
                                 .onDataChange(dataSnapshotMock);
                     }
                 });
-        onView(withId(R.id.waitingTime)).check(matches(withText("5")));
+        onView(withId(R.id.timeRemaining)).check(matches(withText("5")));
     }
 
     @Test

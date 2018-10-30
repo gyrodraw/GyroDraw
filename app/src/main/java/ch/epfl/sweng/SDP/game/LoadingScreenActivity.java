@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -48,8 +49,8 @@ public class LoadingScreenActivity extends Activity {
 
     private DatabaseReference wordsVotesRef;
 
-    private String word1 = "";
-    private String word2 = "";
+    private String word1 = null;
+    private String word2 = null;
 
     private Database database;
 
@@ -135,7 +136,8 @@ public class LoadingScreenActivity extends Activity {
     }
 
     protected void lookingForRoom() {
-        Matchmaker.getInstance().joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
+        Matchmaker.getInstance(new ConstantsWrapper())
+                .joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()) {
@@ -146,7 +148,7 @@ public class LoadingScreenActivity extends Activity {
                 } else {
                     roomID = task.getResult();
                     if(hasLeft) {
-                        Matchmaker.getInstance().leaveRoom(roomID);
+                        Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
                         finish();
                     } else {
                         wordsVotesRef = database.getReference(

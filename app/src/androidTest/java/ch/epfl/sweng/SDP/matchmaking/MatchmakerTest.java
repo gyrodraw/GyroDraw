@@ -41,19 +41,19 @@ public class MatchmakerTest {
     @Test
     public void testJoinRoom() {
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
-        Boolean functionReturnedOK200 = Matchmaker.getInstance().joinRoomOther();
+        Boolean functionReturnedOK200 = Matchmaker.getInstance(mockConstantsWrapper).joinRoomOther();
         assertTrue(functionReturnedOK200);
     }
 
     @Test
     public void testLeaveRoom() {
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
-        Matchmaker.getInstance().leaveRoom("Testroom");
+        Matchmaker.getInstance(mockConstantsWrapper).leaveRoom("Testroom");
     }
 
     @Test
     public void testJoinRoomWithExceptionThrown() {
         doThrow(IllegalArgumentException.class).when(mockConstantsWrapper).getFirebaseUserId();
-        Matchmaker.getInstance().joinRoom();
+        Matchmaker.getInstance(mockConstantsWrapper).joinRoom();
     }
 }

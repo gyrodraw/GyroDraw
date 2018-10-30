@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
@@ -391,7 +392,7 @@ public class WaitingPageActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance().leaveRoom(roomID);
+            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
             removeAllListeners();
             launchActivity(HomeActivity.class);
             finish();

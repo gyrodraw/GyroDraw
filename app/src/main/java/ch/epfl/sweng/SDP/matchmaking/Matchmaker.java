@@ -44,9 +44,9 @@ public class Matchmaker implements MatchmakingInterface {
      *
      * @return returns a singleton instance.
      */
-    public static Matchmaker getInstance() {
+    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper) {
         if (singleInstance == null) {
-            singleInstance = new Matchmaker();
+            singleInstance = new Matchmaker(constantsWrapper);
         }
 
         return singleInstance;
@@ -55,9 +55,9 @@ public class Matchmaker implements MatchmakingInterface {
     /**
      * Matchmaker init.
      */
-    private Matchmaker() {
+    private Matchmaker(ConstantsWrapper constantsWrapper) {
         this.myRef = Database.INSTANCE.getReference("realRooms");
-        this.constantsWrapper = new ConstantsWrapper();
+        this.constantsWrapper = constantsWrapper;
         this.reference = constantsWrapper.getReference("rooms");
     }
 

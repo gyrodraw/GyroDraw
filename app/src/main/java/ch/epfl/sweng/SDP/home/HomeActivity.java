@@ -28,7 +28,6 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
-
 import com.bumptech.glide.Glide;
 
 import com.firebase.ui.auth.AuthUI;
@@ -243,13 +242,8 @@ public class HomeActivity extends Activity {
     // To remove, only for testing
 
     private void showPopup() {
+
         profileWindow.setContentView(R.layout.activity_pop_up);
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
-        TextView crossText = profileWindow.findViewById(R.id.crossText);
-        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
         Account auser = new Account(new ConstantsWrapper(), this.user);
 
@@ -264,6 +258,12 @@ public class HomeActivity extends Activity {
 
         TextView trophiesTextView = profileWindow.findViewById(R.id.maxTrophies);
         trophiesTextView.setText("Avrage trophies: "  + auser.getTrophies());
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        TextView crossText = profileWindow.findViewById(R.id.crossText);
+        Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
+        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
 
         crossText.setTypeface(typeMuro);
         signOutButton.setTypeface(typeMuro);
@@ -302,4 +302,5 @@ public class HomeActivity extends Activity {
         timerRef.child("startTimer").setValue(0);
         timerRef.child("usersEndVoting").setValue(0);
     }
+
 }

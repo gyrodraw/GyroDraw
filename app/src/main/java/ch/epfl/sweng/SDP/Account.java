@@ -12,9 +12,9 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-
 import static java.lang.Math.toIntExact;
+
+import java.util.HashMap;
 
 /**
  * Class that simulates an account.
@@ -272,4 +272,7 @@ public class Account implements java.io.Serializable {
         return averageRating;
     }
 
+    public int getMatchesPlayed() {
+        return matchesPlayed;
+    }
 }

@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-
 import android.support.test.InstrumentationRegistry;
 
 import ch.epfl.sweng.SDP.Account;
@@ -12,11 +11,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-
-import com.google.android.gms.tasks.Task;
-
 import com.google.firebase.database.ValueEventListener;
 
 import static org.junit.Assert.assertTrue;

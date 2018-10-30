@@ -244,8 +244,6 @@ public class HomeActivity extends Activity {
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        Account userAccount = new Account(new ConstantsWrapper(), this.user);
-
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
@@ -272,6 +270,8 @@ public class HomeActivity extends Activity {
         signOutButton.setTypeface(typeMuro);
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
         deleteButton.setTypeface(typeMuro);
+
+        Account userAccount = new Account(new ConstantsWrapper(), this.user);
 
         gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
         gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));

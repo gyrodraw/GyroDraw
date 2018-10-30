@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;

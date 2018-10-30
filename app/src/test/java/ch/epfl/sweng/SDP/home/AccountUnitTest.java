@@ -155,8 +155,6 @@ public class AccountUnitTest {
         map.put("matchesWon", (long)1.0);
         map.put("matchesLost",(long) 1.0);
         map.put("averageRating", (long)1.0);
-        when(snap.getValue()).thenReturn(map);
-        listener.onDataChange(snap);
 
     }
 

@@ -248,6 +248,10 @@ public class Account implements java.io.Serializable {
 
     }
 
+    /**
+     * Sets the values of this object.
+     * @param map the dictionary with all the variables-
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setValues(Map<String, Object> map) {
         username = (String) map.get("username");

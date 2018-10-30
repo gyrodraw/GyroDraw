@@ -271,7 +271,7 @@ public class HomeActivity extends Activity {
         Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
         deleteButton.setTypeface(typeMuro);
 
-        Account userAccount = new Account(new ConstantsWrapper(), this.user);
+        Account userAccount = new Account(1,100,200,1);
 
         gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
         gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));

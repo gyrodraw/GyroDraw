@@ -42,6 +42,13 @@ public class Account implements java.io.Serializable {
         this(constantsWrapper, username, 0, 0);
     }
 
+    public Account(int trophies, int stars, int matchesLost, int matchesWon) {
+        this.trophies = trophies;
+        this.stars = stars;
+        this.matchesLost = matchesLost;
+        this.matchesWon = matchesWon;
+    }
+
     /**
      * Builder for account.
      *

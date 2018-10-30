@@ -110,7 +110,7 @@ public class DrawingActivityTest {
         Intents.release();
     }
 
-    @Test
+    /*@Test
     public void testListenerTimer() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         activityRule.getActivity().callOnDataChangeTimer(dataSnapshotMock);
@@ -123,7 +123,7 @@ public class DrawingActivityTest {
         Espresso.pressBack();
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-    }
+    }*/
 
     @Test
     public void testLocalDbHandler(){

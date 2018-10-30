@@ -239,7 +239,7 @@ public class WaitingPageActivityTest {
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
     }
 
-    /*@Test
+    @Test
     public void testOnState2Change() {
         Intents.init();
 
@@ -249,9 +249,9 @@ public class WaitingPageActivityTest {
         intended(hasComponent(DrawingActivity.class.getName()));
         Espresso.pressBack();
         Intents.release();
-    }*/
+    }
 
-    /*@Test
+    @Test
     public void testListenerTimer() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         mActivityRule.getActivity().runOnUiThread(
@@ -263,7 +263,7 @@ public class WaitingPageActivityTest {
                 });
 
         onView(withId(R.id.waitingTime)).check(matches(withText("5")));
-    }*/
+    }
 
 
     /**

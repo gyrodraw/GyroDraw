@@ -20,6 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import android.graphics.Point;
 import android.support.test.annotation.UiThreadTest;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -31,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -98,7 +100,7 @@ public class DrawingActivityTest {
         assertEquals(1, paintView.getCircleY());
     }
 
-    /*@Test
+    @Test
     public void testStateChange() {
         Intents.init();
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
@@ -111,15 +113,16 @@ public class DrawingActivityTest {
     @Test
     public void testListenerTimer() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
-        activityRule.getActivity().runOnUiThread(
-                new Runnable() {
-                    public void run() {
-                        activityRule.getActivity().listenerTimer
-                                .onDataChange(dataSnapshotMock);
-                    }
-                });
+        activityRule.getActivity().callOnDataChangeTimer(dataSnapshotMock);
         onView(withId(R.id.timeRemaining)).check(matches(withText("5")));
-    }*/
+    }
+
+    public void testPressBack() {
+        Intents.init();
+        Espresso.pressBack();
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
+    }
 
     @Test
     public void testLocalDbHandler(){

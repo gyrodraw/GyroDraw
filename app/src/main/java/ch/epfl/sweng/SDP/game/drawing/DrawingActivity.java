@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import android.view.Display;
@@ -310,5 +311,15 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 break;
             default:
         }
+    }
+
+    @VisibleForTesting
+    public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listenerTimer.onDataChange(dataSnapshot);
+            }
+        });
     }
 }

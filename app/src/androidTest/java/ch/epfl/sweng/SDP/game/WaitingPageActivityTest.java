@@ -239,7 +239,7 @@ public class WaitingPageActivityTest {
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
     }
 
-    /*@Test
+    @Test
     public void testOnState2Change() {
         Intents.init();
 
@@ -249,7 +249,7 @@ public class WaitingPageActivityTest {
         intended(hasComponent(DrawingActivity.class.getName()));
         Espresso.pressBack();
         Intents.release();
-    }*/
+    }
 
     @Test
     public void testListenerTimer() {
@@ -258,7 +258,6 @@ public class WaitingPageActivityTest {
 
         onView(withId(R.id.waitingTime)).check(matches(withText("5")));
     }
-
 
     /**
      * Check if the view is displayed.

@@ -24,16 +24,14 @@ public class AccountUnitTest {
     private ConstantsWrapper mockConstantsWrapper;
     private Context mockContext;
     private Account mockAccount;
-    private DatabaseReference mockReference;
-    private Query mockQuery;
 
     @Before
     public void init() {
         mockConstantsWrapper = mock(ConstantsWrapper.class);
         mockContext = mock(Context.class);
         mockAccount = mock(Account.class);
-        mockReference = mock(DatabaseReference.class);
-        mockQuery = mock(Query.class);
+        DatabaseReference mockReference = mock(DatabaseReference.class);
+        Query mockQuery = mock(Query.class);
 
         when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
@@ -70,8 +68,6 @@ public class AccountUnitTest {
         mockDbHandler.saveAccount(Account.getInstance(mockContext));
         mockDbHandler.retrieveAccount(Account.getInstance(mockContext));
         assertThat(Account.getInstance(mockContext).getUsername(), is("123456789"));
-        LocalDbHandlerForAccount newDbHandler = new LocalDbHandlerForAccount(mockContext, null,
-                2);
     }
 
     @Test(expected = IllegalArgumentException.class)

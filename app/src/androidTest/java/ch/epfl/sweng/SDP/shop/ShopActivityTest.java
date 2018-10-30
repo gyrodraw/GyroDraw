@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,145 +51,125 @@ import static org.mockito.Mockito.when;
 
 import org.mockito.MockitoAnnotations;
 
+import org.mockito.internal.matchers.Null;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 @RunWith(AndroidJUnit4.class)
 public class ShopActivityTest {
-    private final int delay = 500;
-    private long stars = 0;
-    private final int newStars = 500;
+    private final int delayZero = 0;
+    private final int delay500 = 500;
+    private int stars;
+    private final int validNewStars = 1000;
+    private final int invalidNewStars = -1000;
     private final String testString = "testString";
-    private final String color1 = "red";
+    private final String color0 = "black";
 
     private HashMap<String, Boolean> userColors = new HashMap<>();
 
 
-    @Mock
-    private DataSnapshot trueSnapshot;
-    @Mock
-    private DataSnapshot existingStarsSnapshot;
-    @Mock
-    private DataSnapshot nonExistentSnapshot;
 
     @Mock
-    private DatabaseReference currentUserRef;
+    DatabaseReference currentUserStars;
     @Mock
-    private DatabaseReference currentUserStarsRef;
-    @Mock
-    private DatabaseReference currentUserItemsRef;
-    @Mock
-    private DatabaseReference currentUserColorsRef;
-    @Mock
-    private DatabaseReference currentUserSpecificColorRef;
-
-    @Mock
-    private Query ownedItemsQuery;
+    DatabaseReference currentUserSpecificItem;
 
     @Before
     public void setup() {
         //Initialize mocked objects.
         MockitoAnnotations.initMocks(this);
 
-        when(existingStarsSnapshot.exists()).thenReturn(true);
-        when(existingStarsSnapshot.getValue()).thenReturn(stars);
+        when(currentUserStars.setValue(anyInt(), any())).thenAnswer(new Answer<Void>() {
 
-        when(nonExistentSnapshot.exists()).thenReturn(false);
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                stars = invocation.getArgument(1);
+                assertEquals((int)invocation.getArgument(1), stars);
+                return null;
+            }
+        });
 
-        when(trueSnapshot.exists()).thenReturn(true);
-        when(trueSnapshot.getValue()).thenReturn(true);
+        when(currentUserSpecificItem.setValue(eq(true), any()))
+                .thenAnswer(new Answer<Void>() {
 
-        when(currentUserRef.child("items")).thenReturn(currentUserItemsRef);
+            @Override
+            public Void answer(InvocationOnMock invocation) {
+                userColors.put(color0, true);
+                assertTrue(userColors.get(color0));
+                return null;
+            }
+        });
 
-        when(currentUserItemsRef.child("colors")).thenReturn(currentUserColorsRef);
-        when(currentUserColorsRef.child(anyString())).thenReturn(currentUserSpecificColorRef);
     }
 
     @Rule
     public final ActivityTestRule<ShopTestActivity> activityTestRule =
             new ActivityTestRule<>(ShopTestActivity.class);
 
-    @Test
-    public void returnIsClickable() {
-        onView(ViewMatchers.withId(R.id.returnFromShop)).check(matches(isClickable()));
-    }
+    //relevant tests
+
+    //tests for initializeReferences()
+
+    //tests for onCreate()
+
+    //tests for getColorsFromDatabase()
+
+    //tests for initializeButton()
+
+    //tests for addPurchaseOnClickListenerToButton()
+
+    //tests for setReturn()
+
+    //tests for setRefresh()
+
+    //tests for purchaseItem()
+
+    //tests for alreadyOwned()
+
+    //tests for updateUserIf()
+
+    //tests for getStars()
+
+    //tests for getPrice()
+
+    //tests for wrapDataSnapshotValue()
+
+    //tests for sufficientCurrency()
+
+    //tests for updateUser()
+
+    //tests for updateUserStars()
 
     @Test
-    public void btnHasOnClickListenerAfterSetReturn() {
-        Button btn = new Button(activityTestRule.getActivity().getApplicationContext());
-        assertFalse(btn.hasOnClickListeners());
-        activityTestRule.getActivity().setReturn(btn);
-        assertTrue(btn.hasOnClickListeners());
+    public void updateUserStarsWorks() {
+        stars = invalidNewStars;
+        activityTestRule.getActivity().updateUserStars(currentUserStars, validNewStars);
+
     }
 
-    @Test
-    public void refreshIsClickable() {
-        onView(ViewMatchers.withId(R.id.refreshShop)).check(matches(isClickable()));
+    @Test(expected = IllegalArgumentException.class)
+    public void updateUserStarsWorksWithNegativeNewStars() {
+        activityTestRule.getActivity().updateUserStars(currentUserStars, invalidNewStars);
     }
 
-    @Test
-    public void btnHasOnClickListenerAfterSetRefresh() {
-        Button btn = new Button(activityTestRule.getActivity().getApplicationContext());
-        assertFalse(btn.hasOnClickListeners());
-        activityTestRule.getActivity().setRefresh(btn);
-        assertTrue(btn.hasOnClickListeners());
+    @Test(expected = NullPointerException.class)
+    public void updateUserStarsWorksWithNullReference() {
+        activityTestRule.getActivity().updateUserStars(null, validNewStars);
     }
 
-    @Test
-    public void initializeButtonIsClickable() {
-        Button btn = activityTestRule.getActivity().initializeButton(testString);
-        assertTrue(btn.isClickable());
-    }
+    //tests for addUserItem()
 
     @Test
-    public void initializeButtonHasCorrectText() {
-        Button btn = activityTestRule.getActivity().initializeButton(testString);
-        assertEquals(testString, btn.getText());
+    public void addUserItemWorks() {
+        activityTestRule.getActivity().addUserItem(currentUserSpecificItem);
     }
 
-    @Test
-    public void addPurchaseOnClickListenerToButtonWorks() {
-        Button btn = activityTestRule.getActivity().initializeButton(testString);
-        assertTrue(!btn.hasOnClickListeners());
-        activityTestRule.getActivity().addPurchaseOnClickListenerToButton(btn);
-        assertTrue(btn.hasOnClickListeners());
+    @Test(expected = NullPointerException.class)
+    public void addUserItemWorksWithNullReference() {
+        activityTestRule.getActivity().addUserItem(null);
     }
 
-    @Test
-    public void sufficientCurrencyWorksIfMoreStars() {
-        assertTrue(activityTestRule.getActivity().sufficientCurrency(3, 0));
-    }
-
-    @Test
-    public void sufficientCurrencyWorksIfEqualStars() {
-        assertTrue(activityTestRule.getActivity().sufficientCurrency(3,3));
-    }
-
-    @Test
-    public void sufficientCurrencyWorksIfLessStars() {
-        assertFalse(activityTestRule.getActivity().sufficientCurrency(0, 3));
-    }
-
-    @Test
-    public void wrapDataSnapshotValueWorksWithExistingValid() {
-        IntegerWrapper wrapper = new IntegerWrapper(0);
-        activityTestRule.getActivity().wrapDataSnapshotValue(wrapper, existingStarsSnapshot);
-        assertEquals(stars, wrapper.getInt());
-    }
-
-    @Test
-    public void wrapDataSnapshotValueWorksWithExistingInvalid() {
-        IntegerWrapper wrapper = new IntegerWrapper(0);
-        activityTestRule.getActivity().wrapDataSnapshotValue(wrapper, trueSnapshot);
-        assertEquals(-1, wrapper.getInt());
-    }
-
-    @Test
-    public void wrapDataSnapshotValueWorksWithNonExisting() {
-        IntegerWrapper wrapper = new IntegerWrapper(0);
-        activityTestRule.getActivity().wrapDataSnapshotValue(wrapper, nonExistentSnapshot);
-        assertEquals(-1, wrapper.getInt());
-    }
+    //tests for setTextViewMessage()
 
     @Test
     public void setTextViewMessageWorks() {
@@ -197,14 +178,29 @@ public class ShopActivityTest {
         assertEquals(testString, textView.getText());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void setTextViewMessageWorksWithNullTextView() {
+        activityTestRule.getActivity().setTextViewMessage(null, testString);
+    }
+
+    @Test
+    public void setTextViewMessageWorksWithNullString() {
+        TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        activityTestRule.getActivity().setTextViewMessage(textView, null);
+        assertEquals("", textView.getText());
+    }
+
+    //tests for resetTextViewMessage()
+
     @Test
     public void resetTextViewMessageWorks() {
         Looper.prepare();
-        final TextView textView = new TextView(activityTestRule
-                .getActivity().getApplicationContext());
-        activityTestRule.getActivity().setTextViewMessage(textView, testString);
-        activityTestRule.getActivity().resetTextViewMessage(textView, delay);
-        new CountDownTimer(delay, delay) {
+        final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        textView.setText(testString);
+        assertEquals(testString, textView.getText());
+        activityTestRule.getActivity().resetTextViewMessage(textView, delay500);
+        new CountDownTimer(delay500, delay500) {
+
             public void onTick(long millisUntilFinished) {
                 /**
                  * Comment for the sake of CodeClimate.
@@ -218,12 +214,41 @@ public class ShopActivityTest {
     }
 
     @Test
+    public void resetTextViewMessageWorksWithZeroDelay() {
+        final TextView textView = new TextView(activityTestRule.getActivity().getApplicationContext());
+        textView.setText(testString);
+        assertEquals(testString, textView.getText());
+        activityTestRule.getActivity().resetTextViewMessage(textView, delayZero);
+        new CountDownTimer(delayZero, delayZero) {
+
+            public void onTick(long millisUntilFinished) {
+                /**
+                 * Comment for the sake of CodeClimate.
+                 */
+            }
+
+            public void onFinish() {
+                assertEquals("", textView.getText());
+            }
+        }.start();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void resetTextViewMessageWorksWithNullTextView() {
+        activityTestRule.getActivity().resetTextViewMessage(null, delay500);
+    }
+
+    //tests for gotoHome()
+
+    @Test
     public void gotoHomeWorks() {
         Intents.init();
         activityTestRule.getActivity().gotoHome();
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
     }
+
+    //tests for refreshShop()
 
     @Test
     public void refreshShopWorks() {
@@ -233,31 +258,8 @@ public class ShopActivityTest {
         Intents.release();
     }
 
-    @Test
-    public void updateUserStarsWorksCorrectly() {
-        when(currentUserStarsRef.setValue(anyInt(), any())).thenAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) {
-                stars = invocation.getArgument(0);
-                assertEquals(newStars, stars);
-                return null;
-            }
-        });
-        activityTestRule.getActivity().updateUserStars(newStars, currentUserStarsRef);
-    }
 
-    @Test
-    public void addUserItemWorksCorrectly() {
-        when(currentUserSpecificColorRef.setValue(eq(true), any()))
-                .thenAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) {
-                userColors.clear();
-                userColors.put(color1, true);
-                assertEquals(true, userColors.get(color1));
-                return null;
-            }
-        });
-        activityTestRule.getActivity().addUserItem(currentUserSpecificColorRef);
-    }
+
+    //retarded tests
+
 }

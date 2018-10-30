@@ -63,7 +63,8 @@ public class ShopActivity extends Activity {
         initializeReferences();
         setContentView(R.layout.shop_activity);
         shopTextView = findViewById(R.id.shopMessages);
-        getColorsFromDatabase(shopColorsRef, shopTextView);
+        LinearLayout layout = findViewById(R.id.linearLayout);
+        getColorsFromDatabase(shopColorsRef, shopTextView, layout);
         retFromShop = findViewById(R.id.returnFromShop);
         setReturn(retFromShop);
         refresh = findViewById(R.id.refreshShop);
@@ -77,16 +78,15 @@ public class ShopActivity extends Activity {
      * @param textView TextView to display user relevant messages.
      */
     protected void getColorsFromDatabase(DatabaseReference shopColorsReference,
-                                         final TextView textView) {
+                                         final TextView textView, final LinearLayout layout) {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    LinearLayout linearLayout = findViewById(R.id.linearLayout);
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Button btn = initializeButton(snapshot.getKey());
                         addPurchaseOnClickListenerToButton(btn);
-                        linearLayout.addView(btn);
+                        layout.addView(btn);
                     }
                 }
                 else {
@@ -325,7 +325,7 @@ public class ShopActivity extends Activity {
      */
     protected void updateUser(String itemName, int newStars, DatabaseReference currentUserRef,
                             final TextView textView) {
-        updateUserStars(newStars, currentUserRef.child("stars"));
+        updateUserStars(currentUserRef.child("stars"), newStars);
         addUserItem(currentUserRef.child(items).child(colors).child(itemName));
         setTextViewMessage(textView, "Purchase successful.");
         resetTextViewMessage(textView, delayToClear);
@@ -336,7 +336,13 @@ public class ShopActivity extends Activity {
      * @param newStars New amount of stars the user posesses.
      * @param currentUserStarsRef Reference to where the users stars are stored in the database.
      */
-    protected void updateUserStars(int newStars, DatabaseReference currentUserStarsRef) {
+    protected void updateUserStars(DatabaseReference currentUserStarsRef, int newStars) {
+        if (currentUserStarsRef == null) {
+            throw new NullPointerException();
+        }
+        if (newStars < 0) {
+            throw new IllegalArgumentException("newStars must be bigger/equal zero");
+        }
         currentUserStarsRef.setValue(newStars, new DatabaseReference.CompletionListener() {
 
                     @Override
@@ -355,6 +361,9 @@ public class ShopActivity extends Activity {
      *                                database.
      */
     protected void addUserItem(DatabaseReference currentUserSpecificItem) {
+        if(currentUserSpecificItem == null) {
+            throw new NullPointerException();
+        }
         currentUserSpecificItem.setValue(true, new DatabaseReference.CompletionListener() {
 
             @Override
@@ -374,6 +383,12 @@ public class ShopActivity extends Activity {
      * @param message String to be displayed.
      */
     protected void setTextViewMessage(TextView textView, String message) {
+        if(textView == null) {
+            throw new NullPointerException();
+        }
+        if(message == null) {
+            setTextViewMessage(textView, "");
+        }
         textView.setText(message);
     }
 
@@ -383,6 +398,9 @@ public class ShopActivity extends Activity {
      * @param delay Delay until message is cleared in milliseconds.
      */
     protected void resetTextViewMessage(final TextView textView, int delay) {
+        if(textView == null) {
+            throw new NullPointerException();
+        }
         new CountDownTimer(delay, delay) {
             public void onTick(long millisUntilFinished) {
                 /**

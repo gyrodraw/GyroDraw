@@ -6,10 +6,8 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 import android.widget.RatingBar;
 
-import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
@@ -29,6 +27,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -77,7 +77,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesBigNumber() {
-        StarAnimationView starsAnimation =  mActivityRule.getActivity()
+        StarAnimationView starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
@@ -91,7 +91,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesNegativeNumber() {
-        StarAnimationView starsAnimation =  mActivityRule.getActivity()
+        StarAnimationView starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();

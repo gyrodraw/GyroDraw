@@ -2,20 +2,13 @@ package ch.epfl.sweng.SDP.matchmaking;
 
 import ch.epfl.sweng.SDP.ConstantsWrapper;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
 
 public class Matchmaker implements MatchmakingInterface {
 
@@ -25,11 +18,11 @@ public class Matchmaker implements MatchmakingInterface {
     private DatabaseReference reference;
 
     /**
-     *  Create a singleton Instance.
+     * Create a singleton Instance.
+     *
      * @return returns a singleton instance.
      */
-    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper)
-    {
+    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper) {
         if (singleInstance == null) {
             singleInstance = new Matchmaker(constantsWrapper);
         }
@@ -39,7 +32,7 @@ public class Matchmaker implements MatchmakingInterface {
 
 
     /**
-     *  Matchmaker init.
+     * Matchmaker init.
      */
     private Matchmaker(ConstantsWrapper constantsWrapper) {
         this.constantsWrapper = constantsWrapper;
@@ -53,10 +46,12 @@ public class Matchmaker implements MatchmakingInterface {
 
         Boolean successful = false;
         HttpURLConnection connection = null;
+
         try {
             //Create connection
 
-            String urlParameters = "userId=" + URLEncoder.encode(constantsWrapper.getFirebaseUserId(), "UTF-8");
+            String userId = constantsWrapper.getFirebaseUserId();
+            String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
             URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
             connection = createConnection(url);
 
@@ -83,6 +78,7 @@ public class Matchmaker implements MatchmakingInterface {
 
     /**
      * Creates a connection.
+     *
      * @return set up connection
      */
     private HttpURLConnection createConnection(URL url) throws IOException {
@@ -100,6 +96,7 @@ public class Matchmaker implements MatchmakingInterface {
 
     /**
      * leave a room.
+     *
      * @param roomId the id of the room.
      */
     public Boolean leaveRoom(String roomId) {
@@ -109,6 +106,4 @@ public class Matchmaker implements MatchmakingInterface {
                 .removeValue();
         return true;
     }
-
-
 }

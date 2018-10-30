@@ -43,3 +43,4 @@
         <activity android:name=".home.LeaguesActivity"></activity>
     </application>
 </manifest>
+

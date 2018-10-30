@@ -17,9 +17,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
@@ -39,24 +41,14 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends Activity {
 
-    private Dialog profileWindow;
-
-    private final String user = "aa";
-
     private static final String TAG = "HomeActivity";
-
     private static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-
     private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
-
-    private DatabaseReference dbRef;
-    private DatabaseReference dbRefTimer;
-
     private static boolean enableBackgroundAnimation = true;
-
+    private final String user = "aa";
     // To be removed (for testing purposes only)
     private final ValueEventListener listenerAllReady = new ValueEventListener() {
         @Override
@@ -72,6 +64,16 @@ public class HomeActivity extends Activity {
             // Does nothing for the moment
         }
     };
+    private Dialog profileWindow;
+    private DatabaseReference dbRef;
+    private DatabaseReference dbRefTimer;
+
+    /**
+     * Disables the background animation. Call this method in every HomeActivity test
+     */
+    public static void disableBackgroundAnimation() {
+        enableBackgroundAnimation = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,16 +88,6 @@ public class HomeActivity extends Activity {
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
         dbRefTimer.addValueEventListener(listenerAllReady);
-
-
-        /*
-        User u = new User();
-        u.setName("dude");
-        u.setUsername("monkey");
-        u.uploadUser();
-        u.downloadUser();
-        */
-        initUsersDatabase();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
@@ -208,8 +200,12 @@ public class HomeActivity extends Activity {
     private void listenerEventSelector(final View view, int id) {
         switch (id) {
             case R.id.drawButton:
-                ((ImageView) view).setImageResource(R.drawable.draw_button);
-                launchActivity(WaitingPageActivity.class);
+                if (CheckConnection.isOnline(this)) {
+                    ((ImageView) view).setImageResource(R.drawable.draw_button);
+                    launchActivity(WaitingPageActivity.class);
+                } else {
+                    Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG);
+                }
                 break;
             case R.id.leagueImage:
                 showLeagues();
@@ -243,6 +239,8 @@ public class HomeActivity extends Activity {
         press.setFillAfter(true);
         view.startAnimation(press);
     }
+
+    // To remove, only for testing
 
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
@@ -279,8 +277,6 @@ public class HomeActivity extends Activity {
         profileWindow.show();
     }
 
-    // To remove, only for testing
-
     /**
      * Callback function when clicking the voting button. Sets the user ready in the database.
      *
@@ -305,12 +301,5 @@ public class HomeActivity extends Activity {
         timerRef.child("observableTime").setValue(0);
         timerRef.child("startTimer").setValue(0);
         timerRef.child("usersEndVoting").setValue(0);
-    }
-
-    /**
-     * Disables the background animation. Call this method in every HomeActivity test
-     */
-    public static void disableBackgroundAnimation() {
-        enableBackgroundAnimation = false;
     }
 }

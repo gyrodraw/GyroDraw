@@ -1,15 +1,16 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-
 public class RoomTest {
 
-    Room room;
+    private Room room;
+
 
     @Before
     public void init() {

@@ -9,5 +9,10 @@
     <color name="colorGreenStar">#51BBA1</color>
     <color name="colorBlueTrophy">#34b9c8</color>
     <color name="colorLeague1">#5E5CC6</color>
+    <color name="colorWhite">#FFFFFFFF</color>
+    <color name="colorBlue">#FF157EFB</color>
+    <color name="colorGreen">#FF53D768</color>
+    <color name="colorYellow">#FFFED130</color>
+    <color name="colorRed">#FFFC3242</color>
     <color name="transparent">#00000000</color>
 </resources>

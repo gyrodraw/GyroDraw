@@ -7,15 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -64,8 +67,6 @@ public class LoginActivity extends Activity {
 
     private void handleSuccessfulSignIn(IdpResponse response) {
         assert response != null;
-
-        // FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); for Till
 
         if (response.isNewUser() || !getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("hasAccount", false)) {

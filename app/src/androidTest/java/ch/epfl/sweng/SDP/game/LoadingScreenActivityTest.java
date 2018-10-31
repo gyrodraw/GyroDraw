@@ -6,6 +6,7 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
@@ -52,6 +53,13 @@ public class LoadingScreenActivityTest {
 
             };
 
+    private KeyEvent keyEventMock;
+
+    @Before
+    public void init() {
+        keyEventMock = Mockito.mock(KeyEvent.class);
+    }
+
     @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
@@ -91,4 +99,12 @@ public class LoadingScreenActivityTest {
             }
         };
     }*/
+
+    @Test
+    public void pressBackButton() {
+        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(5)));
+        boolean res = mActivityRule.getActivity()
+                .onKeyDown(KeyEvent.KEYCODE_BACK, keyEventMock);
+        assertTrue(res);
+    }
 }

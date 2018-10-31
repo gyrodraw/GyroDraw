@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,14 +9,22 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.LocalDbHandler;
-import ch.epfl.sweng.SDP.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
 
 
 public class DrawingGame extends DrawingActivity implements SensorEventListener {
@@ -23,6 +32,30 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
 
     private int speed;
     private SensorManager sensorManager;
+
+    private final Database database = Database.INSTANCE;
+    private DatabaseReference timerRef;
+    private DatabaseReference stateRef;
+
+    private String roomID;
+
+    protected final ValueEventListener listenerTimer = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+
+            if(value != null) {
+                ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
+    protected String winningWord;
 
     @Override
     int getLayoutid() {
@@ -34,6 +67,11 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             super.onCreate(savedInstanceState);
           //  setContentView(R.layout.activity_drawing);
             speed = 5; //will be passed as variable in future, not hardcoded
+
+             Intent intent = getIntent();
+
+            roomID = intent.getStringExtra("RoomID");
+             winningWord = intent.getStringExtra("WinningWord");
 
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
@@ -53,6 +91,31 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             Log.d(TAG, "We couldn't find the accelerometer on device.");
         }
     }
+
+    protected final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer state = dataSnapshot.getValue(Integer.class);
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case START_VOTING_ACTIVITY:
+                        timerRef.removeEventListener(listenerTimer);
+                        Intent intent = new Intent(getApplicationContext(),
+                                VotingPageActivity.class);
+                        intent.putExtra("RoomID", roomID);
+                        startActivity(intent);
+                        break;
+                    default:
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
 
     /**
      * Fires when a sensor detected a change.
@@ -94,6 +157,21 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
     public void exitClick(View view) {
         Log.d(TAG, "Exiting drawing view");
         this.finish();
+    }
+
+    /**
+     * Method that call onDataChange on the UI thread.
+     * @param dataSnapshot Snapshot of the database (mock snapshot
+     *                     in out case).
+     */
+    @VisibleForTesting
+    public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listenerTimer.onDataChange(dataSnapshot);
+            }
+        });
     }
 
 }

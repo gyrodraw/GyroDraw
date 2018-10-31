@@ -7,12 +7,9 @@ import android.graphics.Typeface;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -28,37 +25,27 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
 
 import android.util.Log;
-
-import android.view.Display;
 import android.view.KeyEvent;
-
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import android.widget.ToggleButton;
+import ch.epfl.sweng.SDP.Activity;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.EventListener;
-
-import ch.epfl.sweng.SDP.Activity;
-
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.LocalDbHandler;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
-import com.google.android.gms.common.util.ArrayUtils;
 
 // TODO: refactor code so this is a subclass
 public class DrawingActivity extends Activity {
@@ -92,10 +79,6 @@ public class DrawingActivity extends Activity {
                 R.anim.fui_slide_out_left);
         setContentView(getLayoutid());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        Intent intent = getIntent();
-        roomID = intent.getStringExtra("RoomID");
-        winningWord = intent.getStringExtra("WinningWord");
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),
                 findViewById(R.id.blueButton), findViewById(R.id.greenButton),

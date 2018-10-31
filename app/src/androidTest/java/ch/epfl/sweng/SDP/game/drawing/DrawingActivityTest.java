@@ -1,59 +1,49 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-
-import android.content.Intent;
-import android.content.res.Resources;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
-import android.graphics.Point;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.widget.TextView;
-
-import com.google.firebase.database.DataSnapshot;
-
-import ch.epfl.sweng.SDP.LocalDbHandler;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.when;
 
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import com.google.firebase.database.DataSnapshot;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+
 @RunWith(AndroidJUnit4.class)
 public class DrawingActivityTest {
 
     @Rule
-    public final ActivityTestRule<DrawingActivity> activityRule =
-            new ActivityTestRule<DrawingActivity>(DrawingActivity.class){
+    public final ActivityTestRule<DrawingGameWithTimer> activityRule =
+            new ActivityTestRule<DrawingGameWithTimer>(DrawingGameWithTimer.class){
 
                 @Override
                 protected Intent getActivityIntent() {
@@ -143,8 +133,8 @@ public class DrawingActivityTest {
         canvas.drawPath(path, paint);
         canvas.drawBitmap(bitmap, 0, 0, paint);
 
-        LocalDbHandler localDbHandler =
-                new LocalDbHandler(activityRule.getActivity(), null, 1);
+        LocalDbHandlerForImages localDbHandler =
+                new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 100);
 
         bitmap = compressBitmap(bitmap, 100);
@@ -153,7 +143,7 @@ public class DrawingActivityTest {
 
         for(int i = 0; i < 100; ++i){
             for(int j = 0; j < 100; ++j){
-                assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
+                assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
             }
         }
     }

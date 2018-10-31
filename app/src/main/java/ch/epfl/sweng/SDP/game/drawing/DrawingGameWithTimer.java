@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 
 public class DrawingGameWithTimer extends DrawingGame {
 
@@ -42,7 +42,7 @@ public class DrawingGameWithTimer extends DrawingGame {
      * Saves drawing in database and storage and calls new activity.
      */
     private void stop() {
-        LocalDbHandler localDbHandler = new LocalDbHandler(this, null, 1);
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
         paintView.saveCanvasInDb(localDbHandler);
         paintView.saveCanvasInStorage();
         // add redirection here

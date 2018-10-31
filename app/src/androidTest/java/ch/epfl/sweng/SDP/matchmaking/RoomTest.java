@@ -11,6 +11,7 @@ public class RoomTest {
 
     private Room room;
 
+
     @Before
     public void init() {
         room = new Room();

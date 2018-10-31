@@ -14,18 +14,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
 import com.bumptech.glide.Glide;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.Locale;
 
 public class VotingPageActivity extends Activity {
@@ -133,11 +128,7 @@ public class VotingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-
-            // Check if all the players are ready for the next phase
-            if (value != null && value == 1) {
-                // Start new activity
-            }
+            timer.setText(String.format(Locale.getDefault(),"%d", value));
         }
 
         @Override
@@ -404,4 +395,3 @@ public class VotingPageActivity extends Activity {
         enableAnimations = false;
     }
 }
-

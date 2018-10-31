@@ -18,16 +18,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ch.epfl.sweng.SDP.Account;
 import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
-
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.bumptech.glide.Glide;
 
 import com.firebase.ui.auth.AuthUI;
@@ -48,6 +47,7 @@ public class HomeActivity extends Activity {
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
     private final String user = "aa";
+
     // To be removed (for testing purposes only)
     private final ValueEventListener listenerAllReady = new ValueEventListener() {
         @Override
@@ -79,6 +79,9 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
+
+        LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
+        localDb.retrieveAccount(Account.getInstance(this));
 
         // Testing method
         Database database = Database.INSTANCE;
@@ -272,7 +275,7 @@ public class HomeActivity extends Activity {
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        Account userAccount = new Account(1,100,200,1);
+        Account userAccount = new Account(1,2,3,4);
 
         this.setMuroFont();
 
@@ -318,5 +321,4 @@ public class HomeActivity extends Activity {
         timerRef.child("startTimer").setValue(0);
         timerRef.child("usersEndVoting").setValue(0);
     }
-
 }

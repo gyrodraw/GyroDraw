@@ -10,11 +10,9 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import ch.epfl.sweng.SDP.LocalDbHandler;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
-
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -257,7 +255,7 @@ public class PaintView extends View {
     /**
      * Saves the bitmap in the local database.
      */
-    public void saveCanvasInDb(LocalDbHandler localDbHandler) {
+    public void saveCanvasInDb(LocalDbHandlerForImages localDbHandler) {
         if (isDrawing) {
             drawEnd();
         }

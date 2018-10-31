@@ -377,14 +377,14 @@ public class ShopActivityTest {
         activityTestRule.getActivity().getPrice(shopColors, testString, wrapper);
     }
 
-    @Ignore
+
     @Test(expected = NullPointerException.class)
     public void getPriceWorksWithNullReference() {
         IntegerWrapper wrapper = new IntegerWrapper(0);
         activityTestRule.getActivity().getPrice(null, testString, wrapper);
     }
 
-    @Ignore
+
     @Test(expected = NullPointerException.class)
     public void getPriceWorksWithNullString() {
         IntegerWrapper wrapper = new IntegerWrapper(0);

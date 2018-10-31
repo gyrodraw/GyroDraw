@@ -226,7 +226,7 @@ public class HomeActivity extends Activity {
                 profileWindow.dismiss();
                 break;
             case R.id.playoffline:
-                launchActivity(DrawingActivity.class);
+                launchActivity(DrawingGame.class);
                 break;
             default:
         }

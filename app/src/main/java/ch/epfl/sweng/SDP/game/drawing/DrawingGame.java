@@ -25,9 +25,14 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
     private SensorManager sensorManager;
 
     @Override
+    int getLayoutid() {
+        return R.layout.activity_drawing_offline;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_drawing_offline);
+          //  setContentView(R.layout.activity_drawing);
             speed = 5; //will be passed as variable in future, not hardcoded
 
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

@@ -196,4 +196,5 @@ public class DrawingActivityTest {
         }
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
+
 }

@@ -29,12 +29,16 @@ public class DrawingActivity extends Activity {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
+    int getLayoutid() {
+        return R.layout.activity_drawing_offline;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fui_slide_in_right,
                 R.anim.fui_slide_out_left);
-        setContentView(R.layout.activity_drawing_offline);
+        setContentView(getLayoutid());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),

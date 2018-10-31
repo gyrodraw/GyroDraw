@@ -16,9 +16,14 @@ public class DrawingGameWithTimer extends DrawingGame {
     private int timeInterval;
 
     @Override
+    int getLayoutid() {
+        return R.layout.activity_drawing;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawing);
+      //  setContentView();
 
         time = 60000; //will be passed as variable in future, not hardcoded
         timeInterval = 1000;  //will be passed as variable in future, not hardcoded

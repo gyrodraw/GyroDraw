@@ -1,10 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static ch.epfl.sweng.SDP.home.League.createLeague1;
-import static ch.epfl.sweng.SDP.home.League.createLeague2;
-import static ch.epfl.sweng.SDP.home.League.createLeague3;
-import static java.lang.Math.toIntExact;
-
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -12,18 +7,23 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
+import static ch.epfl.sweng.SDP.home.League.createLeague1;
+import static ch.epfl.sweng.SDP.home.League.createLeague2;
+import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static java.lang.Math.toIntExact;
+
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * Singleton class that represents an account.
@@ -53,6 +53,12 @@ public class Account {
 
     private LocalDbHandlerForAccount localDbHandler;
 
+    /**
+     * Main account init method.
+     * @param context the current context.
+     * @param constantsWrapper the constant wrapper.
+     * @param username the user name.
+     */
     public Account(Context context, ConstantsWrapper constantsWrapper, String username) {
         if (instance != null && !testing) {
             throw new IllegalStateException("Already instantiated");
@@ -404,9 +410,6 @@ public class Account {
      */
     public static void enableTesting() {
         testing = true;
-    }
-
-    public void addStars(int i) {
     }
 
 }

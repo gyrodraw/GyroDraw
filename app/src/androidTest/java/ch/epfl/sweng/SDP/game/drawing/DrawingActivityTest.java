@@ -68,6 +68,9 @@ public class DrawingActivityTest {
     private Resources res;
     private DataSnapshot dataSnapshotMock;
 
+    /**
+     * Initialise mock elements and get UI elements.
+     */
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);

@@ -53,58 +53,9 @@ public class LoadingScreenActivityTest {
 
             };
 
-    private KeyEvent keyEventMock;
-
-    @Before
-    public void init() {
-        keyEventMock = Mockito.mock(KeyEvent.class);
-    }
-
     @Test
     public void testWordsReady() {
         ArrayList<String> words = new ArrayList<>();
         mActivityRule.getActivity().areWordsReady(words);
-    }
-
-    /*@Test
-    public void testActivityLoadingStartsWaitingPage() {
-        Intents.init();
-        //intended(hasComponent(HomeActivity.class.getName()));
-        //onView(withId(R.id.drawButton)).perform(click());
-        //intended(hasComponent(LoadingScreenActivity.class.getName()));
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(10)));
-        intended(hasComponent(WaitingPageActivity.class.getName()));
-        Intents.release();
-    }*/
-
-    /**
-     * Perform action of waiting for a specific time.
-     */
-    /*@Ignore
-    public static ViewAction waitFor(final long millis) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isRoot();
-            }
-
-            @Override
-            public String getDescription() {
-                return "Wait for " + millis + " milliseconds.";
-            }
-
-            @Override
-            public void perform(UiController uiController, final View view) {
-                uiController.loopMainThreadForAtLeast(millis);
-            }
-        };
-    }*/
-
-    @Test
-    public void pressBackButton() {
-        onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(5)));
-        boolean res = mActivityRule.getActivity()
-                .onKeyDown(KeyEvent.KEYCODE_BACK, keyEventMock);
-        assertTrue(res);
     }
 }

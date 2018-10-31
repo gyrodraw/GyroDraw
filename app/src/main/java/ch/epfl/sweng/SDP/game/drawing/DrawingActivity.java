@@ -258,8 +258,8 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(new ConstantsWrapper()).
-                    leaveRoom(roomID);
+            Matchmaker.getInstance(new ConstantsWrapper())
+                    .leaveRoom(roomID);
             removeAllListeners();
             launchActivity(HomeActivity.class);
             finish();
@@ -313,6 +313,11 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         }
     }
 
+    /**
+     * Method that call onDataChange on the UI thread.
+     * @param dataSnapshot Snapshot of the database (mock snapshot
+     *                     in out case).
+     */
     @VisibleForTesting
     public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {

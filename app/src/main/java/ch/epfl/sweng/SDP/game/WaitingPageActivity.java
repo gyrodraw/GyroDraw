@@ -405,6 +405,11 @@ public class WaitingPageActivity extends Activity {
         enableSquareAnimation = false;
     }
 
+    /**
+     * Method that calls onDataChange on the UI thread.
+     * @param dataSnapshot Snapshot of the database (mock snapshot
+     *                     in this case).
+     */
     @VisibleForTesting
     public void callOnDataChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {

@@ -359,7 +359,6 @@ public class ShopActivityTest {
 
     //tests for getPrice()
 
-    @Ignore
     @Test
     public void getPriceWorks() {
         doAnswer(new Answer<Void>() {

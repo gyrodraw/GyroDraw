@@ -320,7 +320,6 @@ public class ShopActivityTest {
 
     //tests for getStars()
 
-    @Ignore
     @Test
     public void getStarsWorks() {
         doAnswer(new Answer<Void>() {
@@ -337,14 +336,12 @@ public class ShopActivityTest {
         activityTestRule.getActivity().getStars(currentUserStars, wrapper);
     }
 
-    @Ignore
     @Test(expected = NullPointerException.class)
     public void getStarsWorksWithNullReference() {
         IntegerWrapper wrapper = new IntegerWrapper(0);
         activityTestRule.getActivity().getStars(null, wrapper);
     }
-
-    @Ignore
+    
     @Test(expected = NullPointerException.class)
     public void getStarsWorksWithNullWrapper() {
         doAnswer(new Answer<Void>() {

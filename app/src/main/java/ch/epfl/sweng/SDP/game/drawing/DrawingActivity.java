@@ -1,9 +1,13 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,16 +17,37 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+
+import android.view.Display;
+import android.view.KeyEvent;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.widget.ToggleButton;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.EventListener;
+
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
@@ -35,11 +60,61 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private Handler handler;
     private SensorManager sensorManager;
 
+    private String roomID;
+    private String winningWord;
+    ToggleButton flyDraw;
+
     private ImageView[] colorButtons;
 
     private ImageView pencilButton;
     private ImageView eraserButton;
     private ImageView bucketButton;
+
+    private final Database database = Database.INSTANCE;
+    private DatabaseReference timerRef;
+    private DatabaseReference stateRef;
+
+    protected final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer state = dataSnapshot.getValue(Integer.class);
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case START_VOTING_ACTIVITY:
+                        timerRef.removeEventListener(listenerTimer);
+                        Intent intent = new Intent(getApplicationContext(),
+                                VotingPageActivity.class);
+                        intent.putExtra("RoomID", roomID);
+                        startActivity(intent);
+                        break;
+                    default:
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
+    protected final ValueEventListener listenerTimer = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+
+            if(value != null) {
+                ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +123,17 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 R.anim.fui_slide_out_left);
         setContentView(R.layout.activity_drawing);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        Intent intent = getIntent();
+        roomID = intent.getStringExtra("RoomID");
+        winningWord = intent.getStringExtra("WinningWord");
+
+        ((TextView) findViewById(R.id.winningWord)).setText(winningWord);
+
+        timerRef = database.getReference("realRooms." + roomID + ".timer.observableTime");
+        timerRef.addValueEventListener(listenerTimer);
+        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef.addValueEventListener(listenerState);
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),
                 findViewById(R.id.blueButton), findViewById(R.id.greenButton),
@@ -80,36 +166,16 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         // Set the content to appear under the system bars so that the
         // content doesn't resize when the system bars hide and show.
 
-        setCountdownTimer();
+        // Previous mock timer
+        // setCountdownTimer();
 
-        // informes the paintView that it has to be updated
+        // informs the paintView that it has to be updated
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
                 paintView.invalidate();
             }
         };
-    }
-
-    /**
-     * Initializes the countdown to a given time.
-     *
-     * @return the countdown
-     */
-    private CountDownTimer setCountdownTimer() {
-        return new CountDownTimer(time, timeInterval) {
-            public void onTick(long millisUntilFinished) {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText(Long.toString(millisUntilFinished / timeInterval));
-            }
-
-            public void onFinish() {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setTextSize(20);
-                textView.setText("Time over!");
-                stop();
-            }
-        }.start();
     }
 
     /**
@@ -159,7 +225,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     /**
      * Called when accelerometer changed, circle coordinates are updated.
      *
-     * @param coordinateX coordiate
+     * @param coordinateX coordinate
      * @param coordinateY coordinate
      */
     public void updateValues(float coordinateX, float coordinateY) {
@@ -181,6 +247,24 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         paintView.saveCanvasInDb(localDbHandler);
         paintView.saveCanvasInStorage();
         // add redirection here
+    }
+
+
+    private void removeAllListeners() {
+        timerRef.removeEventListener(listenerTimer);
+        stateRef.removeEventListener(listenerState);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Matchmaker.getInstance(new ConstantsWrapper())
+                    .leaveRoom(roomID);
+            removeAllListeners();
+            launchActivity(HomeActivity.class);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -227,5 +311,20 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 break;
             default:
         }
+    }
+
+    /**
+     * Method that call onDataChange on the UI thread.
+     * @param dataSnapshot Snapshot of the database (mock snapshot
+     *                     in out case).
+     */
+    @VisibleForTesting
+    public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listenerTimer.onDataChange(dataSnapshot);
+            }
+        });
     }
 }

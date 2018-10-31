@@ -138,13 +138,13 @@ public class Account {
     }
 
     /**
-     * Checks in Firebase if username already exists.
+     * Updates username to newName.
      *
-     * @param newName username to compare
-     * @throws IllegalArgumentException If username is null or already taken
-     * @throws DatabaseException If something went wrong with database.
+     * @param newName new username
+     * @throws IllegalArgumentException if username not available anymore
+     * @throws DatabaseException if problems with Firebase
      */
-    void checkIfAccountNameIsFree(final String newName)
+    public void updateUsername(final String newName)
             throws IllegalArgumentException, DatabaseException {
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
@@ -156,6 +156,12 @@ public class Account {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             throw new IllegalArgumentException("Username already taken.");
+                        } else {
+                            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+                            builder.addChildren(userId + ".username").build()
+                                    .setValue(newName, createCompletionListener());
+                            username = newName;
+                            localDbHandler.saveAccount(instance);
                         }
                     }
 
@@ -164,23 +170,6 @@ public class Account {
                         throw databaseError.toException();
                     }
                 });
-    }
-
-    /**
-     * Updates username to newName.
-     *
-     * @param newName new username
-     * @throws IllegalArgumentException if username not available anymore
-     * @throws DatabaseException if problems with Firebase
-     */
-    public void updateUsername(final String newName)
-            throws IllegalArgumentException, DatabaseException {
-        checkIfAccountNameIsFree(newName);
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".username").build()
-                .setValue(newName, createCompletionListener());
-        username = newName;
-        localDbHandler.saveAccount(this);
     }
 
     /**

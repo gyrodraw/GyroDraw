@@ -25,8 +25,8 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 import com.bumptech.glide.Glide;
 
@@ -201,10 +201,11 @@ public class HomeActivity extends Activity {
             case R.id.drawButton:
                 if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
-                    launchActivity(WaitingPageActivity.class);
+                    launchActivity(LoadingScreenActivity.class);
                 } else {
                     Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG);
                 }
+
                 break;
             case R.id.leagueImage:
                 showLeagues();

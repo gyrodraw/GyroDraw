@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 public class MatchmakerTest {
 
+    private static final String USER_ID = "123456789";
     private ConstantsWrapper mockConstantsWrapper;
     private DatabaseReference mockReference;
     private Task mockTask;
@@ -39,15 +40,22 @@ public class MatchmakerTest {
 
     @Test
     public void testJoinRoom() {
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
-        Boolean functionReturnedOK200 = Matchmaker.getInstance(mockConstantsWrapper).joinRoom();
+        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
+        Boolean functionReturnedOK200 = Matchmaker.getInstance(mockConstantsWrapper)
+                .joinRoomOther();
         assertTrue(functionReturnedOK200);
     }
 
     @Test
     public void testLeaveRoom() {
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
+        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
         Matchmaker.getInstance(mockConstantsWrapper).leaveRoom("Testroom");
+    }
+
+    @Test
+    public void testLeaveRoomOther() {
+        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
+        Matchmaker.getInstance(mockConstantsWrapper).leaveRoomOther("Testroom");
     }
 
     @Test

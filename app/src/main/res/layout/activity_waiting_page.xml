@@ -25,8 +25,43 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:alpha="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/waitingTime"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/roomID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <TextView
+        android:id="@+id/roomID"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="52dp"
+        android:shadowColor="@android:color/black"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:text="@string/vote"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
     <ImageView
         android:id="@+id/imageWord1"
@@ -95,16 +130,6 @@
             android:textColor="@color/colorGrey"
             android:textSize="40sp" />
     </RadioGroup>
-
-    <ImageView
-        android:id="@+id/waitingAnimationDots"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/waitingAnimationSquare"

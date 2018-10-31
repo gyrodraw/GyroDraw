@@ -20,7 +20,18 @@ public class ConstantsWrapper {
         return Database.INSTANCE.getReference(path);
     }
 
-    public String getFirebaseUserId() {
-        return firebaseUser.getUid();
+
+    /**
+     * Get the ID of the connected user.
+     * @return Returns the ID of the user or Undefined if its null
+     */
+    public String getFirebaseUserId(){
+        if(firebaseUser != null) {
+            return firebaseUser.getUid();
+        }
+        else {
+            // Needed for testing for now
+            return "Undefined";
+        }
     }
 }

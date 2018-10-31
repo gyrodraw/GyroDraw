@@ -2,11 +2,15 @@ package ch.epfl.sweng.SDP.game;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.SystemClock;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.RatingBar;
+
+import com.google.firebase.database.DataSnapshot;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -22,12 +26,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -40,11 +47,26 @@ public class VotingPageActivityTest {
                 protected void beforeActivityLaunched() {
                     disableAnimations();
                 }
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("RoomID", "0123457890");
+
+                    return intent;
+                }
             };
+
+    private DataSnapshot dataSnapshotMock;
 
     // Add a monitor for the home activity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(HomeActivity.class.getName(), null, false);
+
+    @Before
+    public void init() {
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+    }
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
@@ -111,4 +133,11 @@ public class VotingPageActivityTest {
         Assert.assertNotNull(homeActivity);
         assertTrue(mActivityRule.getActivity().isFinishing());
     }
+
+    @Test
+    public void testStateChange() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+    }
+
 }

@@ -1,19 +1,62 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
+
 import android.util.Log;
+
+import android.view.Display;
+import android.view.KeyEvent;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.widget.ToggleButton;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.EventListener;
+
 import ch.epfl.sweng.SDP.Activity;
+
+import ch.epfl.sweng.SDP.ConstantsWrapper;
+import ch.epfl.sweng.SDP.LocalDbHandler;
+
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
@@ -23,15 +66,24 @@ public class DrawingActivity extends Activity {
     protected PaintView paintView;
     protected Handler handler;
 
+    private String roomID;
+    private String winningWord;
+    ToggleButton flyDraw;
+
     private ImageView[] colorButtons;
 
     private ImageView pencilButton;
     private ImageView eraserButton;
     private ImageView bucketButton;
 
+
     int getLayoutid() {
         return R.layout.activity_drawing_offline;
     }
+
+    private final Database database = Database.INSTANCE;
+    private DatabaseReference timerRef;
+    private DatabaseReference stateRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +92,10 @@ public class DrawingActivity extends Activity {
                 R.anim.fui_slide_out_left);
         setContentView(getLayoutid());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        Intent intent = getIntent();
+        roomID = intent.getStringExtra("RoomID");
+        winningWord = intent.getStringExtra("WinningWord");
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),
                 findViewById(R.id.blueButton), findViewById(R.id.greenButton),
@@ -63,7 +119,6 @@ public class DrawingActivity extends Activity {
         // Set the content to appear under the system bars so that the
         // content doesn't resize when the system bars hide and show.
 
-        // informes the paintView that it has to be updated
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -81,6 +136,16 @@ public class DrawingActivity extends Activity {
         paintView.clear();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Matchmaker.getInstance(new ConstantsWrapper())
+                    .leaveRoom(roomID);
+            launchActivity(HomeActivity.class);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * Sets the clicked button to selected and sets the corresponding color.
@@ -132,5 +197,6 @@ public class DrawingActivity extends Activity {
         Log.d(TAG, "Exiting drawing view");
         this.finish();
     }
+
 
 }

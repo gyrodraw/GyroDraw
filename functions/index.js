@@ -5,7 +5,12 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const maxPlayers = 5;
+const maxWords = 6;
+const WAITING_TIME_CHOOSE_WORDS = 10;
+const WAITING_TIME_DRAWING = 10;
+const WAITING_TIME_VOTING = 10;
 var StateEnum = Object.freeze({"votingPage":1, "endVotingPage":2})
+var state = 0;
 
 admin.initializeApp();
 
@@ -38,6 +43,28 @@ function checkUsersReady(state, path, snapshot) {
   }
 }
 
+function checkUsersReady2(state, path, snapshot) {
+  let ready = true;
+  snapshot.forEach((child) => {
+    if(child.val() !== state) {
+      ready = false;
+    }
+  });
+
+  if(ready && snapshot.numChildren() >= 2) {
+    admin.database().ref(path + "/state").set(state + 1);
+    /*admin.database().ref(path).child("users").on('value', (snapUsers) => {
+      return snapUsers.forEach((child) => {
+        child.ref.set(state + 1);
+      });
+    });*/
+    console.log("Ready");
+  } else {
+    console.log("Not ready");
+  }
+  return;
+}
+
 exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer').onWrite((event) => {
   return admin.database().ref('/mockRooms/ABCDE/timer/startTimer').once("value")
   .then(snapshot => {
@@ -66,16 +93,18 @@ function functionTimer (seconds, call) {
         if (seconds > 300) {
             return;
         }
+
         let interval = setInterval(onInterval, 1000);
         let elapsedSeconds = 0;
 
         function onInterval () {
             if (elapsedSeconds >= seconds) {
-                clearInterval(interval);
-                call(0);
-                resolve(elapsedSeconds);
-                return;
+              clearInterval(interval);
+              call(0);
+              resolve(elapsedSeconds);
+              return;
             }
+
             call(seconds - elapsedSeconds);
             elapsedSeconds++;
         }
@@ -122,4 +151,117 @@ exports.joinGame = functions.https.onRequest((req, res) => {
       return res.status(200).end();
     });
   });
+});
+
+exports.joinGame2 = functions.https.onCall((data, context) => {
+  console.log("Started method");
+  // Grab the text parameter.
+  const username = data.username;
+  let _roomID;
+  console.log(username);
+  var alreadyJoined = false;
+
+  return admin.database().ref('realRooms').once('value', (snapshot) => {
+    return snapshot.forEach((roomID) => {
+        console.log(roomID.child("users").numChildren());
+
+        // Check if the room is full or if the user already joined a room
+        if(roomID.child("users").numChildren() < 5 && !alreadyJoined) {
+          const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
+          const path = "realRooms/" + roomID.key;
+          _roomID = roomID.key;
+          if(roomID.hasChild("users")) {
+            if(roomID.child("users/" + username).exists()) {
+              admin.database().ref(path).child("users/" + username).remove();
+            }
+            admin.database().ref(path).child("users").update({[username]:0});
+          } else {
+            if(roomID.child("users/" + username).exists()) {
+              admin.database().ref(path).child("users/" + username).remove();
+            }
+            admin.database().ref(path).update({"users":{[username]:0}});
+          }
+          alreadyJoined = true;
+        }
+    });
+  }).then(() => {
+    return _roomID;
+  });
+});
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateTwoRandomNumbers() {
+  const firstNumber = getRandomInt(0, maxWords);
+  let secondNumber = firstNumber;
+
+  while(firstNumber === secondNumber) {
+    secondNumber = getRandomInt(0, maxWords);
+  }
+
+  return [firstNumber, secondNumber];
+}
+
+function addWordsToDatabase(roomID) {
+  const numbers = generateTwoRandomNumbers();
+  return admin.database().ref("words").once('value', (snapshot) => {
+    const word1 = snapshot.child(numbers[0]).val();
+    const word2 = snapshot.child(numbers[1]).val();
+    admin.database().ref("realRooms/" + roomID).update({"words": {[word1]:0,[word2]:0}});
+  });
+
+}
+
+exports.chooseWordsGeneration = functions.database.ref("realRooms/{roomID}/users").onWrite((change, context) => {
+  const roomID = context.params.roomID;
+  return admin.database().ref("realRooms/" + roomID).once('value', (snapshot) => {
+    if(snapshot.child("users").numChildren() === 1) {
+      admin.database().ref("realRooms/" + roomID + "/state").set(0);
+      state = 0;
+    }
+
+    if(snapshot.hasChild("words") && !snapshot.hasChild("users")) {
+      // Remove the words because the room is empty
+      admin.database().ref("realRooms/" + roomID + "/words").remove();
+    }
+    else if(snapshot.hasChild("users") && !snapshot.hasChild("words")) {
+      // Generate the words
+      addWordsToDatabase(roomID);
+    }
+
+    return checkUsersReady2(0, "realRooms/" + roomID, snapshot.child("users"));
+  });
+});
+
+function startTimer(time, roomID,newState) {
+  return functionTimer(time, elapsedTime => {
+          return admin.database().ref("realRooms/" + roomID + "/timer/observableTime").set(elapsedTime);
+      })
+      .then(totalTime => {
+          return console.log('Timer of ' + totalTime + ' has finished.');
+      })
+      .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+      .then(() => admin.database().ref("realRooms/" + roomID + "/timer/endTime").set(1))
+      .then(() => admin.database().ref("realRooms/" + roomID + "/state").set(newState))
+      .catch(error => console.error(error));
+}
+
+exports.onStateUpdate = functions.database.ref("realRooms/{roomID}/state").onWrite((change, context) => {
+  const roomID = context.params.roomID;
+  state = change.after.val();
+  switch(state) {
+    case 0:
+      break;
+    case 1:
+      return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, 2);
+    case 2:
+      return startTimer(WAITING_TIME_DRAWING, roomID, 3);
+    case 3:
+      return startTimer(WAITING_TIME_VOTING, roomID, 4);
+    default:
+      break;
+  }
+  return 0;
 });

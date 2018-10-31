@@ -58,6 +58,12 @@
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/winningWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
     <ch.epfl.sweng.SDP.game.drawing.PaintView
         android:id="@+id/paintView"
         android:layout_width="match_parent"

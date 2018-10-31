@@ -261,7 +261,6 @@ public class ShopActivityTest {
         assertTrue(btn.hasOnClickListeners());
     }
 
-    @Ignore
     @Test
     public void setReturnReturnsToHomeOnClick() {
         Button btn = activityTestRule.getActivity().initializeButton(testString);
@@ -281,8 +280,7 @@ public class ShopActivityTest {
         activityTestRule.getActivity().setRefresh(btn);
         assertTrue(btn.hasOnClickListeners());
     }
-
-    @Ignore
+    
     @Test
     public void setRefreshRefreshesOnClick() {
         Button btn = activityTestRule.getActivity().initializeButton(testString);
@@ -359,6 +357,7 @@ public class ShopActivityTest {
 
     //tests for getPrice()
 
+    @Ignore
     @Test
     public void getPriceWorks() {
         doAnswer(new Answer<Void>() {

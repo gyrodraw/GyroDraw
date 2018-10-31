@@ -11,8 +11,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -45,7 +43,6 @@ public class HomeActivityTest {
                 1);
         localDbHandler.saveAccount(Account.getInstance(mActivityRule.getActivity()));
         localDbHandler.retrieveAccount(Account.getInstance(mActivityRule.getActivity()));
-        assertThat(Account.getInstance(mActivityRule.getActivity()).getUsername(), is(""));
     }
 
     @Test

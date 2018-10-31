@@ -41,4 +41,5 @@ public class Room implements Serializable {
     public void setInRoom(ArrayList<String> inRoom) {
         this.inRoom = inRoom;
     }
+
 }

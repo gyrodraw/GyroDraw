@@ -31,7 +31,9 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
+
     <style name="BackGroundImageView">
         <item name="android:scaleType">fitXY</item>
     </style>
+
 </resources>

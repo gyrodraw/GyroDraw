@@ -4,12 +4,14 @@ import com.google.android.gms.tasks.Task;
 
 
 public interface MatchmakingInterface {
+  
+    void leaveRoom(String roomId);
 
-    public void leaveRoom(String roomId);
-
-    public Task<String> joinRoom();
+    Task<String> joinRoom();
 
     Boolean joinRoomOther();
 
     Boolean leaveRoomOther(String roomId);
+  
 }
+

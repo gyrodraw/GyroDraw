@@ -1,21 +1,29 @@
 package ch.epfl.sweng.SDP.auth;
 
+import android.content.Context;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
+
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+import ch.epfl.sweng.SDP.home.League;
 import static ch.epfl.sweng.SDP.home.League.createLeague1;
 import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
-
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
-import ch.epfl.sweng.SDP.home.League;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static java.lang.Math.toIntExact;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Singleton class that represents an account.
@@ -37,11 +45,21 @@ public class Account {
     private String currentLeague;
     private int trophies;
     private int stars;
+    private int matchesWon;
+    private int matchesLost;
+    private double averageRating;
+
     private DatabaseReference usersRef;
 
     private LocalDbHandlerForAccount localDbHandler;
 
-    private Account(Context context, ConstantsWrapper constantsWrapper, String username) {
+    /**
+     * Main account init method.
+     * @param context the current context.
+     * @param constantsWrapper the constant wrapper.
+     * @param username the user name.
+     */
+    public Account(Context context, ConstantsWrapper constantsWrapper, String username) {
         if (instance != null && !testing) {
             throw new IllegalStateException("Already instantiated");
         }
@@ -53,6 +71,20 @@ public class Account {
         this.currentLeague = LEAGUES[0].getName();
         this.trophies = 0;
         this.stars = 0;
+    }
+
+    /**
+     * Offline init method for testing.
+     * @param trophies number of trophies.
+     * @param stars number of stars.
+     * @param matchesLost number of matches lost.
+     * @param matchesWon number of matches won.
+     */
+    public Account(int trophies, int stars, int matchesLost, int matchesWon) {
+        this.trophies = trophies;
+        this.stars = stars;
+        this.matchesLost = matchesLost;
+        this.matchesWon = matchesWon;
     }
 
     /**
@@ -320,9 +352,64 @@ public class Account {
     }
 
     /**
+     * Download an object from the database and set the variables of this object.
+     */
+    public void downloadUser() {
+
+        // Read from the database
+        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
+                setValues(map);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value, print error
+                Log.d("Account", error.getDetails());
+            }
+        });
+
+    }
+
+    /**
+     * Sets the values of this object.
+     * @param map the dictionary with all the variables-
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setValues(Map<String, Object> map) {
+        username = (String) map.get("username");
+        userId = (String) map.get("id");
+
+        stars = toIntExact( (Long) map.get("stars"));
+        trophies = toIntExact((Long) map.get("trophies"));
+        matchesWon = toIntExact( (Long) map.get("matchesWon"));
+        matchesLost = toIntExact((Long) map.get("matchesLost"));
+        averageRating = toIntExact((Long) map.get("averageRating"));
+    }
+
+    public int getMatchesWon() {
+        return matchesWon;
+    }
+
+    public int getMatchesLost() {
+        return matchesLost;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    /**
      * Enable testing.
      */
     public static void enableTesting() {
         testing = true;
     }
+
 }

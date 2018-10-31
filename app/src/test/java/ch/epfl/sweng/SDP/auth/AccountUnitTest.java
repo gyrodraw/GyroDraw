@@ -17,6 +17,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
+import java.util.HashMap;
+
 @RunWith(JUnit4.class)
 public class AccountUnitTest {
 
@@ -71,6 +73,7 @@ public class AccountUnitTest {
     public void testSetStars() {
         Account.getInstance(mockContext).setStars(1);
     }
+
 
     @Test
     public void testSetCurrentLeague() {
@@ -127,6 +130,26 @@ public class AccountUnitTest {
     public void testAddStars() {
         Account.getInstance(mockContext).changeStars(20);
         //assertEquals(account.getStars(), 20);
+    }
+
+    @Test
+    public void testDownloadUser() {
+        mockAccount.downloadUser();
+    }
+
+    @Test
+    public void testSetValues() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", "fred");
+        map.put("id", "fred");
+
+        map.put("stars", (long) 1.0);
+        map.put("trophies", (long)1.0);
+        map.put("matchesWon", (long)1.0);
+        map.put("matchesLost",(long) 1.0);
+        map.put("averageRating", (long)1.0);
+
+        mockAccount.setValues(map);
     }
 
     @Test

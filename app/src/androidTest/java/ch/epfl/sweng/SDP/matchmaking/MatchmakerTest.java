@@ -52,6 +52,12 @@ public class MatchmakerTest {
     }
 
     @Test
+    public void testLeaveRoomOther() {
+        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
+        Matchmaker.getInstance(mockConstantsWrapper).leaveRoomOther("Testroom");
+    }
+
+    @Test
     public void testJoinRoomWithExceptionThrown() {
         doThrow(IllegalArgumentException.class).when(mockConstantsWrapper).getFirebaseUserId();
         Matchmaker.getInstance(mockConstantsWrapper).joinRoom();

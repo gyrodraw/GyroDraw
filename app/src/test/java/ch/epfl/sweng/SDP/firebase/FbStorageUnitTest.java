@@ -1,36 +1,17 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.firebase;
+
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint;
-
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-
+import java.io.ByteArrayOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.io.ByteArrayOutputStream;
-
-import ch.epfl.sweng.SDP.Account;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.FbStorage;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 public class FbStorageUnitTest {
 

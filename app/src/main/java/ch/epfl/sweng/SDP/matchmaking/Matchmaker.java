@@ -1,35 +1,20 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
 import android.support.annotation.NonNull;
-
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-
-import ch.epfl.sweng.SDP.ConstantsWrapper;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
-
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
-
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-
 import com.google.firebase.database.DatabaseReference;
-
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Matchmaker implements MatchmakingInterface {
 

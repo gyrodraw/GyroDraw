@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
+import static java.lang.String.format;
+
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,25 +16,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.BooleanVariableListener;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
-
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
 import com.bumptech.glide.Glide;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Locale;
 
 public class WaitingPageActivity extends Activity {
@@ -75,7 +71,7 @@ public class WaitingPageActivity extends Activity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
 
-            if(value != null) {
+            if (value != null) {
                 ((TextView) findViewById(R.id.waitingTime))
                         .setText(String.valueOf(value));
             }
@@ -91,7 +87,7 @@ public class WaitingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
-            if(state != null) {
+            if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case HOMESTATE:
@@ -102,7 +98,7 @@ public class WaitingPageActivity extends Activity {
                         timerRef.addValueEventListener(listenerTimer);
                         break;
                     case START_DRAWING_ACTIVITY:
-                        if(timerRef != null) {
+                        if (timerRef != null) {
                             timerRef.removeEventListener(listenerTimer);
                         }
                         launchDrawingActivity();
@@ -128,7 +124,7 @@ public class WaitingPageActivity extends Activity {
                     winningWord = getWinningWord(word1Votes, word2Votes,
                             new String[]{word1, word2});
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Value is not ready");
             }
         }
@@ -149,7 +145,7 @@ public class WaitingPageActivity extends Activity {
                     winningWord = getWinningWord(word1Votes, word2Votes,
                             new String[]{word1, word2});
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Value is not ready");
             }
         }
@@ -190,7 +186,7 @@ public class WaitingPageActivity extends Activity {
         word1 = intent.getStringExtra("word1");
         word2 = intent.getStringExtra("word2");
 
-        if(enableSquareAnimation) {
+        if (enableSquareAnimation) {
             Glide.with(this).load(R.drawable.waiting_animation_square)
                     .into((ImageView) findViewById(R.id.waitingAnimationSquare));
             Glide.with(this).load(R.drawable.background_animation)
@@ -223,6 +219,14 @@ public class WaitingPageActivity extends Activity {
 
     }
 
+    //TODO Give this path
+//        // Select the words based on the user current league
+//        DatabaseReference wordsSelectionRef = database
+//                .getReference(format(Locale.getDefault(), "leagues.%s.%s",
+//                        Account.getInstance(this).getCurrentLeague(),
+//                        WORD_CHILDREN_DB_ID));
+//        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
+
     protected void launchDrawingActivity() {
         Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
         intent.putExtra("RoomID", roomID);
@@ -231,7 +235,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     private void initRadioButton(Button button, String childString,
-                                 DatabaseReference dbRef, WordNumber wordNumber) {
+            DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.addValueEventListener(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
@@ -240,7 +244,9 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Get the words that receives the larger amount of votes.
+     * <<<<<<< HEAD Callback function called when a radio button is pressed. Updates the votes in
+     * the database. ======= Get the words that receives the larger amount of votes.
+     *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
      * @param words Array containing the words
@@ -248,15 +254,15 @@ public class WaitingPageActivity extends Activity {
      */
     public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
         String winningWord = words[1];
-        if(word1Votes >= word2Votes) {
+        if (word1Votes >= word2Votes) {
             winningWord = words[0];
         }
         return winningWord;
     }
 
     /**
-     * Callback function called when a radio button is pressed.
-     * Updates the votes in the database.
+     * Callback function called when a radio button is pressed. Updates the votes in the database.
+     * >>>>>>> master
      *
      * @param view View corresponding to the button clicked
      */
@@ -342,7 +348,7 @@ public class WaitingPageActivity extends Activity {
         ++usersReadyCount;
         TextView usersReady = findViewById(R.id.playersCounterText);
         usersReady.setText(
-                String.format(Locale.getDefault(), "%d/%d", usersReadyCount,
+                format(Locale.getDefault(), "%d/%d", usersReadyCount,
                         NUMBER_OF_PLAYERS_NEEDED));
 
         // We should probably check if the database is ready too
@@ -382,7 +388,7 @@ public class WaitingPageActivity extends Activity {
     private void removeAllListeners() {
         try {
             timerRef.removeEventListener(listenerTimer);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             Log.e(TAG, "Timer listener not initialized");
         }
         stateRef.removeEventListener(listenerState);
@@ -407,8 +413,8 @@ public class WaitingPageActivity extends Activity {
 
     /**
      * Method that calls onDataChange on the UI thread.
-     * @param dataSnapshot Snapshot of the database (mock snapshot
-     *                     in this case).
+     *
+     * @param dataSnapshot Snapshot of the database (mock snapshot in this case).
      */
     @VisibleForTesting
     public void callOnDataChange(final DataSnapshot dataSnapshot) {

@@ -1,17 +1,17 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BooleanVariableListener;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,16 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctionsException;
-
 import java.util.ArrayList;
-
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.BooleanVariableListener;
-import ch.epfl.sweng.SDP.ConstantsWrapper;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class LoadingScreenActivity extends Activity {
 

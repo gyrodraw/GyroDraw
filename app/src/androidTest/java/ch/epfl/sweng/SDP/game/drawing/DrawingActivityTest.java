@@ -2,10 +2,16 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.when;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,33 +19,53 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import com.google.firebase.database.DataSnapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
 public class DrawingActivityTest {
     @Rule
     public final ActivityTestRule<DrawingActivity> activityRule =
-            new ActivityTestRule<>(DrawingActivity.class);
+            new ActivityTestRule<DrawingActivity>(DrawingActivity.class){
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("RoomID", "0123457890");
+                    intent.putExtra("WinningWord", "word1Mock");
+
+                    return intent;
+                }
+            };
 
     private PaintView paintView;
     private Resources res;
+    private DataSnapshot dataSnapshotMock;
 
+    /**
+     * Initialise mock elements and get UI elements.
+     */
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
     }
 
     @Test
@@ -61,11 +87,35 @@ public class DrawingActivityTest {
         assertTrue(paintView.getCircleRadius() == 12);
     }
 
-    @Test
     public void testSetCircleWorks() {
         paintView.setCircle(30, -10);
         assertEquals(30, paintView.getCircleX());
         assertEquals(1, paintView.getCircleY());
+    }
+
+    @Test
+    public void testStateChange() {
+        Intents.init();
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
+        activityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+
+        intended(hasComponent(VotingPageActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testListenerTimer() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        activityRule.getActivity().callOnDataChangeTimer(dataSnapshotMock);
+        onView(withId(R.id.timeRemaining)).check(matches(withText("5")));
+    }
+
+    @Test
+    public void testPressBack() {
+        Intents.init();
+        Espresso.pressBack();
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
     }
 
     @Test

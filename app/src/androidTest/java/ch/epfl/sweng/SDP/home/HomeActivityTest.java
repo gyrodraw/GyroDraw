@@ -10,6 +10,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
 import android.support.test.espresso.intent.Intents;
@@ -18,7 +20,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +35,8 @@ public class HomeActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     disableBackgroundAnimation();
+                    disableLoadingAnimations();
+                    setOnTest();
                 }
             };
 
@@ -49,7 +53,7 @@ public class HomeActivityTest {
     public void testDrawButtonOpensWaitingPageActivity() {
         Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
-        intended(hasComponent(WaitingPageActivity.class.getName()));
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
         Intents.release();
     }
 

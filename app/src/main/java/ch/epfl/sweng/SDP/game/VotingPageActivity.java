@@ -2,22 +2,25 @@ package ch.epfl.sweng.SDP.game;
 
 import static java.lang.String.format;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.Locale;
 
 public class VotingPageActivity extends Activity {
@@ -36,15 +38,49 @@ public class VotingPageActivity extends Activity {
     // For the moment it is defined as a constant
     private static final String PATH = "mockRooms.ABCDE";
     private static final String USER = "aa"; // need to be replaced with the username
+
+    private DatabaseReference rankingRef;
+    private DatabaseReference counterRef;
+    private DatabaseReference endTimeRef;
+    private DatabaseReference usersRef;
+    private DatabaseReference endVotingUsersRef;
+    private DatabaseReference stateRef;
+
+    private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
+    private short drawingDownloadCounter = 0;
+    private short changeDrawingCounter = 0;
+
+    private int[] ratings;
+    private short ratingToSendCounter = 0;
+
+    private String[] playersNames;
+
+    private ImageView drawingView;
+    private TextView playerNameView;
+    private TextView timer;
+    private RatingBar ratingBar;
+
+    private String roomID = "undefined";
+
     private static boolean enableAnimations = true;
-    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
+
+    public int[] getRatings() {
+        return ratings.clone();
+    }
+
+    protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
+            Integer state = dataSnapshot.getValue(Integer.class);
 
-            // Check if all the players are ready for the next phase
-            if (value != null && value == 1) {
-                // Start new activity
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case END_VOTING_ACTIVITY:
+                        // Start ranking activity
+                        break;
+                    default:
+                }
             }
         }
 
@@ -53,10 +89,22 @@ public class VotingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-    private DatabaseReference rankingRef;
-    private DatabaseReference counterRef;
-    private DatabaseReference endTimeRef;
-    private DatabaseReference usersRef;
+
+    private final ValueEventListener listenerCounter = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+            if(value != null) {
+                timer.setText(String.valueOf(value));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
+
     private final ValueEventListener listenerEndTime = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -75,17 +123,8 @@ public class VotingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-    private DatabaseReference endVotingUsersRef;
-    private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
-    private short drawingDownloadCounter = 0;
-    private short changeDrawingCounter = 0;
-    private int[] ratings;
-    private short ratingToSendCounter = 0;
-    private String[] playersNames;
-    private ImageView drawingView;
-    private TextView playerNameView;
-    private TextView timer;
-    private final ValueEventListener listenerCounter = new ValueEventListener() {
+
+    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -97,37 +136,29 @@ public class VotingPageActivity extends Activity {
             throw databaseError.toException();
         }
     };
-    private RatingBar ratingBar;
-
-    /**
-     * Disables the background and stars animation.
-     * Call this method in every VotingPageActivity test
-     */
-    public static void disableAnimations() {
-        enableAnimations = false;
-    }
-
-    public int[] getRatings() {
-        return ratings.clone();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voting_page);
 
+        Intent intent = getIntent();
+        roomID = intent.getStringExtra("RoomID");
+
         // Get the Database instance and the ranking reference
         Database database = Database.INSTANCE;
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
-        counterRef = database.getReference(PATH + ".timer.observableTime");
-        endTimeRef = database.getReference(PATH + ".timer.endTime");
-        endVotingUsersRef = database.getReference(PATH + ".timer.usersEndTime");
 
         usersRef = database.getReference(PATH + ".connectedUsers." + USER);
+        counterRef = database.getReference(PATH + ".timer.observableTime");
         counterRef.addValueEventListener(listenerCounter);
+        endTimeRef = database.getReference(PATH + ".timer.endTime");
         endTimeRef.addValueEventListener(listenerEndTime);
+        endVotingUsersRef = database.getReference(PATH + ".timer.usersEndTime");
         endVotingUsersRef.addValueEventListener(listenerEndUsersVoting);
+        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef.addValueEventListener(listenerState);
 
         // Get the drawingIds; hardcoded now, need to be given by the server/script
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
@@ -324,7 +355,7 @@ public class VotingPageActivity extends Activity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                //throw databaseError.toException();
+                throw databaseError.toException();
             }
         });
     }
@@ -333,5 +364,34 @@ public class VotingPageActivity extends Activity {
         changeDrawing(img, winnerName);
         // buttonChangeImage and rankingButton need to be removed after testing
         setVisibility(View.GONE, R.id.ratingBar, R.id.buttonChangeImage, R.id.rankingButton);
+    }
+
+    private void removeAllListeners() {
+        counterRef.removeEventListener(listenerCounter);
+        endTimeRef.removeEventListener(listenerEndTime);
+        usersRef.removeEventListener(listenerEndUsersVoting);
+        endVotingUsersRef.removeEventListener(listenerEndUsersVoting);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            if(roomID != null) {
+                Matchmaker.getInstance(new ConstantsWrapper())
+                        .leaveRoom(roomID);
+            }
+            removeAllListeners();
+            launchActivity(HomeActivity.class);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Disables the background and stars animation.
+     * Call this method in every VotingPageActivity test
+     */
+    public static void disableAnimations() {
+        enableAnimations = false;
     }
 }

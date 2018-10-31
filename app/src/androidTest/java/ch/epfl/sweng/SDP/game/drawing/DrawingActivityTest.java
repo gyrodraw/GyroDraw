@@ -100,7 +100,7 @@ public class DrawingActivityTest {
         assertEquals(1, paintView.getCircleY());
     }
 
-    /*@Test
+    @Test
     public void testStateChange() {
         Intents.init();
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
@@ -108,9 +108,9 @@ public class DrawingActivityTest {
 
         intended(hasComponent(VotingPageActivity.class.getName()));
         Intents.release();
-    }*/
+    }
 
-    /*@Test
+    @Test
     public void testListenerTimer() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         activityRule.getActivity().callOnDataChangeTimer(dataSnapshotMock);
@@ -123,7 +123,7 @@ public class DrawingActivityTest {
         Espresso.pressBack();
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-    }*/
+    }
 
     @Test
     public void testLocalDbHandler(){

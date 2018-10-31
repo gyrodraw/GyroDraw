@@ -40,7 +40,8 @@ public class HomeActivityTest {
 
     @Test
     public void testLocalDb() {
-        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(mActivityRule.getActivity(), null,
+        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
+                mActivityRule.getActivity(), null,
                 1);
         localDbHandler.saveAccount(Account.getInstance(mActivityRule.getActivity()));
         localDbHandler.retrieveAccount(Account.getInstance(mActivityRule.getActivity()));

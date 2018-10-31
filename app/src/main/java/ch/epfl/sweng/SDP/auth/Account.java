@@ -157,7 +157,8 @@ public class Account {
                         if (snapshot.exists()) {
                             throw new IllegalArgumentException("Username already taken.");
                         } else {
-                            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
+                            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
+                                    usersRef);
                             builder.addChildren(userId + ".username").build()
                                     .setValue(newName, createCompletionListener());
                             username = newName;
@@ -192,7 +193,7 @@ public class Account {
                             trophiesBuilder.addChildren(userId + ".trophies").build()
                                     .setValue(newTrophies, createCompletionListener());
                             trophies = newTrophies;
-                            
+
                             updateCurrentLeague();
 
                             localDbHandler.saveAccount(instance);

@@ -216,6 +216,12 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
+        if(roomID != null) {
+            Matchmaker.getInstance(new ConstantsWrapper())
+                    .leaveRoom(roomID);
+        }
+        removeAllListeners();
+        finish();
     }
 
     /**
@@ -371,20 +377,6 @@ public class VotingPageActivity extends Activity {
         endTimeRef.removeEventListener(listenerEndTime);
         usersRef.removeEventListener(listenerEndUsersVoting);
         endVotingUsersRef.removeEventListener(listenerEndUsersVoting);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if(roomID != null) {
-                Matchmaker.getInstance(new ConstantsWrapper())
-                        .leaveRoom(roomID);
-            }
-            removeAllListeners();
-            launchActivity(HomeActivity.class);
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     /**

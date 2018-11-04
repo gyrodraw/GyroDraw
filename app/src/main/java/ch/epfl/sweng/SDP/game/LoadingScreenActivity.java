@@ -174,4 +174,10 @@ public class LoadingScreenActivity extends Activity {
         super.onStart();
         hasLeft = false;
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }

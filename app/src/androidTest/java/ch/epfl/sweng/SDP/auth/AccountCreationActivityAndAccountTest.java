@@ -31,7 +31,7 @@ import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
-public class AccountCreationActivityTest {
+public class AccountCreationActivityAndAccountTest {
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
@@ -212,8 +212,9 @@ public class AccountCreationActivityTest {
 
     @Test
     public void testUpdateUsername() {
-        Account.getInstance(activityRule.getActivity()).updateUsername("987654322");
-        assertThat(Account.getInstance(activityRule.getActivity()).getUsername(), is("987654322"));
+        mockAccount.updateUsername("987654321");
+        Account.getInstance(activityRule.getActivity()).setUsername("987654321");
+        assertThat(Account.getInstance(activityRule.getActivity()).getUsername(), is("987654321"));
     }
 
     @Test

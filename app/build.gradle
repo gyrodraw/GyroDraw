@@ -71,6 +71,9 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:4.2.0'
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'com.google.firebase:firebase-functions:15.0.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
+
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
@@ -78,6 +81,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     // Optional -- Mockito framework
     testImplementation 'org.mockito:mockito-core:1.10.19'
+    androidTestImplementation 'org.mockito:mockito-android:2.7.22'
+
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

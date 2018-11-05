@@ -1,7 +1,7 @@
 <resources>
 
 
-    <string name="create_acc">Create Account:</string>
+    <string name="create_acc">Create Account</string>
     <string name="username">username</string>
     <string name="enter_username">Enter Username</string>
     <string name="test_name">Max Muster</string>
@@ -27,5 +27,16 @@
     <string name="home">Home</string>
     <string name="players_ready">Players ready</string>
     <string name="vote">Vote for what you want to draw</string>
+    <string name="title_activity_profile_page">ProfilePage</string>
+    <string name="games_lost">Games lost:</string>
+    <string name="games_won">Games won:</string>
+    <string name="zero">0</string>
+    <string name="average_stars">Average stars:</string>
+    <string name="max_trophies">Max trophies:</string>
+    <string name="profile">Profile</string>
+    <string name="usernameMustNotBeEmpty">Username must not be empty.</string>
+    <string name="usernameAlreadyTaken">Username already taken, try again</string>
+    <string name="usernameTaken">Username already taken, try again</string>
+
 
 </resources>

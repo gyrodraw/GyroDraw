@@ -1,29 +1,20 @@
 package ch.epfl.sweng.SDP.auth;
 
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
-
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
-import ch.epfl.sweng.SDP.home.League;
 import static ch.epfl.sweng.SDP.home.League.createLeague1;
 import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import static java.lang.Math.toIntExact;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Singleton class that represents an account.
@@ -48,18 +39,13 @@ public class Account {
     private int matchesWon;
     private int matchesLost;
     private double averageRating;
+    private int maxTrophies;
 
     private DatabaseReference usersRef;
 
     private LocalDbHandlerForAccount localDbHandler;
 
-    /**
-     * Main account init method.
-     * @param context the current context.
-     * @param constantsWrapper the constant wrapper.
-     * @param username the user name.
-     */
-    public Account(Context context, ConstantsWrapper constantsWrapper, String username) {
+    private Account(Context context, ConstantsWrapper constantsWrapper, String username) {
         if (instance != null && !testing) {
             throw new IllegalStateException("Already instantiated");
         }
@@ -71,24 +57,14 @@ public class Account {
         this.currentLeague = LEAGUES[0].getName();
         this.trophies = 0;
         this.stars = 0;
+        this.matchesWon = 0;
+        this.matchesLost = 0;
+        this.averageRating = 0.0;
+        this.maxTrophies = 0;
     }
 
     /**
-     * Offline init method for testing.
-     * @param trophies number of trophies.
-     * @param stars number of stars.
-     * @param matchesLost number of matches lost.
-     * @param matchesWon number of matches won.
-     */
-    public Account(int trophies, int stars, int matchesLost, int matchesWon) {
-        this.trophies = trophies;
-        this.stars = stars;
-        this.matchesLost = matchesLost;
-        this.matchesWon = matchesWon;
-    }
-
-    /**
-     * Create an account instance. Trophies and stars are initialized at 0.
+     * Create an account instance. Trophies, stars and statistics are initialized to 0.
      *
      * @param username string defining the preferred username
      * @throws IllegalArgumentException if username is null
@@ -161,6 +137,39 @@ public class Account {
         this.currentLeague = currentLeague;
     }
 
+    public int getMatchesWon() {
+        return matchesWon;
+    }
+
+    public void setMatchesWon(int matchesWon) {
+        this.matchesWon = matchesWon;
+    }
+
+    public int getMatchesLost() {
+        return matchesLost;
+    }
+
+    public void setMatchesLost(int matchesLost) {
+        this.matchesLost = matchesLost;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public int getMaxTrophies() {
+        return maxTrophies;
+    }
+
+    public void setMaxTrophies(int maxTrophies) {
+        this.maxTrophies = maxTrophies;
+    }
+
+
     /**
      * Registers this account in Firebase and in the local database.
      */
@@ -212,31 +221,24 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void changeTrophies(final int change) throws DatabaseException {
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".trophies").build().addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Long value = dataSnapshot.getValue(Long.class);
-                        if (value != null) {
-                            final int newTrophies = Math.max(0, value.intValue() + change);
-                            DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            trophiesBuilder.addChildren(userId + ".trophies").build()
-                                    .setValue(newTrophies, createCompletionListener());
-                            trophies = newTrophies;
+        DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(
+                usersRef);
+        int newTrophies = Math.max(0, trophies + change);
+        trophiesBuilder.addChildren(userId + ".trophies").build()
+                .setValue(newTrophies, createCompletionListener());
+        trophies = newTrophies;
 
-                            updateCurrentLeague();
+        updateCurrentLeague();
 
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
+        if (trophies > maxTrophies) {
+            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
+                    usersRef);
+            builder.addChildren(userId + ".maxTrophies").build()
+                    .setValue(trophies, createCompletionListener());
+            maxTrophies = trophies;
+        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+        localDbHandler.saveAccount(instance);
     }
 
     private void updateCurrentLeague() {
@@ -262,33 +264,70 @@ public class Account {
      */
     public void changeStars(final int amount)
             throws IllegalArgumentException, DatabaseException {
-        if (stars + amount < 0) {
+        int newStars = amount + stars;
+
+        if (newStars < 0) {
             throw new IllegalArgumentException("Negative Balance");
         }
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".stars").build().addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Long value = dataSnapshot.getValue(Long.class);
-                        if (value != null) {
-                            final int newStars = amount + value.intValue();
 
-                            DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            starsBuilder.addChildren(userId + ".stars").build()
-                                    .setValue(newStars, createCompletionListener());
-                            stars = newStars;
+        DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(
+                usersRef);
+        starsBuilder.addChildren(userId + ".stars").build()
+                .setValue(newStars, createCompletionListener());
+        stars = newStars;
 
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
+        localDbHandler.saveAccount(instance);
+    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+    /**
+     * Method that allows one to increase the number of matches won.
+     *
+     * @throws DatabaseException in case write to database fails
+     */
+    public void increaseMatchesWon()
+            throws IllegalArgumentException, DatabaseException {
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
+                usersRef);
+        builder.addChildren(userId + ".matchesWon").build()
+                .setValue(++matchesWon, createCompletionListener());
+
+        localDbHandler.saveAccount(instance);
+    }
+
+    /**
+     * Method that allows one to increase the number of matches lost.
+     *
+     * @throws DatabaseException in case write to database fails
+     */
+    public void increaseMatchesLost()
+            throws IllegalArgumentException, DatabaseException {
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
+                usersRef);
+        builder.addChildren(userId + ".matchesLost").build()
+                .setValue(++matchesLost, createCompletionListener());
+
+        localDbHandler.saveAccount(instance);
+    }
+
+    /**
+     * Method that allows one to change the average rating given a new rating.
+     *
+     * @throws DatabaseException in case write to database fails
+     */
+    public void changeAverageRating(double rating)
+            throws IllegalArgumentException, DatabaseException {
+        if (!(0 < rating && rating <= 5)) {
+            throw new IllegalArgumentException("Wrong rating given");
+        }
+
+        double newAverageRating = averageRating == 0 ? rating : (averageRating + rating) / 2.0;
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
+                usersRef);
+        builder.addChildren(userId + ".averageRating").build()
+                .setValue(newAverageRating, createCompletionListener());
+        averageRating = newAverageRating;
+
+        localDbHandler.saveAccount(instance);
     }
 
     /**
@@ -352,64 +391,9 @@ public class Account {
     }
 
     /**
-     * Download an object from the database and set the variables of this object.
-     */
-    public void downloadUser() {
-
-        // Read from the database
-        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
-                setValues(map);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value, print error
-                Log.d("Account", error.getDetails());
-            }
-        });
-
-    }
-
-    /**
-     * Sets the values of this object.
-     * @param map the dictionary with all the variables-
-     */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setValues(Map<String, Object> map) {
-        username = (String) map.get("username");
-        userId = (String) map.get("id");
-
-        stars = toIntExact( (Long) map.get("stars"));
-        trophies = toIntExact((Long) map.get("trophies"));
-        matchesWon = toIntExact( (Long) map.get("matchesWon"));
-        matchesLost = toIntExact((Long) map.get("matchesLost"));
-        averageRating = toIntExact((Long) map.get("averageRating"));
-    }
-
-    public int getMatchesWon() {
-        return matchesWon;
-    }
-
-    public int getMatchesLost() {
-        return matchesLost;
-    }
-
-    public double getAverageRating() {
-        return averageRating;
-    }
-
-    /**
      * Enable testing.
      */
     public static void enableTesting() {
         testing = true;
     }
-
 }

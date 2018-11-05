@@ -182,7 +182,7 @@ public class WaitingPageActivityTest {
         onView(withId(R.id.incrementButton)).perform(click());
         onView(withId(R.id.playersCounterText)).check(matches(withText("3/5")));
     }
-    
+
     @Test
     public void getWinningWordTest() {
         String[] words = {"cat", "dog"};

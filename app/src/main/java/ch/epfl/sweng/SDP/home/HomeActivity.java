@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -28,7 +27,6 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.bumptech.glide.Glide;
-
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -96,6 +94,10 @@ public class HomeActivity extends Activity {
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final ImageView starsButton = findViewById(R.id.starsButton);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+
+        // Set the username button with the right username
+        usernameButton.setText(Account.getInstance(this).getUsername());
+        // TODO set trophiesButton and starsButton
 
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -275,7 +277,7 @@ public class HomeActivity extends Activity {
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        Account userAccount = new Account(1,2,3,4);
+        Account userAccount = Account.getInstance(this);
 
         this.setMuroFont();
 
@@ -286,7 +288,7 @@ public class HomeActivity extends Activity {
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
         averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
-        maxTrophiesNumber.setText(Integer.toString(userAccount.getTrophies()));
+        maxTrophiesNumber.setText(Integer.toString(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);

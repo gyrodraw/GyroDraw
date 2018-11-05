@@ -230,7 +230,6 @@ public class WaitingPageActivityTest {
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
         intended(hasComponent(DrawingActivity.class.getName()));
-        Espresso.pressBack();
         Intents.release();
     }
 

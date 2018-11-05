@@ -15,27 +15,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 import java.util.HashMap;
+
+import ch.epfl.sweng.SDP.firebase.user.FakeCurrentUser;
+import ch.epfl.sweng.SDP.firebase.database.FakeDatabase;
 
 @RunWith(JUnit4.class)
 public class AccountUnitTest {
 
-    private ConstantsWrapper mockConstantsWrapper;
     private Context mockContext;
     private Account mockAccount;
 
     @Before
     public void init() {
-        mockConstantsWrapper = mock(ConstantsWrapper.class);
         mockContext = mock(Context.class);
         mockAccount = mock(Account.class);
         DatabaseReference mockReference = mock(DatabaseReference.class);
         Query mockQuery = mock(Query.class);
-
-        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
 
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
@@ -54,14 +51,19 @@ public class AccountUnitTest {
         doNothing().when(mockAccount).registerAccount();
         doNothing().when(mockAccount).updateUsername(isA(String.class));
 
-        Account.createAccount(mockContext, mockConstantsWrapper, "123456789");
+        FakeDatabase database = (FakeDatabase) FakeDatabase.getInstance();
+        database.setReference(mockReference);
+
+        FakeCurrentUser user = (FakeCurrentUser) FakeCurrentUser.getInstance();
+
+        Account.createAccount(mockContext, "123456789");
         Account.getInstance(mockContext).setUserId("123456789");
         Account.enableTesting();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullUsername() {
-        Account.createAccount(mockContext, mockConstantsWrapper, null);
+        Account.createAccount(mockContext, null);
     }
 
     @Test
@@ -80,18 +82,17 @@ public class AccountUnitTest {
         Account.getInstance(mockContext).setCurrentLeague("test");
     }
 
-    @Test
+    /*@Test
     public void testSetUsersRef() {
         DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
         Account.getInstance(mockContext).setUsersRef(databaseReference);
-    }
+    }*/
 
     @Test
     public void testAccountValuesCorrect() {
         assertThat(Account.getInstance(mockContext).getTrophies(), is(0));
         assertThat(Account.getInstance(mockContext).getStars(), is(0));
         assertThat(Account.getInstance(mockContext).getUsername(), is("123456789"));
-        assertThat(mockConstantsWrapper.getFirebaseUserId(), is("123456789"));
     }
 
     @Test
@@ -132,10 +133,10 @@ public class AccountUnitTest {
         //assertEquals(account.getStars(), 20);
     }
 
-    @Test
+    /*@Test
     public void testDownloadUser() {
         mockAccount.downloadUser();
-    }
+    }*/
 
     @Test
     public void testSetValues() {

@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 
 public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
 
@@ -93,7 +92,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
             account.setCurrentLeague(cursor.getString(3));
             account.setTrophies(cursor.getInt(4));
             account.setStars(cursor.getInt(5));
-            account.setUsersRef(Database.INSTANCE.getReference("users"));
+            //account.setUsersRef(Database.INSTANCE.getReference("users"));
             cursor.close();
         }
         db.close();

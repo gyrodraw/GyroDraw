@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
@@ -106,7 +106,7 @@ public class LoadingScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
 
-        database = Database.INSTANCE;
+        database = RealDatabase.getInstance();
 
         if(!isTesting) {
             lookingForRoom();
@@ -127,7 +127,7 @@ public class LoadingScreenActivity extends Activity {
     }
 
     protected void lookingForRoom() {
-        Matchmaker.getInstance(new ConstantsWrapper())
+        Matchmaker.getInstance()
                 .joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -139,7 +139,7 @@ public class LoadingScreenActivity extends Activity {
                 } else {
                     roomID = task.getResult();
                     if(hasLeft) {
-                        Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+                        Matchmaker.getInstance().leaveRoom(roomID);
                         finish();
                     } else {
                         wordsVotesRef = database.getReference(

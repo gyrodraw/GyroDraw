@@ -23,7 +23,9 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.database.FakeDatabase;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -84,7 +86,7 @@ public class HomeActivity extends Activity {
         localDb.retrieveAccount(Account.getInstance(this));
 
         // Testing method
-        Database database = Database.INSTANCE;
+        Database database = RealDatabase.getInstance();
         dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
 
         dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");

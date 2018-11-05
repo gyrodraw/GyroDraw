@@ -16,8 +16,8 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -146,7 +146,7 @@ public class VotingPageActivity extends Activity {
         roomID = intent.getStringExtra("RoomID");
 
         // Get the Database instance and the ranking reference
-        Database database = Database.INSTANCE;
+        Database database = RealDatabase.getInstance();
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
 
@@ -377,7 +377,7 @@ public class VotingPageActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             if(roomID != null) {
-                Matchmaker.getInstance(new ConstantsWrapper())
+                Matchmaker.getInstance()
                         .leaveRoom(roomID);
             }
             removeAllListeners();

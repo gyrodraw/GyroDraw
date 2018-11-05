@@ -18,8 +18,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
@@ -175,7 +175,7 @@ public class WaitingPageActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = Database.INSTANCE;
+        database = RealDatabase.getInstance();
 
         overridePendingTransition(0, 0);
 
@@ -399,7 +399,7 @@ public class WaitingPageActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+            Matchmaker.getInstance().leaveRoom(roomID);
             removeAllListeners();
             launchActivity(HomeActivity.class);
             finish();

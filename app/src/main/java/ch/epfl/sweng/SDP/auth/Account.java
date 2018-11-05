@@ -2,27 +2,21 @@ package ch.epfl.sweng.SDP.auth;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.user.RealCurrentUser;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
 import ch.epfl.sweng.SDP.home.League;
 import static ch.epfl.sweng.SDP.home.League.createLeague1;
 import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import static java.lang.Math.toIntExact;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -49,24 +43,23 @@ public class Account {
     private int matchesLost;
     private double averageRating;
 
-    private DatabaseReference usersRef;
+    private Database database;
 
     private LocalDbHandlerForAccount localDbHandler;
 
     /**
      * Main account init method.
      * @param context the current context.
-     * @param constantsWrapper the constant wrapper.
      * @param username the user name.
      */
-    public Account(Context context, ConstantsWrapper constantsWrapper, String username) {
+    public Account(Context context, String username) {
         if (instance != null && !testing) {
             throw new IllegalStateException("Already instantiated");
         }
 
         this.localDbHandler = new LocalDbHandlerForAccount(context, null, 1);
-        this.usersRef = constantsWrapper.getReference("users");
-        this.userId = constantsWrapper.getFirebaseUserId();
+        this.database = RealDatabase.getInstance();
+        this.userId = RealCurrentUser.getInstance().getCurrentUserId();
         this.username = username;
         this.currentLeague = LEAGUES[0].getName();
         this.trophies = 0;
@@ -94,13 +87,13 @@ public class Account {
      * @throws IllegalArgumentException if username is null
      * @throws IllegalStateException if the account was already instantiated
      */
-    public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
+    public static void createAccount(Context context,
             String username) {
         if (username == null) {
             throw new IllegalArgumentException("username is null");
         }
 
-        instance = new Account(context, constantsWrapper, username);
+        instance = new Account(context, username);
     }
 
     /**
@@ -111,15 +104,15 @@ public class Account {
      */
     public static Account getInstance(Context context) {
         if (instance == null) {
-            createAccount(context, new ConstantsWrapper(), "");
+            createAccount(context, "");
         }
 
         return instance;
     }
 
-    public void setUsersRef(DatabaseReference usersRef) {
-        this.usersRef = usersRef;
-    }
+    //public void setUsersRef(DatabaseReference usersRef) {
+    //    this.usersRef = usersRef;
+    //}
 
     public String getUsername() {
         return username;
@@ -165,7 +158,7 @@ public class Account {
      * Registers this account in Firebase and in the local database.
      */
     void registerAccount() throws DatabaseException {
-        usersRef.child(userId).setValue(this, createCompletionListener());
+        database.setValue("users."+userId, this);
         localDbHandler.saveAccount(this);
     }
 
@@ -181,76 +174,42 @@ public class Account {
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
         }
-        usersRef.orderByChild("username").equalTo(newName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            throw new IllegalArgumentException("Username already taken.");
-                        } else {
-                            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            builder.addChildren(userId + ".username").build()
-                                    .setValue(newName, createCompletionListener());
-                            username = newName;
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+        database.containsValue("users." + username + "." + newName, new Runnable() {
+            @Override
+            public void run() {
+                throw new IllegalArgumentException("Username already taken.");
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+                database.setValue("users."+userId+".username", newName);
+                username = newName;
+                localDbHandler.saveAccount(instance);
+            }
+        });
     }
 
     /**
-     * Method that allowes one to change trophies.
+     * Method that allows one to change trophies.
      *
      * @param change modifier of trophies
      * @throws DatabaseException in case write to database fails
      */
-    public void changeTrophies(final int change) throws DatabaseException {
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".trophies").build().addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Long value = dataSnapshot.getValue(Long.class);
-                        if (value != null) {
-                            final int newTrophies = Math.max(0, value.intValue() + change);
-                            DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            trophiesBuilder.addChildren(userId + ".trophies").build()
-                                    .setValue(newTrophies, createCompletionListener());
-                            trophies = newTrophies;
-
-                            updateCurrentLeague();
-
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+    public void changeTrophies(int change) throws DatabaseException {
+        trophies = Math.max(this.trophies + change, 0);
+        database.setValue("users."+userId+".trophies", trophies);
+        updateCurrentLeague();
+        localDbHandler.saveAccount(instance);
     }
 
     private void updateCurrentLeague() {
         // Update current league
-        DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(
-                usersRef);
         for (League league : LEAGUES) {
             if (league.contains(trophies)) {
                 currentLeague = league.getName();
             }
         }
-
-        leagueBuilder.addChildren(userId + ".currentLeague").build()
-                .setValue(currentLeague, createCompletionListener());
+        database.setValue("users."+userId+".currentLeague", currentLeague);
     }
 
     /**
@@ -265,30 +224,9 @@ public class Account {
         if (stars + amount < 0) {
             throw new IllegalArgumentException("Negative Balance");
         }
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".stars").build().addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Long value = dataSnapshot.getValue(Long.class);
-                        if (value != null) {
-                            final int newStars = amount + value.intValue();
-
-                            DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            starsBuilder.addChildren(userId + ".stars").build()
-                                    .setValue(newStars, createCompletionListener());
-                            stars = newStars;
-
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+        stars += amount;
+        database.setValue("Users."+userId+".stars", stars);
+        localDbHandler.saveAccount(instance);
     }
 
     /**
@@ -300,11 +238,9 @@ public class Account {
     public void addFriend(final String usernameId)
             throws IllegalArgumentException, DatabaseException {
         if (usernameId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Friends name must not be null");
         }
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".friends." + usernameId).build()
-                .setValue(true, createCompletionListener());
+        database.setValue("users."+userId+".friends."+usernameId, true);
     }
 
     /**
@@ -318,45 +254,16 @@ public class Account {
         if (usernameId == null) {
             throw new IllegalArgumentException();
         }
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".friends." + usernameId).build()
-                .removeValue(createCompletionListener());
-    }
-
-    /**
-     * Checks if databaseError occurred.
-     *
-     * @param databaseError potenial databaseError
-     * @throws DatabaseException in case databaseError is non-null
-     */
-    private void checkForDatabaseError(@Nullable DatabaseError databaseError)
-            throws DatabaseException {
-        if (databaseError != null) {
-            throw databaseError.toException();
-        }
-    }
-
-    /**
-     * Creates a CompletionListener that checks if there was a DatabaseError.
-     *
-     * @return CompletionListener
-     */
-    private DatabaseReference.CompletionListener createCompletionListener() {
-        return new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                    @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-            }
-        };
+        database.removeValue("users."+userId+".friends."+usernameId);
     }
 
     /**
      * Download an object from the database and set the variables of this object.
-     */
+
     public void downloadUser() {
 
         // Read from the database
+        database.
         usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -376,6 +283,7 @@ public class Account {
         });
 
     }
+     */
 
     /**
      * Sets the values of this object.

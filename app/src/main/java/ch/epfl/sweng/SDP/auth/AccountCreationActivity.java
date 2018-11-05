@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class AccountCreationActivity extends Activity {
@@ -46,9 +46,10 @@ public class AccountCreationActivity extends Activity {
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            Account.createAccount(this, new ConstantsWrapper(), username);
+            Account.createAccount(this, username);
 
-            Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
+            FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/")
+                    .getReference("users").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

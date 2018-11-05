@@ -25,8 +25,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -57,7 +57,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
-    private final Database database = Database.INSTANCE;
+    private final Database database = RealDatabase.getInstance();
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
 
@@ -245,7 +245,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(new ConstantsWrapper())
+            Matchmaker.getInstance()
                     .leaveRoom(roomID);
             removeAllListeners();
             launchActivity(HomeActivity.class);

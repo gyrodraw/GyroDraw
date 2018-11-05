@@ -20,8 +20,10 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.user.FakeCurrentUser;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +39,7 @@ public class HomeActivityTest {
                     disableBackgroundAnimation();
                     disableLoadingAnimations();
                     setOnTest();
+                    FakeCurrentUser.getInstance();
                 }
             };
 

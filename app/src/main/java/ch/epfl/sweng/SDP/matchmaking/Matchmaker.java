@@ -1,11 +1,13 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
 import android.support.annotation.NonNull;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.user.RealCurrentUser;
+import ch.epfl.sweng.SDP.firebase.database.RealDatabase;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import java.io.DataOutputStream;
@@ -18,20 +20,19 @@ import java.util.Map;
 
 public class Matchmaker implements MatchmakingInterface {
 
-    private ConstantsWrapper constantsWrapper;
     private static Matchmaker singleInstance = null;
     // static method to create instance of Singleton class
-    private DatabaseReference reference;
-    private DatabaseReference myRef;
+    private String userId;
+    private Database database;
 
     /**
      * Create a singleton Instance.
      *
      * @return returns a singleton instance.
      */
-    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper) {
+    public static Matchmaker getInstance() {
         if (singleInstance == null) {
-            singleInstance = new Matchmaker(constantsWrapper);
+            singleInstance = new Matchmaker();
         }
 
         return singleInstance;
@@ -40,10 +41,9 @@ public class Matchmaker implements MatchmakingInterface {
     /**
      * Matchmaker init.
      */
-    private Matchmaker(ConstantsWrapper constantsWrapper) {
-        this.myRef = Database.INSTANCE.getReference("realRooms");
-        this.constantsWrapper = constantsWrapper;
-        this.reference = constantsWrapper.getReference("rooms");
+    private Matchmaker() {
+        this.userId = RealCurrentUser.getInstance().getCurrentUserId();
+        this.database = RealDatabase.getInstance();
     }
 
     /**
@@ -57,7 +57,6 @@ public class Matchmaker implements MatchmakingInterface {
         try {
             //Create connection
 
-            String userId = constantsWrapper.getFirebaseUserId();
             String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
             URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
             connection = createConnection(url);
@@ -94,7 +93,7 @@ public class Matchmaker implements MatchmakingInterface {
         Map<String, Object> data = new HashMap<>();
 
         // Pass the ID for the moment
-        data.put("username", constantsWrapper.getFirebaseUserId());
+        data.put("username", userId);
 
         return mFunctions.getHttpsCallable("joinGame2")
                 .call(data)
@@ -133,15 +132,11 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        myRef.child(roomId).child("users")
-                .child(constantsWrapper.getFirebaseUserId()).removeValue();
+        database.removeValue("realRooms."+roomId+".users."+userId);
     }
 
     public Boolean leaveRoomOther(String roomId) {
-        reference.child(roomId)
-                .child("users")
-                .child(constantsWrapper.getFirebaseUserId())
-                .removeValue();
+        database.removeValue("rooms."+roomId+".users."+userId);
         return true;
     }
 }

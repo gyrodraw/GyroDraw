@@ -33,6 +33,9 @@ import org.mockito.Mockito;
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityAndAccountTest {
 
+    private static final String USER_ID = "123456789";
+    private static final String USERNAME = "123456789";
+
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
@@ -49,7 +52,7 @@ public class AccountCreationActivityAndAccountTest {
         Query mockQuery = mock(Query.class);
 
         when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn("123456789");
+        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
 
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
@@ -67,9 +70,9 @@ public class AccountCreationActivityAndAccountTest {
 
         doNothing().when(mockAccount).updateUsername(isA(String.class));
 
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, "123456789");
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, USERNAME);
         account = Account.getInstance(activityRule.getActivity());
-        account.setUserId("123456789");
+        account.setUserId(USER_ID);
         Account.enableTesting();
     }
 
@@ -103,7 +106,7 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testSetMatchesLost() {
-        account.setMatchesLost(1);
+        account.setTotalMatches(1);
     }
 
     @Test
@@ -135,12 +138,12 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testGetUserId() {
-        assertThat(account.getUserId(), is("123456789"));
+        assertThat(account.getUserId(), is(USER_ID));
     }
 
     @Test
     public void testGetUsername() {
-        assertThat(account.getUsername(), is("123456789"));
+        assertThat(account.getUsername(), is(USERNAME));
     }
 
     @Test
@@ -155,7 +158,7 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testGetMatchesLost() {
-        assertThat(account.getMatchesLost(), is(0));
+        assertThat(account.getTotalMatches(), is(0));
     }
 
     @Test
@@ -176,8 +179,8 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testIncreaseMatchesLost() {
-        account.increaseMatchesLost();
-        assertThat(account.getMatchesLost(), is(1));
+        account.increaseTotalMatches();
+        assertThat(account.getTotalMatches(), is(1));
     }
 
     @Test
@@ -210,9 +213,10 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testUpdateUsername() {
-        mockAccount.updateUsername("987654321");
-        account.setUsername("987654321");
-        assertThat(account.getUsername(), is("987654321"));
+        final String newUsername = "987654321";
+        mockAccount.updateUsername(newUsername);
+        account.setUsername(newUsername);
+        assertThat(account.getUsername(), is(newUsername));
     }
 
     @Test

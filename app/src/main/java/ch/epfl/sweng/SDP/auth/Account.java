@@ -308,7 +308,9 @@ public class Account {
     /**
      * Method that allows one to change the average rating per game given a new rating.
      *
-     * @throws IllegalArgumentException in case a wrong rating is given
+     * The rating passed as parameter should be the average rating obtained after a match.
+     *
+     * @throws IllegalArgumentException in case a rating <= 0 or > 5 is given
      * @throws DatabaseException in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
@@ -334,8 +336,7 @@ public class Account {
      * @throws IllegalArgumentException in case the given usernameId is null
      * @throws DatabaseException in case write to database fails
      */
-    public void addFriend(final String usernameId)
-            throws DatabaseException {
+    public void addFriend(final String usernameId) throws DatabaseException {
         if (usernameId == null) {
             throw new IllegalArgumentException("Friend's usernameId is null");
         }
@@ -351,8 +352,7 @@ public class Account {
      * @throws IllegalArgumentException in case the given usernameId is null
      * @throws DatabaseException in case write to database fails
      */
-    public void removeFriend(final String usernameId)
-            throws DatabaseException {
+    public void removeFriend(final String usernameId) throws DatabaseException {
         if (usernameId == null) {
             throw new IllegalArgumentException("Friend's usernameId is null");
         }
@@ -364,7 +364,7 @@ public class Account {
     /**
      * Checks if databaseError occurred.
      *
-     * @param databaseError potenial databaseError
+     * @param databaseError potential databaseError
      * @throws DatabaseException in case databaseError is non-null
      */
     private void checkForDatabaseError(@Nullable DatabaseError databaseError)
@@ -377,7 +377,7 @@ public class Account {
     /**
      * Creates a CompletionListener that checks if there was a DatabaseError.
      *
-     * @return CompletionListener
+     * @return the CompletionListener
      */
     private DatabaseReference.CompletionListener createCompletionListener() {
         return new DatabaseReference.CompletionListener() {

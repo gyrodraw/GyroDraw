@@ -92,12 +92,14 @@ public class HomeActivity extends Activity {
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
+        final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
+        final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
 
-        // Set the username button with the right username
         usernameButton.setText(Account.getInstance(this).getUsername());
-        // TODO set trophiesButton and starsButton
+        trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
+        starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));
 
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -107,8 +109,11 @@ public class HomeActivity extends Activity {
             Glide.with(this).load(R.drawable.background_animation)
                     .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
         }
+
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
+        trophiesCount.setTypeface(typeMuro);
+        starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);

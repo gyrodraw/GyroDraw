@@ -37,7 +37,7 @@ public class Account {
     private int trophies;
     private int stars;
     private int matchesWon;
-    private int matchesLost;
+    private int totalMatches;
     private double averageRating;
     private int maxTrophies;
 
@@ -58,7 +58,7 @@ public class Account {
         this.trophies = 0;
         this.stars = 0;
         this.matchesWon = 0;
-        this.matchesLost = 0;
+        this.totalMatches = 0;
         this.averageRating = 0.0;
         this.maxTrophies = 0;
     }
@@ -145,12 +145,12 @@ public class Account {
         this.matchesWon = matchesWon;
     }
 
-    public int getMatchesLost() {
-        return matchesLost;
+    public int getTotalMatches() {
+        return totalMatches;
     }
 
-    public void setMatchesLost(int matchesLost) {
-        this.matchesLost = matchesLost;
+    public void setTotalMatches(int totalMatches) {
+        this.totalMatches = totalMatches;
     }
 
     public double getAverageRating() {
@@ -185,8 +185,7 @@ public class Account {
      * @throws IllegalArgumentException if username not available anymore
      * @throws DatabaseException if problems with Firebase
      */
-    public void updateUsername(final String newName)
-            throws IllegalArgumentException, DatabaseException {
+    public void updateUsername(final String newName) throws DatabaseException {
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
         }
@@ -262,8 +261,7 @@ public class Account {
      * @throws IllegalArgumentException in case the balance becomes negative
      * @throws DatabaseException in case write to database fails
      */
-    public void changeStars(final int amount)
-            throws IllegalArgumentException, DatabaseException {
+    public void changeStars(final int amount) throws DatabaseException {
         int newStars = amount + stars;
 
         if (newStars < 0) {
@@ -284,8 +282,7 @@ public class Account {
      *
      * @throws DatabaseException in case write to database fails
      */
-    public void increaseMatchesWon()
-            throws IllegalArgumentException, DatabaseException {
+    public void increaseMatchesWon() throws DatabaseException {
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
                 usersRef);
         builder.addChildren(userId + ".matchesWon").build()
@@ -295,32 +292,32 @@ public class Account {
     }
 
     /**
-     * Method that allows one to increase the number of matches lost.
+     * Method that allows one to increase the total number of matches.
      *
      * @throws DatabaseException in case write to database fails
      */
-    public void increaseMatchesLost()
-            throws IllegalArgumentException, DatabaseException {
+    public void increaseTotalMatches() throws DatabaseException {
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
                 usersRef);
-        builder.addChildren(userId + ".matchesLost").build()
-                .setValue(++matchesLost, createCompletionListener());
+        builder.addChildren(userId + ".totalMatches").build()
+                .setValue(++totalMatches, createCompletionListener());
 
         localDbHandler.saveAccount(instance);
     }
 
     /**
-     * Method that allows one to change the average rating given a new rating.
+     * Method that allows one to change the average rating per game given a new rating.
      *
+     * @throws IllegalArgumentException in case a wrong rating is given
      * @throws DatabaseException in case write to database fails
      */
-    public void changeAverageRating(double rating)
-            throws IllegalArgumentException, DatabaseException {
+    public void changeAverageRating(double rating) throws DatabaseException {
         if (!(0 < rating && rating <= 5)) {
             throw new IllegalArgumentException("Wrong rating given");
         }
 
-        double newAverageRating = averageRating == 0 ? rating : (averageRating + rating) / 2.0;
+        double newAverageRating = averageRating == 0 ? rating
+                : (averageRating * (totalMatches - 1) + rating) / totalMatches;
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
                 usersRef);
         builder.addChildren(userId + ".averageRating").build()
@@ -334,12 +331,13 @@ public class Account {
      * Method that allows one to add friends.
      *
      * @param usernameId String specifying FirebaseUser.UID of friend
+     * @throws IllegalArgumentException in case the given usernameId is null
      * @throws DatabaseException in case write to database fails
      */
     public void addFriend(final String usernameId)
-            throws IllegalArgumentException, DatabaseException {
+            throws DatabaseException {
         if (usernameId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Friend's usernameId is null");
         }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
         builder.addChildren(userId + ".friends." + usernameId).build()
@@ -350,12 +348,13 @@ public class Account {
      * Method that allows one to remove friends.
      *
      * @param usernameId String specifying FirebaseUser.UID of friend
+     * @throws IllegalArgumentException in case the given usernameId is null
      * @throws DatabaseException in case write to database fails
      */
     public void removeFriend(final String usernameId)
-            throws IllegalArgumentException, DatabaseException {
+            throws DatabaseException {
         if (usernameId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Friend's usernameId is null");
         }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
         builder.addChildren(userId + ".friends." + usernameId).build()

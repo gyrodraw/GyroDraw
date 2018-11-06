@@ -19,7 +19,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
     private static final String COLUMN_TROPHIES = "trophies";
     private static final String COLUMN_STARS = "stars";
     private static final String COLUMN_MATCHES_WON = "matchesWon";
-    private static final String COLUMN_MATCHES_LOST = "matchesLost";
+    private static final String COLUMN_TOTAL_MATCHES = "totalMatches";
     private static final String COLUMN_AVERAGE_RATING = "averageRating";
     private static final String COLUMN_MAX_TROPHIES = "maxTrophies";
 
@@ -42,7 +42,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
                 + " INTEGER PRIMARY KEY," + COLUMN_USER_ID + " USER_ID," + COLUMN_USERNAME
                 + " USERNAME," + COLUMN_CURRENT_LEAGUE + " CURRENT_LEAGUE," + COLUMN_TROPHIES
                 + " TROPHIES," + COLUMN_STARS + " STARS," + COLUMN_MATCHES_WON + " MATCHES_WON,"
-                + COLUMN_MATCHES_LOST + " MATCHES_LOST," + COLUMN_AVERAGE_RATING
+                + COLUMN_TOTAL_MATCHES + " MATCHES_LOST," + COLUMN_AVERAGE_RATING
                 + " AVERAGE_RATING," + COLUMN_MAX_TROPHIES + " MAX_TROPHIES )";
 
         db.execSQL(createTable);
@@ -74,7 +74,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
         values.put(COLUMN_TROPHIES, account.getTrophies());
         values.put(COLUMN_STARS, account.getStars());
         values.put(COLUMN_MATCHES_WON, account.getMatchesWon());
-        values.put(COLUMN_MATCHES_LOST, account.getMatchesLost());
+        values.put(COLUMN_TOTAL_MATCHES, account.getTotalMatches());
         values.put(COLUMN_AVERAGE_RATING, account.getAverageRating());
         values.put(COLUMN_MAX_TROPHIES, account.getMaxTrophies());
 
@@ -104,7 +104,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
             account.setTrophies(cursor.getInt(4));
             account.setStars(cursor.getInt(5));
             account.setMatchesWon(cursor.getInt(6));
-            account.setMatchesLost(cursor.getInt(7));
+            account.setTotalMatches(cursor.getInt(7));
             account.setAverageRating(cursor.getDouble(8));
             account.setMaxTrophies(cursor.getInt(9));
             account.setUsersRef(Database.INSTANCE.getReference("users"));

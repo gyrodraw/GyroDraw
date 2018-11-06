@@ -284,7 +284,7 @@ public class HomeActivity extends Activity {
         TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
         gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
         TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
-        gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));
+        gamesLostNumber.setText(Integer.toString(userAccount.getTotalMatches()));
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
         averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);

@@ -39,6 +39,7 @@ public class AccountCreationActivityAndAccountTest {
 
     private ConstantsWrapper mockConstantsWrapper;
     private Account mockAccount;
+    private Account account;
 
     @Before
     public void init() {
@@ -64,13 +65,15 @@ public class AccountCreationActivityAndAccountTest {
 
         doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
 
-        doNothing().when(mockAccount).registerAccount();
         doNothing().when(mockAccount).updateUsername(isA(String.class));
 
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, "123456789");
-        Account.getInstance(activityRule.getActivity()).setUserId("123456789");
+        account = Account.getInstance(activityRule.getActivity());
+        account.setUserId("123456789");
         Account.enableTesting();
     }
+
+    // Tests for Account
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullUsername() {
@@ -79,168 +82,165 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testSetTrophies() {
-        Account.getInstance(activityRule.getActivity()).setTrophies(1);
+        account.setTrophies(1);
     }
 
     @Test
     public void testSetStars() {
-        Account.getInstance(activityRule.getActivity()).setStars(1);
+        account.setStars(1);
     }
 
 
     @Test
     public void testSetCurrentLeague() {
-        Account.getInstance(activityRule.getActivity()).setCurrentLeague("test");
+        account.setCurrentLeague("test");
     }
 
     @Test
     public void testSetMatchesWon() {
-        Account.getInstance(activityRule.getActivity()).setMatchesWon(1);
+        account.setMatchesWon(1);
     }
 
     @Test
     public void testSetMatchesLost() {
-        Account.getInstance(activityRule.getActivity()).setMatchesLost(1);
+        account.setMatchesLost(1);
     }
 
     @Test
     public void testSetMaxTrophies() {
-        Account.getInstance(activityRule.getActivity()).setMaxTrophies(1);
+        account.setMaxTrophies(1);
     }
 
     @Test
     public void testSetAverageRating() {
-        Account.getInstance(activityRule.getActivity()).setAverageRating(1.0);
+        account.setAverageRating(1.0);
     }
 
     @Test
     public void testSetUsersRef() {
         DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
-        Account.getInstance(activityRule.getActivity()).setUsersRef(databaseReference);
-    }
-
-    @Test
-    public void testAccountValuesCorrect() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getTrophies(), is(0));
-        assertThat(Account.getInstance(activityRule.getActivity()).getStars(), is(0));
-        assertThat(Account.getInstance(activityRule.getActivity()).getUsername(), is("123456789"));
-        assertThat(mockConstantsWrapper.getFirebaseUserId(), is("123456789"));
+        account.setUsersRef(databaseReference);
     }
 
     @Test
     public void testCurrentLeague() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getCurrentLeague(), is("league1"));
+        assertThat(account.getCurrentLeague(), is("league1"));
     }
 
     @Test
     public void testGetStars() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getStars(),
+        assertThat(account.getStars(),
                 is(0));
     }
 
     @Test
     public void testGetUserId() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getUserId(), is("123456789"));
+        assertThat(account.getUserId(), is("123456789"));
     }
 
     @Test
     public void testGetUsername() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getUsername(), is("123456789"));
+        assertThat(account.getUsername(), is("123456789"));
     }
 
     @Test
     public void testGetTrophies() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getTrophies(), is(0));
+        assertThat(account.getTrophies(), is(0));
     }
 
     @Test
     public void testGetMatchesWon() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getMatchesWon(), is(0));
+        assertThat(account.getMatchesWon(), is(0));
     }
 
     @Test
     public void testGetMatchesLost() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getMatchesLost(), is(0));
+        assertThat(account.getMatchesLost(), is(0));
     }
 
     @Test
     public void testGetAverageRating() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getAverageRating(), is(0.0));
+        assertThat(account.getAverageRating(), is(0.0));
     }
 
     @Test
     public void testGetMaxTrophies() {
-        assertThat(Account.getInstance(activityRule.getActivity()).getMaxTrophies(), is(0));
+        assertThat(account.getMaxTrophies(), is(0));
     }
 
     @Test
     public void testIncreaseMatchesWon() {
-        Account.getInstance(activityRule.getActivity()).increaseMatchesWon();
+        account.increaseMatchesWon();
+        assertThat(account.getMatchesWon(), is(1));
     }
 
     @Test
     public void testIncreaseMatchesLost() {
-        Account.getInstance(activityRule.getActivity()).increaseMatchesLost();
+        account.increaseMatchesLost();
+        assertThat(account.getMatchesLost(), is(1));
     }
 
     @Test
     public void testChangeAverageRating() {
-        Account.getInstance(activityRule.getActivity()).changeAverageRating(3.5);
+        account.changeAverageRating(3.5);
+        assertThat(account.getAverageRating(), is(3.5));
     }
 
     @Test
     public void testChangeTrophies() {
-        Account.getInstance(activityRule.getActivity()).changeTrophies(20);
-        //assertEquals(account.getTrophies(), 20);
+        account.changeTrophies(20);
+        assertThat(account.getTrophies(), is(20));
     }
 
     @Test
     public void testAddStars() {
-        Account.getInstance(activityRule.getActivity()).changeStars(20);
-        //assertEquals(account.getStars(), 20);
+        account.changeStars(20);
+        assertThat(account.getStars(), is(20));
     }
 
     @Test
     public void testAddFriend() {
-        Account.getInstance(activityRule.getActivity()).addFriend("EPFLien");
+        account.addFriend("EPFLien");
     }
 
     @Test
     public void testRemoveFriend() {
-        Account.getInstance(activityRule.getActivity()).removeFriend("EPFLien");
+        account.removeFriend("EPFLien");
     }
 
     @Test
     public void testUpdateUsername() {
         mockAccount.updateUsername("987654321");
-        Account.getInstance(activityRule.getActivity()).setUsername("987654321");
-        assertThat(Account.getInstance(activityRule.getActivity()).getUsername(), is("987654321"));
+        account.setUsername("987654321");
+        assertThat(account.getUsername(), is("987654321"));
     }
 
     @Test
     public void testRegisterAccount() {
-        mockAccount.registerAccount();
+        account.registerAccount();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullUsername() {
-        Account.getInstance(activityRule.getActivity()).updateUsername(null);
+        account.updateUsername(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddNegativeBalanceStars() {
-        Account.getInstance(activityRule.getActivity()).changeStars(-1000);
+        account.changeStars(-1000);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddNullFriend() {
-        Account.getInstance(activityRule.getActivity()).addFriend(null);
+        account.addFriend(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void removeNullFriend() {
-        Account.getInstance(activityRule.getActivity()).removeFriend(null);
+        account.removeFriend(null);
     }
+
+    // Tests for AccountCreationActivity
 
     @Test
     public void testCreateAccIsClickable() {

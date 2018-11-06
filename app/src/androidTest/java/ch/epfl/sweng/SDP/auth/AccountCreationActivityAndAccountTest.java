@@ -34,7 +34,6 @@ import org.mockito.Mockito;
 public class AccountCreationActivityAndAccountTest {
 
     private static final String USER_ID = "123456789";
-    private static final String USERNAME = "123456789";
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
@@ -70,53 +69,68 @@ public class AccountCreationActivityAndAccountTest {
 
         doNothing().when(mockAccount).updateUsername(isA(String.class));
 
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, USERNAME);
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, "123456789");
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         Account.enableTesting();
     }
 
+
     // Tests for Account
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateAccountWithNullUsername() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, null);
-    }
-
     @Test
-    public void testSetTrophies() {
+    public void testSetGetTrophies() {
         account.setTrophies(1);
+        assertThat(account.getTrophies(), is(1));
     }
 
     @Test
-    public void testSetStars() {
+    public void testSetGetStars() {
         account.setStars(1);
+        assertThat(account.getStars(), is(1));
     }
 
 
     @Test
-    public void testSetCurrentLeague() {
+    public void testSetGetCurrentLeague() {
         account.setCurrentLeague("test");
+        assertThat(account.getCurrentLeague(), is("test"));
     }
 
     @Test
-    public void testSetMatchesWon() {
+    public void testSetGetMatchesWon() {
         account.setMatchesWon(1);
+        assertThat(account.getMatchesWon(), is(1));
     }
 
     @Test
-    public void testSetMatchesLost() {
+    public void testSetGetTotalMatches() {
         account.setTotalMatches(1);
+        assertThat(account.getTotalMatches(), is(1));
     }
 
     @Test
-    public void testSetMaxTrophies() {
+    public void testSetGetMaxTrophies() {
         account.setMaxTrophies(1);
+        assertThat(account.getMaxTrophies(), is(1));
     }
 
     @Test
-    public void testSetAverageRating() {
+    public void testSetGetAverageRating() {
         account.setAverageRating(1.0);
+        assertThat(account.getAverageRating(), is(1.0));
+    }
+
+    @Test
+    public void testSetGetUserId() {
+        account.setUserId("123");
+        assertThat(account.getUserId(), is("123"));
+    }
+
+    @Test
+    public void testSetGetUsername() {
+        account.setUsername("user");
+        assertThat(account.getUsername(), is("user"));
     }
 
     @Test
@@ -126,59 +140,13 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testCurrentLeague() {
-        assertThat(account.getCurrentLeague(), is("league1"));
-    }
-
-    @Test
-    public void testGetStars() {
-        assertThat(account.getStars(),
-                is(0));
-    }
-
-    @Test
-    public void testGetUserId() {
-        assertThat(account.getUserId(), is(USER_ID));
-    }
-
-    @Test
-    public void testGetUsername() {
-        assertThat(account.getUsername(), is(USERNAME));
-    }
-
-    @Test
-    public void testGetTrophies() {
-        assertThat(account.getTrophies(), is(0));
-    }
-
-    @Test
-    public void testGetMatchesWon() {
-        assertThat(account.getMatchesWon(), is(0));
-    }
-
-    @Test
-    public void testGetMatchesLost() {
-        assertThat(account.getTotalMatches(), is(0));
-    }
-
-    @Test
-    public void testGetAverageRating() {
-        assertThat(account.getAverageRating(), is(0.0));
-    }
-
-    @Test
-    public void testGetMaxTrophies() {
-        assertThat(account.getMaxTrophies(), is(0));
-    }
-
-    @Test
     public void testIncreaseMatchesWon() {
         account.increaseMatchesWon();
         assertThat(account.getMatchesWon(), is(1));
     }
 
     @Test
-    public void testIncreaseMatchesLost() {
+    public void testIncreaseTotalMatches() {
         account.increaseTotalMatches();
         assertThat(account.getTotalMatches(), is(1));
     }
@@ -225,13 +193,28 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNullUsername() {
+    public void testCreateAccountWithNullUsername() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateUsernameWithNull() {
         account.updateUsername(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddNegativeBalanceStars() {
         account.changeStars(-1000);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testChangeAverageRatingWithZero() {
+        account.changeAverageRating(0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testChangeAverageRatingWithGreaterThanFiveValue() {
+        account.changeAverageRating(6);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -243,6 +226,7 @@ public class AccountCreationActivityAndAccountTest {
     public void removeNullFriend() {
         account.removeFriend(null);
     }
+
 
     // Tests for AccountCreationActivity
 

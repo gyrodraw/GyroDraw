@@ -328,17 +328,7 @@ public class WaitingPageActivity extends Activity {
         Button b2 = findViewById(R.id.buttonWord2);
         b2.setEnabled(false);
     }
-
-    /*@Override
-    protected void onPause() {
-        super.onPause();
-
-        if (wordsVotesRef != null) {
-            // need to keep the most voted word here, it has to
-            // be done by the script not by this class
-        }
-    }*/
-
+    
     /**
      * Increment the number of players logged in the room. This method exists only for testing
      * purposes.

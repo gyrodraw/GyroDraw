@@ -5,6 +5,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const maxPlayers = 5;
+const mockMaxPlayers = 3;
 const maxWords = 6;
 const WAITING_TIME_CHOOSE_WORDS = 10;
 const WAITING_TIME_DRAWING = 10;
@@ -51,7 +52,7 @@ function checkUsersReady2(state, path, snapshot) {
     }
   });
 
-  if(ready && snapshot.numChildren() >= 2) {
+  if(ready && snapshot.numChildren() >= mockMaxPlayers) {
     admin.database().ref(path + "/state").set(state + 1);
     /*admin.database().ref(path).child("users").on('value', (snapUsers) => {
       return snapUsers.forEach((child) => {

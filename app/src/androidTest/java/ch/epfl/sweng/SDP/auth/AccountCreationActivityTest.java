@@ -19,6 +19,7 @@ import ch.epfl.sweng.SDP.firebase.database.FakeDatabase;
 import ch.epfl.sweng.SDP.firebase.user.CurrentUser;
 import ch.epfl.sweng.SDP.firebase.user.FakeCurrentUser;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,12 @@ public class AccountCreationActivityTest {
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
+
+    @Before
+    public void init() {
+        Database database = FakeDatabase.getInstance();
+        CurrentUser user = FakeCurrentUser.getInstance();
+    }
 
     @Test
     public void testCreateAccIsClickable() {
@@ -52,8 +59,6 @@ public class AccountCreationActivityTest {
 
     @Test
     public void testCreateAccountWithValidInput() {
-        Database database = FakeDatabase.getInstance();
-        CurrentUser user = FakeCurrentUser.getInstance();
         onView(withId(R.id.usernameInput))
                 .perform(typeText("Max Muster"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAcc)).perform(click());

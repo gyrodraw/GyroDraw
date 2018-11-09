@@ -13,7 +13,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
  */
 public abstract class Database {
 
-    public static Database instance;
+    private static Database instance;
 
     protected static Database getInstance(Database newInstance) {
         if(instance != null) {

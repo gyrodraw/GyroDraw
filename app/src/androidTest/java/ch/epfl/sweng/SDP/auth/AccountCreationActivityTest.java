@@ -14,6 +14,11 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.database.Database;
+import ch.epfl.sweng.SDP.firebase.database.FakeDatabase;
+import ch.epfl.sweng.SDP.firebase.user.CurrentUser;
+import ch.epfl.sweng.SDP.firebase.user.FakeCurrentUser;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +52,8 @@ public class AccountCreationActivityTest {
 
     @Test
     public void testCreateAccountWithValidInput() {
+        Database database = FakeDatabase.getInstance();
+        CurrentUser user = FakeCurrentUser.getInstance();
         onView(withId(R.id.usernameInput))
                 .perform(typeText("Max Muster"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAcc)).perform(click());

@@ -1,9 +1,16 @@
 package ch.epfl.sweng.SDP.firebase.database;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 public class FakeDatabase extends Database {
 
@@ -15,7 +22,7 @@ public class FakeDatabase extends Database {
     }
 
     public static Database getInstance() {
-        return Database.getInstance(new FakeDatabase());
+        return getInstance(new FakeDatabase());
     }
 
     @Override
@@ -24,17 +31,13 @@ public class FakeDatabase extends Database {
     }
 
     @Override
-    public <V> void setValueSynchronous(String path, V newValue, Runnable onSuccess, Runnable onFailure) {
+    public <V> void setValueSynchronous(String path, V newValue, OnSuccessListener listener) {
         setValue(path, newValue);
     }
 
     @Override
-    public void containsValue(String path, Runnable onTrue, Runnable onFalse) {
-        if(database.containsKey(path)) {
-            onTrue.run();
-        } else {
-            onFalse.run();
-        }
+    public void containsValue(String path, ValueEventListener listener) {
+        listener.onDataChange((DataSnapshot)database.get(path));
     }
 
     @Override
@@ -49,5 +52,9 @@ public class FakeDatabase extends Database {
 
     public void setReference(DatabaseReference reference){
         this.reference = reference;
+    }
+
+    public void cache(Account account, LocalDbHandlerForAccount cache) {
+        // Does nothing.
     }
 }

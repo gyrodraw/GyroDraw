@@ -9,53 +9,32 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 public class RealDatabase extends Database {
 
     public static Database getInstance() {
         return Database.getInstance(new RealDatabase());
     }
 
+    @Override
     public <V> void setValue(String path, V newValue) {
         DatabaseReferenceBuilder builder = (new DatabaseReferenceBuilder()).addChildren(path);
         builder.build().setValue(newValue);
     }
 
-    public <V> void setValueSynchronous(String path, V newValue, final Runnable onSuccess, final Runnable onFailure) {
+    @Override
+    public <V> void setValueSynchronous(String path, V newValue, OnSuccessListener listener) {
         DatabaseReferenceBuilder builder = (new DatabaseReferenceBuilder()).addChildren(path);
-        builder.build().setValue(newValue).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                onSuccess.run();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                onFailure.run();
-            }
-        });
+        builder.build().setValue(newValue).addOnSuccessListener(listener);
     }
 
     @Override
-    public void containsValue(String path, final Runnable onTrue, final Runnable onFalse) {
+    public void containsValue(String path, ValueEventListener listener) {
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         builder.addChildren(path);
-        builder.build().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-                    if (data.exists()) {
-                        onTrue.run();
-                    } else {
-                        onFalse.run();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+        builder.build().addListenerForSingleValueEvent(listener);
     }
 
     @Override
@@ -69,5 +48,8 @@ public class RealDatabase extends Database {
         return (new DatabaseReferenceBuilder()).addChildren(path).build();
     }
 
-
+    @Override
+    public void cache(Account account, LocalDbHandlerForAccount cache) {
+        cache.saveAccount(account);
+    }
 }

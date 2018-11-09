@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.auth;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import ch.epfl.sweng.SDP.firebase.database.Database;
@@ -13,7 +14,10 @@ import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.ValueEventListener;
 
 import static java.lang.Math.toIntExact;
 
@@ -159,7 +163,7 @@ public class Account {
      */
     void registerAccount() throws DatabaseException {
         database.setValue("users."+userId, this);
-        localDbHandler.saveAccount(this);
+        database.cache(instance, localDbHandler);
     }
 
     /**
@@ -174,17 +178,17 @@ public class Account {
         if (newName == null) {
             throw new IllegalArgumentException("Username must not be null");
         }
-        database.containsValue("users." + username + "." + newName, new Runnable() {
+        database.containsValue("users." + username + "." + newName, new ValueEventListener() {
             @Override
-            public void run() {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 throw new IllegalArgumentException("Username already taken.");
             }
-        }, new Runnable() {
+
             @Override
-            public void run() {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 database.setValue("users."+userId+".username", newName);
                 username = newName;
-                localDbHandler.saveAccount(instance);
+                database.cache(instance, localDbHandler);
             }
         });
     }
@@ -199,7 +203,7 @@ public class Account {
         trophies = Math.max(this.trophies + change, 0);
         database.setValue("users."+userId+".trophies", trophies);
         updateCurrentLeague();
-        localDbHandler.saveAccount(instance);
+        database.cache(instance, localDbHandler);
     }
 
     private void updateCurrentLeague() {
@@ -226,7 +230,7 @@ public class Account {
         }
         stars += amount;
         database.setValue("Users."+userId+".stars", stars);
-        localDbHandler.saveAccount(instance);
+        database.cache(instance, localDbHandler);
     }
 
     /**

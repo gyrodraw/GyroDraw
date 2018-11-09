@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.auth;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -25,34 +26,13 @@ import ch.epfl.sweng.SDP.firebase.database.FakeDatabase;
 public class AccountUnitTest {
 
     private Context mockContext;
-    private Account mockAccount;
 
     @Before
     public void init() {
         mockContext = mock(Context.class);
-        mockAccount = mock(Account.class);
-        DatabaseReference mockReference = mock(DatabaseReference.class);
-        Query mockQuery = mock(Query.class);
-
-        when(mockReference.child(isA(String.class))).thenReturn(mockReference);
-        when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
-
-        when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
-
-        doNothing().when(mockReference)
-                .setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .removeValue(isA(DatabaseReference.CompletionListener.class));
-
-        doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
-
-        doNothing().when(mockAccount).registerAccount();
-        doNothing().when(mockAccount).updateUsername(isA(String.class));
 
         FakeDatabase database = (FakeDatabase) FakeDatabase.getInstance();
-        database.setReference(mockReference);
+        database.setReference(mock(DatabaseReference.class));
 
         FakeCurrentUser user = (FakeCurrentUser) FakeCurrentUser.getInstance();
 
@@ -124,7 +104,7 @@ public class AccountUnitTest {
     @Test
     public void testChangeTrophies() {
         Account.getInstance(mockContext).changeTrophies(20);
-        //assertEquals(account.getTrophies(), 20);
+        assertEquals(Account.getInstance(mockContext).getTrophies(), 20);
     }
 
     @Test
@@ -150,7 +130,7 @@ public class AccountUnitTest {
         map.put("matchesLost",(long) 1.0);
         map.put("averageRating", (long)1.0);
 
-        mockAccount.setValues(map);
+        Account.getInstance(mockContext).setValues(map);
     }
 
     @Test
@@ -165,14 +145,13 @@ public class AccountUnitTest {
 
     @Test
     public void testUpdateUsername() {
-        mockAccount.updateUsername("987654321");
         Account.getInstance(mockContext).setUsername("987654321");
         assertThat(Account.getInstance(mockContext).getUsername(), is("987654321"));
     }
 
     @Test
     public void testRegisterAccount() {
-        mockAccount.registerAccount();
+        Account.getInstance(mockContext).registerAccount();
     }
 
     @Test(expected = IllegalArgumentException.class)

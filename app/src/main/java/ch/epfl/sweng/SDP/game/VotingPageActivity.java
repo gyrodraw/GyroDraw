@@ -150,7 +150,7 @@ public class VotingPageActivity extends Activity {
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
 
-        usersRef = database.getReference(PATH + ".connectedUsers." + USER);
+        usersRef = database.getReference("realRooms." + roomID + ".users");
         counterRef = database.getReference(PATH + ".timer.observableTime");
         counterRef.addValueEventListener(listenerCounter);
         endTimeRef = database.getReference(PATH + ".timer.endTime");
@@ -160,15 +160,13 @@ public class VotingPageActivity extends Activity {
         stateRef = database.getReference("realRooms." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        // Get the drawingIds; hardcoded now, need to be given by the server/script
-        String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
-                "1539331659.jpg", "1539381600.jpg"};
-        retrieveDrawingsFromDatabaseStorage(drawingsIds);
-
         // Get the players' names
         playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
                 "Player4"}; // hardcoded now, need to be given by the
         // server/script or retrieved from database
+        
+        // Get the drawingIds and save the corresponding images
+        retrieveDrawingsFromDatabaseStorage();
 
         ratings = new int[NUMBER_OF_DRAWINGS];
         ratingBar = findViewById(R.id.ratingBar);
@@ -250,36 +248,54 @@ public class VotingPageActivity extends Activity {
         return "123456789"; // the room ID should be given by the server/script
     }
 
-    // Retrieve the drawings corresponding to the given ids from the
-    // storage and store them in the drawings field.
-    private void retrieveDrawingsFromDatabaseStorage(String[] drawingsIds) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];
-        final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
+    // Retrieve the drawings and store them in the drawings field.
+    private void retrieveDrawingsFromDatabaseStorage() {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
 
-        for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
-            refs[i] = storage.getReference().child(drawingsIds[i]);
-
-            // Download the image
-            refs[i].getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    final int OFFSET = 0;
-
-                    // Convert the image downloaded as byte[] to Bitmap
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, OFFSET, bytes.length);
-
-                    // Store the image
-                    storeBitmap(bitmap);
-
-                    // Make the drawingView and the playerNameView visible
-                    setVisibility(View.VISIBLE, drawingView, playerNameView);
-
-                    // Display the first drawing
-                    changeDrawing(drawings[0], playersNames[0]);
+                short counter = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    drawingsIds[counter++] = snapshot.getKey();
                 }
-            });
-        }
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];
+                final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
+
+                for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
+                    refs[i] = storage.getReference().child(drawingsIds[i]);
+
+                    // Download the image
+                    refs[i].getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            final int OFFSET = 0;
+
+                            // Convert the image downloaded as byte[] to Bitmap
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, OFFSET, bytes.length);
+
+                            // Store the image
+                            storeBitmap(bitmap);
+
+                            // Make the drawingView and the playerNameView visible
+                            setVisibility(View.VISIBLE, drawingView, playerNameView);
+
+                            // Display the first drawing
+                            changeDrawing(drawings[0], playersNames[0]);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+
+
     }
 
     private void storeBitmap(Bitmap bitmap) {

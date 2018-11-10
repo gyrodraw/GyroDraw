@@ -34,17 +34,11 @@ import java.util.Locale;
 public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
-
-    // For the moment it is defined as a constant
-    private static final String PATH = "mockRooms.ABCDE";
-    private static final String USER = "aa"; // need to be replaced with the username
+    private static final String PATH = "realRooms.";
 
     private DatabaseReference rankingRef;
-    private DatabaseReference counterRef;
-    private DatabaseReference endTimeRef;
-    private DatabaseReference usersRef;
-    private DatabaseReference endVotingUsersRef;
     private DatabaseReference stateRef;
+    private DatabaseReference timerRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short drawingDownloadCounter = 0;
@@ -105,25 +99,6 @@ public class VotingPageActivity extends Activity {
         }
     };
 
-    private final ValueEventListener listenerEndTime = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
-
-            // Check if the timer ended
-            if (value != null && value == 1) {
-                // TODO create constants for states
-                usersRef.setValue(2);
-            }
-
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
-
     private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -145,20 +120,20 @@ public class VotingPageActivity extends Activity {
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
 
+        playerNameView = findViewById(R.id.playerNameView);
+        drawingView = findViewById(R.id.drawing);
+        timer = findViewById(R.id.timer);
+
         // Get the Database instance and the ranking reference
         Database database = Database.INSTANCE;
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
 
-        usersRef = database.getReference(PATH + ".connectedUsers." + USER);
-        counterRef = database.getReference(PATH + ".timer.observableTime");
-        counterRef.addValueEventListener(listenerCounter);
-        endTimeRef = database.getReference(PATH + ".timer.endTime");
-        endTimeRef.addValueEventListener(listenerEndTime);
-        endVotingUsersRef = database.getReference(PATH + ".timer.usersEndTime");
-        endVotingUsersRef.addValueEventListener(listenerEndUsersVoting);
-        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef = database.getReference(PATH + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
+
+        timerRef = database.getReference(PATH + roomID + ".timer/observableTime");
+        timerRef.addValueEventListener(listenerCounter);
 
         // Get the drawingIds; hardcoded now, need to be given by the server/script
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",
@@ -187,9 +162,6 @@ public class VotingPageActivity extends Activity {
                 starsAnimation.addStars((int) rating);
             }
         });
-        playerNameView = findViewById(R.id.playerNameView);
-        drawingView = findViewById(R.id.drawing);
-        timer = findViewById(R.id.timer);
 
         if (!enableAnimations) {
             setVisibility(View.GONE, R.id.starsAnimation);
@@ -373,10 +345,7 @@ public class VotingPageActivity extends Activity {
     }
 
     private void removeAllListeners() {
-        counterRef.removeEventListener(listenerCounter);
-        endTimeRef.removeEventListener(listenerEndTime);
-        usersRef.removeEventListener(listenerEndUsersVoting);
-        endVotingUsersRef.removeEventListener(listenerEndUsersVoting);
+
     }
 
     /**

@@ -195,7 +195,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
         const playingVal = snapshot.child(roomID.key + "/playing").val();
 
         // Check if the room is full, if the user already joined a room and if 
-        // the game is nor already playing
+        // the game is not already playing
         if(roomID.child("users").numChildren() < maxPlayers && !alreadyJoined
           && playingVal !== StateEnum.Playing) {
           const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
@@ -248,10 +248,6 @@ function addWordsToDatabase(roomID) {
 exports.chooseWordsGeneration = functions.database.ref(parentRoomID + "{roomID}/users").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
-    /*if(snapshot.child("users").numChildren() === 1) {
-      admin.database().ref(parentRoomID + roomID + "/state").set(0);
-      state = 0;
-    }*/
 
     if(snapshot.hasChild("words") && !snapshot.hasChild("users")) {
       // Remove the words because the room is empty

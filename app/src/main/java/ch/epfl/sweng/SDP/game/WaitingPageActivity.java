@@ -328,7 +328,7 @@ public class WaitingPageActivity extends Activity {
         Button b2 = findViewById(R.id.buttonWord2);
         b2.setEnabled(false);
     }
-    
+
     /**
      * Increment the number of players logged in the room. This method exists only for testing
      * purposes.

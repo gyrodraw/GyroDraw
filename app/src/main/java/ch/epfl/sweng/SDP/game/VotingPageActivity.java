@@ -326,6 +326,11 @@ public class VotingPageActivity extends Activity {
         });
     }
 
+    /**
+     * Display the drawing of the winner
+     * @param img Drawing of the winner
+     * @param winnerName Name of the winner
+     */
     public void showWinnerDrawing(Bitmap img, String winnerName) {
         changeDrawing(img, winnerName);
         // buttonChangeImage and rankingButton need to be removed after testing

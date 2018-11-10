@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -91,19 +92,6 @@ public class VotingPageActivity extends Activity {
             if(value != null) {
                 timer.setText(String.valueOf(value));
             }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
-
-    private final ValueEventListener listenerEndUsersVoting = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
-            timer.setText(String.format(Locale.getDefault(),"%d", value));
         }
 
         @Override
@@ -338,14 +326,16 @@ public class VotingPageActivity extends Activity {
         });
     }
 
-    private void showWinnerDrawing(Bitmap img, String winnerName) {
+    public void showWinnerDrawing(Bitmap img, String winnerName) {
         changeDrawing(img, winnerName);
         // buttonChangeImage and rankingButton need to be removed after testing
         setVisibility(View.GONE, R.id.ratingBar, R.id.buttonChangeImage, R.id.rankingButton);
     }
 
     private void removeAllListeners() {
-
+        // Clear listeners
+        stateRef.removeEventListener(listenerState);
+        timerRef.removeEventListener(listenerCounter);
     }
 
     /**
@@ -354,5 +344,15 @@ public class VotingPageActivity extends Activity {
      */
     public static void disableAnimations() {
         enableAnimations = false;
+    }
+
+    @VisibleForTesting
+    public void callShowWinnerDrawing(final Bitmap image, final String winner) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showWinnerDrawing(image, winner);
+            }
+        });
     }
 }

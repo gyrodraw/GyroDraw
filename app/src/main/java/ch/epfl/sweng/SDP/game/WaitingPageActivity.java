@@ -391,6 +391,19 @@ public class WaitingPageActivity extends Activity {
         enableSquareAnimation = false;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Does not leave the room if the activity is stopped because
+        // drawing activity is launched.
+        if(!isDrawingActivityLaunched) {
+            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+        }
+        removeAllListeners();
+        finish();
+    }
+
     /**
      * Method that calls onDataChange on the UI thread.
      *
@@ -404,19 +417,6 @@ public class WaitingPageActivity extends Activity {
                 listenerTimer.onDataChange(dataSnapshot);
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // Does not leave the room if the activity is stopped because
-        // drawing activity is launched.
-        if(!isDrawingActivityLaunched) {
-            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
-        }
-        removeAllListeners();
-        finish();
     }
 
 }

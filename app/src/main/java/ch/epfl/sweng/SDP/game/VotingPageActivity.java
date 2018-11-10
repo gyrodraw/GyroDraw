@@ -205,6 +205,8 @@ public class VotingPageActivity extends Activity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
+
+        addStarAnimationListener();
     }
 
     @Override
@@ -238,7 +240,10 @@ public class VotingPageActivity extends Activity {
         ++changeDrawingCounter;
         previousRating = 0;
         changeDrawing(drawings[changeDrawingCounter], playersNames[changeDrawingCounter]);
-        ratingBar.setEnabled(true);
+        addStarAnimationListener();
+        ratingBar.setRating(0f);
+        ratingBar.setIsIndicator(false);
+        ratingBar.setAlpha(1f);
     }
 
     private void addStarAnimationListener() {
@@ -293,27 +298,29 @@ public class VotingPageActivity extends Activity {
                 final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
 
                 for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
-                    refs[i] = storage.getReference().child(drawingsIds[i]);
+                    if (drawingsIds[i] != null) {
+                        refs[i] = storage.getReference().child(drawingsIds[i]);
 
-                    // Download the image
-                    refs[i].getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            final int OFFSET = 0;
+                        // Download the image
+                        refs[i].getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                final int OFFSET = 0;
 
-                            // Convert the image downloaded as byte[] to Bitmap
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, OFFSET, bytes.length);
+                                // Convert the image downloaded as byte[] to Bitmap
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, OFFSET, bytes.length);
 
-                            // Store the image
-                            storeBitmap(bitmap);
+                                // Store the image
+                                storeBitmap(bitmap);
 
-                            // Make the drawingView and the playerNameView visible
-                            setVisibility(View.VISIBLE, drawingView, playerNameView);
+                                // Make the drawingView and the playerNameView visible
+                                setVisibility(View.VISIBLE, drawingView, playerNameView);
 
-                            // Display the first drawing
-                            changeDrawing(drawings[0], playersNames[0]);
-                        }
-                    });
+                                // Display the first drawing
+                                changeDrawing(drawings[0], playersNames[0]);
+                            }
+                        });
+                    }
                 }
             }
 

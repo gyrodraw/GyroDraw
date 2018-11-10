@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DrawingActivity extends Activity implements SensorEventListener {
     private static final String TAG = "DrawingActivity";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private boolean isVotingActivityLaunched = false;
 
@@ -121,9 +122,9 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
         ((TextView) findViewById(R.id.winningWord)).setText(winningWord);
 
-        timerRef = database.getReference("realRooms." + roomID + ".timer.observableTime");
+        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
-        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),

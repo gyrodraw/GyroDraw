@@ -34,7 +34,7 @@ import java.util.Locale;
 public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
-    private static final String PATH = "realRooms.";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -129,10 +129,10 @@ public class VotingPageActivity extends Activity {
         rankingRef = database
                 .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
 
-        stateRef = database.getReference(PATH + roomID + ".state");
+        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        timerRef = database.getReference(PATH + roomID + ".timer/observableTime");
+        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer/observableTime");
         timerRef.addValueEventListener(listenerCounter);
 
         // Get the drawingIds; hardcoded now, need to be given by the server/script

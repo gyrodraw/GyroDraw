@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
@@ -49,7 +48,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
     private String roomID;
     private String winningWord;
-    ToggleButton flyDraw;
 
     private ImageView[] colorButtons;
 
@@ -69,6 +67,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch(stateEnum) {
                     case START_VOTING_ACTIVITY:
+                        stop();
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext(),
                                 VotingPageActivity.class);
@@ -91,7 +90,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
 
-            if(value != null) {
+            if (value != null) {
                 ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
             }
         }

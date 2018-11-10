@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static java.lang.String.format;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,13 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +21,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import java.util.Locale;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
+import static java.lang.String.format;
 
 public class VotingPageActivity extends Activity {
 
@@ -51,7 +54,7 @@ public class VotingPageActivity extends Activity {
     private short changeDrawingCounter = 0;
 
     private int[] ratings;
-    private short ratingToSendCounter = 0;
+    private int previousRating = 0;
 
     private String[] playersNames;
 
@@ -59,6 +62,7 @@ public class VotingPageActivity extends Activity {
     private TextView playerNameView;
     private TextView timer;
     private RatingBar ratingBar;
+    private StarAnimationView starsAnimation;
 
     private String roomID = "undefined";
 
@@ -73,9 +77,9 @@ public class VotingPageActivity extends Activity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
 
-            if(state != null) {
+            if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
-                switch(stateEnum) {
+                switch (stateEnum) {
                     case END_VOTING_ACTIVITY:
                         // Start ranking activity
                         break;
@@ -94,7 +98,7 @@ public class VotingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-            if(value != null) {
+            if (value != null) {
                 timer.setText(String.valueOf(value));
             }
         }
@@ -128,7 +132,7 @@ public class VotingPageActivity extends Activity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
-            timer.setText(String.format(Locale.getDefault(),"%d", value));
+            timer.setText(String.format(Locale.getDefault(), "%d", value));
         }
 
         @Override
@@ -164,7 +168,7 @@ public class VotingPageActivity extends Activity {
         playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
                 "Player4"}; // hardcoded now, need to be given by the
         // server/script or retrieved from database
-        
+
         // Get the drawingIds and save the corresponding images
         retrieveDrawingsFromDatabaseStorage();
 
@@ -176,18 +180,16 @@ public class VotingPageActivity extends Activity {
                 ratingBar.setIsIndicator(true);
                 ratingBar.setAlpha(0.8f);
                 // Store the rating
-                ratings[ratingToSendCounter] = (int) rating;
+                ratings[changeDrawingCounter] = (int) rating;
 
                 //Send it to the database along with the corresponding player name
-                sendRatingToDatabase(playersNames[ratingToSendCounter]);
-
-                StarAnimationView starsAnimation = findViewById(R.id.starsAnimation);
-                starsAnimation.addStars((int) rating);
+                sendRatingToDatabase(playersNames[changeDrawingCounter]);
             }
         });
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
         timer = findViewById(R.id.timer);
+        starsAnimation = findViewById(R.id.starsAnimation);
 
         if (!enableAnimations) {
             setVisibility(View.GONE, R.id.starsAnimation);
@@ -234,8 +236,34 @@ public class VotingPageActivity extends Activity {
      */
     public void changeImage(View view) {
         ++changeDrawingCounter;
+        previousRating = 0;
         changeDrawing(drawings[changeDrawingCounter], playersNames[changeDrawingCounter]);
         ratingBar.setEnabled(true);
+    }
+
+    private void addStarAnimationListener() {
+        final String playerName = playersNames[changeDrawingCounter];
+        final DatabaseReference playerRating = rankingRef
+                .child(playerName);
+
+        playerRating.addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        // Get the current rating
+                        Long value = dataSnapshot.getValue(Long.class);
+
+                        if (value != null) {
+                            starsAnimation.addStars((int) (value - previousRating));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
+
     }
 
     // Change drawing and player name in the UI.
@@ -308,7 +336,7 @@ public class VotingPageActivity extends Activity {
 
     // Send "playerName" drawing's rating to the database.
     private void sendRatingToDatabase(String playerName) {
-        final int rating = ratings[ratingToSendCounter];
+        final int rating = ratings[changeDrawingCounter];
         final DatabaseReference playerRating = rankingRef
                 .child(playerName);
 
@@ -330,8 +358,6 @@ public class VotingPageActivity extends Activity {
                         throw databaseError.toException();
                     }
                 });
-
-        ++ratingToSendCounter;
     }
 
     /**
@@ -392,7 +418,7 @@ public class VotingPageActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if(roomID != null) {
+            if (roomID != null) {
                 Matchmaker.getInstance(new ConstantsWrapper())
                         .leaveRoom(roomID);
             }

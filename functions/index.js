@@ -192,12 +192,13 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   return admin.database().ref(parentRoomID).once('value', (snapshot) => {
     return snapshot.forEach((roomID) => {
         console.log(roomID.child("users").numChildren());
-        const playingVal = snapshot.child(roomID.key + "/playing").val();
+        const playingVal = roomID.child("playing").val();
+        console.log("Playing value: " + playingVal);
 
         // Check if the room is full, if the user already joined a room and if 
         // the game is not already playing
-        if(roomID.child("users").numChildren() < maxPlayers && !alreadyJoined
-          && playingVal !== StateEnum.Playing) {
+        if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
+          && playingVal !== PlayingEnum.Playing) {
           const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
           const path = parentRoomID + roomID.key;
           _roomID = roomID.key;

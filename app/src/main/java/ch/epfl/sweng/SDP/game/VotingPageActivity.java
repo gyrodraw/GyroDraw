@@ -327,7 +327,7 @@ public class VotingPageActivity extends Activity {
     }
 
     /**
-     * Display the drawing of the winner
+     * Display the drawing of the winner.
      * @param img Drawing of the winner
      * @param winnerName Name of the winner
      */

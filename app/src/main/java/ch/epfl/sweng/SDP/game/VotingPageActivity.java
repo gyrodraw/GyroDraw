@@ -100,6 +100,7 @@ public class VotingPageActivity extends Activity {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
                 timer.setText(String.valueOf(value));
+                changeImage(null);
             }
         }
 
@@ -203,9 +204,10 @@ public class VotingPageActivity extends Activity {
         setVisibility(View.INVISIBLE, drawingView, playerNameView);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.playerNameView)).setTypeface(typeMuro);
+        playerNameView.setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
 
+        previousRating = 0;
         addStarAnimationListener();
     }
 
@@ -299,7 +301,7 @@ public class VotingPageActivity extends Activity {
 
                 for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
                     if (drawingsIds[i] != null) {
-                        refs[i] = storage.getReference().child(drawingsIds[i]);
+                        refs[i] = storage.getReference().child(drawingsIds[i] + ".jpg");
 
                         // Download the image
                         refs[i].getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {

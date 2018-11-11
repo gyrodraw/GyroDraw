@@ -42,7 +42,6 @@ public class VotingPageActivity extends Activity {
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
-    private short drawingDownloadCounter = 0;
     private short changeDrawingCounter = 0;
 
     private int[] ratings;
@@ -269,8 +268,9 @@ public class VotingPageActivity extends Activity {
                 final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
 
                 for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
-                    if (drawingsIds[i] != null) {
-                        refs[i] = storage.getReference().child(drawingsIds[i] + ".jpg");
+                    final String currentId = drawingsIds[i];
+                    if (currentId != null) {
+                        refs[i] = storage.getReference().child(currentId + ".jpg");
 
                         // Download the image
                         refs[i].getBytes(ONE_MEGABYTE)
@@ -284,7 +284,7 @@ public class VotingPageActivity extends Activity {
                                                 .decodeByteArray(bytes, OFFSET, bytes.length);
 
                                         // Store the image
-                                        storeBitmap(bitmap);
+                                        storeBitmap(bitmap, currentId);
 
                                         // Make the drawingView and the playerNameView visible
                                         setVisibility(View.VISIBLE, drawingView, playerNameView);
@@ -306,9 +306,14 @@ public class VotingPageActivity extends Activity {
 
     }
 
-    private void storeBitmap(Bitmap bitmap) {
-        drawings[drawingDownloadCounter] = bitmap;
-        ++drawingDownloadCounter;
+    private void storeBitmap(Bitmap bitmap, String id) {
+        int index;
+        for (index = 0; index < drawingsIds.length; index++) {
+            if (drawingsIds[index].equals(id)) {
+                break;
+            }
+        }
+        drawings[index] = bitmap;
     }
 
     /* public for testing only, the users in the database should be already sorted by their ranking

@@ -11,45 +11,14 @@ const WAITING_TIME_CHOOSE_WORDS = 10;
 const WAITING_TIME_DRAWING = 10;
 const WAITING_TIME_VOTING = 10;
 const parentRoomID = "realRooms/";
-var StateEnumMock = Object.freeze({"votingPage":1, "endVotingPage":2});
+
 var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "VotingPage": 3, "EndVoting" : 4});
 var PlayingEnum = Object.freeze({"Idle": 0, "PlayingButJoinable": 1, "Playing": 2});
 var state = 0;
 
 admin.initializeApp();
 
-// Mock to be removed soon
-exports.connectedUsers = functions.database.ref('/mockRooms/ABCDE/connectedUsers').onWrite((event) => {
-    return admin.database().ref('/mockRooms/ABCDE/connectedUsers').once("value")
-    .then(snapshot => {
-      checkUsersReady(StateEnumMock.endVotingPage, 'mockRooms/ABCDE/timer/usersEndVoting', snapshot);
-      checkUsersReady(StateEnumMock.votingPage, 'mockRooms/ABCDE/timer/startTimer', snapshot);
-      return;
-    });
-});
-
-// Mock to be removed soon
 function checkUsersReady(state, path, snapshot) {
-  let ready = true;
-  snapshot.forEach( (child) => {
-    if(child.val() !== state) {
-      ready = false;
-    }
-  });
-
-  if(ready) {
-    admin.database().ref(path).set(1);
-    if(state === StateEnumMock.endVotingPage) {
-      admin.database().ref('mockRooms/ABCDE/timer/endTime').set(0);
-    }
-    console.log("Ready");
-  } else {
-    admin.database().ref(path).set(0);
-    console.log("Not ready");
-  }
-}
-
-function checkUsersReady2(state, path, snapshot) {
   let ready = true;
   snapshot.child("users").forEach((child) => {
     if(child.val() !== state) {
@@ -69,29 +38,6 @@ function checkUsersReady2(state, path, snapshot) {
   return;
 }
 
-// Mock to be removed soon
-exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer').onWrite((event) => {
-  return admin.database().ref('/mockRooms/ABCDE/timer/startTimer').once("value")
-  .then(snapshot => {
-    if(snapshot.val() === 1) {
-      console.log("Timer started");
-
-      // Wait in seconds
-      return functionTimer(20,
-            elapsedTime => {
-                admin.database().ref('/mockRooms/ABCDE/timer/observableTime').set(elapsedTime);
-            })
-            .then(totalTime => {
-                return console.log('Timer of ' + totalTime + ' has finished.');
-            })
-            .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
-            .then(() => admin.database().ref('/mockRooms/ABCDE/timer/endTime').set(1))
-            .then(() => event.data.ref.remove())
-            .catch(error => console.error(error));
-    }
-    return;
-  })
-});
 
 function functionTimer (seconds, state, roomID, call) {
   return new Promise((resolve, reject) => {
@@ -116,7 +62,6 @@ function functionTimer (seconds, state, roomID, call) {
       });
 
       if(stop === true){
-        console.log("Timer should be stopped");
         stop = false;
         throw new "Timer stopped";
       }
@@ -246,7 +191,7 @@ function addWordsToDatabase(roomID) {
 
 }
 
-exports.chooseWordsGeneration = functions.database.ref(parentRoomID + "{roomID}/users").onWrite((change, context) => {
+exports.onUsersChange = functions.database.ref(parentRoomID + "{roomID}/users").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
 
@@ -259,7 +204,7 @@ exports.chooseWordsGeneration = functions.database.ref(parentRoomID + "{roomID}/
       addWordsToDatabase(roomID);
     }
 
-    return checkUsersReady2(0, parentRoomID + roomID, snapshot);
+    return checkUsersReady(0, parentRoomID + roomID, snapshot);
   });
 });
 

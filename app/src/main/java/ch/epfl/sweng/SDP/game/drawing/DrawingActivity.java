@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
@@ -315,7 +316,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         // Does not leave the room if the activity is stopped because
         // voting activity is launched.
         if (!isVotingActivityLaunched) {
-            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
         }
 
         removeAllListeners();

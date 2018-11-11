@@ -17,6 +17,7 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -180,7 +181,7 @@ public class VotingPageActivity extends Activity {
         }
         */
         if(roomID != null) {
-            Matchmaker.getInstance(new ConstantsWrapper())
+            Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
         removeAllListeners();

@@ -24,7 +24,6 @@ public class Matchmaker implements MatchmakingInterface {
 
     private static Matchmaker singleInstance = null;
 
-    private DatabaseReference reference;
     private DatabaseReference myRef;
     private Account account;
 

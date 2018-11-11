@@ -97,8 +97,7 @@ public class VotingPageActivity extends Activity {
 
                 // Switch every 2 seconds
                 if((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
-                    changeDrawing(drawings[changeDrawingCounter++ % NUMBER_OF_DRAWINGS],
-                            playersNames[changeDrawingCounter++ % NUMBER_OF_DRAWINGS]);
+                    changeImage();
                 }
             }
         }
@@ -225,10 +224,8 @@ public class VotingPageActivity extends Activity {
 
     /**
      * Switch the drawing when clicking the button.
-     *
-     * @param view View referencing the button
      */
-    public void changeImage(View view) {
+    public void changeImage() {
         ++changeDrawingCounter;
         previousRating = 0;
         changeDrawing(drawings[changeDrawingCounter], playersNames[changeDrawingCounter]);
@@ -384,8 +381,8 @@ public class VotingPageActivity extends Activity {
 
                 // Clear the UI; buttonChangeImage and rankingButton need
                 // to be removed after testing
-                setVisibility(View.GONE, R.id.ratingBar, R.id.drawing, R.id.playerNameView,
-                        R.id.buttonChangeImage, R.id.rankingButton, R.id.timer);
+                setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
+                        R.id.playerNameView, R.id.timer);
 
                 // Create and show the final ranking in the new fragment
                 getSupportFragmentManager().beginTransaction()
@@ -411,7 +408,7 @@ public class VotingPageActivity extends Activity {
     public void showWinnerDrawing(Bitmap img, String winnerName) {
         changeDrawing(img, winnerName);
         // buttonChangeImage and rankingButton need to be removed after testing
-        setVisibility(View.GONE, R.id.ratingBar, R.id.buttonChangeImage, R.id.rankingButton);
+        setVisibility(View.GONE, R.id.ratingBar);
     }
 
     private void removeAllListeners() {

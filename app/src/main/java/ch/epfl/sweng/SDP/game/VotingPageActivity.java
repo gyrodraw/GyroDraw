@@ -215,6 +215,11 @@ public class VotingPageActivity extends Activity {
      * @param view the view corresponding to the button pressed
      */
     public void startHomeActivity(View view) {
+        // Remove the drawings from FirebaseStorage
+        for (String id: drawingsIds) {
+            FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
+        }
+
         launchActivity(HomeActivity.class);
         finish();
     }

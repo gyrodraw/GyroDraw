@@ -42,7 +42,7 @@ public class PaintView extends View {
     private int height;
     private int circleRadius;
     private int color = 0;
-    private int previousColor = 1;
+    private int previousColor = 0;
 
     /**
      * Constructor for the view.

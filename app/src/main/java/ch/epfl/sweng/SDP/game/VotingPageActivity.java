@@ -12,7 +12,13 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,22 +30,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static final int TIME_FOR_VOTING = 10;
+    private static final int TIME_FOR_VOTING = 24;
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -101,10 +98,13 @@ public class VotingPageActivity extends Activity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
-                timer.setText(String.valueOf(value));
+                timer.setText(String.valueOf(value % 5));
 
-                // Switch every 2 seconds
-                if((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
+                if (value == TIME_FOR_VOTING) {
+                    setLayoutToVisible();
+                }
+                if (value < TIME_FOR_VOTING && (value % 5) == 4 && value != 0) {
+                    // Switch every 5 seconds
                     changeImage();
                 }
             }
@@ -156,7 +156,8 @@ public class VotingPageActivity extends Activity {
                 ratingBar = findViewById(R.id.ratingBar);
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                     @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    public void onRatingChanged(RatingBar ratingBar, float rating,
+                            boolean fromUser) {
                         ratingBar.setIsIndicator(true);
                         ratingBar.setAlpha(0.8f);
                         // Store the rating
@@ -177,11 +178,13 @@ public class VotingPageActivity extends Activity {
                 } else {
                     Glide.with(getApplicationContext()).load(R.drawable.background_animation)
                             .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+                    Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
+                            .into((ImageView) findViewById(R.id.waitingAnimationDots));
                 }
 
-                // Make the drawingView and the playerNameView invisible
-                // until the drawings have been downloaded
-                setVisibility(View.INVISIBLE, drawingView, playerNameView);
+                // Make the layout invisible until the drawings have been downloaded
+                setVisibility(View.GONE, ratingBar, playerNameView,
+                        drawingView, timer, starsAnimation);
 
                 Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
                 playerNameView.setTypeface(typeMuro);
@@ -223,8 +226,11 @@ public class VotingPageActivity extends Activity {
      */
     public void startHomeActivity(View view) {
         // Remove the drawings from FirebaseStorage
-        for (String id: drawingsIds) {
-            FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
+        for (String id : drawingsIds) {
+            // Remove this after testing
+            if (id != null && !id.substring(0, 4).equals("user")) {
+                FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
+            }
         }
 
         launchActivity(HomeActivity.class);
@@ -242,6 +248,12 @@ public class VotingPageActivity extends Activity {
         ratingBar.setRating(0f);
         ratingBar.setIsIndicator(false);
         ratingBar.setAlpha(1f);
+    }
+
+    private void setLayoutToVisible() {
+        setVisibility(View.GONE, findViewById(R.id.waitingAnimationDots));
+        setVisibility(View.VISIBLE, ratingBar, playerNameView,
+                drawingView, timer, starsAnimation);
     }
 
     private void addStarAnimationListener() {
@@ -267,7 +279,6 @@ public class VotingPageActivity extends Activity {
                         throw databaseError.toException();
                     }
                 });
-
     }
 
     private void retrieveFinalRanking() {
@@ -323,9 +334,6 @@ public class VotingPageActivity extends Activity {
                                         // Store the image
                                         storeBitmap(bitmap, currentId);
 
-                                        // Make the drawingView and the playerNameView visible
-                                        setVisibility(View.VISIBLE, drawingView, playerNameView);
-
                                         // Display the first drawing
                                         changeDrawing(drawings[0], playersNames[0]);
                                     }
@@ -339,8 +347,6 @@ public class VotingPageActivity extends Activity {
                 throw databaseError.toException();
             }
         });
-
-
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {
@@ -447,7 +453,7 @@ public class VotingPageActivity extends Activity {
     /**
      * Display the drawing of the winner.
      *
-     * @param img        Drawing of the winner
+     * @param img Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

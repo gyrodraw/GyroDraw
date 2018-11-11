@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static java.lang.String.format;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,20 +7,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import java.util.Locale;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class VotingPageActivity extends Activity {
 
@@ -196,7 +193,7 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
-        if(roomID != null) {
+        if (roomID != null) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
@@ -244,6 +241,7 @@ public class VotingPageActivity extends Activity {
 
                         if (value != null) {
                             starsAnimation.addStars((int) (value - previousRating));
+                            previousRating = value.intValue();
                         }
                     }
 
@@ -385,7 +383,8 @@ public class VotingPageActivity extends Activity {
 
     /**
      * Display the drawing of the winner.
-     * @param img Drawing of the winner
+     *
+     * @param img        Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

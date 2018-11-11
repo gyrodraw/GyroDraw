@@ -20,11 +20,11 @@ admin.initializeApp();
 
 function checkUsersReady(state, path, snapshot) {
   let ready = true;
-  snapshot.child("users").forEach((child) => {
+  /*snapshot.child("users").forEach((child) => {
     if(child.val() !== state) {
       ready = false;
     }
-  });
+  });*/
 
   if(ready && snapshot.child("users").numChildren() >= mockMaxPlayers) {
     if(snapshot.child("state").val() === StateEnum.Idle || 
@@ -129,6 +129,7 @@ exports.joinGame = functions.https.onRequest((req, res) => {
 exports.joinGame2 = functions.https.onCall((data, context) => {
   console.log("Started method");
   // Grab the text parameter.
+  const id = data.id;
   const username = data.username;
   let _roomID;
   console.log(username);
@@ -148,15 +149,15 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
           const path = parentRoomID + roomID.key;
           _roomID = roomID.key;
           if(roomID.hasChild("users")) {
-            if(roomID.child("users/" + username).exists()) {
-              admin.database().ref(path).child("users/" + username).remove();
+            if(roomID.child("users/" + id).exists()) {
+              admin.database().ref(path).child("users/" + id).remove();
             }
-            admin.database().ref(path).child("users").update({[username]:0});
+            admin.database().ref(path).child("users").update({[id]:username});
           } else {
-            if(roomID.child("users/" + username).exists()) {
-              admin.database().ref(path).child("users/" + username).remove();
+            if(roomID.child("users/" + id).exists()) {
+              admin.database().ref(path).child("users/" + id).remove();
             }
-            admin.database().ref(path).update({"users":{[username]:0}});
+            admin.database().ref(path).update({"users":{[id]:username}});
           }
           alreadyJoined = true;
         }

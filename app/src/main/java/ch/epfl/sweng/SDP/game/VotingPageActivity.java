@@ -96,7 +96,7 @@ public class VotingPageActivity extends Activity {
                 timer.setText(String.valueOf(value));
 
                 // Switch every 2 seconds
-                if((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
+                if ((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
                     changeImage();
                 }
             }
@@ -168,11 +168,13 @@ public class VotingPageActivity extends Activity {
                 } else {
                     Glide.with(getApplicationContext()).load(R.drawable.background_animation)
                             .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+                    Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
+                            .into((ImageView) findViewById(R.id.waitingAnimationDots));
                 }
 
-                // Make the drawingView and the playerNameView invisible
-                // until the drawings have been downloaded
-                setVisibility(View.INVISIBLE, drawingView, playerNameView);
+                // Make the layout invisible until the drawings have been downloaded
+                setVisibility(View.GONE, ratingBar, playerNameView,
+                        drawingView, timer, starsAnimation);
 
                 Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
                 playerNameView.setTypeface(typeMuro);
@@ -230,6 +232,12 @@ public class VotingPageActivity extends Activity {
         ratingBar.setAlpha(1f);
     }
 
+    private void setLayoutToVisible() {
+        setVisibility(View.GONE, findViewById(R.id.waitingAnimationDots));
+        setVisibility(View.VISIBLE, ratingBar, playerNameView,
+                drawingView, timer, starsAnimation);
+    }
+
     private void addStarAnimationListener() {
         final String playerName = playersNames[changeDrawingCounter];
         final DatabaseReference playerRating = rankingRef
@@ -253,7 +261,6 @@ public class VotingPageActivity extends Activity {
                         throw databaseError.toException();
                     }
                 });
-
     }
 
     // Change drawing and player name in the UI.
@@ -291,7 +298,7 @@ public class VotingPageActivity extends Activity {
                                         storeBitmap(bitmap, currentId);
 
                                         // Make the drawingView and the playerNameView visible
-                                        setVisibility(View.VISIBLE, drawingView, playerNameView);
+                                        setLayoutToVisible();
 
                                         // Display the first drawing
                                         changeDrawing(drawings[0], playersNames[0]);
@@ -306,8 +313,6 @@ public class VotingPageActivity extends Activity {
                 throw databaseError.toException();
             }
         });
-
-
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {

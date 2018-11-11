@@ -85,4 +85,14 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true" />
 
+    <ImageView
+        android:id="@+id/waitingAnimationDots"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
 </android.support.constraint.ConstraintLayout>

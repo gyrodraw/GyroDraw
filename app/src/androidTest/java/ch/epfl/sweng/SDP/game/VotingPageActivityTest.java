@@ -75,28 +75,6 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void changeImageButtonIsClickable() {
-        onView(withId(R.id.buttonChangeImage)).check(matches(isClickable()));
-        onView(withId(R.id.buttonChangeImage)).perform(click());
-    }
-
-    @Test
-    public void changeImageButtonIsDisplayed() {
-        onView(withId(R.id.buttonChangeImage)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void rankingButtonIsClickable() {
-        onView(withId(R.id.rankingButton)).check(matches(isClickable()));
-        onView(withId(R.id.rankingButton)).perform(click());
-    }
-
-    @Test
-    public void rankingButtonIsDisplayed() {
-        onView(withId(R.id.rankingButton)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void addStarsHandlesBigNumber() {
         StarAnimationView starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);

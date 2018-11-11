@@ -222,6 +222,21 @@ function startTimer(time, roomID, prevState, newState) {
       .catch(error => console.error(error));
 }
 
+function createRankingNode(roomID) {
+  updates = {};
+  admin.database().ref(parentRoomID + roomID).child("users").once('value', (snapshot) => {
+    snapshot.forEach((child) => {
+      updates[child.val()] = 0;
+    });
+    //return admin.database().ref(parentRoomID + roomID + "/ranking").set(snapshot.val());
+  });
+  console.dir(updates);
+  admin.database().ref(parentRoomID + roomID).child("ranking").once('value', function(snapshot) {
+    snapshot.ref.set(updates);
+  });
+  return;
+}
+
 exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").onWrite((change, context) => {
   const roomID = context.params.roomID;
   state = change.after.val();
@@ -241,13 +256,16 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       playingRef.set(PlayingEnum.PlayingButJoinable);
       return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage);
     case StateEnum.DrawingPage:
+      createRankingNode(roomID);
       playingRef.set(PlayingEnum.Playing);
       return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.VotingPage);
     case StateEnum.VotingPage:
       return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
     case StateEnum.EndVoting:
-      playingRef.set(PlayingEnum.Idle);
-      stateRef.set(StateEnum.Idle);
+      setTimeout(() => {
+        playingRef.set(PlayingEnum.Idle);
+        stateRef.set(StateEnum.Idle);
+      }, 1000)
       break;
     default:
       break;

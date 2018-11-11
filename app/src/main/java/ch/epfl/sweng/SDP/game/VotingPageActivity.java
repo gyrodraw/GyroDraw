@@ -34,6 +34,7 @@ public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+    private static final int TIME_FOR_VOTING = 10;
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -74,6 +75,7 @@ public class VotingPageActivity extends Activity {
                 switch (stateEnum) {
                     case END_VOTING_ACTIVITY:
                         // Start ranking activity
+                        startRankingFragment();
                         break;
                     default:
                 }
@@ -92,6 +94,12 @@ public class VotingPageActivity extends Activity {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
                 timer.setText(String.valueOf(value));
+
+                // Switch every 2 seconds
+                if((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
+                    changeDrawing(drawings[changeDrawingCounter++ % NUMBER_OF_DRAWINGS],
+                            playersNames[changeDrawingCounter++ % NUMBER_OF_DRAWINGS]);
+                }
             }
         }
 
@@ -115,8 +123,7 @@ public class VotingPageActivity extends Activity {
 
         // Get the Database instance and the ranking reference
         final Database database = Database.INSTANCE;
-        rankingRef = database
-                .getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        rankingRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
 
         stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
@@ -351,6 +358,10 @@ public class VotingPageActivity extends Activity {
      * @param view View referencing the button
      */
     public void showFinalRanking(View view) {
+        startRankingFragment();
+    }
+
+    private void startRankingFragment() {
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

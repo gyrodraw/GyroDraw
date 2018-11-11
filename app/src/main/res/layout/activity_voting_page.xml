@@ -65,40 +65,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/drawing" />
 
-    <Button
-        android:id="@+id/buttonChangeImage"
-        android:layout_width="wrap_content"
-        android:layout_height="27dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@null"
-        android:gravity="start|center"
-        android:includeFontPadding="false"
-        android:onClick="changeImage"
-        android:text="Change image"
-        android:textColor="@color/colorGrey"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rankingButton" />
-
-    <Button
-        android:id="@+id/rankingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="27dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@null"
-        android:gravity="start|center"
-        android:includeFontPadding="false"
-        android:onClick="showFinalRanking"
-        android:text="Ranking"
-        android:textColor="@color/colorGrey"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/timer"
         android:layout_width="wrap_content"

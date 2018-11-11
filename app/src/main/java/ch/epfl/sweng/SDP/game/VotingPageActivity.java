@@ -21,7 +21,6 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -216,7 +215,7 @@ public class VotingPageActivity extends Activity {
      */
     public void startHomeActivity(View view) {
         // Remove the drawings from FirebaseStorage
-        for (String id: drawingsIds) {
+        for (String id : drawingsIds) {
             // Remove this after testing
             if (!id.substring(0, 4).equals("user")) {
                 FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
@@ -292,12 +291,26 @@ public class VotingPageActivity extends Activity {
                         refs[i] = storage.getReference().child(currentId + ".jpg");
 
                         // Download the image
-                        boolean downloaded = downloadImage(refs[i], ONE_MEGABYTE, currentId)
-                                .isSuccessful();
-                        while (!downloaded) {
-                            downloaded = downloadImage(refs[i], ONE_MEGABYTE, currentId)
-                                    .isSuccessful();
-                        }
+                        refs[i].getBytes(ONE_MEGABYTE)
+                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        final int OFFSET = 0;
+
+                                        // Convert the image downloaded as byte[] to Bitmap
+                                        Bitmap bitmap = BitmapFactory
+                                                .decodeByteArray(bytes, OFFSET, bytes.length);
+
+                                        // Store the image
+                                        storeBitmap(bitmap, currentId);
+
+                                        // Make the drawingView and the playerNameView visible
+                                        setLayoutToVisible();
+
+                                        // Display the first drawing
+                                        changeDrawing(drawings[0], playersNames[0]);
+                                    }
+                                });
                     }
                 }
             }
@@ -307,33 +320,6 @@ public class VotingPageActivity extends Activity {
                 throw databaseError.toException();
             }
         });
-    }
-
-    private Task downloadImage(StorageReference ref, long ONE_MEGABYTE, final String currentId) {
-        return ref.getBytes(ONE_MEGABYTE)
-                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        if (bytes != null) {
-                            final int OFFSET = 0;
-
-                            // Convert the image downloaded as byte[] to Bitmap
-                            Bitmap bitmap = BitmapFactory
-                                    .decodeByteArray(bytes, OFFSET, bytes.length);
-
-                            // Store the image
-                            storeBitmap(bitmap, currentId);
-
-                            // Make the drawingView and the playerNameView visible
-                            setLayoutToVisible();
-
-                            // Display the first drawing
-                            changeDrawing(drawings[0], playersNames[0]);
-                        } else {
-
-                        }
-                    }
-                });
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {

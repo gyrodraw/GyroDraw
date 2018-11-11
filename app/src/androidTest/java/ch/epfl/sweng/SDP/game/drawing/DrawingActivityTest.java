@@ -111,14 +111,6 @@ public class DrawingActivityTest {
     }
 
     @Test
-    public void testPressBack() {
-        Intents.init();
-        Espresso.pressBack();
-        intended(hasComponent(HomeActivity.class.getName()));
-        Intents.release();
-    }
-
-    @Test
     public void testLocalDbHandler(){
         Paint paint = initializedPaint();
 

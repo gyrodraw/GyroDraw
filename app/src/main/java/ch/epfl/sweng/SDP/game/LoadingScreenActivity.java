@@ -140,7 +140,8 @@ public class LoadingScreenActivity extends Activity {
                 } else {
                     roomID = task.getResult();
                     if(hasLeft) {
-                        Matchmaker.getInstance(Account.getInstance(getApplicationContext())).leaveRoom(roomID);
+                        Matchmaker.getInstance(Account.getInstance(getApplicationContext()))
+                                .leaveRoom(roomID);
                         finish();
                     } else {
                         wordsVotesRef = database.getReference(

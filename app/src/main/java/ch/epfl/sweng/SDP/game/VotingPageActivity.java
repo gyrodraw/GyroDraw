@@ -32,7 +32,7 @@ public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static final int TIME_FOR_VOTING = 10;
+    private static final int TIME_FOR_VOTING = 24;
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -91,10 +91,13 @@ public class VotingPageActivity extends Activity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
-                timer.setText(String.valueOf(value));
+                timer.setText(String.valueOf(value % 5));
 
-                // Switch every 2 seconds
-                if ((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
+                if (value == TIME_FOR_VOTING) {
+                    setLayoutToVisible();
+                }
+                if (value < TIME_FOR_VOTING && (value % 5) == 4 && value != 0) {
+                    // Switch every 5 seconds
                     changeImage();
                 }
             }
@@ -303,9 +306,6 @@ public class VotingPageActivity extends Activity {
 
                                         // Store the image
                                         storeBitmap(bitmap, currentId);
-
-                                        // Make the drawingView and the playerNameView visible
-                                        setLayoutToVisible();
 
                                         // Display the first drawing
                                         changeDrawing(drawings[0], playersNames[0]);

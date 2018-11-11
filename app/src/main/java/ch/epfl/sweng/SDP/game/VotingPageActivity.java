@@ -103,6 +103,7 @@ public class VotingPageActivity extends Activity {
                 if (value == TIME_FOR_VOTING) {
                     setLayoutToVisible();
                 }
+
                 if (value < TIME_FOR_VOTING && (value % 5) == 4 && value != 0) {
                     // Switch every 5 seconds
                     changeImage();

@@ -342,7 +342,10 @@ public class Account {
         }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
         builder.addChildren(userId + ".friends." + usernameId).build()
-                .setValue(true, createCompletionListener());
+                .setValue(usernameId, createCompletionListener());
+        builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(usernameId + ".friends." + userId).build()
+                .setValue(userId, createCompletionListener());
     }
 
     /**
@@ -358,6 +361,9 @@ public class Account {
         }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
         builder.addChildren(userId + ".friends." + usernameId).build()
+                .removeValue(createCompletionListener());
+        builder = new DatabaseReferenceBuilder(usersRef);
+        builder.addChildren(usernameId + ".friends." + userId).build()
                 .removeValue(createCompletionListener());
     }
 

@@ -1,18 +1,25 @@
 package ch.epfl.sweng.SDP.game;
 
+import static java.lang.String.format;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,18 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.Locale;
-
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
-import static java.lang.String.format;
 
 public class VotingPageActivity extends Activity {
 
@@ -50,13 +46,15 @@ public class VotingPageActivity extends Activity {
     private DatabaseReference stateRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
+    private short idsAndUsernamesCounter = 0;
     private short drawingDownloadCounter = 0;
     private short changeDrawingCounter = 0;
 
     private int[] ratings;
     private int previousRating = 0;
 
-    private String[] playersNames;
+    private String[] playersNames = new String[NUMBER_OF_DRAWINGS];
+    private String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
 
     private ImageView drawingView;
     private TextView playerNameView;
@@ -150,9 +148,9 @@ public class VotingPageActivity extends Activity {
         roomID = intent.getStringExtra("RoomID");
 
         // Get the Database instance and the ranking reference
-        Database database = Database.INSTANCE;
+        final Database database = Database.INSTANCE;
         rankingRef = database
-                .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
+                .getReference(format(Locale.getDefault(), "realRooms.%s.ranking", roomID));
 
         usersRef = database.getReference("realRooms." + roomID + ".users");
         counterRef = database.getReference(PATH + ".timer.observableTime");
@@ -164,50 +162,61 @@ public class VotingPageActivity extends Activity {
         stateRef = database.getReference("realRooms." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        // Get the players' names
-        playersNames = new String[]{"Player0", "Player1", "Player2", "Player3",
-                "Player4"}; // hardcoded now, need to be given by the
-        // server/script or retrieved from database
-
-        // Get the drawingIds and save the corresponding images
-        retrieveDrawingsFromDatabaseStorage();
-
-        ratings = new int[NUMBER_OF_DRAWINGS];
-        ratingBar = findViewById(R.id.ratingBar);
-        ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                ratingBar.setIsIndicator(true);
-                ratingBar.setAlpha(0.8f);
-                // Store the rating
-                ratings[changeDrawingCounter] = (int) rating;
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get the players' ids and usernames
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    drawingsIds[idsAndUsernamesCounter] = snapshot.getKey();
+                    playersNames[idsAndUsernamesCounter++] = (String) snapshot.getValue();
+                }
 
-                //Send it to the database along with the corresponding player name
-                sendRatingToDatabase(playersNames[changeDrawingCounter]);
+                retrieveDrawingsFromDatabaseStorage();
+
+                ratings = new int[NUMBER_OF_DRAWINGS];
+                ratingBar = findViewById(R.id.ratingBar);
+                ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        ratingBar.setIsIndicator(true);
+                        ratingBar.setAlpha(0.8f);
+                        // Store the rating
+                        ratings[changeDrawingCounter] = (int) rating;
+
+                        // Send it to the database along with the corresponding player name
+                        sendRatingToDatabase(playersNames[changeDrawingCounter]);
+                    }
+                });
+
+                playerNameView = findViewById(R.id.playerNameView);
+                drawingView = findViewById(R.id.drawing);
+                timer = findViewById(R.id.timer);
+                starsAnimation = findViewById(R.id.starsAnimation);
+
+                if (!enableAnimations) {
+                    setVisibility(View.GONE, R.id.starsAnimation);
+                } else {
+                    Glide.with(getApplicationContext()).load(R.drawable.background_animation)
+                            .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+                }
+
+                // Make the drawingView and the playerNameView invisible
+                // until the drawings have been downloaded
+                setVisibility(View.INVISIBLE, drawingView, playerNameView);
+
+                Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+                playerNameView.setTypeface(typeMuro);
+                timer.setTypeface(typeMuro);
+
+                previousRating = 0;
+                addStarAnimationListener();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
             }
         });
-        playerNameView = findViewById(R.id.playerNameView);
-        drawingView = findViewById(R.id.drawing);
-        timer = findViewById(R.id.timer);
-        starsAnimation = findViewById(R.id.starsAnimation);
-
-        if (!enableAnimations) {
-            setVisibility(View.GONE, R.id.starsAnimation);
-        } else {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
-        }
-
-        // Make the drawingView and the playerNameView invisible
-        // until the drawings have been downloaded
-        setVisibility(View.INVISIBLE, drawingView, playerNameView);
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        playerNameView.setTypeface(typeMuro);
-        timer.setTypeface(typeMuro);
-
-        previousRating = 0;
-        addStarAnimationListener();
     }
 
     @Override
@@ -219,6 +228,12 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
+        if (roomID != null) {
+            Matchmaker.getInstance(new ConstantsWrapper())
+                    .leaveRoom(roomID);
+        }
+        removeAllListeners();
+        finish();
     }
 
     /**
@@ -278,22 +293,11 @@ public class VotingPageActivity extends Activity {
         playerNameView.setText(playerName);
     }
 
-    private String getRoomId() {
-        return "123456789"; // the room ID should be given by the server/script
-    }
-
     // Retrieve the drawings and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage() {
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
-
-                short counter = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    drawingsIds[counter++] = snapshot.getKey();
-                }
-
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];
                 final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
@@ -303,24 +307,26 @@ public class VotingPageActivity extends Activity {
                         refs[i] = storage.getReference().child(drawingsIds[i] + ".jpg");
 
                         // Download the image
-                        refs[i].getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                final int OFFSET = 0;
+                        refs[i].getBytes(ONE_MEGABYTE)
+                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        final int OFFSET = 0;
 
-                                // Convert the image downloaded as byte[] to Bitmap
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, OFFSET, bytes.length);
+                                        // Convert the image downloaded as byte[] to Bitmap
+                                        Bitmap bitmap = BitmapFactory
+                                                .decodeByteArray(bytes, OFFSET, bytes.length);
 
-                                // Store the image
-                                storeBitmap(bitmap);
+                                        // Store the image
+                                        storeBitmap(bitmap);
 
-                                // Make the drawingView and the playerNameView visible
-                                setVisibility(View.VISIBLE, drawingView, playerNameView);
+                                        // Make the drawingView and the playerNameView visible
+                                        setVisibility(View.VISIBLE, drawingView, playerNameView);
 
-                                // Display the first drawing
-                                changeDrawing(drawings[0], playersNames[0]);
-                            }
-                        });
+                                        // Display the first drawing
+                                        changeDrawing(drawings[0], playersNames[0]);
+                                    }
+                                });
                     }
                 }
             }
@@ -382,8 +388,7 @@ public class VotingPageActivity extends Activity {
 
                 // Get the final ranking
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ranking[counter] = snapshot.getKey();
-                    ++counter;
+                    ranking[counter++] = snapshot.getKey();
                 }
 
                 // Prepare a Bundle for passing the ranking array to the fragment
@@ -393,7 +398,7 @@ public class VotingPageActivity extends Activity {
                 // Clear the UI; buttonChangeImage and rankingButton need
                 // to be removed after testing
                 setVisibility(View.GONE, R.id.ratingBar, R.id.drawing, R.id.playerNameView,
-                        R.id.buttonChangeImage, R.id.rankingButton);
+                        R.id.buttonChangeImage, R.id.rankingButton, R.id.timer);
 
                 // Create and show the final ranking in the new fragment
                 getSupportFragmentManager().beginTransaction()
@@ -423,23 +428,9 @@ public class VotingPageActivity extends Activity {
         endVotingUsersRef.removeEventListener(listenerEndUsersVoting);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (roomID != null) {
-                Matchmaker.getInstance(new ConstantsWrapper())
-                        .leaveRoom(roomID);
-            }
-            removeAllListeners();
-            launchActivity(HomeActivity.class);
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     /**
-     * Disables the background and stars animation.
-     * Call this method in every VotingPageActivity test
+     * Disables the background and stars animation. Call this method in every VotingPageActivity
+     * test
      */
     public static void disableAnimations() {
         enableAnimations = false;

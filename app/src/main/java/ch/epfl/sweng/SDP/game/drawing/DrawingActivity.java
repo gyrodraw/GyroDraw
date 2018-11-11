@@ -39,6 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DrawingActivity extends Activity implements SensorEventListener {
     private static final String TAG = "DrawingActivity";
+
+    private boolean isVotingActivityLaunched = false;
+
     private PaintView paintView;
     private int speed;
     private int time;
@@ -68,6 +71,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 switch(stateEnum) {
                     case START_VOTING_ACTIVITY:
                         stop();
+                        isVotingActivityLaunched = true;
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext(),
                                 VotingPageActivity.class);
@@ -241,18 +245,6 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         stateRef.removeEventListener(listenerState);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(new ConstantsWrapper())
-                    .leaveRoom(roomID);
-            removeAllListeners();
-            launchActivity(HomeActivity.class);
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     /**
      * Sets the clicked button to selected and sets the corresponding color.
      *
@@ -312,5 +304,19 @@ public class DrawingActivity extends Activity implements SensorEventListener {
                 listenerTimer.onDataChange(dataSnapshot);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Does not leave the room if the activity is stopped because
+        // voting activity is launched.
+        if (!isVotingActivityLaunched) {
+            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+        }
+
+        removeAllListeners();
+        finish();
     }
 }

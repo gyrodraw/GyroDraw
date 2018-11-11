@@ -20,10 +20,11 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
-import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
+import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
+
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import com.google.firebase.database.DataSnapshot;
@@ -48,8 +49,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
 
 
 

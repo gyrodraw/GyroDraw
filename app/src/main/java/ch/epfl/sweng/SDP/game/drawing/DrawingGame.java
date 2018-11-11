@@ -41,7 +41,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
-    private String roomID;
+    private String roomId;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -72,14 +72,15 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
 
             speed = 5; //will be passed as variable in future, not hardcoded
 
+
+              timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
+              timerRef.addValueEventListener(listenerTimer);
+              stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
+              stateRef.addValueEventListener(listenerState);
+
              Intent intent = getIntent();
 
-              timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
-              timerRef.addValueEventListener(listenerTimer);
-              stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
-            stateRef.addValueEventListener(listenerState);
-
-             roomID = intent.getStringExtra("RoomID");
+             roomId = intent.getStringExtra("RoomID");
              winningWord = intent.getStringExtra("WinningWord");
 
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -108,7 +109,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
         // Does not leave the room if the activity is stopped because
         // voting activity is launched.
         if (!isVotingActivityLaunched) {
-            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
         }
 
         removeAllListeners();
@@ -131,7 +132,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext(),
                                 VotingPageActivity.class);
-                        intent.putExtra("RoomID", roomID);
+                        intent.putExtra("RoomID", roomId);
                         startActivity(intent);
                         break;
                     default:

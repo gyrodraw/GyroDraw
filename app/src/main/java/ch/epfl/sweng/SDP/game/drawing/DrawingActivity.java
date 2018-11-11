@@ -40,12 +40,9 @@ public class DrawingActivity extends Activity {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
-
     int getLayoutid() {
         return R.layout.activity_drawing_offline;
     }
-
-    private final Database database = Database.INSTANCE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,13 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class VotingPageActivity extends Activity {
 
@@ -40,7 +42,6 @@ public class VotingPageActivity extends Activity {
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
-    private short drawingDownloadCounter = 0;
     private short changeDrawingCounter = 0;
 
     private int[] ratings;
@@ -191,7 +192,7 @@ public class VotingPageActivity extends Activity {
                                       corresponding to the ranking in the DB has been implemented
         }
         */
-        if(roomID != null) {
+        if (roomID != null) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
@@ -239,6 +240,7 @@ public class VotingPageActivity extends Activity {
 
                         if (value != null) {
                             starsAnimation.addStars((int) (value - previousRating));
+                            previousRating = value.intValue();
                         }
                     }
 
@@ -266,8 +268,9 @@ public class VotingPageActivity extends Activity {
                 final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
 
                 for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
-                    if (drawingsIds[i] != null) {
-                        refs[i] = storage.getReference().child(drawingsIds[i] + ".jpg");
+                    final String currentId = drawingsIds[i];
+                    if (currentId != null) {
+                        refs[i] = storage.getReference().child(currentId + ".jpg");
 
                         // Download the image
                         refs[i].getBytes(ONE_MEGABYTE)
@@ -281,7 +284,7 @@ public class VotingPageActivity extends Activity {
                                                 .decodeByteArray(bytes, OFFSET, bytes.length);
 
                                         // Store the image
-                                        storeBitmap(bitmap);
+                                        storeBitmap(bitmap, currentId);
 
                                         // Make the drawingView and the playerNameView visible
                                         setVisibility(View.VISIBLE, drawingView, playerNameView);
@@ -303,9 +306,14 @@ public class VotingPageActivity extends Activity {
 
     }
 
-    private void storeBitmap(Bitmap bitmap) {
-        drawings[drawingDownloadCounter] = bitmap;
-        ++drawingDownloadCounter;
+    private void storeBitmap(Bitmap bitmap, String id) {
+        int index;
+        for (index = 0; index < drawingsIds.length; index++) {
+            if (drawingsIds[index].equals(id)) {
+                break;
+            }
+        }
+        drawings[index] = bitmap;
     }
 
     /* public for testing only, the users in the database should be already sorted by their ranking
@@ -380,7 +388,8 @@ public class VotingPageActivity extends Activity {
 
     /**
      * Display the drawing of the winner.
-     * @param img Drawing of the winner
+     *
+     * @param img        Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

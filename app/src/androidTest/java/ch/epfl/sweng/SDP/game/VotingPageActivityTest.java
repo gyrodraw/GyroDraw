@@ -3,9 +3,9 @@ package ch.epfl.sweng.SDP.game;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.SystemClock;
-import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.RatingBar;
@@ -33,7 +33,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 
@@ -78,7 +77,7 @@ public class VotingPageActivityTest {
     @Test
     public void changeImageButtonIsClickable() {
         onView(withId(R.id.buttonChangeImage)).check(matches(isClickable()));
-        onView(withId(R.id.rankingButton)).perform(click());
+        onView(withId(R.id.buttonChangeImage)).perform(click());
     }
 
     @Test
@@ -140,4 +139,10 @@ public class VotingPageActivityTest {
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
     }
 
+    @Test
+    public void testShowDrawingImage() {
+        Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
+        image.eraseColor(android.graphics.Color.GREEN);
+        mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
+    }
 }

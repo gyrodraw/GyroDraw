@@ -88,7 +88,7 @@
             android:layout_weight="1"
             android:paddingLeft="16dp"
             android:paddingStart="16dp"
-            android:text="@string/games_lost"
+            android:text="@string/total_games"
             android:textColor="@color/colorDrawYellow"
             android:textSize="25sp" />
 

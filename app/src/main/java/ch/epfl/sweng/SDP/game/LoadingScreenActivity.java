@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BooleanVariableListener;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -127,7 +128,7 @@ public class LoadingScreenActivity extends Activity {
     }
 
     protected void lookingForRoom() {
-        Matchmaker.getInstance(new ConstantsWrapper())
+        Matchmaker.getInstance(Account.getInstance(this))
                 .joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -139,7 +140,8 @@ public class LoadingScreenActivity extends Activity {
                 } else {
                     roomID = task.getResult();
                     if(hasLeft) {
-                        Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+                        Matchmaker.getInstance(Account.getInstance(getApplicationContext()))
+                                .leaveRoom(roomID);
                         finish();
                     } else {
                         wordsVotesRef = database.getReference(
@@ -173,5 +175,11 @@ public class LoadingScreenActivity extends Activity {
     protected void onStart() {
         super.onStart();
         hasLeft = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

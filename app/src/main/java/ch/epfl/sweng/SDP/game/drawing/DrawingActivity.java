@@ -34,6 +34,7 @@ import android.widget.ToggleButton;
 import ch.epfl.sweng.SDP.Activity;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
@@ -47,11 +48,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+
 // TODO: refactor code so this is a subclass
 public class DrawingActivity extends Activity {
     protected static final String TAG = "DrawingActivity";
     protected PaintView paintView;
     protected Handler handler;
+
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+
 
     private String roomID;
     private String winningWord;
@@ -71,6 +77,7 @@ public class DrawingActivity extends Activity {
     private final Database database = Database.INSTANCE;
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,15 +126,17 @@ public class DrawingActivity extends Activity {
         paintView.clear();
     }
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(new ConstantsWrapper())
+            Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
             launchActivity(HomeActivity.class);
             finish();
         }
         return super.onKeyDown(keyCode, event);
+
     }
 
     /**
@@ -180,6 +189,7 @@ public class DrawingActivity extends Activity {
         Log.d(TAG, "Exiting drawing view");
         this.finish();
     }
+
 
 
 }

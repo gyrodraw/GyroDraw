@@ -22,9 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 
 public class DrawingGame extends DrawingActivity implements SensorEventListener {
@@ -36,6 +38,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
     private final Database database = Database.INSTANCE;
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
+    private boolean isVotingActivityLaunched = false;
 
     private String roomID;
 
@@ -90,6 +93,25 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
         } else {
             Log.d(TAG, "We couldn't find the accelerometer on device.");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Does not leave the room if the activity is stopped because
+        // voting activity is launched.
+        if (!isVotingActivityLaunched) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+        }
+
+        removeAllListeners();
+        finish();
+    }
+
+    private void removeAllListeners() {
+        timerRef.removeEventListener(listenerTimer);
+        stateRef.removeEventListener(listenerState);
     }
 
     protected final ValueEventListener listenerState = new ValueEventListener() {
@@ -173,5 +195,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             }
         });
     }
+
+
 
 }

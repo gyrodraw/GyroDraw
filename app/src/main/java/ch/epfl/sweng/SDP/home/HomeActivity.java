@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -35,7 +34,6 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 import com.bumptech.glide.Glide;
-
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,26 +51,8 @@ public class HomeActivity extends Activity {
     private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
-    private final String user = "aa";
 
-    // To be removed (for testing purposes only)
-    private final ValueEventListener listenerAllReady = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Long value = dataSnapshot.getValue(Long.class);
-            if (value == 1) {
-                launchActivity(VotingPageActivity.class);
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
-        }
-    };
     private Dialog profileWindow;
-    private DatabaseReference dbRef;
-    private DatabaseReference dbRefTimer;
 
     /**
      * Disables the background animation. Call this method in every HomeActivity test
@@ -90,20 +70,18 @@ public class HomeActivity extends Activity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
-        // Testing method
-        Database database = Database.INSTANCE;
-        dbRef = database.getReference("mockRooms.ABCDE.connectedUsers");
-
-        dbRefTimer = database.getReference("mockRooms.ABCDE.timer.startTimer");
-        dbRefTimer.addValueEventListener(listenerAllReady);
-        initUsersDatabase();
-
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button offlineButton = findViewById(R.id.playoffline);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
+        final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
+        final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+
+        usernameButton.setText(Account.getInstance(this).getUsername());
+        trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
+        starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));
 
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -113,8 +91,11 @@ public class HomeActivity extends Activity {
             Glide.with(this).load(R.drawable.background_animation)
                     .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
         }
+
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
+        trophiesCount.setTypeface(typeMuro);
+        starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
@@ -287,18 +268,18 @@ public class HomeActivity extends Activity {
     private void showPopup() {
         profileWindow.setContentView(R.layout.activity_pop_up);
 
-        Account userAccount = new Account(1,2,3,4);
+        Account userAccount = Account.getInstance(this);
 
         this.setMuroFont();
 
         TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
         gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
         TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
-        gamesLostNumber.setText(Integer.toString(userAccount.getMatchesLost()));
+        gamesLostNumber.setText(Integer.toString(userAccount.getTotalMatches()));
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
         averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
-        maxTrophiesNumber.setText(Integer.toString(userAccount.getTrophies()));
+        maxTrophiesNumber.setText(Integer.toString(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
@@ -308,29 +289,5 @@ public class HomeActivity extends Activity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
-    }
-
-    /**
-     * Callback function when clicking the voting button. Sets the user ready in the database.
-     *
-     * @param view View referencing the button
-     */
-    public void startVotingPage(View view) {
-        // For testing purposes only
-        dbRef.child(user).setValue(1);
-    }
-
-    // Testing purpose method
-    private void initUsersDatabase() {
-        dbRef.child(user).setValue(0);
-        dbRef.child("bb").setValue(1);
-        dbRef.child("cc").setValue(1);
-        dbRef.child("dd").setValue(1);
-        dbRef.child("ee").setValue(1);
-        DatabaseReference timerRef = dbRef.getParent().child("timer");
-        timerRef.child("endTime").setValue(0);
-        timerRef.child("observableTime").setValue(0);
-        timerRef.child("startTimer").setValue(0);
-        timerRef.child("usersEndVoting").setValue(0);
     }
 }

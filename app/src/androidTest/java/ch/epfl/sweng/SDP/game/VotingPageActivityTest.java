@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
@@ -76,7 +77,7 @@ public class VotingPageActivityTest {
     @Test
     public void changeImageButtonIsClickable() {
         onView(withId(R.id.buttonChangeImage)).check(matches(isClickable()));
-        onView(withId(R.id.rankingButton)).perform(click());
+        onView(withId(R.id.buttonChangeImage)).perform(click());
     }
 
     @Test
@@ -138,4 +139,10 @@ public class VotingPageActivityTest {
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
     }
 
+    @Test
+    public void testShowDrawingImage() {
+        Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
+        image.eraseColor(android.graphics.Color.GREEN);
+        mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
+    }
 }

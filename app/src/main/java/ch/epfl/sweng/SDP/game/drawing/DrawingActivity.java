@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
@@ -39,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DrawingActivity extends Activity implements SensorEventListener {
     private static final String TAG = "DrawingActivity";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private boolean isVotingActivityLaunched = false;
 
@@ -120,9 +122,9 @@ public class DrawingActivity extends Activity implements SensorEventListener {
 
         ((TextView) findViewById(R.id.winningWord)).setText(winningWord);
 
-        timerRef = database.getReference("realRooms." + roomID + ".timer.observableTime");
+        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
-        stateRef = database.getReference("realRooms." + roomID + ".state");
+        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),
@@ -313,7 +315,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         // Does not leave the room if the activity is stopped because
         // voting activity is launched.
         if (!isVotingActivityLaunched) {
-            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
         }
 
         removeAllListeners();

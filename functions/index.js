@@ -11,51 +11,20 @@ const WAITING_TIME_CHOOSE_WORDS = 10;
 const WAITING_TIME_DRAWING = 10;
 const WAITING_TIME_VOTING = 10;
 const parentRoomID = "realRooms/";
-var StateEnumMock = Object.freeze({"votingPage":1, "endVotingPage":2});
+
 var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "VotingPage": 3, "EndVoting" : 4});
 var PlayingEnum = Object.freeze({"Idle": 0, "PlayingButJoinable": 1, "Playing": 2});
 var state = 0;
 
 admin.initializeApp();
 
-// Mock to be removed soon
-exports.connectedUsers = functions.database.ref('/mockRooms/ABCDE/connectedUsers').onWrite((event) => {
-    return admin.database().ref('/mockRooms/ABCDE/connectedUsers').once("value")
-    .then(snapshot => {
-      checkUsersReady(StateEnumMock.endVotingPage, 'mockRooms/ABCDE/timer/usersEndVoting', snapshot);
-      checkUsersReady(StateEnumMock.votingPage, 'mockRooms/ABCDE/timer/startTimer', snapshot);
-      return;
-    });
-});
-
-// Mock to be removed soon
 function checkUsersReady(state, path, snapshot) {
   let ready = true;
-  snapshot.forEach( (child) => {
+  /*snapshot.child("users").forEach((child) => {
     if(child.val() !== state) {
       ready = false;
     }
-  });
-
-  if(ready) {
-    admin.database().ref(path).set(1);
-    if(state === StateEnumMock.endVotingPage) {
-      admin.database().ref('mockRooms/ABCDE/timer/endTime').set(0);
-    }
-    console.log("Ready");
-  } else {
-    admin.database().ref(path).set(0);
-    console.log("Not ready");
-  }
-}
-
-function checkUsersReady2(state, path, snapshot) {
-  let ready = true;
-  snapshot.child("users").forEach((child) => {
-    if(child.val() !== state) {
-      ready = false;
-    }
-  });
+  });*/
 
   if(ready && snapshot.child("users").numChildren() >= mockMaxPlayers) {
     if(snapshot.child("state").val() === StateEnum.Idle || 
@@ -69,29 +38,6 @@ function checkUsersReady2(state, path, snapshot) {
   return;
 }
 
-// Mock to be removed soon
-exports.startTimer = functions.database.ref('/mockRooms/ABCDE/timer/startTimer').onWrite((event) => {
-  return admin.database().ref('/mockRooms/ABCDE/timer/startTimer').once("value")
-  .then(snapshot => {
-    if(snapshot.val() === 1) {
-      console.log("Timer started");
-
-      // Wait in seconds
-      return functionTimer(20,
-            elapsedTime => {
-                admin.database().ref('/mockRooms/ABCDE/timer/observableTime').set(elapsedTime);
-            })
-            .then(totalTime => {
-                return console.log('Timer of ' + totalTime + ' has finished.');
-            })
-            .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
-            .then(() => admin.database().ref('/mockRooms/ABCDE/timer/endTime').set(1))
-            .then(() => event.data.ref.remove())
-            .catch(error => console.error(error));
-    }
-    return;
-  })
-});
 
 function functionTimer (seconds, state, roomID, call) {
   return new Promise((resolve, reject) => {
@@ -116,7 +62,6 @@ function functionTimer (seconds, state, roomID, call) {
       });
 
       if(stop === true){
-        console.log("Timer should be stopped");
         stop = false;
         throw new "Timer stopped";
       }
@@ -184,6 +129,7 @@ exports.joinGame = functions.https.onRequest((req, res) => {
 exports.joinGame2 = functions.https.onCall((data, context) => {
   console.log("Started method");
   // Grab the text parameter.
+  const id = data.id;
   const username = data.username;
   let _roomID;
   console.log(username);
@@ -192,25 +138,26 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   return admin.database().ref(parentRoomID).once('value', (snapshot) => {
     return snapshot.forEach((roomID) => {
         console.log(roomID.child("users").numChildren());
-        const playingVal = snapshot.child(roomID.key + "/playing").val();
+        const playingVal = roomID.child("playing").val();
+        console.log("Playing value: " + playingVal);
 
         // Check if the room is full, if the user already joined a room and if 
         // the game is not already playing
-        if(roomID.child("users").numChildren() < maxPlayers && !alreadyJoined
-          && playingVal !== StateEnum.Playing) {
+        if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
+          && playingVal !== PlayingEnum.Playing) {
           const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
           const path = parentRoomID + roomID.key;
           _roomID = roomID.key;
           if(roomID.hasChild("users")) {
-            if(roomID.child("users/" + username).exists()) {
-              admin.database().ref(path).child("users/" + username).remove();
+            if(roomID.child("users/" + id).exists()) {
+              admin.database().ref(path).child("users/" + id).remove();
             }
-            admin.database().ref(path).child("users").update({[username]:0});
+            admin.database().ref(path).child("users").update({[id]:username});
           } else {
-            if(roomID.child("users/" + username).exists()) {
-              admin.database().ref(path).child("users/" + username).remove();
+            if(roomID.child("users/" + id).exists()) {
+              admin.database().ref(path).child("users/" + id).remove();
             }
-            admin.database().ref(path).update({"users":{[username]:0}});
+            admin.database().ref(path).update({"users":{[id]:username}});
           }
           alreadyJoined = true;
         }
@@ -245,7 +192,7 @@ function addWordsToDatabase(roomID) {
 
 }
 
-exports.chooseWordsGeneration = functions.database.ref(parentRoomID + "{roomID}/users").onWrite((change, context) => {
+exports.onUsersChange = functions.database.ref(parentRoomID + "{roomID}/users").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
 
@@ -258,7 +205,7 @@ exports.chooseWordsGeneration = functions.database.ref(parentRoomID + "{roomID}/
       addWordsToDatabase(roomID);
     }
 
-    return checkUsersReady2(0, parentRoomID + roomID, snapshot);
+    return checkUsersReady(0, parentRoomID + roomID, snapshot);
   });
 });
 

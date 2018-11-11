@@ -120,17 +120,6 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
 
-  <Button
-    android:id="@+id/buttonVotingPage"
-    android:textStyle="bold"
-    android:layout_width="127dp"
-    android:layout_height="39dp"
-    android:background="@null"
-    android:onClick="startVotingPage"
-    android:text="Voting page"
-    android:textColor="@color/colorGrey"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
   <TextView
     android:id="@+id/trophiesCount"
     android:layout_width="wrap_content"

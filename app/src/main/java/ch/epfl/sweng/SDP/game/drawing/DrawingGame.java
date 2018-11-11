@@ -39,6 +39,8 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
     private DatabaseReference stateRef;
     private boolean isVotingActivityLaunched = false;
 
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
+
     private String roomID;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
@@ -71,6 +73,11 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             speed = 5; //will be passed as variable in future, not hardcoded
 
              Intent intent = getIntent();
+
+              timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
+              timerRef.addValueEventListener(listenerTimer);
+              stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+            stateRef.addValueEventListener(listenerState);
 
              roomID = intent.getStringExtra("RoomID");
              winningWord = intent.getStringExtra("WinningWord");
@@ -108,7 +115,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
         finish();
     }
 
-    private void removeAllListeners() {
+    protected void removeAllListeners() {
         timerRef.removeEventListener(listenerTimer);
         stateRef.removeEventListener(listenerState);
     }

@@ -100,7 +100,6 @@ public class VotingPageActivity extends Activity {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
                 timer.setText(String.valueOf(value));
-                changeImage(null);
             }
         }
 

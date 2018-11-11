@@ -22,6 +22,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -40,6 +45,7 @@ public class VotingPageActivity extends Activity {
     private DatabaseReference stateRef;
     private DatabaseReference timerRef;
     private DatabaseReference usersRef;
+    private DatabaseReference finishedRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
@@ -61,6 +67,8 @@ public class VotingPageActivity extends Activity {
 
     private static boolean enableAnimations = true;
 
+    private Map<String, Integer> finalRanking;
+
     public int[] getRatings() {
         return ratings.clone();
     }
@@ -75,7 +83,7 @@ public class VotingPageActivity extends Activity {
                 switch (stateEnum) {
                     case END_VOTING_ACTIVITY:
                         // Start ranking activity
-                        startRankingFragment();
+                        retrieveFinalRanking();
                         break;
                     default:
                 }
@@ -130,8 +138,9 @@ public class VotingPageActivity extends Activity {
         timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerCounter);
 
-        usersRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        finishedRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
 
+        usersRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -259,6 +268,25 @@ public class VotingPageActivity extends Activity {
                     }
                 });
 
+    }
+
+    private void retrieveFinalRanking() {
+        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            Map<String, Integer> finalRanking = new HashMap<>();
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                }
+                setFinishedCollectingRanking();
+                startRankingFragment();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     // Change drawing and player name in the UI.
@@ -395,6 +423,23 @@ public class VotingPageActivity extends Activity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 throw databaseError.toException();
+            }
+        });
+    }
+
+    private void setFinishedCollectingRanking() {
+        finishedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+                if(value != null) {
+                    finishedRef.setValue(++value);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

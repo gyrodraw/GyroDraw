@@ -23,7 +23,6 @@ public class DrawingGameWithTimer extends DrawingGame {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  setContentView();
 
         time = 60000; //will be passed as variable in future, not hardcoded
         timeInterval = 1000;  //will be passed as variable in future, not hardcoded

@@ -16,11 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -28,6 +23,10 @@ import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class DrawingGame extends DrawingActivity implements SensorEventListener {
 
@@ -68,12 +67,12 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-          //  setContentView(R.layout.activity_drawing);
+
             speed = 5; //will be passed as variable in future, not hardcoded
 
              Intent intent = getIntent();
 
-            roomID = intent.getStringExtra("RoomID");
+             roomID = intent.getStringExtra("RoomID");
              winningWord = intent.getStringExtra("WinningWord");
 
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

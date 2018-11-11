@@ -10,11 +10,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
-import static junit.framework.TestCase.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
@@ -25,11 +20,22 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
-import com.google.firebase.database.DataSnapshot;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.concurrent.TimeUnit;
+
+import static junit.framework.TestCase.assertEquals;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -41,7 +47,6 @@ import org.mockito.Mockito;
 
 import org.mockito.MockitoAnnotations;
 
-import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
@@ -223,13 +228,13 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void testOnState2Change() {
+    public void testOnState3Change() {
         Intents.init();
 
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
-        intended(hasComponent(DrawingActivity.class.getName()));
+        intended(hasComponent(DrawingGameWithTimer.class.getName()));
         Intents.release();
     }
 

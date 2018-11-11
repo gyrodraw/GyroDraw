@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static java.lang.String.format;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,7 +31,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import static java.lang.String.format;
+
 import java.util.Locale;
+
 
 public class WaitingPageActivity extends Activity {
 

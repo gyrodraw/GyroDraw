@@ -1,28 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Build;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.VisibleForTesting;
 
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,22 +13,16 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import ch.epfl.sweng.SDP.Activity;
 
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.google.android.gms.common.util.ArrayUtils;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 
 // TODO: refactor code so this is a subclass
@@ -55,12 +31,7 @@ public class DrawingActivity extends Activity {
     protected PaintView paintView;
     protected Handler handler;
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
-
-
-
-    private String roomID;
-    private String winningWord;
+    private String roomId;
     ToggleButton flyDraw;
 
     private ImageView[] colorButtons;
@@ -75,9 +46,6 @@ public class DrawingActivity extends Activity {
     }
 
     private final Database database = Database.INSTANCE;
-    private DatabaseReference timerRef;
-    private DatabaseReference stateRef;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +99,7 @@ public class DrawingActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Matchmaker.getInstance(Account.getInstance(this))
-                    .leaveRoom(roomID);
+                    .leaveRoom(roomId);
             launchActivity(HomeActivity.class);
             finish();
         }

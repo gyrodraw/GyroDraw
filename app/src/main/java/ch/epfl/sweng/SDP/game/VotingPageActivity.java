@@ -37,6 +37,7 @@ public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+    private static final int TIME_FOR_VOTING = 10;
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -75,6 +76,7 @@ public class VotingPageActivity extends Activity {
                 switch(stateEnum) {
                     case END_VOTING_ACTIVITY:
                         // Start ranking activity
+                        startRankingFragment();
                         break;
                     default:
                 }
@@ -93,6 +95,12 @@ public class VotingPageActivity extends Activity {
             Integer value = dataSnapshot.getValue(Integer.class);
             if(value != null) {
                 timer.setText(String.valueOf(value));
+
+                // Switch every 2 seconds
+                if((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
+                    changeDrawing(drawings[changeDrawingCounter++ % NUMBER_OF_DRAWINGS],
+                            playersNames[changeDrawingCounter++ % NUMBER_OF_DRAWINGS]);
+                }
             }
         }
 
@@ -117,7 +125,7 @@ public class VotingPageActivity extends Activity {
         // Get the Database instance and the ranking reference
         Database database = Database.INSTANCE;
         rankingRef = database
-                .getReference(format(Locale.getDefault(), "rooms.%s.ranking", getRoomId()));
+                .getReference(format(Locale.getDefault(), TOP_ROOM_NODE_ID + ".%s.ranking", roomID));
 
         stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
@@ -216,10 +224,6 @@ public class VotingPageActivity extends Activity {
         playerNameView.setText(playerName);
     }
 
-    private String getRoomId() {
-        return "123456789"; // the room ID should be given by the server/script
-    }
-
     // Retrieve the drawings corresponding to the given ids from the
     // storage and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage(String[] drawingsIds) {
@@ -294,6 +298,10 @@ public class VotingPageActivity extends Activity {
      * @param view View referencing the button
      */
     public void showFinalRanking(View view) {
+        startRankingFragment();
+    }
+
+    private void startRankingFragment() {
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -313,7 +321,7 @@ public class VotingPageActivity extends Activity {
                 // Clear the UI; buttonChangeImage and rankingButton need
                 // to be removed after testing
                 setVisibility(View.GONE, R.id.ratingBar, R.id.drawing, R.id.playerNameView,
-                        R.id.buttonChangeImage, R.id.rankingButton);
+                        R.id.buttonChangeImage, R.id.rankingButton, R.id.timer);
 
                 // Create and show the final ranking in the new fragment
                 getSupportFragmentManager().beginTransaction()

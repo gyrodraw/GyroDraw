@@ -12,16 +12,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -29,6 +19,15 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class VotingPageActivity extends Activity {
 
@@ -96,7 +95,7 @@ public class VotingPageActivity extends Activity {
                 timer.setText(String.valueOf(value));
 
                 // Switch every 2 seconds
-                if((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
+                if ((value % 2) == 0 && value != TIME_FOR_VOTING && value != 0) {
                     changeImage();
                 }
             }
@@ -147,7 +146,8 @@ public class VotingPageActivity extends Activity {
                 ratingBar = findViewById(R.id.ratingBar);
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                     @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    public void onRatingChanged(RatingBar ratingBar, float rating,
+                            boolean fromUser) {
                         ratingBar.setIsIndicator(true);
                         ratingBar.setAlpha(0.8f);
                         // Store the rating
@@ -214,7 +214,7 @@ public class VotingPageActivity extends Activity {
      */
     public void startHomeActivity(View view) {
         // Remove the drawings from FirebaseStorage
-        for (String id: drawingsIds) {
+        for (String id : drawingsIds) {
             FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
         }
 
@@ -282,26 +282,12 @@ public class VotingPageActivity extends Activity {
                         refs[i] = storage.getReference().child(currentId + ".jpg");
 
                         // Download the image
-                        refs[i].getBytes(ONE_MEGABYTE)
-                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        final int OFFSET = 0;
-
-                                        // Convert the image downloaded as byte[] to Bitmap
-                                        Bitmap bitmap = BitmapFactory
-                                                .decodeByteArray(bytes, OFFSET, bytes.length);
-
-                                        // Store the image
-                                        storeBitmap(bitmap, currentId);
-
-                                        // Make the drawingView and the playerNameView visible
-                                        setVisibility(View.VISIBLE, drawingView, playerNameView);
-
-                                        // Display the first drawing
-                                        changeDrawing(drawings[0], playersNames[0]);
-                                    }
-                                });
+                        boolean downloaded = downloadImage(refs[i], ONE_MEGABYTE, currentId)
+                                .isSuccessful();
+                        while (!downloaded) {
+                            downloaded = downloadImage(refs[i], ONE_MEGABYTE, currentId)
+                                    .isSuccessful();
+                        }
                     }
                 }
             }
@@ -311,8 +297,34 @@ public class VotingPageActivity extends Activity {
                 throw databaseError.toException();
             }
         });
+    }
 
+    private Task downloadImage(StorageReference ref, long ONE_MEGABYTE, final String currentId) {
+        return ref.getBytes(ONE_MEGABYTE)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        if (bytes != null) {
+                            final int OFFSET = 0;
 
+                            // Convert the image downloaded as byte[] to Bitmap
+                            Bitmap bitmap = BitmapFactory
+                                    .decodeByteArray(bytes, OFFSET, bytes.length);
+
+                            // Store the image
+                            storeBitmap(bitmap, currentId);
+
+                            // Make the drawingView and the playerNameView visible
+                            setVisibility(View.VISIBLE, drawingView,
+                                    playerNameView);
+
+                            // Display the first drawing
+                            changeDrawing(drawings[0], playersNames[0]);
+                        } else {
+
+                        }
+                    }
+                });
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {
@@ -402,7 +414,7 @@ public class VotingPageActivity extends Activity {
     /**
      * Display the drawing of the winner.
      *
-     * @param img        Drawing of the winner
+     * @param img Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

@@ -220,7 +220,7 @@ public class VotingPageActivity extends Activity {
         // Remove the drawings from FirebaseStorage
         for (String id : drawingsIds) {
             // Remove this after testing
-            if (!id.substring(0, 4).equals("user")) {
+            if (id != null && !id.substring(0, 4).equals("user")) {
                 FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
             }
         }

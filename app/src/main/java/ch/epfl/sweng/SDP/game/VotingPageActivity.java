@@ -40,6 +40,7 @@ public class VotingPageActivity extends Activity {
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
     private DatabaseReference timerRef;
+    private DatabaseReference usersRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short drawingDownloadCounter = 0;
@@ -120,8 +121,10 @@ public class VotingPageActivity extends Activity {
         stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer/observableTime");
+        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerCounter);
+
+        usersRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
 
         // Get the drawingIds; hardcoded now, need to be given by the server/script
         String[] drawingsIds = new String[]{"1539331767.jpg", "1539297081.jpg", "1539331311.jpg",

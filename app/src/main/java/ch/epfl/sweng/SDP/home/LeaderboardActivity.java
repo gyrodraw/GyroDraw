@@ -7,9 +7,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +39,7 @@ public class LeaderboardActivity extends Activity {
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private int yellow;
+    private int lightGray;
     private Typeface typeMuro;
     private LinearLayout leaderboard;
 
@@ -50,6 +53,7 @@ public class LeaderboardActivity extends Activity {
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Resources res = getResources();
         yellow = res.getColor(R.color.colorDrawYellow);
+        lightGray = res.getColor(R.color.colorLightGrey);
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
@@ -158,18 +162,30 @@ public class LeaderboardActivity extends Activity {
         private LinearLayout toLayout(final Context context, int index) {
             TextView usernameView = new TextView(context);
             TextView trophiesView = new TextView(context);
-            final Button friendsButton = new Button(context);
+            final ImageView friendsButton = new ImageView(context);
 
+            LinearLayout.LayoutParams usernameParams = new LinearLayout.LayoutParams(0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, 4);
+            LinearLayout.LayoutParams trophiesParams = new LinearLayout.LayoutParams(0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, 2);
+            LinearLayout.LayoutParams friendsParams = new LinearLayout.LayoutParams(0, 100, 1);
+
+            usernameParams.gravity = Gravity.CENTER;
+            trophiesParams.gravity = Gravity.CENTER;
+            friendsParams.gravity = Gravity.CENTER;
+
+            usernameView.setLayoutParams(usernameParams);
+            trophiesView.setLayoutParams(trophiesParams);
+            friendsButton.setLayoutParams(friendsParams);
+
+            friendsButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
             friendsButton.setTag("friendsButton" + index);
 
             setTextSizeAndColor(usernameView, username, 25, yellow);
-            setTextSizeAndColor(trophiesView, trophies.toString(), 25, Color.LTGRAY);
+            setTextSizeAndColor(trophiesView, trophies.toString(), 25, lightGray);
 
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-
-            usernameView.setLayoutParams(
-                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            trophiesView.setPadding(0, 0, 30, 0);
 
             // initializes the friendsButton on first view of leaderboard
             isFriendWithCurrentUser(context, initializeFriendsButton(friendsButton));
@@ -206,7 +222,7 @@ public class LeaderboardActivity extends Activity {
                     .addListenerForSingleValueEvent(listener);
         }
 
-        private ValueEventListener initializeFriendsButton(final Button friendButton) {
+        private ValueEventListener initializeFriendsButton(final ImageView friendButton) {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -225,7 +241,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         private ValueEventListener changeFriendsButtonBackgroundOnClick(
-                final Context context, final Button friendButton) {
+                final Context context, final ImageView friendButton) {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

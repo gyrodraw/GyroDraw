@@ -55,7 +55,6 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_weight="5"
                 android:ems="10"
                 android:hint="@string/enter_name_here"
                 android:inputType="text"

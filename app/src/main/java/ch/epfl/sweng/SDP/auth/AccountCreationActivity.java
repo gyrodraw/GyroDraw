@@ -57,6 +57,7 @@ public class AccountCreationActivity extends Activity {
             Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
+
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 usernameTaken.setText(getString(R.string.usernameTaken));

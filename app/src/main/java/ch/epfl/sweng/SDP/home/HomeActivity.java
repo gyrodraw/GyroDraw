@@ -62,6 +62,11 @@ public class HomeActivity extends Activity {
 
         overridePendingTransition(0, 0);
 
+        if (enableBackgroundAnimation) {
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
+        }
+
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
@@ -80,11 +85,6 @@ public class HomeActivity extends Activity {
         TextView leagueText = findViewById(R.id.leagueText);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
-
-        if (enableBackgroundAnimation) {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
-        }
 
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);

@@ -239,7 +239,7 @@ public class AccountCreationActivityAndAccountTest {
     public void testCreateAccountWithNullName() {
         onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
         onView(ViewMatchers.withId(R.id.usernameTaken))
-                .check(matches(withText("Username must not be empty.")));
+                .check(matches(withText("Username must not be empty")));
     }
 
     @Test

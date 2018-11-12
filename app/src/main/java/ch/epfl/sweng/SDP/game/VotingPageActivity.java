@@ -121,6 +121,29 @@ public class VotingPageActivity extends Activity {
         drawingView = findViewById(R.id.drawing);
         timer = findViewById(R.id.timer);
 
+        playerNameView = findViewById(R.id.playerNameView);
+        drawingView = findViewById(R.id.drawing);
+        timer = findViewById(R.id.timer);
+        starsAnimation = findViewById(R.id.starsAnimation);
+        ratingBar = findViewById(R.id.ratingBar);
+
+        if (!enableAnimations) {
+            setVisibility(View.GONE, R.id.starsAnimation);
+        } else {
+            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
+                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
+        }
+
+        // Make the layout invisible until the drawings have been downloaded
+        setVisibility(View.GONE, ratingBar, playerNameView,
+                drawingView, timer, starsAnimation);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        playerNameView.setTypeface(typeMuro);
+        timer.setTypeface(typeMuro);
+
         // Get the Database instance and the ranking reference
         final Database database = Database.INSTANCE;
         rankingRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
@@ -132,7 +155,6 @@ public class VotingPageActivity extends Activity {
         timerRef.addValueEventListener(listenerCounter);
 
         usersRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
-
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -145,7 +167,6 @@ public class VotingPageActivity extends Activity {
                 retrieveDrawingsFromDatabaseStorage();
 
                 ratings = new int[NUMBER_OF_DRAWINGS];
-                ratingBar = findViewById(R.id.ratingBar);
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating,
@@ -159,28 +180,6 @@ public class VotingPageActivity extends Activity {
                         sendRatingToDatabase(playersNames[changeDrawingCounter]);
                     }
                 });
-
-                playerNameView = findViewById(R.id.playerNameView);
-                drawingView = findViewById(R.id.drawing);
-                timer = findViewById(R.id.timer);
-                starsAnimation = findViewById(R.id.starsAnimation);
-
-                if (!enableAnimations) {
-                    setVisibility(View.GONE, R.id.starsAnimation);
-                } else {
-                    Glide.with(getApplicationContext()).load(R.drawable.background_animation)
-                            .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
-                    Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
-                            .into((ImageView) findViewById(R.id.waitingAnimationDots));
-                }
-
-                // Make the layout invisible until the drawings have been downloaded
-                setVisibility(View.GONE, ratingBar, playerNameView,
-                        drawingView, timer, starsAnimation);
-
-                Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-                playerNameView.setTypeface(typeMuro);
-                timer.setTypeface(typeMuro);
 
                 previousRating = 0;
                 addStarAnimationListener();

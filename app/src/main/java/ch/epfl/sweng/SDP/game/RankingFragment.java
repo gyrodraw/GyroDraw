@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.utils.SortUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,7 +81,7 @@ public class RankingFragment extends ListFragment {
                     finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
                 }
 
-                List<String> rankingUsernames = sortByValue(finalRanking);
+                List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
                         rankingUsernames.toArray(new String[rankingUsernames.size()]));
                 setListAdapter(adapter);
@@ -110,32 +111,6 @@ public class RankingFragment extends ListFragment {
             }
         });
     }
-
-    /**
-     * @see "https://stackoverflow.com/questions/109383/sort-a-mapkey-value-by-values"
-     * @param map
-     * @param <K>
-     * @param <V>
-     * @return
-     */
-    public static <K, V> List<K> sortByValue(Map<K, V> map) {
-        List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
-        Collections.sort(list, new Comparator<Object>() {
-            @SuppressWarnings("unchecked")
-            public int compare(Object o1, Object o2) {
-                return -((Comparable<V>) ((Map.Entry<K, V>) (o1)).getValue()).compareTo(((Map.Entry<K, V>) (o2)).getValue());
-            }
-        });
-
-        List<K> result = new ArrayList<>();
-        for (Iterator<Map.Entry<K, V>> it = list.iterator(); it.hasNext();) {
-            Map.Entry<K, V> entry = it.next();
-            result.add(entry.getKey());
-        }
-
-        return result;
-    }
-
     private class RankingAdapter extends ArrayAdapter<String> {
 
         String[] players;

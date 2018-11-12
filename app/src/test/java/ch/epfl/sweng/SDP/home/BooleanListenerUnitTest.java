@@ -3,7 +3,7 @@ package ch.epfl.sweng.SDP.home;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import ch.epfl.sweng.SDP.BooleanVariableListener;
+import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

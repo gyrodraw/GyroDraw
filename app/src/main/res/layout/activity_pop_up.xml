@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@color/colorPrimaryDark"
+    android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -173,6 +174,7 @@
         android:id="@+id/signOutButton"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorGrey"
         android:text="@string/sign_out"

@@ -172,6 +172,10 @@ public class Account {
         return instance;
     }
 
+    public static void deleteAccount() {
+        instance = null;
+    }
+
     public void setUsersRef(DatabaseReference usersRef) {
         this.usersRef = usersRef;
     }

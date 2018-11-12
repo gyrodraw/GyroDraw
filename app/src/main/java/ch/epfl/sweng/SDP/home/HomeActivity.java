@@ -103,6 +103,7 @@ public class HomeActivity extends Activity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            Account.deleteAccount();
                             toastSignOut.cancel();
                             launchActivity(MainActivity.class);
                             finish();
@@ -222,13 +223,13 @@ public class HomeActivity extends Activity {
         this.setMuroFont();
 
         TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
-        gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
+        gamesWonNumber.setText(String.valueOf(userAccount.getMatchesWon()));
         TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
-        gamesLostNumber.setText(Integer.toString(userAccount.getTotalMatches()));
+        gamesLostNumber.setText(String.valueOf(userAccount.getTotalMatches()));
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
-        averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
+        averageStarsNumber.setText(String.valueOf(userAccount.getAverageRating()));
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
-        maxTrophiesNumber.setText(Integer.toString(userAccount.getMaxTrophies()));
+        maxTrophiesNumber.setText(String.valueOf(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);

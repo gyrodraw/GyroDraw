@@ -15,14 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -30,6 +30,7 @@ import java.util.LinkedList;
 public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
+    private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     LinearLayout leaderboard;
 
     @Override
@@ -71,7 +72,7 @@ public class LeaderboardActivity extends Activity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, "There was an error with Firebase.");
+                        Log.d(TAG, FIREBASE_ERROR);
                     }
                 });
     }
@@ -176,7 +177,7 @@ public class LeaderboardActivity extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, "There was an error with Firebase.");
+                    Log.d(TAG, FIREBASE_ERROR);
                 }
             };
         }
@@ -197,7 +198,7 @@ public class LeaderboardActivity extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, "There was an error with Firebase.");
+                    Log.d(TAG, FIREBASE_ERROR);
                 }
             };
         }

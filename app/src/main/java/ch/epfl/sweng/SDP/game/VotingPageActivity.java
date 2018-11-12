@@ -28,10 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class VotingPageActivity extends Activity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
@@ -64,8 +60,6 @@ public class VotingPageActivity extends Activity {
 
     private static boolean enableAnimations = true;
 
-    private Map<String, Integer> finalRanking;
-
     public int[] getRatings() {
         return ratings.clone();
     }
@@ -80,7 +74,7 @@ public class VotingPageActivity extends Activity {
                 switch (stateEnum) {
                     case END_VOTING_ACTIVITY:
                         // Start ranking activity
-                        retrieveFinalRanking();
+                        startRankingFragment();
                         break;
                     default:
                 }
@@ -282,25 +276,6 @@ public class VotingPageActivity extends Activity {
                 });
     }
 
-    private void retrieveFinalRanking() {
-        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            Map<String, Integer> finalRanking = new HashMap<>();
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
-                }
-                setFinishedCollectingRanking();
-                startRankingFragment();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-    }
-
     // Change drawing and player name in the UI.
     private void changeDrawing(Bitmap img, String playerName) {
         drawingView.setImageBitmap(img);
@@ -412,7 +387,7 @@ public class VotingPageActivity extends Activity {
 
                 // Prepare a Bundle for passing the ranking array to the fragment
                 Bundle bundle = new Bundle();
-                bundle.putStringArray("Ranking", ranking);
+                bundle.putString("roomID", roomID);
 
                 // Clear the UI; buttonChangeImage and rankingButton need
                 // to be removed after testing
@@ -430,23 +405,6 @@ public class VotingPageActivity extends Activity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 throw databaseError.toException();
-            }
-        });
-    }
-
-    private void setFinishedCollectingRanking() {
-        finishedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer value = dataSnapshot.getValue(Integer.class);
-                if(value != null) {
-                    finishedRef.setValue(++value);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }

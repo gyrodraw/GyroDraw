@@ -17,6 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.Button;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.LeaderboardActivity;
@@ -24,6 +25,7 @@ import ch.epfl.sweng.SDP.home.LeaderboardActivity;
 import com.google.firebase.FirebaseApp;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -29,8 +29,6 @@ public class Account {
             createLeague3()
     };
 
-    private static boolean testing = false;
-
     private String userId;
     private String username;
     private String email;
@@ -47,16 +45,10 @@ public class Account {
     private LocalDbHandlerForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-            String email) {
-        this(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0, 0,
-                0, 0, 0.0, 0);
-    }
-
-    private Account(Context context, ConstantsWrapper constantsWrapper, String username,
             String email, String currentLeague,
             int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
             int maxTrophies) {
-        if (instance != null && !testing) {
+        if (instance != null) {
             throw new IllegalStateException("Already instantiated");
         }
         this.localDbHandler = new LocalDbHandlerForAccount(context, null, 1);
@@ -76,12 +68,41 @@ public class Account {
     /**
      * Create an account instance. Trophies, stars and statistics are initialized to 0.
      *
-     * @param username string defining the preferred username
-     * @throws IllegalArgumentException if username is null
+     * @param context the context in which the method is called
+     * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
+     * instance
+     * @param username the string defining the preferred username
+     * @param email the string defining the user email
+     * @throws IllegalArgumentException if one of the parameters is null
      * @throws IllegalStateException if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
             String username, String email) {
+        createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0, 0,
+                0, 0, 0.0, 0);
+    }
+
+    /**
+     * Create an account instance given the specified parameters.
+     *
+     * @param context the context in which the method is called
+     * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
+     * instance
+     * @param username the string defining the preferred username
+     * @param email the string defining the user's email
+     * @param currentLeague the string defining the user's current league
+     * @param trophies the string defining the user's trophies
+     * @param stars the string defining the user's stars
+     * @param matchesWon the string defining the user's matches won
+     * @param totalMatches the string defining the user's total matches played
+     * @param averageRating the string defining the user's average rating
+     * @param maxTrophies the string defining the user's max trophies achieved
+     * @throws IllegalArgumentException if one of the parameters is null or invalid
+     * @throws IllegalStateException if the account was already instantiated
+     */
+    public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
+            String username, String email, String currentLeague, int trophies, int stars,
+            int matchesWon, int totalMatches, double averageRating, int maxTrophies) {
         if (context == null) {
             throw new IllegalArgumentException("context is null");
         }
@@ -98,64 +119,38 @@ public class Account {
             throw new IllegalArgumentException("email is null");
         }
 
-        instance = new Account(context, constantsWrapper, username, email);
-    }
-
-    /**
-     * TODO
-     */
-    public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-            String username, String email, String currentLeague, int trophies, int stars,
-            int matchesWon, int totalMatches, double averageRating, int maxTrophies) {
-        if (instance == null) {
-            if (context == null) {
-                throw new IllegalArgumentException("context is null");
-            }
-
-            if (constantsWrapper == null) {
-                throw new IllegalArgumentException("constantsWrapper is null");
-            }
-
-            if (username == null) {
-                throw new IllegalArgumentException("username is null");
-            }
-
-            if (email == null) {
-                throw new IllegalArgumentException("email is null");
-            }
-
-            if (currentLeague == null) {
-                throw new IllegalArgumentException("currentLeague is null");
-            }
-
-            if (trophies < 0) {
-                throw new IllegalArgumentException("trophies is negative");
-            }
-
-            if (stars < 0) {
-                throw new IllegalArgumentException("stars is negative");
-            }
-
-            if (matchesWon < 0) {
-                throw new IllegalArgumentException("matchesWon is negative");
-            }
-
-            if (totalMatches < 0) {
-                throw new IllegalArgumentException("totalMatches is negative");
-            }
-
-            if (averageRating < 0) {
-                throw new IllegalArgumentException("averageRating is negative");
-            }
-
-            if (maxTrophies < 0) {
-                throw new IllegalArgumentException("maxTrophies is negative");
-            }
-
-            instance = new Account(context, constantsWrapper, username, email, currentLeague,
-                    trophies,
-                    stars, matchesWon, totalMatches, averageRating, maxTrophies);
+        if (currentLeague == null) {
+            throw new IllegalArgumentException("currentLeague is null");
         }
+
+        if (trophies < 0) {
+            throw new IllegalArgumentException("trophies is negative");
+        }
+
+        if (stars < 0) {
+            throw new IllegalArgumentException("stars is negative");
+        }
+
+        if (matchesWon < 0) {
+            throw new IllegalArgumentException("matchesWon is negative");
+        }
+
+        if (totalMatches < 0) {
+            throw new IllegalArgumentException("totalMatches is negative");
+        }
+
+        if (averageRating < 0) {
+            throw new IllegalArgumentException("averageRating is negative");
+        }
+
+        if (maxTrophies < 0) {
+            throw new IllegalArgumentException("maxTrophies is negative");
+        }
+
+        instance = new Account(context, constantsWrapper, username, email, currentLeague,
+                trophies,
+                stars, matchesWon, totalMatches, averageRating, maxTrophies);
+
     }
 
     /**
@@ -478,12 +473,5 @@ public class Account {
                 checkForDatabaseError(databaseError);
             }
         };
-    }
-
-    /**
-     * Enable testing.
-     */
-    public static void enableTesting() {
-        testing = true;
     }
 }

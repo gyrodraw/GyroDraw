@@ -18,6 +18,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.LeaderboardActivity;
 
 import com.google.firebase.FirebaseApp;
 

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game;
+package ch.epfl.sweng.SDP.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,24 +9,27 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.LinkedList;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
 
 public class LeaderboardActivity extends Activity {
 
@@ -37,9 +40,14 @@ public class LeaderboardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_leaderboard);
         leaderboard = findViewById(R.id.leaderboard);
+
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.backgroundAnimation));
+
+        setExitListener();
 
         EditText searchField = findViewById(R.id.searchField);
         searchField.addTextChangedListener(new TextWatcher() {
@@ -62,9 +70,31 @@ public class LeaderboardActivity extends Activity {
         updateLeaderboard("");
     }
 
+    private void setExitListener() {
+        final TextView exit = findViewById(R.id.exitButton);
+        final Context context = this;
+        exit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        HomeActivity.pressButton(exit, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        HomeActivity.bounceButton(view, HomeActivity.MAIN_AMPLITUDE,
+                                HomeActivity.MAIN_FREQUENCY, context);
+                        launchActivity(HomeActivity.class);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
     private void updateLeaderboard(String query) {
         Database.INSTANCE.getReference("users")
-                .orderByChild("username").startAt(query).endAt(query+"\uf8ff")
+                .orderByChild("username").startAt(query).endAt(query + "\uf8ff")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -82,9 +112,9 @@ public class LeaderboardActivity extends Activity {
         leaderboard.removeAllViews();
         LinkedList<Player> players = new LinkedList<>();
         for (DataSnapshot s : snapshots) {
-            Player temp = new Player((String)s.child("userId").getValue(),
-                    (String)s.child("username").getValue(),
-                    (Long)s.child("trophies").getValue());
+            Player temp = new Player((String) s.child("userId").getValue(),
+                    (String) s.child("username").getValue(),
+                    (Long) s.child("trophies").getValue());
 
             players.add(temp);
         }
@@ -92,7 +122,7 @@ public class LeaderboardActivity extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, 20, 0, 0);
-        for(int i = 0; i < Math.min(10, players.size()); ++i) {
+        for (int i = 0; i < Math.min(10, players.size()); ++i) {
             leaderboard.addView(players.get(i).toLayout(getApplicationContext(), i), layoutParams);
         }
     }
@@ -120,7 +150,7 @@ public class LeaderboardActivity extends Activity {
             TextView trophiesView = new TextView(context);
             final Button friendsButton = new Button(context);
 
-            friendsButton.setTag("friendsButton"+index);
+            friendsButton.setTag("friendsButton" + index);
 
             setTextSizeAndColor(usernameView, username, 25, Color.YELLOW);
             setTextSizeAndColor(trophiesView, trophies.toString(), 25, Color.LTGRAY);
@@ -148,7 +178,7 @@ public class LeaderboardActivity extends Activity {
             entry.addView(trophiesView);
             entry.addView(friendsButton);
             entry.setBackgroundColor(Color.DKGRAY);
-            entry.setPadding(30,10,30,10);
+            entry.setPadding(30, 10, 30, 10);
 
             return entry;
         }

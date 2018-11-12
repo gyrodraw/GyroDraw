@@ -2,9 +2,8 @@ package ch.epfl.sweng.SDP.game;
 
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.action.ViewActions;
-
 import static android.support.test.espresso.Espresso.onView;
+import android.support.test.espresso.action.ViewActions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;

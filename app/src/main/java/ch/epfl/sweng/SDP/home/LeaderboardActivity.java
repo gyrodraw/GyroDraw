@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -35,7 +36,9 @@ public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
-    LinearLayout leaderboard;
+    private int yellow;
+    private Typeface typeMuro;
+    private LinearLayout leaderboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +47,19 @@ public class LeaderboardActivity extends Activity {
         setContentView(R.layout.activity_leaderboard);
         leaderboard = findViewById(R.id.leaderboard);
 
+        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Resources res = getResources();
+        yellow = res.getColor(R.color.colorDrawYellow);
+
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
+        EditText searchField = findViewById(R.id.searchField);
+
+        ((TextView) findViewById(R.id.exitButton)).setTypeface(typeMuro);
+        searchField.setTypeface(typeMuro);
         setExitListener();
 
-        EditText searchField = findViewById(R.id.searchField);
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence query, int start, int count, int after) {
@@ -152,7 +162,7 @@ public class LeaderboardActivity extends Activity {
 
             friendsButton.setTag("friendsButton" + index);
 
-            setTextSizeAndColor(usernameView, username, 25, Color.YELLOW);
+            setTextSizeAndColor(usernameView, username, 25, yellow);
             setTextSizeAndColor(trophiesView, trophies.toString(), 25, Color.LTGRAY);
 
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
@@ -187,7 +197,6 @@ public class LeaderboardActivity extends Activity {
             view.setText(text);
             view.setTextSize(size);
             view.setTextColor(color);
-            Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
             view.setTypeface(typeMuro);
         }
 

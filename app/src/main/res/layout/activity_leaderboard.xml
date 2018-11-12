@@ -42,10 +42,9 @@
         android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/searchField"
@@ -60,7 +59,7 @@
                 android:ems="10"
                 android:hint="@string/enter_name_here"
                 android:inputType="text"
-                android:textColor="@color/colorYellow"
+                android:textColor="@color/colorDrawYellow"
                 android:textColorHint="@color/colorLightGrey"
                 android:textSize="25sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -69,12 +68,13 @@
 
             <TextView
                 android:id="@+id/exitButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_weight="1"
                 android:includeFontPadding="false"
                 android:text="@string/cross"
                 android:textColor="@color/colorDrawYellow"
@@ -82,7 +82,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
+        </RelativeLayout>
 
 
         <ScrollView

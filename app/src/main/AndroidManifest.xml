@@ -43,7 +43,7 @@
         <activity android:name=".game.VotingPageActivity" />
         <activity android:name=".home.LeaguesActivity"></activity>
         <activity android:name=".game.LoadingScreenActivity"></activity>
-        <activity android:name=".game.LeaderboardActivity">
+        <activity android:name=".home.LeaderboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

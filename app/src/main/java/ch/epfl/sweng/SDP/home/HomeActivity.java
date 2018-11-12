@@ -1,8 +1,7 @@
 package ch.epfl.sweng.SDP.home;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -17,26 +16,29 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.CheckConnection;
-import ch.epfl.sweng.SDP.game.LeaderboardActivity;
-import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.CheckConnection;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class HomeActivity extends Activity {
 
     private static final String TAG = "HomeActivity";
-    private static final int MAIN_FREQUENCY = 10;
+    public static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-    private static final double MAIN_AMPLITUDE = 0.1;
+    public static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
 
@@ -52,6 +54,7 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
 
@@ -152,6 +155,7 @@ public class HomeActivity extends Activity {
     }
 
     private void setListener(final View view, final double amplitude, final int frequency) {
+        final Context context = this;
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -162,11 +166,11 @@ public class HomeActivity extends Activity {
                             ((ImageView) view)
                                     .setImageResource(R.drawable.draw_button_pressed);
                         }
-                        pressButton(view);
+                        pressButton(view, context);
                         break;
                     case MotionEvent.ACTION_UP:
                         listenerEventSelector(view, id);
-                        bounceButton(view, amplitude, frequency);
+                        bounceButton(view, amplitude, frequency, context);
                         break;
                     default:
                 }
@@ -208,16 +212,30 @@ public class HomeActivity extends Activity {
         }
     }
 
-    private void bounceButton(final View view, double amplitude, int frequency) {
+    /**
+     * Bounce the given view.
+     *
+     * @param view      the view
+     * @param amplitude the amplitude of the bounce
+     * @param frequency the frequency of the bounce
+     * @param c         the context of the view
+     */
+    public static void bounceButton(final View view, double amplitude, int frequency, Context c) {
         assert amplitude != 0;
-        final Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        final Animation bounce = AnimationUtils.loadAnimation(c, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
         bounce.setInterpolator(interpolator);
         view.startAnimation(bounce);
     }
 
-    private void pressButton(View view) {
-        final Animation press = AnimationUtils.loadAnimation(this, R.anim.press);
+    /**
+     * Press the given view.
+     *
+     * @param view the view
+     * @param c    the context of the view
+     */
+    public static void pressButton(View view, Context c) {
+        final Animation press = AnimationUtils.loadAnimation(c, R.anim.press);
         press.setFillAfter(true);
         view.startAnimation(press);
     }

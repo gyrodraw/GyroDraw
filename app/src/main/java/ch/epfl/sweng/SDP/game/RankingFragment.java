@@ -1,11 +1,8 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,17 +19,10 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Stream;
 
 
 /**
@@ -40,7 +30,6 @@ import java.util.stream.Stream;
  */
 public class RankingFragment extends ListFragment {
 
-    private static final String RANKING_KEY = "Ranking";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private String roomID;
@@ -100,17 +89,18 @@ public class RankingFragment extends ListFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
-                if(value != null) {
+                if (value != null) {
                     finishedRef.setValue(++value);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                throw databaseError.toException();
             }
         });
     }
+
     private class RankingAdapter extends ArrayAdapter<String> {
 
         String[] players;

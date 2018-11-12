@@ -1,22 +1,46 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class DrawingGameWithTimer extends DrawingGame {
 
     private int time;
     private int timeInterval;
+    private String winningWord;
+
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private String roomId;
+
+    private final Database database = Database.INSTANCE;
+    private DatabaseReference timerRef;
+    private DatabaseReference stateRef;
+    private boolean isVotingActivityLaunched = false;
 
     @Override
-    int getLayoutid() {
+    protected int getLayoutid() {
         return R.layout.activity_drawing;
     }
 
@@ -30,9 +54,79 @@ public class DrawingGameWithTimer extends DrawingGame {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
+        String path = TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime";
+        timerRef = database.getReference(path);
+        timerRef.addValueEventListener(listenerTimer);
+        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
+        stateRef.addValueEventListener(listenerState);
+
+        Intent intent = getIntent();
+
+        roomId = intent.getStringExtra("RoomID");
+        winningWord = intent.getStringExtra("WinningWord");
+
         setCountdownTimer();
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Does not leave the room if the activity is stopped because
+        // voting activity is launched.
+        if (!isVotingActivityLaunched) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
+        }
+
+        removeAllListeners();
+
+        finish();
+    }
+
+    protected void removeAllListeners() {
+        timerRef.removeEventListener(listenerTimer);
+        stateRef.removeEventListener(listenerState);
+    }
+
+    protected final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer state = dataSnapshot.getValue(Integer.class);
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case START_VOTING_ACTIVITY:
+                        timerRef.removeEventListener(listenerTimer);
+                        Intent intent = new Intent(getApplicationContext(),
+                                VotingPageActivity.class);
+                        intent.putExtra("RoomID", roomId);
+                        startActivity(intent);
+                        break;
+                    default:
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Matchmaker.getInstance(Account.getInstance(this))
+                    .leaveRoom(roomId);
+            launchActivity(HomeActivity.class);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
 
     // MARK: COUNTDOWN METHODS
 

@@ -28,9 +28,6 @@ public class RoomTest {
         assertEquals(room.getName(), "TEST");
     }
 
-    /**
-     * Test get the room id
-     */
     @Test
     public void getId() {
         assertEquals(room.getId(), null);

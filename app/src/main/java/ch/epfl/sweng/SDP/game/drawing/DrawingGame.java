@@ -30,18 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DrawingGame extends DrawingActivity implements SensorEventListener {
 
-
     private int speed;
     private SensorManager sensorManager;
-
-    private final Database database = Database.INSTANCE;
-    private DatabaseReference timerRef;
-    private DatabaseReference stateRef;
-    private boolean isVotingActivityLaunched = false;
-
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
-
-    private String roomId;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -59,10 +49,8 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
         }
     };
 
-    protected String winningWord;
-
     @Override
-    int getLayoutid() {
+    protected int getLayoutid() {
         return R.layout.activity_drawing_offline;
     }
 
@@ -71,17 +59,6 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             super.onCreate(savedInstanceState);
 
             speed = 5; //will be passed as variable in future, not hardcoded
-
-              String path = TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime";
-              timerRef = database.getReference(path);
-              timerRef.addValueEventListener(listenerTimer);
-              stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
-              stateRef.addValueEventListener(listenerState);
-
-             Intent intent = getIntent();
-
-             roomId = intent.getStringExtra("RoomID");
-             winningWord = intent.getStringExtra("WinningWord");
 
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
@@ -101,50 +78,6 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             Log.d(TAG, "We couldn't find the accelerometer on device.");
         }
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // Does not leave the room if the activity is stopped because
-        // voting activity is launched.
-        if (!isVotingActivityLaunched) {
-            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
-        }
-
-        removeAllListeners();
-        finish();
-    }
-
-    protected void removeAllListeners() {
-        timerRef.removeEventListener(listenerTimer);
-        stateRef.removeEventListener(listenerState);
-    }
-
-    protected final ValueEventListener listenerState = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer state = dataSnapshot.getValue(Integer.class);
-            if(state != null) {
-                GameStates stateEnum = GameStates.convertValueIntoState(state);
-                switch(stateEnum) {
-                    case START_VOTING_ACTIVITY:
-                        timerRef.removeEventListener(listenerTimer);
-                        Intent intent = new Intent(getApplicationContext(),
-                                VotingPageActivity.class);
-                        intent.putExtra("RoomID", roomId);
-                        startActivity(intent);
-                        break;
-                    default:
-                }
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
-        }
-    };
 
     /**
      * Fires when a sensor detected a change.

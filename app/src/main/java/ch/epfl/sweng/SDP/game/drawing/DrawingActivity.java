@@ -24,14 +24,11 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
-
-// TODO: refactor code so this is a subclass
 public class DrawingActivity extends Activity {
     protected static final String TAG = "DrawingActivity";
     protected PaintView paintView;
     protected Handler handler;
 
-    private String roomId;
     ToggleButton flyDraw;
 
     private ImageView[] colorButtons;
@@ -40,7 +37,7 @@ public class DrawingActivity extends Activity {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
-    int getLayoutid() {
+    protected int getLayoutid() {
         return R.layout.activity_drawing_offline;
     }
 
@@ -91,18 +88,6 @@ public class DrawingActivity extends Activity {
         paintView.clear();
     }
 
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(Account.getInstance(this))
-                    .leaveRoom(roomId);
-            launchActivity(HomeActivity.class);
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-
-    }
 
     /**
      * Sets the clicked button to selected and sets the corresponding color.

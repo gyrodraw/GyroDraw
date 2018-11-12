@@ -99,26 +99,25 @@ public class LeaderboardActivity extends Activity {
         private String username;
         private Long trophies;
 
-        protected Player(String userId, String username, Long trophies) {
+        private Player(String userId, String username, Long trophies) {
             this.userId = userId;
             this.username = username;
             this.trophies = trophies;
         }
 
         @Override
-        public int compareTo(Object o) {
-            if (o.getClass() != this.getClass()) {
-                throw new IllegalArgumentException("not same class");
-            }
-            return -trophies.compareTo(((Player) o).trophies);
+        public int compareTo(Object object) {
+            return -this.trophies.compareTo(((Player) object).trophies);
         }
 
         @SuppressLint("NewApi")
-        public LinearLayout toLayout(final Context context) {
+        private LinearLayout toLayout(final Context context) {
             LinearLayout entry = new LinearLayout(context);
             TextView usernameView = new TextView(context);
             TextView trophiesView = new TextView(context);
             final Button friendsButton = new Button(context);
+
+            friendsButton.setTag("friendsButton");
 
             setTextSizeAndColor(usernameView, username, 25, Color.YELLOW);
             setTextSizeAndColor(trophiesView, trophies.toString(), 25, Color.LTGRAY);
@@ -130,13 +129,13 @@ public class LeaderboardActivity extends Activity {
                             LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
             // initializes the friendsButton on first view of leaderboard
-            isFriendWithCurrenUser(context, initializeFriendsButton(friendsButton));
+            isFriendWithCurrentUser(context, initializeFriendsButton(friendsButton));
 
-            // modifies friedsButton on every click
+            // modifies friendsButton on every click
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    isFriendWithCurrenUser(context,
+                    isFriendWithCurrentUser(context,
                             changeFriendsButtonBackgroundOnClick(context, friendsButton));
 
                 }
@@ -157,7 +156,7 @@ public class LeaderboardActivity extends Activity {
             view.setTextColor(color);
         }
 
-        private void isFriendWithCurrenUser(final Context context, ValueEventListener listener) {
+        private void isFriendWithCurrentUser(final Context context, ValueEventListener listener) {
             Database.INSTANCE.getReference("users").child(userId).child("friends")
                     .child(Account.getInstance(context).getUserId())
                     .addListenerForSingleValueEvent(listener);
@@ -201,4 +200,6 @@ public class LeaderboardActivity extends Activity {
             };
         }
     }
+
 }
+

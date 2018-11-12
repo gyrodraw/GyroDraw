@@ -30,6 +30,7 @@ public class Account {
     };
 
     private static boolean testing = false;
+    private static final String FRIENDS_TAG = ".friends.";
 
     private String userId;
     private String username;
@@ -341,10 +342,10 @@ public class Account {
             throw new IllegalArgumentException("Friend's usernameId is null");
         }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".friends." + usernameId).build()
+        builder.addChildren(userId + FRIENDS_TAG + usernameId).build()
                 .setValue(usernameId, createCompletionListener());
         builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(usernameId + ".friends." + userId).build()
+        builder.addChildren(usernameId + FRIENDS_TAG + userId).build()
                 .setValue(userId, createCompletionListener());
     }
 
@@ -360,10 +361,10 @@ public class Account {
             throw new IllegalArgumentException("Friend's usernameId is null");
         }
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + ".friends." + usernameId).build()
+        builder.addChildren(userId + FRIENDS_TAG + usernameId).build()
                 .removeValue(createCompletionListener());
         builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(usernameId + ".friends." + userId).build()
+        builder.addChildren(usernameId + FRIENDS_TAG + userId).build()
                 .removeValue(createCompletionListener());
     }
 

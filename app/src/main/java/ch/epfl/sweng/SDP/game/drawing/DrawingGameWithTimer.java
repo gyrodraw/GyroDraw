@@ -7,6 +7,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
@@ -100,7 +101,7 @@ public class DrawingGameWithTimer extends DrawingGame {
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext(),
                                 VotingPageActivity.class);
-                        System.out.println(winningWord);
+                        Log.d(TAG,winningWord);
                         intent.putExtra("RoomID", roomId);
                         startActivity(intent);
                         break;

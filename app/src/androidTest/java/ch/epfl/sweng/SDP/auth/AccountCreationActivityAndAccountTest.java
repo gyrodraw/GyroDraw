@@ -23,6 +23,7 @@ import ch.epfl.sweng.SDP.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -69,14 +70,24 @@ public class AccountCreationActivityAndAccountTest {
 
         doNothing().when(mockAccount).updateUsername(isA(String.class));
 
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, "123456789");
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, "123456789",
+                "testEmail");
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
-        Account.enableTesting();
     }
 
+    @After
+    public void afterEachTest() {
+        Account.deleteAccount();
+    }
 
     // Tests for Account
+
+    @Test
+    public void testSetGetEmail() {
+        account.setEmail("email");
+        assertThat(account.getEmail(), is("email"));
+    }
 
     @Test
     public void testSetGetTrophies() {
@@ -192,9 +203,83 @@ public class AccountCreationActivityAndAccountTest {
         account.registerAccount();
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testCreateAccountWhenAlreadyCreated() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "123456789",
+                "testEmail");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNullContext() {
+        Account.createAccount(null, mockConstantsWrapper, "username", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNullConstantsWrapper() {
+        Account.createAccount(activityRule.getActivity(), null,
+                "username", null);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullUsername() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, null);
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                null, "testEmail");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNullEmail() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNullCurrentLeague() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", null, 0, 0,
+                0, 0, 0.0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNegativeTrophies() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", "league1", -1, 0,
+                0, 0, 0.0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNegativeStars() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", "league1", 0,
+                -1, 0, 0, 0.0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNegativeMatchesWon() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", "league1", 0,
+                0, -1, 0, 0.0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNegativeTotalMatches() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", "league1", 0,
+                0, 0, -1, 0.0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNegativeAverageRating() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", "league1", 0,
+                0, 0, 0, -1.0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAccountWithNegativeMaxTrophies() {
+        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+                "username", "testEmail", "league1", 0,
+                0, 0, 0, 0.0, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -226,7 +311,6 @@ public class AccountCreationActivityAndAccountTest {
     public void removeNullFriend() {
         account.removeFriend(null);
     }
-
 
     // Tests for AccountCreationActivity
 

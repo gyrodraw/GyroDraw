@@ -17,6 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.Button;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.LeaderboardActivity;
@@ -24,6 +25,7 @@ import ch.epfl.sweng.SDP.home.LeaderboardActivity;
 import com.google.firebase.FirebaseApp;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,13 +43,6 @@ public class LeaderboardActivityTest {
         onView(withId(R.id.searchField))
                 .perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.searchField)).check(matches(isClickable()));
-    }
-
-    @Test
-    public void testModifySearchField() {
-        onView(withId(R.id.searchField))
-                .perform(typeText("M"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.scrollLeaderboard)).check(matches(isCompletelyDisplayed()));
     }
 
     @Test

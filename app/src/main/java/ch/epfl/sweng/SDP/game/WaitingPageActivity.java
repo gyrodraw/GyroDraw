@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
@@ -43,6 +44,7 @@ public class WaitingPageActivity extends Activity {
     private String roomID = null;
 
     private static boolean enableSquareAnimation = true;
+    private boolean isDrawingActivityLaunched = false;
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -228,6 +230,7 @@ public class WaitingPageActivity extends Activity {
 //        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
 
     protected void launchDrawingActivity() {
+        isDrawingActivityLaunched = true;
         Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
         intent.putExtra("RoomID", roomID);
         intent.putExtra("WinningWord", winningWord);
@@ -244,8 +247,8 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * <<<<<<< HEAD Callback function called when a radio button is pressed. Updates the votes in
-     * the database. ======= Get the words that receives the larger amount of votes.
+     * Callback function called when a radio button is pressed. Updates the votes in
+     * the database. Get the words that receives the larger amount of votes.
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
@@ -262,7 +265,6 @@ public class WaitingPageActivity extends Activity {
 
     /**
      * Callback function called when a radio button is pressed. Updates the votes in the database.
-     * >>>>>>> master
      *
      * @param view View corresponding to the button clicked
      */
@@ -328,16 +330,6 @@ public class WaitingPageActivity extends Activity {
         b2.setEnabled(false);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (wordsVotesRef != null) {
-            // need to keep the most voted word here, it has to
-            // be done by the script not by this class
-        }
-    }
-
     /**
      * Increment the number of players logged in the room. This method exists only for testing
      * purposes.
@@ -396,19 +388,21 @@ public class WaitingPageActivity extends Activity {
         word2Ref.removeEventListener(listenerWord2);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(new ConstantsWrapper()).leaveRoom(roomID);
-            removeAllListeners();
-            launchActivity(HomeActivity.class);
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     public static void disableAnimations() {
         enableSquareAnimation = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Does not leave the room if the activity is stopped because
+        // drawing activity is launched.
+        if(!isDrawingActivityLaunched) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+        }
+        removeAllListeners();
+        finish();
     }
 
     /**

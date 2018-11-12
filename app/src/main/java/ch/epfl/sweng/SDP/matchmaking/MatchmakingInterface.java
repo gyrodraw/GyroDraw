@@ -11,7 +11,5 @@ public interface MatchmakingInterface {
 
     Boolean joinRoomOther();
 
-    Boolean leaveRoomOther(String roomId);
-  
 }
 

@@ -1,7 +1,8 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
 import android.support.annotation.NonNull;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
@@ -18,20 +19,19 @@ import java.util.Map;
 
 public class Matchmaker implements MatchmakingInterface {
 
-    private ConstantsWrapper constantsWrapper;
     private static Matchmaker singleInstance = null;
     // static method to create instance of Singleton class
-    private DatabaseReference reference;
     private DatabaseReference myRef;
+    private Account account;
 
     /**
      * Create a singleton Instance.
      *
      * @return returns a singleton instance.
      */
-    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper) {
+    public static Matchmaker getInstance(Account account) {
         if (singleInstance == null) {
-            singleInstance = new Matchmaker(constantsWrapper);
+            singleInstance = new Matchmaker(account);
         }
 
         return singleInstance;
@@ -40,10 +40,9 @@ public class Matchmaker implements MatchmakingInterface {
     /**
      * Matchmaker init.
      */
-    private Matchmaker(ConstantsWrapper constantsWrapper) {
+    private Matchmaker(Account account) {
         this.myRef = Database.INSTANCE.getReference("realRooms");
-        this.constantsWrapper = constantsWrapper;
-        this.reference = constantsWrapper.getReference("rooms");
+        this.account = account;
     }
 
     /**
@@ -57,7 +56,7 @@ public class Matchmaker implements MatchmakingInterface {
         try {
             //Create connection
 
-            String userId = constantsWrapper.getFirebaseUserId();
+            String userId = account.getUserId();
             String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
             URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
             connection = createConnection(url);
@@ -94,7 +93,8 @@ public class Matchmaker implements MatchmakingInterface {
         Map<String, Object> data = new HashMap<>();
 
         // Pass the ID for the moment
-        data.put("username", constantsWrapper.getFirebaseUserId());
+        data.put("id", account.getUserId());
+        data.put("username", account.getUsername());
 
         return mFunctions.getHttpsCallable("joinGame2")
                 .call(data)
@@ -134,14 +134,6 @@ public class Matchmaker implements MatchmakingInterface {
      */
     public void leaveRoom(String roomId) {
         myRef.child(roomId).child("users")
-                .child(constantsWrapper.getFirebaseUserId()).removeValue();
-    }
-
-    public Boolean leaveRoomOther(String roomId) {
-        reference.child(roomId)
-                .child("users")
-                .child(constantsWrapper.getFirebaseUserId())
-                .removeValue();
-        return true;
+                .child(account.getUserId()).removeValue();
     }
 }

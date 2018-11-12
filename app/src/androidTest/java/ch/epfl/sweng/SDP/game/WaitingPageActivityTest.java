@@ -184,14 +184,6 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void pressBackTest() {
-        Intents.init();
-        Espresso.pressBack();
-        intended(hasComponent(HomeActivity.class.getName()));
-        Intents.release();
-    }
-
-    @Test
     public void getWinningWordTest() {
         String[] words = {"cat", "dog"};
         String winningWord = WaitingPageActivity.getWinningWord(2,1,
@@ -230,7 +222,6 @@ public class WaitingPageActivityTest {
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
         intended(hasComponent(DrawingActivity.class.getName()));
-        Espresso.pressBack();
         Intents.release();
     }
 

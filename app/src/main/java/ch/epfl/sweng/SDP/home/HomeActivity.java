@@ -114,30 +114,6 @@ public class HomeActivity extends Activity {
         profileWindow.dismiss();
     }
 
-    /**
-     * Deletes the user from FirebaseAuth and deletes any existing credentials for the user in
-     * Google Smart Lock. It then starts the {@link MainActivity}.
-     */
-    private void delete() {
-        final Toast toastDelete = makeAndShowToast("Deleting account...");
-
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            toastDelete.cancel();
-                            launchActivity(MainActivity.class);
-                            finish();
-                        } else {
-                            Log.e(TAG, "Delete account failed!");
-                        }
-                    }
-                });
-        profileWindow.dismiss();
-    }
-
     private Toast makeAndShowToast(String msg) {
         assert msg != null;
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
@@ -176,7 +152,8 @@ public class HomeActivity extends Activity {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(LoadingScreenActivity.class);
                 } else {
-                    Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "No internet connection.",
+                            Toast.LENGTH_LONG).show();
                 }
 
                 break;
@@ -188,9 +165,6 @@ public class HomeActivity extends Activity {
                 break;
             case R.id.signOutButton:
                 signOut();
-                break;
-            case R.id.deleteButton:
-                delete();
                 break;
             case R.id.crossText:
                 profileWindow.dismiss();
@@ -238,8 +212,6 @@ public class HomeActivity extends Activity {
         crossText.setTypeface(typeMuro);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         signOutButton.setTypeface(typeMuro);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
-        deleteButton.setTypeface(typeMuro);
     }
 
     private void showPopup() {
@@ -261,8 +233,6 @@ public class HomeActivity extends Activity {
         setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
-        setListener(deleteButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();

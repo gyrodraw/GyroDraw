@@ -11,18 +11,15 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class LoginActivity extends Activity {
@@ -109,26 +106,6 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
-        HashMap<String, HashMap<String, Object>> userEntry =
-                (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
-
-        HashMap<String, Object> user = userEntry
-                .get(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        Account.createAccount(getApplicationContext(),
-                new ConstantsWrapper(), (String) user.get("username"),
-                (String) user.get("email"), (String) user.get("currentLeague"),
-                ((Long) user.get("trophies")).intValue(), ((Long) user.get("stars")).intValue(),
-                ((Long) user.get("matchesWon")).intValue(),
-                ((Long) user.get("totalMatches")).intValue(),
-                ((Long) user.get("averageRating")).doubleValue(),
-                ((Long) user.get("maxTrophies")).intValue());
-
-        LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
-                getApplicationContext(), null, 1);
-        handler.saveAccount(Account.getInstance(getApplicationContext()));
-    }
 
     private void handleFailedSignIn(IdpResponse response) {
         TextView errorMessage = findViewById(R.id.error_message);

@@ -142,7 +142,7 @@
         android:includeFontPadding="false"
         android:text="@string/zero"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="35sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="@+id/trophiesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/trophiesButton" />
@@ -157,7 +157,7 @@
         android:includeFontPadding="false"
         android:text="@string/zero"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="35sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="@+id/starsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/starsButton" />

@@ -26,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:alpha="0.8"
         app:srcCompat="@drawable/background_animation"
-        tools:ignore="ContentDescription" /> 
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/darkAlpha"

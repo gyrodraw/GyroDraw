@@ -34,7 +34,6 @@ public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
-    private int yellow;
     private Typeface typeMuro;
     private LinearLayout leaderboard;
 
@@ -76,6 +75,9 @@ public class LeaderboardActivity extends Activity {
         updateLeaderboard("");
     }
 
+    /**
+     * Sets listener and animation for exit button.
+     */
     private void setExitListener() {
         final TextView exit = findViewById(R.id.exitButton);
         final Context context = this;
@@ -98,6 +100,10 @@ public class LeaderboardActivity extends Activity {
         });
     }
 
+    /**
+     * Gets called when user entered a new search query.
+     * @param query new string to search
+     */
     private void updateLeaderboard(String query) {
         Database.INSTANCE.getReference("users")
                 .orderByChild("username").startAt(query).endAt(query + "\uf8ff")
@@ -114,6 +120,11 @@ public class LeaderboardActivity extends Activity {
                 });
     }
 
+    /**
+     * Gets called when all data has been fetched from Firebase.
+     * Adds snapshots to a list, sorts it by trophies and converts players to LinearLayouts
+     * @param snapshots all players from firebase fulfilling the search query
+     */
     private void processResponse(Iterable<DataSnapshot> snapshots) {
         leaderboard.removeAllViews();
         LinkedList<Player> players = new LinkedList<>();
@@ -133,6 +144,9 @@ public class LeaderboardActivity extends Activity {
         }
     }
 
+    /**
+     * Helper class to manage and display data from Firebase
+     */
     private class Player implements Comparable {
 
         private String userId;
@@ -145,11 +159,24 @@ public class LeaderboardActivity extends Activity {
             this.trophies = trophies;
         }
 
+        /**
+         * Allows one to call sort on a collection of Players.
+         * Sorts collection in descending order.
+         * @param object    Player to compare
+         * @return          1 if this is larger, -1 if this is smaller, 0 else
+         */
         @Override
         public int compareTo(Object object) {
             return -this.trophies.compareTo(((Player) object).trophies);
         }
 
+        /**
+         * Converts this player into a LinearLayout
+         * that will be displayed in the leaderboard.
+         * @param context   of the app
+         * @param index     of the player
+         * @return          LinearLayout that will be displayed
+         */
         @SuppressLint("NewApi")
         private LinearLayout toLayout(final Context context, int index) {
             final ImageView friendsButton = new ImageView(context);
@@ -162,13 +189,11 @@ public class LeaderboardActivity extends Activity {
             friendsButton.setTag("friendsButton" + index);
 
             TextView usernameView = new TextView(context);
-            styleView(usernameView, username, 25,
-                    getResources().getColor(R.color.colorDrawYellow),
+            styleView(usernameView, username, getResources().getColor(R.color.colorDrawYellow),
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
             TextView trophiesView = new TextView(context);
-            styleView(trophiesView, trophies.toString(), 25,
-                    getResources().getColor(R.color.colorLightGrey),
+            styleView(trophiesView, trophies.toString(), getResources().getColor(R.color.colorLightGrey),
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
             trophiesView.setPadding(0, 0, 30, 0);
@@ -185,7 +210,8 @@ public class LeaderboardActivity extends Activity {
                 }
             });
 
-            LinearLayout entry = addViews(new LinearLayout(context), usernameView, trophiesView, friendsButton);
+            LinearLayout entry = addViews(new LinearLayout(context),
+                    usernameView, trophiesView, friendsButton);
             if(username.equals(Account.getInstance(context).getUsername())) {
                 friendsButton.setVisibility(View.INVISIBLE);
             }
@@ -204,21 +230,31 @@ public class LeaderboardActivity extends Activity {
             return layout;
         }
 
-        private void styleView(TextView view, String text, float size, int color,
+        private void styleView(TextView view, String text, int color,
                                          LinearLayout.LayoutParams layoutParams) {
             view.setText(text);
-            view.setTextSize(size);
+            view.setTextSize(25);
             view.setTextColor(color);
             view.setTypeface(typeMuro);
             view.setLayoutParams(layoutParams);
         }
 
+        /**
+         * Checks if users are friends and applies listener.
+         * @param context   of app
+         * @param listener  how to handle response
+         */
         private void isFriendWithCurrentUser(final Context context, ValueEventListener listener) {
             Database.INSTANCE.getReference("users").child(userId).child("friends")
                     .child(Account.getInstance(context).getUserId())
                     .addListenerForSingleValueEvent(listener);
         }
 
+        /**
+         * Check if users are already friends and set background accordingly.
+         * @param friendButton  button in question
+         * @return              listener
+         */
         private ValueEventListener initializeFriendsButton(final ImageView friendButton) {
             return new ValueEventListener() {
                 @Override
@@ -237,6 +273,12 @@ public class LeaderboardActivity extends Activity {
             };
         }
 
+        /**
+         * Friends button got clicked, now add/remove friend and modify background.
+         * @param context       of app
+         * @param friendButton  button in question
+         * @return              listener
+         */
         private ValueEventListener changeFriendsButtonBackgroundOnClick(
                 final Context context, final ImageView friendButton) {
             return new ValueEventListener() {

@@ -221,11 +221,11 @@ public class HomeActivity extends Activity {
      * @param view      the view
      * @param amplitude the amplitude of the bounce
      * @param frequency the frequency of the bounce
-     * @param c         the context of the view
+     * @param context   the context of the view
      */
-    public static void bounceButton(final View view, double amplitude, int frequency, Context c) {
+    public static void bounceButton(final View view, double amplitude, int frequency, Context context) {
         assert amplitude != 0;
-        final Animation bounce = AnimationUtils.loadAnimation(c, R.anim.bounce);
+        final Animation bounce = AnimationUtils.loadAnimation(context, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
         bounce.setInterpolator(interpolator);
         view.startAnimation(bounce);
@@ -234,11 +234,11 @@ public class HomeActivity extends Activity {
     /**
      * Press the given view.
      *
-     * @param view the view
-     * @param c    the context of the view
+     * @param view      the view
+     * @param context   the context of the view
      */
-    public static void pressButton(View view, Context c) {
-        final Animation press = AnimationUtils.loadAnimation(c, R.anim.press);
+    public static void pressButton(View view, Context context) {
+        final Animation press = AnimationUtils.loadAnimation(context, R.anim.press);
         press.setFillAfter(true);
         view.startAnimation(press);
     }

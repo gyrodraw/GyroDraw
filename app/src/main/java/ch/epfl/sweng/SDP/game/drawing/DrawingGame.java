@@ -38,7 +38,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
 
-            if(value != null) {
+            if (value != null) {
                 ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
             }
         }
@@ -56,11 +56,11 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-            speed = 5; //will be passed as variable in future, not hardcoded
+        speed = 5; //will be passed as variable in future, not hardcoded
 
-            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
 
     // MARK: ACCELEROMETER METHODS
@@ -123,6 +123,7 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
 
     /**
      * Method that call onDataChange on the UI thread.
+     *
      * @param dataSnapshot Snapshot of the database (mock snapshot
      *                     in out case).
      */
@@ -135,7 +136,6 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
             }
         });
     }
-
 
 
 }

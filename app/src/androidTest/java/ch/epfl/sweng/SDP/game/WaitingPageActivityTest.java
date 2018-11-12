@@ -37,7 +37,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,9 +46,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import org.mockito.MockitoAnnotations;
-
-
-
 
 
 @RunWith(AndroidJUnit4.class)
@@ -198,15 +194,15 @@ public class WaitingPageActivityTest {
     @Test
     public void getWinningWordTest() {
         String[] words = {"cat", "dog"};
-        String winningWord = WaitingPageActivity.getWinningWord(2,1,
+        String winningWord = WaitingPageActivity.getWinningWord(2, 1,
                 words);
         assertEquals("cat", winningWord);
 
-        winningWord = WaitingPageActivity.getWinningWord(2,2,
+        winningWord = WaitingPageActivity.getWinningWord(2, 2,
                 words);
         assertEquals("cat", winningWord);
 
-        winningWord = WaitingPageActivity.getWinningWord(2,3,
+        winningWord = WaitingPageActivity.getWinningWord(2, 3,
                 words);
         assertEquals("dog", winningWord);
     }

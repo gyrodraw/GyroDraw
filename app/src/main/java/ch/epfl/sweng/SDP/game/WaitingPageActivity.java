@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -26,6 +27,7 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,9 +38,7 @@ import static java.lang.String.format;
 
 import java.util.Locale;
 
-
 public class WaitingPageActivity extends Activity {
-
 
     private static final String TAG = "WaitingPageActivity";
 
@@ -245,7 +245,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     private void initRadioButton(Button button, String childString,
-            DatabaseReference dbRef, WordNumber wordNumber) {
+                                 DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.addValueEventListener(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
@@ -259,7 +259,7 @@ public class WaitingPageActivity extends Activity {
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
-     * @param words Array containing the words
+     * @param words      Array containing the words
      * @return Returns the winning word.
      */
     public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
@@ -406,7 +406,7 @@ public class WaitingPageActivity extends Activity {
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.
-        if(!isDrawingActivityLaunched) {
+        if (!isDrawingActivityLaunched) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
         }
         removeAllListeners();

@@ -38,7 +38,6 @@ public class VotingPageActivity extends Activity {
     private DatabaseReference stateRef;
     private DatabaseReference timerRef;
     private DatabaseReference usersRef;
-    private DatabaseReference finishedRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
@@ -87,7 +86,7 @@ public class VotingPageActivity extends Activity {
         }
     };
 
-    private final ValueEventListener listenerCounter = new ValueEventListener() {
+    protected final ValueEventListener listenerCounter = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -358,15 +357,6 @@ public class VotingPageActivity extends Activity {
                 });
     }
 
-    /**
-     * Show the final ranking in a new fragment.
-     *
-     * @param view View referencing the button
-     */
-    public void showFinalRanking(View view) {
-        startRankingFragment();
-    }
-
     private void startRankingFragment() {
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -429,12 +419,36 @@ public class VotingPageActivity extends Activity {
         enableAnimations = false;
     }
 
+    public short getChangeDrawingCounter() {
+        return changeDrawingCounter;
+    }
+
     @VisibleForTesting
     public void callShowWinnerDrawing(final Bitmap image, final String winner) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 showWinnerDrawing(image, winner);
+            }
+        });
+    }
+
+    @VisibleForTesting
+    public void callChangeImage() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                changeImage();
+            }
+        });
+    }
+
+    @VisibleForTesting
+    public void callSetLayoutVisibility() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setLayoutToVisible();
             }
         });
     }

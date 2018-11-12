@@ -7,6 +7,8 @@ const admin = require('firebase-admin');
 const maxPlayers = 5;
 const mockMaxPlayers = 3;
 const maxWords = 6;
+
+// Waiting times
 const WAITING_TIME_CHOOSE_WORDS = 10;
 const WAITING_TIME_DRAWING = 10;
 const WAITING_TIME_VOTING = 30;
@@ -19,9 +21,7 @@ var state = 0;
 admin.initializeApp();
 
 function checkUsersReady(state, path, snapshot) {
-  let ready = true;
- 
-  if(ready && snapshot.child("users").numChildren() === maxPlayers) {
+  if(snapshot.child("users").numChildren() === maxPlayers) {
     if(snapshot.child("state").val() === StateEnum.Idle || 
       snapshot.child("state").val() === StateEnum.EndVoting) {
       admin.database().ref(path + "/state").set(StateEnum.ChoosingWordsCountdown);
@@ -32,7 +32,6 @@ function checkUsersReady(state, path, snapshot) {
   }
   return;
 }
-
 
 function functionTimer (seconds, state, roomID, call) {
   return new Promise((resolve, reject) => {
@@ -51,7 +50,7 @@ function functionTimer (seconds, state, roomID, call) {
           stop = true;
           clearInterval(interval);
           call(0);
-          admin.database().ref(parentRoomID + roomID + "/state").set(0);
+          admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.Idle);
           admin.database().ref(parentRoomID + roomID + "/playing").set(PlayingEnum.Idle);
         }
       });
@@ -221,12 +220,12 @@ function createRankingNode(roomID) {
     snapshot.forEach((child) => {
       updates[child.val()] = 0;
     });
-    //return admin.database().ref(parentRoomID + roomID + "/ranking").set(snapshot.val());
   });
-  console.dir(updates);
+
   admin.database().ref(parentRoomID + roomID).child("ranking").once('value', function(snapshot) {
     snapshot.ref.set(updates);
   });
+
   return;
 }
 
@@ -235,34 +234,30 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
   state = change.after.val();
   let playingRef = admin.database().ref(parentRoomID + roomID + "/playing");
   let stateRef = admin.database().ref(parentRoomID + roomID + "/state");
-  let playingState;
-
-  playingRef.on('value', function(snapshot) {
-    playingState = snapshot.val();
-  });
 
   switch(state) {
     case StateEnum.Idle:
       playingRef.set(PlayingEnum.Idle);
       break;
+
     case StateEnum.ChoosingWordsCountdown:
       playingRef.set(PlayingEnum.PlayingButJoinable);
       return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage);
+
     case StateEnum.DrawingPage:
       createRankingNode(roomID);
       playingRef.set(PlayingEnum.Playing);
       return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.VotingPage);
+
     case StateEnum.VotingPage:
       return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
+
     case StateEnum.EndVoting:
-      /*setTimeout(() => {
-        playingRef.set(PlayingEnum.Idle);
-        stateRef.set(StateEnum.Idle);
-      }, 500)*/
       break;
     default:
       break;
   }
+
   return 0;
 });
 
@@ -272,8 +267,8 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
     if(snapshot.val() === maxPlayers) {
       admin.database().ref(parentRoomID + roomID).child("users").remove();
       admin.database().ref(parentRoomID + roomID).child("ranking").remove();
-      admin.database().ref(parentRoomID + roomID + "/playing").set(PlayingEnum.Idle);
-      admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.Idle);
+      admin.database().ref(parentRoomID + roomID).child("playing").set(PlayingEnum.Idle);
+      admin.database().ref(parentRoomID + roomID).child("state").set(StateEnum.Idle);
       admin.database().ref(parentRoomID + roomID).child("finished").set(0);
     }
   });

@@ -36,11 +36,15 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testSearchFieldVisible() {
+        onView(withId(R.id.searchField))
+                .perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.searchField)).check(matches(isCompletelyDisplayed()));
     }
 
     @Test
     public void testScrollViewVisible() {
+        onView(withId(R.id.scrollLeaderboard))
+                .perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.scrollLeaderboard)).check(matches(isCompletelyDisplayed()));
     }
 

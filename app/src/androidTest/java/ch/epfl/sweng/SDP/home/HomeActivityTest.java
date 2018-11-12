@@ -20,6 +20,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.LeaderboardActivity;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import org.junit.Rule;
@@ -62,6 +63,14 @@ public class HomeActivityTest {
         Intents.init();
         onView(ViewMatchers.withId(R.id.leagueImage)).perform(click());
         intended(hasComponent(LeaguesActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testClickOnTrophiesOpensLeaderboardActivity() {
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.trophiesButton)).perform(click());
+        intended(hasComponent(LeaderboardActivity.class.getName()));
         Intents.release();
     }
 

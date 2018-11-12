@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -156,6 +157,8 @@ public class LeaderboardActivity extends Activity {
             view.setText(text);
             view.setTextSize(size);
             view.setTextColor(color);
+            Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+            view.setTypeface(typeMuro);
         }
 
         private void isFriendWithCurrentUser(final Context context, ValueEventListener listener) {

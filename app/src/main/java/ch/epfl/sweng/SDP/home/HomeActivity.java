@@ -23,6 +23,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.LeaderboardActivity;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -191,6 +192,8 @@ public class HomeActivity extends Activity {
                 }
 
                 break;
+            case R.id.trophiesButton:
+                launchActivity(LeaderboardActivity.class);
             case R.id.leagueImage:
                 showLeagues();
                 break;

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
@@ -13,6 +14,7 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
@@ -27,12 +29,17 @@ public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 42;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        overridePendingTransition(0, 0);
+
         createSignInIntent();
+
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.backgroundAnimation));
     }
 
     private void createSignInIntent() {
@@ -42,6 +49,7 @@ public class LoginActivity extends Activity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setTheme(R.style.LoginTheme)
                         .setLogo(R.drawable.common_google_signin_btn_icon_dark) // custom logo here
                         .build(),
                 RC_SIGN_IN);

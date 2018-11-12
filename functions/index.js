@@ -264,7 +264,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
 exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finished").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID + "/finished").once('value', (snapshot) => {
-    if(snapshot.val() === maxPlayers) {
+    if(snapshot.val() === maxPlayers && roomID !== "0123457890") {
       admin.database().ref(parentRoomID + roomID).child("users").remove();
       admin.database().ref(parentRoomID + roomID).child("ranking").remove();
       admin.database().ref(parentRoomID + roomID).child("playing").set(PlayingEnum.Idle);

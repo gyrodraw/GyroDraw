@@ -7,7 +7,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 public class DatabaseUnitTest {
 
     @Test (expected = IllegalArgumentException.class)
-    public void testIllegalArgumenr() {
+    public void testIllegalArgument() {
         new Database.DatabaseReferenceBuilder(null);
     }
 

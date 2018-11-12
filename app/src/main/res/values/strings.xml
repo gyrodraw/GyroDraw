@@ -34,7 +34,7 @@
     <string name="average_stars">Average stars:</string>
     <string name="max_trophies">Max trophies:</string>
     <string name="profile">Profile</string>
-    <string name="usernameMustNotBeEmpty">Username must not be empty.</string>
+    <string name="usernameMustNotBeEmpty">Username must not be empty</string>
     <string name="usernameAlreadyTaken">Username already taken, try again</string>
     <string name="usernameTaken">Username already taken, try again</string>
     <string name="enter_name_here">Enter name here</string>

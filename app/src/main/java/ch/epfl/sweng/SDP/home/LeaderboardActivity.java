@@ -7,14 +7,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,20 +24,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Collections;
-import java.util.LinkedList;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private int yellow;
-    private int lightGray;
     private Typeface typeMuro;
     private LinearLayout leaderboard;
 
@@ -51,9 +48,6 @@ public class LeaderboardActivity extends Activity {
         leaderboard = findViewById(R.id.leaderboard);
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        Resources res = getResources();
-        yellow = res.getColor(R.color.colorDrawYellow);
-        lightGray = res.getColor(R.color.colorLightGrey);
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
@@ -160,30 +154,24 @@ public class LeaderboardActivity extends Activity {
 
         @SuppressLint("NewApi")
         private LinearLayout toLayout(final Context context, int index) {
-            TextView usernameView = new TextView(context);
-            TextView trophiesView = new TextView(context);
             final ImageView friendsButton = new ImageView(context);
-
-            LinearLayout.LayoutParams usernameParams = new LinearLayout.LayoutParams(0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT, 4);
-            LinearLayout.LayoutParams trophiesParams = new LinearLayout.LayoutParams(0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT, 2);
-            LinearLayout.LayoutParams friendsParams = new LinearLayout.LayoutParams(0, 100, 1);
-
-            usernameParams.gravity = Gravity.CENTER;
-            trophiesParams.gravity = Gravity.CENTER;
-            friendsParams.gravity = Gravity.CENTER;
-
-            usernameView.setLayoutParams(usernameParams);
-            trophiesView.setLayoutParams(trophiesParams);
+            LinearLayout.LayoutParams friendsParams =
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             friendsButton.setLayoutParams(friendsParams);
-
             friendsButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            // give Button unique Tag to test them later
             friendsButton.setTag("friendsButton" + index);
 
-            setTextSizeAndColor(usernameView, username, 25, yellow);
-            setTextSizeAndColor(trophiesView, trophies.toString(), 25, lightGray);
+            TextView usernameView = new TextView(context);
+            styleView(usernameView, username, 25,
+                    getResources().getColor(R.color.colorDrawYellow),
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
+            TextView trophiesView = new TextView(context);
+            styleView(trophiesView, trophies.toString(), 25,
+                    getResources().getColor(R.color.colorLightGrey),
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
             trophiesView.setPadding(0, 0, 30, 0);
 
@@ -199,21 +187,29 @@ public class LeaderboardActivity extends Activity {
                 }
             });
 
-            LinearLayout entry = new LinearLayout(context);
-            entry.addView(usernameView);
-            entry.addView(trophiesView);
-            entry.addView(friendsButton);
+            LinearLayout entry = addViews(new LinearLayout(context), usernameView, trophiesView, friendsButton);
             entry.setBackgroundColor(Color.DKGRAY);
             entry.setPadding(30, 10, 30, 10);
 
             return entry;
         }
 
-        private void setTextSizeAndColor(TextView view, String text, float size, int color) {
+        private LinearLayout addViews(LinearLayout layout, TextView usernameView,
+                              TextView trophiesView, ImageView addFriends) {
+            layout.addView(usernameView);
+            layout.addView(trophiesView);
+            layout.addView(addFriends);
+
+            return layout;
+        }
+
+        private void styleView(TextView view, String text, float size, int color,
+                                         LinearLayout.LayoutParams layoutParams) {
             view.setText(text);
             view.setTextSize(size);
             view.setTextColor(color);
             view.setTypeface(typeMuro);
+            view.setLayoutParams(layoutParams);
         }
 
         private void isFriendWithCurrentUser(final Context context, ValueEventListener listener) {

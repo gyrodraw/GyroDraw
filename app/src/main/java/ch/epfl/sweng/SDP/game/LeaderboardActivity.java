@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,16 +19,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Collections;
-import java.util.LinkedList;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 
+import java.util.Collections;
+import java.util.LinkedList;
+
 public class LeaderboardActivity extends Activity {
 
+    private static final String TAG = "LeaderboardActivity";
     LinearLayout leaderboard;
 
     @Override
@@ -40,27 +42,27 @@ public class LeaderboardActivity extends Activity {
         EditText searchField = findViewById(R.id.searchField);
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence query, int start, int count, int after) {
                 // Not what we need.
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
                 // Not what we need.
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                updateLeaderboard(s.toString());
+            public void afterTextChanged(Editable query) {
+                updateLeaderboard(query.toString());
             }
         });
 
         updateLeaderboard("");
     }
 
-    private void updateLeaderboard(String s) {
+    private void updateLeaderboard(String query) {
         Database.INSTANCE.getReference("users")
-                .orderByChild("username").startAt(s).endAt(s+"\uf8ff")
+                .orderByChild("username").startAt(query).endAt(query+"\uf8ff")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -69,7 +71,7 @@ public class LeaderboardActivity extends Activity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        Log.d(TAG, "There was an error with Firebase.");
                     }
                 });
     }
@@ -112,7 +114,6 @@ public class LeaderboardActivity extends Activity {
 
         @SuppressLint("NewApi")
         private LinearLayout toLayout(final Context context) {
-            LinearLayout entry = new LinearLayout(context);
             TextView usernameView = new TextView(context);
             TextView trophiesView = new TextView(context);
             final Button friendsButton = new Button(context);
@@ -134,13 +135,14 @@ public class LeaderboardActivity extends Activity {
             // modifies friendsButton on every click
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     isFriendWithCurrentUser(context,
                             changeFriendsButtonBackgroundOnClick(context, friendsButton));
 
                 }
             });
 
+            LinearLayout entry = new LinearLayout(context);
             entry.addView(usernameView);
             entry.addView(trophiesView);
             entry.addView(friendsButton);
@@ -175,12 +177,13 @@ public class LeaderboardActivity extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Log.d(TAG, "There was an error with Firebase.");
                 }
             };
         }
 
-        private ValueEventListener changeFriendsButtonBackgroundOnClick(final Context context, final Button friendButton) {
+        private ValueEventListener changeFriendsButtonBackgroundOnClick(
+                final Context context, final Button friendButton) {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -195,7 +198,7 @@ public class LeaderboardActivity extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Log.d(TAG, "There was an error with Firebase.");
                 }
             };
         }

@@ -10,11 +10,6 @@ import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -23,6 +18,11 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class DrawingGameWithTimer extends DrawingGame {
 
@@ -100,6 +100,7 @@ public class DrawingGameWithTimer extends DrawingGame {
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext(),
                                 VotingPageActivity.class);
+                        System.out.println(winningWord);
                         intent.putExtra("RoomID", roomId);
                         startActivity(intent);
                         break;

@@ -60,6 +60,8 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
 
+        overridePendingTransition(0, 0);
+
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 

@@ -72,8 +72,8 @@ public class DrawingGame extends DrawingActivity implements SensorEventListener 
 
             speed = 5; //will be passed as variable in future, not hardcoded
 
-
-              timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
+              String path = TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime";
+              timerRef = database.getReference(path);
               timerRef.addValueEventListener(listenerTimer);
               stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
               stateRef.addValueEventListener(listenerState);

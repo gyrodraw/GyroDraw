@@ -43,13 +43,6 @@ public class LeaderboardActivityTest {
     }
 
     @Test
-    public void testModifySearchField() {
-        onView(withId(R.id.searchField))
-                .perform(typeText("M"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.scrollLeaderboard)).check(matches(isCompletelyDisplayed()));
-    }
-
-    @Test
     public void testFriendsButtonsClickable() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         onView(withId(R.id.searchField))

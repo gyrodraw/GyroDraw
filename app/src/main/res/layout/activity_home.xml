@@ -130,7 +130,7 @@
         android:text="@string/zero"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="25sp"
-        app:layout_constraintBowttom_toTopOf="@+id/starsCount"
+        app:layout_constraintBottom_toTopOf="@+id/starsCount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameButton" />
 

@@ -316,14 +316,14 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testCreateAccIsClickable() {
-        onView(ViewMatchers.withId(R.id.createAcc)).check(matches(isClickable()));
+        onView(ViewMatchers.withId(R.id.createAccount)).check(matches(isClickable()));
     }
 
     @Test
     public void testCreateAccountWithNullName() {
-        onView(ViewMatchers.withId(R.id.createAcc)).perform(click());
+        onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
         onView(ViewMatchers.withId(R.id.usernameTaken))
-                .check(matches(withText("Username must not be empty.")));
+                .check(matches(withText("Username must not be empty")));
     }
 
     @Test
@@ -337,7 +337,7 @@ public class AccountCreationActivityAndAccountTest {
     public void testCreateAccountWithValidInput() {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("Max Muster"), closeSoftKeyboard());
-        onView(ViewMatchers.withId(R.id.createAcc)).perform(click());
+        onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
         assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
     }
 

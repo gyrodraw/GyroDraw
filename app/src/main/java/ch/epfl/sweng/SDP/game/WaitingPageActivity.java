@@ -247,8 +247,7 @@ public class WaitingPageActivity extends Activity {
     }
 
     /**
-     * Callback function called when a radio button is pressed. Updates the votes in
-     * the database. Get the words that receives the larger amount of votes.
+     * Get the words that received the larger amount of votes.
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2

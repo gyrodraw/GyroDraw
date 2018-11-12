@@ -17,17 +17,20 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Singleton class that represents the matchmaker.
+ */
 public class Matchmaker implements MatchmakingInterface {
 
     private static Matchmaker singleInstance = null;
-    // static method to create instance of Singleton class
+
     private DatabaseReference myRef;
     private Account account;
 
     /**
-     * Create a singleton Instance.
+     * Get (eventually create) the instance.
      *
-     * @return returns a singleton instance.
+     * @return the unique instance.
      */
     public static Matchmaker getInstance(Account account) {
         if (singleInstance == null) {
@@ -37,16 +40,15 @@ public class Matchmaker implements MatchmakingInterface {
         return singleInstance;
     }
 
-    /**
-     * Matchmaker init.
-     */
     private Matchmaker(Account account) {
         this.myRef = Database.INSTANCE.getReference("realRooms");
         this.account = account;
     }
 
     /**
-     * join a room.
+     * Join a room.
+     *
+     * @return true if it was successful, false otherwise
      */
     public Boolean joinRoomOther() {
 
@@ -58,7 +60,8 @@ public class Matchmaker implements MatchmakingInterface {
 
             String userId = account.getUserId();
             String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
-            URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
+            URL url = new URL(
+                    "https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
             connection = createConnection(url);
 
             //Send request
@@ -83,8 +86,9 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     /**
-     * Creates a connection.
+     * Create a connection.
      *
+     * @return a {@link Task} wrapping the result
      */
     public Task<String> joinRoom() {
         FirebaseFunctions mFunctions;
@@ -104,16 +108,11 @@ public class Matchmaker implements MatchmakingInterface {
                         // This continuation runs on either success or failure, but if the task
                         // has failed then getResult() will throw an Exception which will be
                         // propagated down.
-                        String result = (String) task.getResult().getData();
-                        return result;
+                        return (String) task.getResult().getData();
                     }
                 });
     }
 
-    /**
-     * Creates a connection.
-     * @return set up connection
-     */
     private HttpURLConnection createConnection(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
@@ -128,12 +127,17 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     /**
-     * leave a room.
+     * Leave a room.
      *
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
         myRef.child(roomId).child("users")
                 .child(account.getUserId()).removeValue();
+
+        if(!account.getUsername().isEmpty()) {
+            myRef.child(roomId).child("ranking")
+                    .child(account.getUsername()).removeValue();
+        }
     }
 }

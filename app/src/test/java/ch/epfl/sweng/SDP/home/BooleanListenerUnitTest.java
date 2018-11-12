@@ -1,12 +1,12 @@
 package ch.epfl.sweng.SDP.home;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import ch.epfl.sweng.SDP.BooleanVariableListener;
-
-import static org.junit.Assert.assertEquals;
 
 public class BooleanListenerUnitTest {
 
@@ -22,7 +22,7 @@ public class BooleanListenerUnitTest {
     @Test
     public void setValueTest() {
         boolSpy.setBoo(true);
-        assertEquals(boolSpy.getBoo(), true);
+        assertThat(boolSpy.getBoo(), is(true));
     }
 
     @Test
@@ -36,7 +36,7 @@ public class BooleanListenerUnitTest {
 
         boolSpy.setListener(testChangeListener);
         boolSpy.setBoo(true);
-        assertEquals(boolSpy.getListener(), testChangeListener);
-        assertEquals(varTest, 5);
+        assertThat(boolSpy.getListener(), is(testChangeListener));
+        assertThat(varTest, is(5));
     }
 }

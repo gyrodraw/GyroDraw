@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
+                                cloneAccountFromFirebase(dataSnapshot);
                                 launchActivity(HomeActivity.class);
                                 finish();
                             } else {

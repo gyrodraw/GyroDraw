@@ -64,22 +64,7 @@ public class LeaderboardActivity extends Activity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        leaderboard.removeAllViews();
-                        LinkedList<Player> players = new LinkedList<>();
-                        for (DataSnapshot s : dataSnapshot.getChildren()) {
-                            Player temp = new Player((String)s.child("userId").getValue(),
-                                    (String)s.child("username").getValue(),
-                                    (Long)s.child("trophies").getValue());
-
-                            players.add(temp);
-                        }
-                        Collections.sort(players);
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        layoutParams.setMargins(0, 20, 0, 0);
-                        for(int i = 0; i < Math.min(10, players.size()); ++i) {
-                            leaderboard.addView(players.get(i).toLayout(getApplicationContext()), layoutParams);
-                        }
+                        processResponse(dataSnapshot.getChildren());
                     }
 
                     @Override
@@ -87,6 +72,25 @@ public class LeaderboardActivity extends Activity {
 
                     }
                 });
+    }
+
+    private void processResponse(Iterable<DataSnapshot> snapshots) {
+        leaderboard.removeAllViews();
+        LinkedList<Player> players = new LinkedList<>();
+        for (DataSnapshot s : snapshots) {
+            Player temp = new Player((String)s.child("userId").getValue(),
+                    (String)s.child("username").getValue(),
+                    (Long)s.child("trophies").getValue());
+
+            players.add(temp);
+        }
+        Collections.sort(players);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 20, 0, 0);
+        for(int i = 0; i < Math.min(10, players.size()); ++i) {
+            leaderboard.addView(players.get(i).toLayout(getApplicationContext()), layoutParams);
+        }
     }
 
     private class Player implements Comparable {

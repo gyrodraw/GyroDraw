@@ -134,5 +134,7 @@ public class Matchmaker implements MatchmakingInterface {
     public void leaveRoom(String roomId) {
         myRef.child(roomId).child("users")
                 .child(account.getUserId()).removeValue();
+        myRef.child(roomId).child("ranking")
+                .child(account.getUsername()).removeValue();
     }
 }

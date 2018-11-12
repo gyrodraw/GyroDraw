@@ -63,6 +63,7 @@ public class HomeActivity extends Activity {
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
+        final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
@@ -87,6 +88,7 @@ public class HomeActivity extends Activity {
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+        setListener(leaderboardButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
@@ -188,9 +190,8 @@ public class HomeActivity extends Activity {
                 } else {
                     Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG);
                 }
-
                 break;
-            case R.id.trophiesButton:
+            case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
                 break;
             case R.id.leagueImage:

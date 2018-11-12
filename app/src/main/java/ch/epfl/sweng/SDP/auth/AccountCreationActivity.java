@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -20,16 +18,19 @@ public class AccountCreationActivity extends Activity {
 
     private EditText usernameInput;
     private TextView usernameTaken;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
 
-        usernameInput = this.findViewById(R.id.usernameInput);
-        usernameTaken = this.findViewById(R.id.usernameTaken);
+        userEmail = getIntent().getStringExtra("email");
 
-        Button createAcc = this.findViewById(R.id.createAcc);
+        usernameInput = findViewById(R.id.usernameInput);
+        usernameTaken = findViewById(R.id.usernameTaken);
+
+        Button createAcc = findViewById(R.id.createAcc);
         createAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,12 +43,10 @@ public class AccountCreationActivity extends Activity {
      * Gets called when user entered username and clicked on create account.
      */
     public void createAccClicked() {
-        String username = usernameInput.getText().toString();
+        final String username = usernameInput.getText().toString();
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            Account.createAccount(this, new ConstantsWrapper(), username);
-
             Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -55,9 +54,9 @@ public class AccountCreationActivity extends Activity {
                             if (snapshot.exists()) {
                                 usernameTaken.setText(getString(R.string.usernameTaken));
                             } else {
+                                Account.createAccount(getApplicationContext(),
+                                        new ConstantsWrapper(), username, userEmail);
                                 Account.getInstance(getApplicationContext()).registerAccount();
-                                getDefaultSharedPreferences(getApplicationContext()).edit()
-                                        .putBoolean("hasAccount", true).apply();
                                 launchActivity(HomeActivity.class);
                                 finish();
                             }

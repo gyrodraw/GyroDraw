@@ -75,8 +75,7 @@ public class LoginActivity extends Activity {
         if (response.isNewUser()) {
             // New user
             Log.d(TAG, "New user");
-            Intent intent = new Intent(this,
-                    AccountCreationActivity.class);
+            Intent intent = new Intent(this, AccountCreationActivity.class);
             intent.putExtra("email", email);
             startActivity(intent);
             finish();
@@ -88,19 +87,7 @@ public class LoginActivity extends Activity {
                             if (snapshot.exists()) {
                                 // User already has an account on Firebase
                                 Log.d(TAG, "User already has an account on Firebase");
-                                HashMap<String, HashMap<String, Object>> userEntry = (HashMap<String, HashMap<String, Object>>) snapshot
-                                        .getValue();
-                                HashMap<String, Object> user = userEntry
-                                        .get(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                Account.createAccount(getApplicationContext(),
-                                        new ConstantsWrapper(), (String) user.get("username"),
-                                        (String) user.get("email"), (String) user.get("currentLeague"),
-                                        ((Long) user.get("trophies")).intValue(), ((Long) user.get("stars")).intValue(),
-                                        ((Long) user.get("matchesWon")).intValue(), ((Long) user.get("totalMatches")).intValue(),
-                                        ((Long) user.get("averageRating")).doubleValue(), ((Long) user.get("maxTrophies")).intValue());
-                                LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
-                                        getApplicationContext(), null, 1);
-                                handler.saveAccount(Account.getInstance(getApplicationContext()));
+                                cloneAccountFromFirebase(snapshot);
                                 launchActivity(HomeActivity.class);
                                 finish();
                             } else {
@@ -120,6 +107,27 @@ public class LoginActivity extends Activity {
                         }
                     });
         }
+    }
+
+    private void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
+        HashMap<String, HashMap<String, Object>> userEntry =
+                (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
+
+        HashMap<String, Object> user = userEntry
+                .get(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        Account.createAccount(getApplicationContext(),
+                new ConstantsWrapper(), (String) user.get("username"),
+                (String) user.get("email"), (String) user.get("currentLeague"),
+                ((Long) user.get("trophies")).intValue(), ((Long) user.get("stars")).intValue(),
+                ((Long) user.get("matchesWon")).intValue(),
+                ((Long) user.get("totalMatches")).intValue(),
+                ((Long) user.get("averageRating")).doubleValue(),
+                ((Long) user.get("maxTrophies")).intValue());
+
+        LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
+                getApplicationContext(), null, 1);
+        handler.saveAccount(Account.getInstance(getApplicationContext()));
     }
 
     private void handleFailedSignIn(IdpResponse response) {

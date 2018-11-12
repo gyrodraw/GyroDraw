@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
@@ -29,6 +30,8 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
@@ -79,13 +82,15 @@ public class LeaderboardActivityTest {
         onView(withId(R.id.scrollLeaderboard)).check(matches(isCompletelyDisplayed()));
     }
 
-    @Ignore
     @Test
     public void testFriendsButtonsClickable() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         onView(withId(R.id.searchField))
                 .perform(typeText(""), ViewActions.closeSoftKeyboard());
 
-        onView(withTagValue(is((Object)"friendsButton"))).perform(click());
+        SystemClock.sleep(3000);
+        onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
+        SystemClock.sleep(1000);
+        onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
     }
 }

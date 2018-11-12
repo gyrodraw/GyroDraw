@@ -91,7 +91,7 @@ public class LeaderboardActivity extends Activity {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, 20, 0, 0);
         for(int i = 0; i < Math.min(10, players.size()); ++i) {
-            leaderboard.addView(players.get(i).toLayout(getApplicationContext()), layoutParams);
+            leaderboard.addView(players.get(i).toLayout(getApplicationContext(), i), layoutParams);
         }
     }
 
@@ -113,12 +113,12 @@ public class LeaderboardActivity extends Activity {
         }
 
         @SuppressLint("NewApi")
-        private LinearLayout toLayout(final Context context) {
+        private LinearLayout toLayout(final Context context, int index) {
             TextView usernameView = new TextView(context);
             TextView trophiesView = new TextView(context);
             final Button friendsButton = new Button(context);
 
-            friendsButton.setTag("friendsButton");
+            friendsButton.setTag("friendsButton"+index);
 
             setTextSizeAndColor(usernameView, username, 25, Color.YELLOW);
             setTextSizeAndColor(trophiesView, trophies.toString(), 25, Color.LTGRAY);
@@ -138,7 +138,6 @@ public class LeaderboardActivity extends Activity {
                 public void onClick(View view) {
                     isFriendWithCurrentUser(context,
                             changeFriendsButtonBackgroundOnClick(context, friendsButton));
-
                 }
             });
 

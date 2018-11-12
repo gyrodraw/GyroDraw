@@ -71,7 +71,7 @@ public class HomeActivity extends Activity {
         localDb.retrieveAccount(Account.getInstance(this));
 
         final ImageView drawButton = findViewById(R.id.drawButton);
-        final Button offlineButton = findViewById(R.id.playoffline);
+        final ImageView practiceButton = findViewById(R.id.practiceButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
@@ -101,7 +101,7 @@ public class HomeActivity extends Activity {
         setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
         setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(offlineButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(practiceButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
     }
 
     // Launch the LeaguesActivity.
@@ -215,7 +215,7 @@ public class HomeActivity extends Activity {
             case R.id.crossText:
                 profileWindow.dismiss();
                 break;
-            case R.id.playoffline:
+            case R.id.practiceButton:
                 launchActivity(DrawingGame.class);
                 break;
             default:

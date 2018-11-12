@@ -1,10 +1,10 @@
 package ch.epfl.sweng.SDP.home;
 
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
-
-import static junit.framework.TestCase.assertEquals;
+import org.junit.Test;
 
 public class GameStatesUnitTest {
 
@@ -13,18 +13,18 @@ public class GameStatesUnitTest {
     @Test
     public void testConvertIntoEnum() {
         gameStates = GameStates.convertValueIntoState(0);
-        assertEquals(gameStates, GameStates.HOMESTATE);
+        assertThat(gameStates, is(GameStates.HOMESTATE));
 
         gameStates = GameStates.convertValueIntoState(1);
-        assertEquals(gameStates, GameStates.CHOOSE_WORDS_TIMER_START);
+        assertThat(gameStates, is(GameStates.CHOOSE_WORDS_TIMER_START));
 
         gameStates = GameStates.convertValueIntoState(2);
-        assertEquals(gameStates, GameStates.START_DRAWING_ACTIVITY);
+        assertThat(gameStates, is(GameStates.START_DRAWING_ACTIVITY));
 
         gameStates = GameStates.convertValueIntoState(3);
-        assertEquals(gameStates, GameStates.START_VOTING_ACTIVITY);
+        assertThat(gameStates, is(GameStates.START_VOTING_ACTIVITY));
 
         gameStates = GameStates.convertValueIntoState(4);
-        assertEquals(gameStates, GameStates.END_VOTING_ACTIVITY);
+        assertThat(gameStates, is(GameStates.END_VOTING_ACTIVITY));
     }
 }

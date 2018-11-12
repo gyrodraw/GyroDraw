@@ -123,9 +123,6 @@ public class VotingPageActivity extends Activity {
         drawingView = findViewById(R.id.drawing);
         timer = findViewById(R.id.timer);
 
-        playerNameView = findViewById(R.id.playerNameView);
-        drawingView = findViewById(R.id.drawing);
-        timer = findViewById(R.id.timer);
         starsAnimation = findViewById(R.id.starsAnimation);
         ratingBar = findViewById(R.id.ratingBar);
 
@@ -155,7 +152,7 @@ public class VotingPageActivity extends Activity {
 
         timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerCounter);
-        
+
         usersRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -254,24 +251,23 @@ public class VotingPageActivity extends Activity {
         final DatabaseReference playerRating = rankingRef
                 .child(playerName);
 
-        playerRating.addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Get the current rating
-                        Long value = dataSnapshot.getValue(Long.class);
+        playerRating.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get the current rating
+                Long value = dataSnapshot.getValue(Long.class);
 
-                        if (value != null) {
-                            starsAnimation.addStars((int) (value - previousRating));
-                            previousRating = value.intValue();
-                        }
-                    }
+                if (value != null) {
+                    starsAnimation.addStars((int) (value - previousRating));
+                    previousRating = value.intValue();
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     // Change drawing and player name in the UI.

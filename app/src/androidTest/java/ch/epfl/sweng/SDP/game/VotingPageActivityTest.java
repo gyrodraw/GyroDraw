@@ -39,6 +39,8 @@ import org.mockito.Mockito;
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
+    private DataSnapshot dataSnapshotMock;
+
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
             new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
@@ -55,8 +57,6 @@ public class VotingPageActivityTest {
                     return intent;
                 }
             };
-
-    private DataSnapshot dataSnapshotMock;
 
     // Add a monitor for the home activity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
@@ -115,6 +115,10 @@ public class VotingPageActivityTest {
     public void testStateChange() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+        RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertTrue(myFragment.isVisible());
     }
 
     @Test

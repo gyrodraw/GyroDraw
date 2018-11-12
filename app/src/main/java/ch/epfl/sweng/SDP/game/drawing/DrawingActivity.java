@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import android.widget.ToggleButton;
 
 import ch.epfl.sweng.SDP.Activity;
@@ -36,6 +37,7 @@ public class DrawingActivity extends Activity {
     private ImageView pencilButton;
     private ImageView eraserButton;
     private ImageView bucketButton;
+
 
     protected int getLayoutid() {
         return R.layout.activity_drawing_offline;

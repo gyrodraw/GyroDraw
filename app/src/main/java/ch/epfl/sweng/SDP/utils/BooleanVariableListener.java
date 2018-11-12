@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.utils;
 
 public class BooleanVariableListener {
     private boolean bool;

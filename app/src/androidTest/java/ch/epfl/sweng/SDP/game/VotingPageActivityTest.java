@@ -158,13 +158,4 @@ public class VotingPageActivityTest {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
         mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
     }
-
-    @Test
-    public void testSetLayoutToVisible() {
-        mActivityRule.getActivity().callSetLayoutVisibility();
-        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
-        onView(withId(R.id.playerNameView)).check(matches(isDisplayed()));
-        onView(withId(R.id.drawing)).check(matches(isDisplayed()));
-        onView(withId(R.id.timer)).check(matches(isDisplayed()));
-    }
 }

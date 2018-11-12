@@ -166,6 +166,5 @@ public class VotingPageActivityTest {
         onView(withId(R.id.playerNameView)).check(matches(isDisplayed()));
         onView(withId(R.id.drawing)).check(matches(isDisplayed()));
         onView(withId(R.id.timer)).check(matches(isDisplayed()));
-        onView(withId(R.id.starsAnimation)).check(matches(isDisplayed()));
     }
 }

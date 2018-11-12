@@ -35,10 +35,10 @@ public class LeaderboardActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_leaderboard);
-        EditText searchField = findViewById(R.id.searchField);
         leaderboard = findViewById(R.id.leaderboard);
+
+        EditText searchField = findViewById(R.id.searchField);
         searchField.addTextChangedListener(new TextWatcher() {
-            boolean _ignore = false;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Not what we need.
@@ -51,13 +51,7 @@ public class LeaderboardActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (_ignore)
-                    return;
-                _ignore = true;
-
                 updateLeaderboard(s.toString());
-
-                _ignore = false;
             }
         });
 
@@ -82,12 +76,9 @@ public class LeaderboardActivity extends Activity {
                         Collections.sort(players);
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
                         layoutParams.setMargins(0, 20, 0, 0);
                         for(int i = 0; i < Math.min(10, players.size()); ++i) {
-                            Player p = players.get(i);
-
-                            leaderboard.addView(p.toLayout(getApplicationContext()), layoutParams);
+                            leaderboard.addView(players.get(i).toLayout(getApplicationContext()), layoutParams);
                         }
                     }
 
@@ -98,7 +89,7 @@ public class LeaderboardActivity extends Activity {
                 });
     }
 
-    private class Player implements Comparable{
+    private class Player implements Comparable {
 
         private String userId;
         private String username;
@@ -119,34 +110,63 @@ public class LeaderboardActivity extends Activity {
         }
 
         @SuppressLint("NewApi")
-        public RelativeLayout toLayout(final Context context) {
-            RelativeLayout entry = new RelativeLayout(context);
-            TextView name = new TextView(context);
-            TextView troph = new TextView(context);
-            final Button addFriend = new Button(context);
-            name.setText(username);
-            name.setTextSize(25);
-            name.setTextColor(Color.YELLOW);
-            troph.setText(trophies+"");
-            troph.setTextSize(25);
-            troph.setTextColor(Color.LTGRAY);
-            troph.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-            RelativeLayout.LayoutParams friendsButtonParams = new RelativeLayout.LayoutParams(90,90);
-            friendsButtonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        public LinearLayout toLayout(final Context context) {
+            LinearLayout entry = new LinearLayout(context);
+            TextView usernameView = new TextView(context);
+            TextView trophiesView = new TextView(context);
+            final Button friendsButton = new Button(context);
 
-            addFriend.setLayoutParams(friendsButtonParams); //causes layout update
-            RelativeLayout.LayoutParams trophiesParams = new RelativeLayout.LayoutParams(800,90);
-            trophiesParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            trophiesParams.addRule(RelativeLayout.LEFT_OF, addFriend.getId());
+            setTextSizeAndColor(usernameView, username, 25, Color.YELLOW);
+            setTextSizeAndColor(trophiesView, trophies.toString(), 25, Color.LTGRAY);
 
-            troph.setLayoutParams(trophiesParams);
-            isFriendWithCurrenUser(context, new ValueEventListener() {
+            trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
+
+            usernameView.setLayoutParams(
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+
+            // initializes the friendsButton on first view of leaderboard
+            isFriendWithCurrenUser(context, initializeFriendsButton(friendsButton));
+
+            // modifies friedsButton on every click
+            friendsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isFriendWithCurrenUser(context,
+                            changeFriendsButtonBackgroundOnClick(context, friendsButton));
+
+                }
+            });
+
+            entry.addView(usernameView);
+            entry.addView(trophiesView);
+            entry.addView(friendsButton);
+            entry.setBackgroundColor(Color.DKGRAY);
+            entry.setPadding(30,10,30,10);
+
+            return entry;
+        }
+
+        private void setTextSizeAndColor(TextView view, String text, float size, int color) {
+            view.setText(text);
+            view.setTextSize(size);
+            view.setTextColor(color);
+        }
+
+        private void isFriendWithCurrenUser(final Context context, ValueEventListener listener) {
+            Database.INSTANCE.getReference("users").child(userId).child("friends")
+                    .child(Account.getInstance(context).getUserId())
+                    .addListenerForSingleValueEvent(listener);
+        }
+
+        private ValueEventListener initializeFriendsButton(final Button friendButton) {
+            return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        addFriend.setBackgroundResource(R.drawable.remove_friend);
+                        friendButton.setBackgroundResource(R.drawable.remove_friend);
                     } else {
-                        addFriend.setBackgroundResource(R.drawable.add_friend);
+                        friendButton.setBackgroundResource(R.drawable.add_friend);
                     }
                 }
 
@@ -154,43 +174,27 @@ public class LeaderboardActivity extends Activity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
-            addFriend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    isFriendWithCurrenUser(context, new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                Account.getInstance(context).removeFriend(userId);
-                                addFriend.setBackgroundResource(R.drawable.add_friend);
-                            } else {
-                                Account.getInstance(context).addFriend(userId);
-                                addFriend.setBackgroundResource(R.drawable.remove_friend);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
-            });
-            entry.addView(name);
-            entry.addView(troph);
-            entry.addView(addFriend);
-            entry.setBackgroundColor(Color.DKGRAY);
-            entry.setPadding(30,10,30,10);
-
-            return entry;
+            };
         }
 
-        private void isFriendWithCurrenUser(final Context context, ValueEventListener listener) {
-            Database.INSTANCE.getReference("users").child(userId).child("friends")
-                    .child(Account.getInstance(context).getUserId())
-                    .addListenerForSingleValueEvent(listener);
+        private ValueEventListener changeFriendsButtonBackgroundOnClick(final Context context, final Button friendButton) {
+            return new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Account.getInstance(context).removeFriend(userId);
+                        friendButton.setBackgroundResource(R.drawable.add_friend);
+                    } else {
+                        Account.getInstance(context).addFriend(userId);
+                        friendButton.setBackgroundResource(R.drawable.remove_friend);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
         }
     }
 }

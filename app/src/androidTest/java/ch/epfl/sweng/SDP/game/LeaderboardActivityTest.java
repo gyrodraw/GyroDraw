@@ -3,8 +3,6 @@ package ch.epfl.sweng.SDP.game;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -14,21 +12,24 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
 import ch.epfl.sweng.SDP.R;
 
 import com.google.firebase.FirebaseApp;
+
+import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.hamcrest.CoreMatchers.is;
-
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
 
     @Rule
-    public final ActivityTestRule<LeaderboardActivity> mActivityRule =
+    public final ActivityTestRule<LeaderboardActivity> activityRule =
             new ActivityTestRule<>(LeaderboardActivity.class);
 
     @Test

@@ -10,6 +10,7 @@ import android.support.test.espresso.action.ViewActions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
@@ -38,14 +39,7 @@ public class LeaderboardActivityTest {
     public void testSearchFieldVisible() {
         onView(withId(R.id.searchField))
                 .perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.searchField)).check(matches(isCompletelyDisplayed()));
-    }
-
-    @Test
-    public void testScrollViewVisible() {
-        onView(withId(R.id.scrollLeaderboard))
-                .perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.scrollLeaderboard)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.searchField)).check(matches(isClickable()));
     }
 
     @Test

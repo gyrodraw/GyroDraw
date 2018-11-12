@@ -223,7 +223,8 @@ public class HomeActivity extends Activity {
      * @param frequency the frequency of the bounce
      * @param context   the context of the view
      */
-    public static void bounceButton(final View view, double amplitude, int frequency, Context context) {
+    public static void bounceButton(final View view, double amplitude,
+                                    int frequency, Context context) {
         assert amplitude != 0;
         final Animation bounce = AnimationUtils.loadAnimation(context, R.anim.bounce);
         BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);

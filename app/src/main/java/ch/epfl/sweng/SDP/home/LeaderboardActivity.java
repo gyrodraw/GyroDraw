@@ -145,7 +145,7 @@ public class LeaderboardActivity extends Activity {
     }
 
     /**
-     * Helper class to manage and display data from Firebase
+     * Helper class to manage and display data from Firebase.
      */
     private class Player implements Comparable {
 
@@ -193,8 +193,10 @@ public class LeaderboardActivity extends Activity {
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
             TextView trophiesView = new TextView(context);
-            styleView(trophiesView, trophies.toString(), getResources().getColor(R.color.colorLightGrey),
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+            styleView(trophiesView, trophies.toString(),
+                    getResources().getColor(R.color.colorLightGrey),
+                    new LinearLayout.LayoutParams(0,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 2));
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
             trophiesView.setPadding(0, 0, 30, 0);
 

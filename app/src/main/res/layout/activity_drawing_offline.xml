@@ -44,13 +44,20 @@
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/bucket" />
 
-        <Button
+        <TextView
             android:id="@+id/exit"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:gravity="center"
+            android:includeFontPadding="false"
             android:onClick="exitClick"
-            android:text="exit" />
+            android:text="@string/cross"
+            android:textColor="@color/colorRed"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -63,12 +70,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 
     <LinearLayout
         android:layout_width="match_parent"

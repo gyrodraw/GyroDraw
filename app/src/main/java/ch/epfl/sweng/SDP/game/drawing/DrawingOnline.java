@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class DrawingOnline extends DrawingOffline {
+public class DrawingOnline extends GyroDrawingActivity {
 
     private int time;
     private int timeInterval;

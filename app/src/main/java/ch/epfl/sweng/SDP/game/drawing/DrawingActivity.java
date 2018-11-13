@@ -126,11 +126,4 @@ public class DrawingActivity extends Activity {
         }
     }
 
-    public void exitClick(View view) {
-        Log.d(TAG, "Exiting drawing view");
-        this.finish();
-    }
-
-
-
 }

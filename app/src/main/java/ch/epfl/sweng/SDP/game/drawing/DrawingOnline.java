@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
@@ -38,6 +39,22 @@ public class DrawingOnline extends DrawingOffline {
     private DatabaseReference stateRef;
     private boolean isVotingActivityLaunched = false;
 
+    protected final ValueEventListener listenerTimer = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+
+            if (value != null) {
+                ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_drawing;
@@ -63,8 +80,6 @@ public class DrawingOnline extends DrawingOffline {
 
         roomId = intent.getStringExtra("RoomID");
         winningWord = intent.getStringExtra("WinningWord");
-
-        setCountdownTimer();
 
     }
 
@@ -116,18 +131,6 @@ public class DrawingOnline extends DrawingOffline {
     };
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Matchmaker.getInstance(Account.getInstance(this))
-                    .leaveRoom(roomId);
-            launchActivity(HomeActivity.class);
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-
-    }
-
     // MARK: COUNTDOWN METHODS
 
     /**
@@ -141,25 +144,21 @@ public class DrawingOnline extends DrawingOffline {
         // add redirection here
     }
 
-    /**
-     * Initializes the countdown to a given time.
-     *
-     * @return the countdown
-     */
-    private CountDownTimer setCountdownTimer() {
-        return new CountDownTimer(time, timeInterval) {
-            public void onTick(long millisUntilFinished) {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText(Long.toString(millisUntilFinished / timeInterval));
-            }
 
-            public void onFinish() {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setTextSize(20);
-                textView.setText("Time over!");
-                stop();
+    /**
+     * Method that call onDataChange on the UI thread.
+     *
+     * @param dataSnapshot Snapshot of the database (mock snapshot
+     *                     in out case).
+     */
+    @VisibleForTesting
+    public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listenerTimer.onDataChange(dataSnapshot);
             }
-        }.start();
+        });
     }
 
 

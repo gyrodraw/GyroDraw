@@ -25,22 +25,6 @@ public class DrawingOffline extends DrawingActivity implements SensorEventListen
     private int speed;
     private SensorManager sensorManager;
 
-    protected final ValueEventListener listenerTimer = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
-
-            if (value != null) {
-                ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,26 +87,9 @@ public class DrawingOffline extends DrawingActivity implements SensorEventListen
         paintView.setCircle((int) tempX, (int) tempY);
     }
 
-    public void exitClick(View view) {
+    private void exitClick(View view) {
         Log.d(TAG, "Exiting drawing view");
         this.finish();
     }
-
-    /**
-     * Method that call onDataChange on the UI thread.
-     *
-     * @param dataSnapshot Snapshot of the database (mock snapshot
-     *                     in out case).
-     */
-    @VisibleForTesting
-    public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listenerTimer.onDataChange(dataSnapshot);
-            }
-        });
-    }
-
 
 }

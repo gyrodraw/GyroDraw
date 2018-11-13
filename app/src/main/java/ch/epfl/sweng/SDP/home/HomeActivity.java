@@ -47,7 +47,7 @@ public class HomeActivity extends Activity {
 
     /**
      * Disables the background animation. Call this method in every HomeActivity test
-     */
+     */ 
     public static void disableBackgroundAnimation() {
         enableBackgroundAnimation = false;
     }

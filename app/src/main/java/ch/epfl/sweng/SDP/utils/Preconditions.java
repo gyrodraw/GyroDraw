@@ -11,6 +11,7 @@ public final class Preconditions {
      *
      * @param precondition the precondition to assert
      * @param errorMessage the error message to show
+     * @throws IllegalArgumentException if the precondition is false
      */
     public static void checkPrecondition(boolean precondition, String errorMessage) {
         if (!precondition) {
@@ -23,6 +24,7 @@ public final class Preconditions {
      * thrown.
      *
      * @param precondition the precondition to assert
+     * @throws IllegalArgumentException if the precondition is false
      */
     public static void checkPrecondition(boolean precondition) {
         if (!precondition) {

@@ -13,7 +13,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static org.junit.Assert.*;
 
-public class DrawingGameTest {
+public class DrawingOfflineTest {
 
     @Rule
     public final ActivityTestRule<DrawingOffline> activityRule =

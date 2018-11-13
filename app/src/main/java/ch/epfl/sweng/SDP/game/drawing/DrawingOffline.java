@@ -50,11 +50,6 @@ public class DrawingOffline extends DrawingActivity implements SensorEventListen
     };
 
     @Override
-    protected int getLayoutid() {
-        return R.layout.activity_drawing_offline;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

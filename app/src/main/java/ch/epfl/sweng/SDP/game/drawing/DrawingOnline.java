@@ -96,6 +96,7 @@ public class DrawingOnline extends DrawingOffline {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch(stateEnum) {
                     case START_VOTING_ACTIVITY:
+                        isVotingActivityLaunched = true;
                         timerRef.removeEventListener(listenerTimer);
                         Intent intent = new Intent(getApplicationContext(),
                                 VotingPageActivity.class);

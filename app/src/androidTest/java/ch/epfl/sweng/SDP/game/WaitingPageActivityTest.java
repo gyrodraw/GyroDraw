@@ -217,7 +217,7 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void testOnState3Change() {
+    public void testOnState2Change() {
         Intents.init();
 
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);

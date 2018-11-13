@@ -38,7 +38,7 @@ import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
-public class DrawingActivityTest {
+public class DrawingOnlineTest {
 
     @Rule
     public final ActivityTestRule<DrawingOnline> activityRule =

@@ -27,6 +27,7 @@ import java.util.List;
 public class LoginActivity extends Activity {
 
     private static final String TAG = "LoginActivity";
+    private static final String EMAIL = "email";
     private static final int RC_SIGN_IN = 42;
 
     @Override
@@ -81,11 +82,11 @@ public class LoginActivity extends Activity {
             // New user
             Log.d(TAG, "New user");
             Intent intent = new Intent(this, AccountCreationActivity.class);
-            intent.putExtra("email", email);
+            intent.putExtra(EMAIL, email);
             startActivity(intent);
             finish();
         } else {
-            Database.INSTANCE.getReference("users").orderByChild("email").equalTo(email)
+            Database.INSTANCE.getReference("users").orderByChild(EMAIL).equalTo(email)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,7 +101,7 @@ public class LoginActivity extends Activity {
                                 Log.d(TAG, "User signed in but not did not create an account");
                                 Intent intent = new Intent(getApplicationContext(),
                                         AccountCreationActivity.class);
-                                intent.putExtra("email", email);
+                                intent.putExtra(EMAIL, email);
                                 startActivity(intent);
                                 finish();
                             }

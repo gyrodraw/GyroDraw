@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            throw databaseError.toException();
                         }
                     });
         } else {
@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         launchActivity(LoginActivity.class);
                         finish();
                     }

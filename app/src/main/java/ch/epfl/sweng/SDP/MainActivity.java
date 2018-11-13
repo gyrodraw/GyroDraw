@@ -58,6 +58,8 @@ public class MainActivity extends Activity {
 
     private void displayMainLayout() {
         setContentView(R.layout.activity_main);
+        Glide.with(this).load(R.drawable.background_animation)
+                .into((ImageView) findViewById(R.id.backgroundAnimation));
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {
                     @Override

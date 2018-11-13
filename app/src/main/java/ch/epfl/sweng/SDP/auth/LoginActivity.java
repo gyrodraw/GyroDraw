@@ -39,6 +39,8 @@ public class LoginActivity extends Activity {
 
         createSignInIntent();
 
+        Glide.with(this).load(R.drawable.waiting_animation_dots)
+                .into((ImageView) findViewById(R.id.waitingAnimationDots));
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
     }

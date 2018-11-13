@@ -1,14 +1,11 @@
 package ch.epfl.sweng.SDP.game;
 
-import static java.lang.String.format;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,24 +13,28 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import static java.lang.String.format;
+
 import java.util.Locale;
 
 public class WaitingPageActivity extends Activity {
-
 
     private static final String TAG = "WaitingPageActivity";
 
@@ -230,15 +231,17 @@ public class WaitingPageActivity extends Activity {
 //        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
 
     protected void launchDrawingActivity() {
+        Intent intent = new Intent(getApplicationContext(), DrawingOnline.class);
+
         isDrawingActivityLaunched = true;
-        Intent intent = new Intent(getApplicationContext(), DrawingActivity.class);
+
         intent.putExtra("RoomID", roomID);
         intent.putExtra("WinningWord", winningWord);
         startActivity(intent);
     }
 
     private void initRadioButton(Button button, String childString,
-            DatabaseReference dbRef, WordNumber wordNumber) {
+                                 DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.addValueEventListener(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
@@ -251,7 +254,7 @@ public class WaitingPageActivity extends Activity {
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
-     * @param words Array containing the words
+     * @param words      Array containing the words
      * @return Returns the winning word.
      */
     public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
@@ -344,9 +347,10 @@ public class WaitingPageActivity extends Activity {
 
         // We should probably check if the database is ready too
         if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            Intent intent = new Intent(this, DrawingActivity.class);
+            Intent intent = new Intent(this, DrawingOnline.class);
             intent.putExtra("RoomID", roomID);
             startActivity(intent);
+
         }
     }
 
@@ -397,7 +401,7 @@ public class WaitingPageActivity extends Activity {
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.
-        if(!isDrawingActivityLaunched) {
+        if (!isDrawingActivityLaunched) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
         }
         removeAllListeners();

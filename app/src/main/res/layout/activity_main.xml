@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:context="ch.epfl.sweng.SDP.MainActivity"
-    tools:layout_editor_absoluteY="25dp">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/colorPrimaryDark"
+  tools:context="ch.epfl.sweng.SDP.MainActivity"
+  tools:layout_editor_absoluteY="25dp">
 
     <ImageView
         android:id="@+id/backgroundImage"
@@ -32,8 +32,8 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="141dp"
-        android:layout_height="135dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="225dp"
         android:contentDescription="@string/app_logo"

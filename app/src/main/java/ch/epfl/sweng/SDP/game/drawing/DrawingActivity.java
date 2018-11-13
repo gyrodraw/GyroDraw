@@ -17,7 +17,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -25,10 +24,8 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -68,7 +65,7 @@ public class DrawingActivity extends Activity implements SensorEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
-            if(state != null) {
+            if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch(stateEnum) {
                     case START_VOTING_ACTIVITY:

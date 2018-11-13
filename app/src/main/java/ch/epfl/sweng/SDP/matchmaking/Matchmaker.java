@@ -135,7 +135,7 @@ public class Matchmaker implements MatchmakingInterface {
         myRef.child(roomId).child("users")
                 .child(account.getUserId()).removeValue();
 
-        if(!account.getUsername().isEmpty()) {
+        if (!account.getUsername().isEmpty()) {
             myRef.child(roomId).child("ranking")
                     .child(account.getUsername()).removeValue();
         }

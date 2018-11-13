@@ -35,14 +35,15 @@ public class LeaderboardActivity extends Activity {
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private Typeface typeMuro;
-    private LinearLayout leaderboard;
+    private LinearLayout leaderboardView;
+    private Leaderboard leaderboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_leaderboard);
-        leaderboard = findViewById(R.id.leaderboard);
+        leaderboardView = findViewById(R.id.leaderboard);
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
@@ -54,6 +55,8 @@ public class LeaderboardActivity extends Activity {
         ((TextView) findViewById(R.id.exitButton)).setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
         setExitListener();
+
+        leaderboard = new Leaderboard();
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -68,11 +71,9 @@ public class LeaderboardActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable query) {
-                updateLeaderboard(query.toString());
+                leaderboard.update(query.toString());
             }
         });
-
-        updateLeaderboard("");
     }
 
     /**
@@ -101,50 +102,6 @@ public class LeaderboardActivity extends Activity {
     }
 
     /**
-     * Gets called when user entered a new search query.
-     * @param query new string to search
-     */
-    private void updateLeaderboard(String query) {
-        Database.INSTANCE.getReference("users")
-                .orderByChild("username").startAt(query).endAt(query + "\uf8ff")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        processResponse(dataSnapshot.getChildren());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, FIREBASE_ERROR);
-                    }
-                });
-    }
-
-    /**
-     * Gets called when all data has been fetched from Firebase.
-     * Adds snapshots to a list, sorts it by trophies and converts players to LinearLayouts
-     * @param snapshots all players from firebase fulfilling the search query
-     */
-    private void processResponse(Iterable<DataSnapshot> snapshots) {
-        leaderboard.removeAllViews();
-        LinkedList<Player> players = new LinkedList<>();
-        for (DataSnapshot s : snapshots) {
-            Player temp = new Player((String) s.child("userId").getValue(),
-                    (String) s.child("username").getValue(),
-                    (Long) s.child("trophies").getValue());
-
-            players.add(temp);
-        }
-        Collections.sort(players);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 20, 0, 0);
-        for (int i = 0; i < Math.min(10, players.size()); ++i) {
-            leaderboard.addView(players.get(i).toLayout(getApplicationContext(), i), layoutParams);
-        }
-    }
-
-    /**
      * Helper class to manage and display data from Firebase.
      */
     private class Player implements Comparable {
@@ -170,6 +127,10 @@ public class LeaderboardActivity extends Activity {
             return -this.trophies.compareTo(((Player) object).trophies);
         }
 
+        public boolean playerNameContainsString(String query) {
+            return query.equals("") ? true : username.toUpperCase().contains(query.toUpperCase());
+        }
+
         /**
          * Converts this player into a LinearLayout
          * that will be displayed in the leaderboard.
@@ -179,14 +140,7 @@ public class LeaderboardActivity extends Activity {
          */
         @SuppressLint("NewApi")
         private LinearLayout toLayout(final Context context, int index) {
-            final ImageView friendsButton = new ImageView(context);
-            LinearLayout.LayoutParams friendsParams =
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            friendsButton.setLayoutParams(friendsParams);
-            friendsButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-            // give Button unique Tag to test them later
-            friendsButton.setTag("friendsButton" + index);
+            final FriendsButton friendsButton = new FriendsButton(context, this, index);
 
             TextView usernameView = new TextView(context);
             styleView(usernameView, username, getResources().getColor(R.color.colorDrawYellow),
@@ -200,25 +154,8 @@ public class LeaderboardActivity extends Activity {
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
             trophiesView.setPadding(0, 0, 30, 0);
 
-            // initializes the friendsButton on first view of leaderboard
-            isFriendWithCurrentUser(context, initializeFriendsButton(friendsButton));
-
-            // modifies friendsButton on every click
-            friendsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isFriendWithCurrentUser(context,
-                            changeFriendsButtonBackgroundOnClick(context, friendsButton));
-                }
-            });
-
             LinearLayout entry = addViews(new LinearLayout(context),
                     usernameView, trophiesView, friendsButton);
-
-            // set friendsButton to invisible to yourself
-            if(username.equals(Account.getInstance(context).getUsername())) {
-                friendsButton.setVisibility(View.INVISIBLE);
-            }
 
             entry.setBackgroundColor(Color.DKGRAY);
             entry.setPadding(30, 10, 30, 10);
@@ -243,31 +180,68 @@ public class LeaderboardActivity extends Activity {
             view.setTypeface(typeMuro);
             view.setLayoutParams(layoutParams);
         }
+    }
+
+    private class FriendsButton extends android.support.v7.widget.AppCompatImageView {
+
+        private final Context context;
+        private final Player player;
+        private final int index;
+
+        public FriendsButton(Context context, Player player, int index) {
+            super(context);
+            this.context = context;
+            this.player = player;
+            this.index = index;
+            this.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    isFriendWithCurrentUser(
+                            changeFriendsButtonBackgroundOnClick());
+                }
+            });
+            this.isFriendWithCurrentUser(initializeFriendsButton());
+            initLayout();
+        }
+
+        private void initLayout() {
+            LinearLayout.LayoutParams friendsParams =
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            setLayoutParams(friendsParams);
+            setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            // give Button unique Tag to test them later
+            setTag("friendsButton" + index);
+
+            // set friendsButton invisible to yourself
+            if(player.username.equals(Account.getInstance(context).getUsername())) {
+                setVisibility(View.INVISIBLE);
+            }
+        }
 
         /**
-         * Checks if users are friends and applies listener.
-         * @param context   of app
+         * Gets data if users are friends, else null.
+         * Then applies listener.
          * @param listener  how to handle response
          */
-        private void isFriendWithCurrentUser(final Context context, ValueEventListener listener) {
-            Database.INSTANCE.getReference("users").child(userId).child("friends")
+        private void isFriendWithCurrentUser(ValueEventListener listener) {
+            Database.INSTANCE.getReference("users").child(player.userId).child("friends")
                     .child(Account.getInstance(context).getUserId())
                     .addListenerForSingleValueEvent(listener);
         }
 
         /**
          * Check if users are already friends and set background accordingly.
-         * @param friendButton  button in question
-         * @return              listener
+         * @return listener
          */
-        private ValueEventListener initializeFriendsButton(final ImageView friendButton) {
+        private ValueEventListener initializeFriendsButton() {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        friendButton.setBackgroundResource(R.drawable.remove_friend);
+                        setBackgroundResource(R.drawable.remove_friend);
                     } else {
-                        friendButton.setBackgroundResource(R.drawable.add_friend);
+                        setBackgroundResource(R.drawable.add_friend);
                     }
                 }
 
@@ -280,21 +254,18 @@ public class LeaderboardActivity extends Activity {
 
         /**
          * Friends button got clicked, now add/remove friend and modify background.
-         * @param context       of app
-         * @param friendButton  button in question
          * @return              listener
          */
-        private ValueEventListener changeFriendsButtonBackgroundOnClick(
-                final Context context, final ImageView friendButton) {
+        private ValueEventListener changeFriendsButtonBackgroundOnClick() {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Account.getInstance(context).removeFriend(userId);
-                        friendButton.setBackgroundResource(R.drawable.add_friend);
+                        Account.getInstance(context).removeFriend(player.userId);
+                        setBackgroundResource(R.drawable.add_friend);
                     } else {
-                        Account.getInstance(context).addFriend(userId);
-                        friendButton.setBackgroundResource(R.drawable.remove_friend);
+                        Account.getInstance(context).addFriend(player.userId);
+                        setBackgroundResource(R.drawable.remove_friend);
                     }
                 }
 
@@ -303,6 +274,99 @@ public class LeaderboardActivity extends Activity {
                     Log.d(TAG, FIREBASE_ERROR);
                 }
             };
+        }
+    }
+
+    private class Leaderboard {
+
+        private LinkedList<Player> allPlayers;
+        private LinkedList<Player> wantedPlayers;
+
+        private Leaderboard() {
+            allPlayers = new LinkedList<>();
+            wantedPlayers = new LinkedList<>();
+            update("");
+        }
+
+        /**
+         * Gets called when user entered a new search query.
+         * Processes inquiry locally if cache (allPlayers) is not empty.
+         * Else fetches data from Firebase and stores it in allPlayers.
+         * @param query new string to search
+         */
+        private void update(String query) {
+            if (!allPlayers.isEmpty()) {
+                filterWantedPlayers(query);
+                Collections.sort(wantedPlayers);
+                leaderboardView.removeAllViews();
+                addWantedPlayersToLayout();
+            } else {
+                fetchPlayersFromFirebase(query);
+            }
+        }
+
+        /**
+         * Copies all players that contain query into wantedPlayers.
+         * @param query string to search
+         */
+        private void filterWantedPlayers(String query) {
+            wantedPlayers.clear();
+            for (Player tempPlayer : allPlayers) {
+                if (tempPlayer.playerNameContainsString(query)) {
+                    wantedPlayers.add(tempPlayer);
+                }
+            }
+        }
+
+        /**
+         * Gets called when local cache of players is empty.
+         * Adds snapshots to a list, filters it by query,
+         * sorts it by trophies and adds players to LinearLayout
+         *
+         * @param query string to search
+         */
+        private void fetchPlayersFromFirebase(final String query) {
+            Database.INSTANCE.getReference("users")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot s : dataSnapshot.getChildren()) {
+                                if (s.child("userId") == null || s.child("username") == null
+                                        || s.child("trophies") == null) {
+                                    continue;
+                                }
+                                Player temp = new Player((String) s.child("userId").getValue(),
+                                        (String) s.child("username").getValue(),
+                                        (Long) s.child("trophies").getValue());
+
+                                allPlayers.add(temp);
+                            }
+                            filterWantedPlayers(query);
+                            Collections.sort(wantedPlayers);
+                            leaderboardView.removeAllViews();
+                            addWantedPlayersToLayout();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, FIREBASE_ERROR);
+                        }
+                    });
+        }
+
+        /**
+         * Adds wantedPlayers to the leaderboardView.
+         */
+        public void addWantedPlayersToLayout() {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 20, 0, 0);
+
+            // add all (max 10) players to the leaderboard
+            for (int i = 0; i < Math.min(10, wantedPlayers.size()); ++i) {
+                leaderboardView.addView(wantedPlayers.get(i)
+                        .toLayout(getApplicationContext(), i), layoutParams);
+            }
         }
     }
 

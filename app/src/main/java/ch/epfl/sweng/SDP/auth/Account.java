@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.auth;
 import static ch.epfl.sweng.SDP.home.League.createLeague1;
 import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -78,8 +79,8 @@ public class Account {
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
             String username, String email) {
-        createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0, 0,
-                0, 0, 0.0, 0);
+        createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0,
+                0, 0, 0, 0.0, 0);
     }
 
     /**
@@ -103,54 +104,21 @@ public class Account {
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
             String username, String email, String currentLeague, int trophies, int stars,
             int matchesWon, int totalMatches, double averageRating, int maxTrophies) {
-        if (context == null) {
-            throw new IllegalArgumentException("context is null");
-        }
-
-        if (constantsWrapper == null) {
-            throw new IllegalArgumentException("constantsWrapper is null");
-        }
-
-        if (username == null) {
-            throw new IllegalArgumentException("username is null");
-        }
-
-        if (email == null) {
-            throw new IllegalArgumentException("email is null");
-        }
-
-        if (currentLeague == null) {
-            throw new IllegalArgumentException("currentLeague is null");
-        }
-
-        if (trophies < 0) {
-            throw new IllegalArgumentException("trophies is negative");
-        }
-
-        if (stars < 0) {
-            throw new IllegalArgumentException("stars is negative");
-        }
-
-        if (matchesWon < 0) {
-            throw new IllegalArgumentException("matchesWon is negative");
-        }
-
-        if (totalMatches < 0) {
-            throw new IllegalArgumentException("totalMatches is negative");
-        }
-
-        if (averageRating < 0) {
-            throw new IllegalArgumentException("averageRating is negative");
-        }
-
-        if (maxTrophies < 0) {
-            throw new IllegalArgumentException("maxTrophies is negative");
-        }
+        checkPrecondition(context != null, "context is null");
+        checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
+        checkPrecondition(username != null, "username is null");
+        checkPrecondition(email != null, "email is null");
+        checkPrecondition(currentLeague != null, "currentLeague is null");
+        checkPrecondition(trophies >= 0, "trophies is negative");
+        checkPrecondition(stars >= 0, "stars is negative");
+        checkPrecondition(matchesWon >= 0, "matchesWon is negative");
+        checkPrecondition(totalMatches >= 0, "totalMatches is negative");
+        checkPrecondition(averageRating >= 0.0, "averageRating is negative");
+        checkPrecondition(maxTrophies >= 0, "maxTrophies is negative");
 
         instance = new Account(context, constantsWrapper, username, email, currentLeague,
                 trophies,
                 stars, matchesWon, totalMatches, averageRating, maxTrophies);
-
     }
 
     /**
@@ -272,9 +240,8 @@ public class Account {
      * @throws DatabaseException if problems with Firebase
      */
     public void updateUsername(final String newName) throws DatabaseException {
-        if (newName == null) {
-            throw new IllegalArgumentException("Username must not be null");
-        }
+        checkPrecondition(newName != null, "Username must not be null");
+
         usersRef.orderByChild("username").equalTo(newName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -349,10 +316,7 @@ public class Account {
      */
     public void changeStars(final int amount) throws DatabaseException {
         int newStars = amount + stars;
-
-        if (newStars < 0) {
-            throw new IllegalArgumentException("Negative Balance");
-        }
+        checkPrecondition(newStars >= 0, "Negative Balance");
 
         DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(
                 usersRef);
@@ -400,9 +364,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
-        if (!(0 < rating && rating <= 5)) {
-            throw new IllegalArgumentException("Wrong rating given");
-        }
+        checkPrecondition(0 < rating && rating <= 5, "Wrong rating given");
 
         double newAverageRating = averageRating == 0 ? rating
                 : (averageRating * (totalMatches - 1) + rating) / totalMatches;
@@ -423,9 +385,8 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void addFriend(final String usernameId) throws DatabaseException {
-        if (usernameId == null) {
-            throw new IllegalArgumentException("Friend's usernameId is null");
-        }
+        checkPrecondition(usernameId != null, "Friend's usernameId is null");
+
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
         builder.addChildren(userId + ".friends." + usernameId).build()
                 .setValue(true, createCompletionListener());
@@ -439,9 +400,8 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void removeFriend(final String usernameId) throws DatabaseException {
-        if (usernameId == null) {
-            throw new IllegalArgumentException("Friend's usernameId is null");
-        }
+        checkPrecondition(usernameId != null, "Friend's usernameId is null");
+
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
         builder.addChildren(userId + ".friends." + usernameId).build()
                 .removeValue(createCompletionListener());

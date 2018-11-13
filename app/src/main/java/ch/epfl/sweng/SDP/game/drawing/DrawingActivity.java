@@ -39,7 +39,7 @@ public class DrawingActivity extends Activity {
     private ImageView bucketButton;
 
 
-    protected int getLayoutid() {
+    protected int getLayoutId() {
         return R.layout.activity_drawing_offline;
     }
 
@@ -48,7 +48,7 @@ public class DrawingActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fui_slide_in_right,
                 R.anim.fui_slide_out_left);
-        setContentView(getLayoutid());
+        setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),

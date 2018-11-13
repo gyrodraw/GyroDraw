@@ -28,13 +28,13 @@ public class DrawingOfflineTest {
 
 
     @Test
-    public void getLayoutid() {
-        int layoutId = activityRule.getActivity().getLayoutid();
+    public void testCorrectLayout() {
+        int layoutId = activityRule.getActivity().getLayoutId();
         assertEquals(layoutId, R.layout.activity_drawing_offline);
-    }
+
 
     @Test
-    public void exitClick() {
+    public void testExitClick() {
         onView(ViewMatchers.withId(R.id.exit)).perform(click());
         assertTrue(activityRule.getActivity().isFinishing());
     }

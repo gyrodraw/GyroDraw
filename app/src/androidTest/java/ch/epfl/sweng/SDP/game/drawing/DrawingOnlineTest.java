@@ -71,7 +71,7 @@ public class DrawingOnlineTest {
 
     @Test
     public void testCorrectLayout() {
-        int layoutId = activityRule.getActivity().getLayoutid();
+        int layoutId = activityRule.getActivity().getLayoutId();
         assertEquals(layoutId, R.layout.activity_drawing);
     }
 

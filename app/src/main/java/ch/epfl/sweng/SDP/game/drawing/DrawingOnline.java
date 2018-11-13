@@ -39,7 +39,7 @@ public class DrawingOnline extends DrawingOffline {
     private boolean isVotingActivityLaunched = false;
 
     @Override
-    protected int getLayoutid() {
+    protected int getLayoutId() {
         return R.layout.activity_drawing;
     }
 

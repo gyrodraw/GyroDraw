@@ -18,28 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".auth.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".auth.LoginActivity"/>
         <activity android:name=".home.HomeActivity" />
         <activity android:name=".game.WaitingPageActivity" />
-        <activity android:name=".game.drawing.DrawingActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".auth.AccountCreationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".game.drawing.DrawingActivity"/>
+        <activity android:name=".auth.AccountCreationActivity"/>
         <activity android:name=".game.VotingPageActivity" />
         <activity android:name=".home.LeaguesActivity"></activity>
         <activity android:name=".game.LoadingScreenActivity"></activity>

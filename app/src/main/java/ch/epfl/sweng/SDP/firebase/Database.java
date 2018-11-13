@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.firebase;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -19,9 +21,7 @@ public enum Database {
      * @throws IllegalArgumentException if the given string is null
      */
     public DatabaseReference getReference(String path) {
-        if (path == null) {
-            throw new IllegalArgumentException("path is null");
-        }
+        checkPrecondition(path != null, "path is null");
 
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         return builder.addChildren(path).build();
@@ -48,9 +48,8 @@ public enum Database {
          * @throws IllegalArgumentException if the given reference is null
          */
         public DatabaseReferenceBuilder(DatabaseReference initialRef) {
-            if (initialRef == null) {
-                throw new IllegalArgumentException("initialRef is null");
-            }
+            checkPrecondition(initialRef != null, "initialRef is null");
+
             ref = initialRef;
         }
 
@@ -62,9 +61,7 @@ public enum Database {
          * @throws IllegalArgumentException if the given key is null
          */
         public DatabaseReferenceBuilder addChild(String childKey) {
-            if (childKey == null) {
-                throw new IllegalArgumentException("childKey is null");
-            }
+            checkPrecondition(childKey != null, "childKey is null");
 
             if (ref == null) {
                 ref = FirebaseDatabase
@@ -80,14 +77,12 @@ public enum Database {
          * Add multiple children to the reference under construction.
          *
          * @param path the sequence of keys, separated by dots, corresponding to the desired nesting
-         *             of children
+         *     of children
          * @return the builder
          * @throws IllegalArgumentException if the given path is null
          */
         public DatabaseReferenceBuilder addChildren(String path) {
-            if (path == null) {
-                throw new IllegalArgumentException("path is null");
-            }
+            checkPrecondition(path != null, "path is null");
 
             String[] keys = path.split("\\.");
             String root = keys[0];

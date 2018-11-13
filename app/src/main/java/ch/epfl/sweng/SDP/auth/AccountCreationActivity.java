@@ -1,12 +1,9 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +11,6 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,12 +20,14 @@ public class AccountCreationActivity extends Activity {
 
     private EditText usernameInput;
     private TextView usernameTaken;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
 
+        userEmail = getIntent().getStringExtra("email");
         overridePendingTransition(0, 0);
 
         usernameInput = findViewById(R.id.usernameInput);
@@ -48,12 +46,10 @@ public class AccountCreationActivity extends Activity {
      * Gets called when user entered username and clicked on create account.
      */
     public void createAccClicked(View view) {
-        String username = usernameInput.getText().toString();
+        final String username = usernameInput.getText().toString();
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            Account.createAccount(this, new ConstantsWrapper(), username);
-
             Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -62,9 +58,9 @@ public class AccountCreationActivity extends Activity {
                             if (snapshot.exists()) {
                                 usernameTaken.setText(getString(R.string.usernameTaken));
                             } else {
+                                Account.createAccount(getApplicationContext(),
+                                        new ConstantsWrapper(), username, userEmail);
                                 Account.getInstance(getApplicationContext()).registerAccount();
-                                getDefaultSharedPreferences(getApplicationContext()).edit()
-                                        .putBoolean("hasAccount", true).apply();
                                 launchActivity(HomeActivity.class);
                                 finish();
                             }

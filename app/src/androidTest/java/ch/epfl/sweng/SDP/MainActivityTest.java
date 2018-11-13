@@ -35,4 +35,6 @@ public class MainActivityTest {
                 .waitForMonitorWithTimeout(monitor, 5000);
         Assert.assertNotNull(loginActivity);
     }
+
+
 }

@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,31 +15,28 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends Activity {
 
     private static final String TAG = "HomeActivity";
-    private static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-    private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
 
@@ -91,10 +86,10 @@ public class HomeActivity extends Activity {
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
-        setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
-        setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
+        setListener(starsButton, getMainAmplitude(), getMainFrequency());
+        setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
+        setListener(usernameButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -113,38 +108,12 @@ public class HomeActivity extends Activity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            Account.deleteAccount();
                             toastSignOut.cancel();
                             launchActivity(MainActivity.class);
                             finish();
                         } else {
                             Log.e(TAG, "Sign out failed!");
-                        }
-                    }
-                });
-        profileWindow.dismiss();
-    }
-
-    /**
-     * Deletes the user from FirebaseAuth and deletes any existing credentials for the user in
-     * Google Smart Lock. It then starts the {@link MainActivity}.
-     */
-    private void delete() {
-        final Toast toastDelete = makeAndShowToast("Deleting account...");
-
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            getDefaultSharedPreferences(getApplicationContext()).edit()
-                                    .putBoolean("hasAccount", false).apply();
-
-                            toastDelete.cancel();
-                            launchActivity(MainActivity.class);
-                            finish();
-                        } else {
-                            Log.e(TAG, "Delete account failed!");
                         }
                     }
                 });
@@ -189,7 +158,8 @@ public class HomeActivity extends Activity {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(LoadingScreenActivity.class);
                 } else {
-                    Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "No internet connection.",
+                            Toast.LENGTH_LONG).show();
                 }
 
                 break;
@@ -201,9 +171,6 @@ public class HomeActivity extends Activity {
                 break;
             case R.id.signOutButton:
                 signOut();
-                break;
-            case R.id.deleteButton:
-                delete();
                 break;
             case R.id.crossText:
                 profileWindow.dismiss();
@@ -251,8 +218,6 @@ public class HomeActivity extends Activity {
         crossText.setTypeface(typeMuro);
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
         signOutButton.setTypeface(typeMuro);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
-        deleteButton.setTypeface(typeMuro);
     }
 
     private void showPopup() {
@@ -263,19 +228,17 @@ public class HomeActivity extends Activity {
         this.setMuroFont();
 
         TextView gamesWonNumber = profileWindow.findViewById(R.id.gamesWonNumber);
-        gamesWonNumber.setText(Integer.toString(userAccount.getMatchesWon()));
+        gamesWonNumber.setText(String.valueOf(userAccount.getMatchesWon()));
         TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
-        gamesLostNumber.setText(Integer.toString(userAccount.getTotalMatches()));
+        gamesLostNumber.setText(String.valueOf(userAccount.getTotalMatches()));
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
-        averageStarsNumber.setText(Double.toString(userAccount.getAverageRating()));
+        averageStarsNumber.setText(String.valueOf(userAccount.getAverageRating()));
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
-        maxTrophiesNumber.setText(Integer.toString(userAccount.getMaxTrophies()));
+        maxTrophiesNumber.setText(String.valueOf(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);
-        setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(crossText, getMainAmplitude(), getMainFrequency());
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
-        setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        Button deleteButton = profileWindow.findViewById(R.id.deleteButton);
-        setListener(deleteButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(signOutButton, getMainAmplitude(), getMainFrequency());
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();

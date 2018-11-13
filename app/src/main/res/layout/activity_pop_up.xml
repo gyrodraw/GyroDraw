@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@color/colorPrimaryDark"
+    android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -173,28 +174,14 @@
         android:id="@+id/signOutButton"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorGrey"
         android:text="@string/sign_out"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorGrey"
-        android:text="@string/delete_account"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </LinearLayout>

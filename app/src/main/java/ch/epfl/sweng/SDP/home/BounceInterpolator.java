@@ -7,6 +7,11 @@ public class BounceInterpolator implements android.view.animation.Interpolator {
     private final double amplitude;
     private final double frequency;
 
+    /**
+     * Bouncing animation for buttons.
+     * @param amplitude of animation
+     * @param frequency of animation
+     */
     public BounceInterpolator(double amplitude, double frequency) {
         checkPrecondition(amplitude != 0,
                 "Amplitude should be different from 0");

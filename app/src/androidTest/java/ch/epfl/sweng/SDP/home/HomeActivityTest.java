@@ -51,26 +51,17 @@ public class HomeActivityTest {
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
-        Intents.init();
-        onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
-        intended(hasComponent(LoadingScreenActivity.class.getName()));
-        Intents.release();
+        clickOpensClass(R.id.drawButton, LoadingScreenActivity.class);
     }
 
     @Test
     public void testClickOnLeagueImageOpensLeaguesActivity() {
-        Intents.init();
-        onView(ViewMatchers.withId(R.id.league1Image)).perform(click());
-        intended(hasComponent(LeaguesActivity.class.getName()));
-        Intents.release();
+        clickOpensClass(R.id.leagueImage, LeaguesActivity.class);
     }
 
     @Test
     public void testClickOnLeaderboardButtonOpensLeaderboardActivity() {
-        Intents.init();
-        onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
-        intended(hasComponent(LeaderboardActivity.class.getName()));
-        Intents.release();
+        clickOpensClass(R.id.leaderboardButton, LeaderboardActivity.class);
     }
 
     @Test
@@ -113,5 +104,12 @@ public class HomeActivityTest {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
+    }
+
+    private void clickOpensClass(int id, Class newClass) {
+        Intents.init();
+        onView(ViewMatchers.withId(id)).perform(click());
+        intended(hasComponent(newClass.getName()));
+        Intents.release();
     }
 }

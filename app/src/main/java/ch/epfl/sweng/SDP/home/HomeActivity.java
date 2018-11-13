@@ -27,13 +27,14 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import static ch.epfl.sweng.SDP.utils.ViewUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.ViewUtils.getMainFrequency;
+
 public class HomeActivity extends Activity {
 
     private static final String TAG = "HomeActivity";
-    private static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-    private static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
 
@@ -83,10 +84,10 @@ public class HomeActivity extends Activity {
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
-        setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
-        setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
+        setListener(starsButton, getMainAmplitude(), getMainFrequency());
+        setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
+        setListener(usernameButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -233,9 +234,9 @@ public class HomeActivity extends Activity {
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
         maxTrophiesNumber.setText(String.valueOf(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);
-        setListener(crossText, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(crossText, getMainAmplitude(), getMainFrequency());
         Button signOutButton = profileWindow.findViewById(R.id.signOutButton);
-        setListener(signOutButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(signOutButton, getMainAmplitude(), getMainFrequency());
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();

@@ -149,9 +149,9 @@ public class LeaderboardActivity extends Activity {
      */
     private class Player implements Comparable {
 
-        private String userId;
-        private String username;
-        private Long trophies;
+        private final String userId;
+        private final String username;
+        private final Long trophies;
 
         private Player(String userId, String username, Long trophies) {
             this.userId = userId;

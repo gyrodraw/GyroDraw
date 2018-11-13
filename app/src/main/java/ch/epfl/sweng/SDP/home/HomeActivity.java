@@ -15,6 +15,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -22,13 +31,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import static ch.epfl.sweng.SDP.utils.ViewUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.ViewUtils.getMainFrequency;
 
 public class HomeActivity extends Activity {
 

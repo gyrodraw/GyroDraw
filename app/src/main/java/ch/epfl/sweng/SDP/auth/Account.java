@@ -30,12 +30,8 @@ public class Account {
             createLeague3()
     };
 
-<<<<<<< HEAD
-    private static boolean testing = false;
     private static final String FRIENDS_TAG = ".friends.";
 
-=======
->>>>>>> b6e8ede8cb7e10291a539a8b023b427d8bffe068
     private String userId;
     private String username;
     private String email;

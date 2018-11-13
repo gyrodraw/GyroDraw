@@ -71,7 +71,7 @@ public class Account {
      *
      * @param context the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     * instance
+     *     instance
      * @param username the string defining the preferred username
      * @param email the string defining the user email
      * @throws IllegalArgumentException if one of the parameters is null
@@ -88,7 +88,7 @@ public class Account {
      *
      * @param context the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     * instance
+     *     instance
      * @param username the string defining the preferred username
      * @param email the string defining the user's email
      * @param currentLeague the string defining the user's current league

@@ -77,7 +77,7 @@ public enum Database {
          * Add multiple children to the reference under construction.
          *
          * @param path the sequence of keys, separated by dots, corresponding to the desired nesting
-         * of children
+         *     of children
          * @return the builder
          * @throws IllegalArgumentException if the given path is null
          */

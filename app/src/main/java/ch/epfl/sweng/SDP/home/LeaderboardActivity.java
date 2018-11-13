@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.LinkedList;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 public class LeaderboardActivity extends Activity {
 
@@ -87,10 +91,10 @@ public class LeaderboardActivity extends Activity {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        HomeActivity.pressButton(exit, context);
+                        pressButton(exit, context);
                         break;
                     case MotionEvent.ACTION_UP:
-                        HomeActivity.bounceButton(view, HomeActivity.MAIN_AMPLITUDE,
+                        bounceButton(view, HomeActivity.MAIN_AMPLITUDE,
                                 HomeActivity.MAIN_FREQUENCY, context);
                         launchActivity(HomeActivity.class);
                         break;
@@ -128,7 +132,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         public boolean playerNameContainsString(String query) {
-            return query.equals("") ? true : username.toUpperCase().contains(query.toUpperCase());
+            return username.toUpperCase().contains(query.toUpperCase());
         }
 
         /**
@@ -143,12 +147,13 @@ public class LeaderboardActivity extends Activity {
             final FriendsButton friendsButton = new FriendsButton(context, this, index);
 
             TextView usernameView = new TextView(context);
-            styleView(usernameView, username, getResources().getColor(R.color.colorDrawYellow),
+            Resources res = getResources();
+            styleView(usernameView, username, res.getColor(R.color.colorDrawYellow),
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
             TextView trophiesView = new TextView(context);
             styleView(trophiesView, trophies.toString(),
-                    getResources().getColor(R.color.colorLightGrey),
+                    res.getColor(R.color.colorPrimaryDark),
                     new LinearLayout.LayoutParams(0,
                             LinearLayout.LayoutParams.WRAP_CONTENT, 2));
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
@@ -157,7 +162,7 @@ public class LeaderboardActivity extends Activity {
             LinearLayout entry = addViews(new LinearLayout(context),
                     usernameView, trophiesView, friendsButton);
 
-            entry.setBackgroundColor(Color.DKGRAY);
+            entry.setBackgroundColor(res.getColor(R.color.colorLightGrey));
             entry.setPadding(30, 10, 30, 10);
 
             return entry;

@@ -10,15 +10,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -91,11 +91,11 @@ public class HomeActivity extends Activity {
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
-        setListener(leaderboardButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
-        setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
+        setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
+        setListener(starsButton, getMainAmplitude(), getMainFrequency());
+        setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
+        setListener(usernameButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -186,35 +186,6 @@ public class HomeActivity extends Activity {
                 break;
             default:
         }
-    }
-
-    /**
-     * Bounce the given view.
-     *
-     * @param view      the view
-     * @param amplitude the amplitude of the bounce
-     * @param frequency the frequency of the bounce
-     * @param context   the context of the view
-     */
-    public static void bounceButton(final View view, double amplitude,
-                                    int frequency, Context context) {
-        assert amplitude != 0;
-        final Animation bounce = AnimationUtils.loadAnimation(context, R.anim.bounce);
-        BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
-        bounce.setInterpolator(interpolator);
-        view.startAnimation(bounce);
-    }
-
-    /**
-     * Press the given view.
-     *
-     * @param view      the view
-     * @param context   the context of the view
-     */
-    public static void pressButton(View view, Context context) {
-        final Animation press = AnimationUtils.loadAnimation(context, R.anim.press);
-        press.setFillAfter(true);
-        view.startAnimation(press);
     }
 
     private void setMuroFont() {

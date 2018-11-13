@@ -2,12 +2,12 @@ package ch.epfl.sweng.SDP.home;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
-class BounceInterpolator implements android.view.animation.Interpolator {
+public class BounceInterpolator implements android.view.animation.Interpolator {
 
     private final double amplitude;
     private final double frequency;
 
-    BounceInterpolator(double amplitude, double frequency) {
+    public BounceInterpolator(double amplitude, double frequency) {
         checkPrecondition(amplitude != 0,
                 "Amplitude should be different from 0");
 

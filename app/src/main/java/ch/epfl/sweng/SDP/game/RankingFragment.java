@@ -103,7 +103,7 @@ public class RankingFragment extends ListFragment {
 
     private class RankingAdapter extends ArrayAdapter<String> {
 
-        String[] players;
+        private final String[] players;
 
         private RankingAdapter(Context context, String[] players) {
             super(context, 0, players);

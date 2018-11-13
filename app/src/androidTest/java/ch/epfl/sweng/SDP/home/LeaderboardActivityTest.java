@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game;
+package ch.epfl.sweng.SDP.home;
 
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
@@ -10,11 +10,15 @@ import android.support.test.espresso.action.ViewActions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
@@ -39,10 +43,18 @@ public class LeaderboardActivityTest {
             new ActivityTestRule<>(LeaderboardActivity.class);
 
     @Test
-    public void testSearchFieldVisible() {
+    public void testSearchFieldClickable() {
         onView(withId(R.id.searchField))
                 .perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.searchField)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void testClickOnExitButtonOpensHomeActivity() {
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.exitButton)).perform(click());
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
     }
 
     @Test

@@ -10,11 +10,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
-import static junit.framework.TestCase.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
@@ -25,11 +20,18 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
-import com.google.firebase.database.DataSnapshot;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+
+import com.google.firebase.database.DataSnapshot;
+
+import static junit.framework.TestCase.assertEquals;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -114,7 +116,7 @@ public class WaitingPageActivityTest {
             onView(withId(R.id.incrementButton)).perform(click());
         }
 
-        intended(hasComponent(DrawingActivity.class.getName()));
+        intended(hasComponent(DrawingOnline.class.getName()));
         Intents.release();
     }
 
@@ -186,15 +188,15 @@ public class WaitingPageActivityTest {
     @Test
     public void getWinningWordTest() {
         String[] words = {"cat", "dog"};
-        String winningWord = WaitingPageActivity.getWinningWord(2,1,
+        String winningWord = WaitingPageActivity.getWinningWord(2, 1,
                 words);
         assertEquals("cat", winningWord);
 
-        winningWord = WaitingPageActivity.getWinningWord(2,2,
+        winningWord = WaitingPageActivity.getWinningWord(2, 2,
                 words);
         assertEquals("cat", winningWord);
 
-        winningWord = WaitingPageActivity.getWinningWord(2,3,
+        winningWord = WaitingPageActivity.getWinningWord(2, 3,
                 words);
         assertEquals("dog", winningWord);
     }
@@ -221,7 +223,7 @@ public class WaitingPageActivityTest {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
-        intended(hasComponent(DrawingActivity.class.getName()));
+        intended(hasComponent(DrawingOnline.class.getName()));
         Intents.release();
     }
 

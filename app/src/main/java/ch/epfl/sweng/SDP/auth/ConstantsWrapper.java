@@ -30,6 +30,6 @@ public class ConstantsWrapper {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             return FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
-        return "null";
+        return "no_user";
     }
 }

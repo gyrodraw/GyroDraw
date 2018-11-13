@@ -16,9 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
-
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,7 +27,11 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
 
 public class HomeActivity extends Activity {
 
@@ -66,6 +67,7 @@ public class HomeActivity extends Activity {
         localDb.retrieveAccount(Account.getInstance(this));
 
         final ImageView drawButton = findViewById(R.id.drawButton);
+        final ImageView practiceButton = findViewById(R.id.practiceButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
@@ -85,11 +87,13 @@ public class HomeActivity extends Activity {
         usernameButton.setTypeface(typeMuro);
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
+
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
         setListener(starsButton, getMainAmplitude(), getMainFrequency());
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
+        setListener(practiceButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -174,6 +178,9 @@ public class HomeActivity extends Activity {
                 break;
             case R.id.crossText:
                 profileWindow.dismiss();
+                break;
+            case R.id.practiceButton:
+                launchActivity(DrawingOffline.class);
                 break;
             default:
         }

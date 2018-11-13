@@ -18,14 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".auth.LoginActivity"/>
+        <activity android:name=".auth.LoginActivity" />
         <activity android:name=".home.HomeActivity" />
         <activity android:name=".game.WaitingPageActivity" />
-        <activity android:name=".game.drawing.DrawingActivity"/>
-        <activity android:name=".auth.AccountCreationActivity"/>
+        <activity android:name=".game.drawing.DrawingOffline" />
+        <activity android:name=".game.drawing.DrawingOnline" />
+        <activity android:name=".game.drawing.DrawingActivity" />
+        <activity android:name=".auth.AccountCreationActivity" />
         <activity android:name=".game.VotingPageActivity" />
-        <activity android:name=".home.LeaguesActivity"></activity>
-        <activity android:name=".game.LoadingScreenActivity"></activity>
+        <activity android:name=".home.LeaguesActivity" />
+        <activity android:name=".game.LoadingScreenActivity" />
     </application>
 
 </manifest>

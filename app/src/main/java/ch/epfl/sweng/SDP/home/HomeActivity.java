@@ -91,11 +91,11 @@ public class HomeActivity extends Activity {
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
-        setListener(leaderboardButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(trophiesButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(starsButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        setListener(leagueImage, MAIN_AMPLITUDE, LEAGUE_IMAGE_FREQUENCY);
-        setListener(usernameButton, MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
+        setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
+        setListener(starsButton, getMainAmplitude(), getMainFrequency());
+        setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
+        setListener(usernameButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.

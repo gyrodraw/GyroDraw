@@ -30,6 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
+
 public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
@@ -86,10 +89,10 @@ public class LeaderboardActivity extends Activity {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        HomeActivity.pressButton(exit, context);
+                        pressButton(exit, context);
                         break;
                     case MotionEvent.ACTION_UP:
-                        HomeActivity.bounceButton(view, HomeActivity.MAIN_AMPLITUDE,
+                        bounceButton(view, HomeActivity.MAIN_AMPLITUDE,
                                 HomeActivity.MAIN_FREQUENCY, context);
                         launchActivity(HomeActivity.class);
                         break;

@@ -10,15 +10,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -186,35 +186,6 @@ public class HomeActivity extends Activity {
                 break;
             default:
         }
-    }
-
-    /**
-     * Bounce the given view.
-     *
-     * @param view      the view
-     * @param amplitude the amplitude of the bounce
-     * @param frequency the frequency of the bounce
-     * @param context   the context of the view
-     */
-    public static void bounceButton(final View view, double amplitude,
-                                    int frequency, Context context) {
-        assert amplitude != 0;
-        final Animation bounce = AnimationUtils.loadAnimation(context, R.anim.bounce);
-        BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
-        bounce.setInterpolator(interpolator);
-        view.startAnimation(bounce);
-    }
-
-    /**
-     * Press the given view.
-     *
-     * @param view      the view
-     * @param context   the context of the view
-     */
-    public static void pressButton(View view, Context context) {
-        final Animation press = AnimationUtils.loadAnimation(context, R.anim.press);
-        press.setFillAfter(true);
-        view.startAnimation(press);
     }
 
     private void setMuroFont() {

@@ -43,24 +43,31 @@ public class HomeActivityTest {
     @Test
     public void testLocalDb() {
         LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
-                mActivityRule.getActivity(), null,
-                1);
+                mActivityRule.getActivity(), null, 1);
         localDbHandler.saveAccount(Account.getInstance(mActivityRule.getActivity()));
         localDbHandler.retrieveAccount(Account.getInstance(mActivityRule.getActivity()));
     }
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
-        clickOpensClass(R.id.drawButton, LoadingScreenActivity.class);
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
+        Intents.release();
     }
 
     @Test
     public void testClickOnLeagueImageOpensLeaguesActivity() {
-        clickOpensClass(R.id.leagueImage, LeaguesActivity.class);
+        Intents.init();
+        HomeActivity.disableBackgroundAnimation();
+        onView(ViewMatchers.withId(R.id.leagueImage)).perform(click());
+        intended(hasComponent(LeaguesActivity.class.getName()));
+        Intents.release();
     }
 
     @Test
     public void testClickOnLeaderboardButtonOpensLeaderboardActivity() {
+        HomeActivity.disableBackgroundAnimation();
         Intents.init();
         onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
         intended(hasComponent(LeaderboardActivity.class.getName()));
@@ -102,12 +109,5 @@ public class HomeActivityTest {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
-    }
-
-    private void clickOpensClass(int id, Class newClass) {
-        Intents.init();
-        onView(ViewMatchers.withId(id)).perform(click());
-        intended(hasComponent(newClass.getName()));
-        Intents.release();
     }
 }

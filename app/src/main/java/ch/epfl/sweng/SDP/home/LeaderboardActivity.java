@@ -241,7 +241,8 @@ public class LeaderboardActivity extends Activity {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
                                 if (s.child("userId") == null || s.child("username") == null
-                                        || s.child("trophies") == null) {
+                                        || s.child("trophies") == null
+                                        || s.getKey().equals("123456789")) {
                                     continue;
                                 }
                                 Player temp = new Player((String) s.child("userId").getValue(),

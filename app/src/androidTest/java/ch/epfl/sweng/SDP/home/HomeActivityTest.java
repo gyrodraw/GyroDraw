@@ -68,7 +68,7 @@ public class HomeActivityTest {
     @Test
     public void testClickOnTrophiesOpensLeaderboardActivity() {
         Intents.init();
-        onView(ViewMatchers.withId(R.id.trophiesButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
         intended(hasComponent(LeaderboardActivity.class.getName()));
         Intents.release();
     }

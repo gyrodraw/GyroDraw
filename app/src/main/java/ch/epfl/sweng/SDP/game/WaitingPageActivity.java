@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,13 +17,10 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
 
-import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
@@ -235,7 +231,7 @@ public class WaitingPageActivity extends Activity {
 //        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
 
     protected void launchDrawingActivity() {
-        Intent intent = new Intent(getApplicationContext(), DrawingGameWithTimer.class);
+        Intent intent = new Intent(getApplicationContext(), DrawingOnline.class);
 
         isDrawingActivityLaunched = true;
 
@@ -351,7 +347,7 @@ public class WaitingPageActivity extends Activity {
 
         // We should probably check if the database is ready too
         if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            Intent intent = new Intent(this, DrawingGameWithTimer.class);
+            Intent intent = new Intent(this, DrawingOnline.class);
             intent.putExtra("RoomID", roomID);
             startActivity(intent);
 

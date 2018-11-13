@@ -19,14 +19,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import com.google.firebase.database.DataSnapshot;
 import java.io.ByteArrayOutputStream;
@@ -42,8 +41,8 @@ import org.mockito.Mockito;
 public class DrawingActivityTest {
 
     @Rule
-    public final ActivityTestRule<DrawingGameWithTimer> activityRule =
-            new ActivityTestRule<DrawingGameWithTimer>(DrawingGameWithTimer.class){
+    public final ActivityTestRule<DrawingOnline> activityRule =
+            new ActivityTestRule<DrawingOnline>(DrawingOnline.class){
 
                 @Override
                 protected Intent getActivityIntent() {
@@ -68,6 +67,12 @@ public class DrawingActivityTest {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+    }
+
+    @Test
+    public void testCorrectLayout() {
+        int layoutId = activityRule.getActivity().getLayoutid();
+        assertEquals(layoutId, R.layout.activity_drawing);
     }
 
     @Test

@@ -23,13 +23,9 @@ import android.view.View;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingGameWithTimer;
-
-import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 
 import com.google.firebase.database.DataSnapshot;
-
-import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -44,8 +40,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import org.mockito.MockitoAnnotations;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -122,7 +116,7 @@ public class WaitingPageActivityTest {
             onView(withId(R.id.incrementButton)).perform(click());
         }
 
-        intended(hasComponent(DrawingGameWithTimer.class.getName()));
+        intended(hasComponent(DrawingOnline.class.getName()));
         Intents.release();
     }
 
@@ -229,7 +223,7 @@ public class WaitingPageActivityTest {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
-        intended(hasComponent(DrawingGameWithTimer.class.getName()));
+        intended(hasComponent(DrawingOnline.class.getName()));
         Intents.release();
     }
 

@@ -33,14 +33,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".game.drawing.DrawingGame">
+        <activity android:name=".game.drawing.DrawingOffline">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".game.drawing.DrawingGameWithTimer">
+        <activity android:name=".game.drawing.DrawingOnline">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -28,7 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class DrawingGame extends DrawingActivity implements SensorEventListener {
+public class DrawingOffline extends DrawingActivity implements SensorEventListener {
 
     private int speed;
     private SensorManager sensorManager;

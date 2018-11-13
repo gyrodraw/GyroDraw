@@ -1,9 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -25,7 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class DrawingGameWithTimer extends DrawingGame {
+public class DrawingOnline extends DrawingOffline {
 
     private int time;
     private int timeInterval;
@@ -128,7 +126,6 @@ public class DrawingGameWithTimer extends DrawingGame {
         return super.onKeyDown(keyCode, event);
 
     }
-
 
     // MARK: COUNTDOWN METHODS
 

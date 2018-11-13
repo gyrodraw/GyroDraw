@@ -96,11 +96,6 @@ public class HomeActivityTest {
         openAndClosePopUp(R.id.signOutButton);
     }
 
-    @Test
-    public void testCanDeleteAccount() {
-        openAndClosePopUp(R.id.deleteButton);
-    }
-
     private void openAndClosePopUp(int view) {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(view)).perform(click());

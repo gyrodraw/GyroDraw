@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.home;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 /**
  * Class representing a league.
  */
@@ -10,10 +12,10 @@ public class League {
     private final int maxTrophies;
 
     private League(String name, int minTrophies, int maxTrophies) {
-        assert name != null: "name is null";
-        assert minTrophies >= 0: "minTrophies is negative";
-        assert maxTrophies >= 0: "maxTrophies is negative";
-        assert minTrophies <= maxTrophies: "minTrophies is greater than maxTrophies";
+        assert name != null : "name is null";
+        assert minTrophies >= 0 : "minTrophies is negative";
+        assert maxTrophies >= 0 : "maxTrophies is negative";
+        assert minTrophies <= maxTrophies : "minTrophies is greater than maxTrophies";
 
         this.name = name;
         this.minTrophies = minTrophies;
@@ -22,6 +24,7 @@ public class League {
 
     /**
      * Create League 1.
+     *
      * @return the desired league.
      */
     public static League createLeague1() {
@@ -30,6 +33,7 @@ public class League {
 
     /**
      * Create League 2.
+     *
      * @return the desired league.
      */
     public static League createLeague2() {
@@ -38,6 +42,7 @@ public class League {
 
     /**
      * Create League 3.
+     *
      * @return the desired league.
      */
     public static League createLeague3() {
@@ -51,9 +56,8 @@ public class League {
      * @return true if the league contains the given number of trophies, false otherwise
      */
     public boolean contains(int trophies) {
-        if (trophies < 0) {
-            throw new IllegalArgumentException("trophies is negative");
-        }
+        checkPrecondition(trophies >= 0, "trophies is negative");
+
         return minTrophies <= trophies && trophies <= maxTrophies;
     }
 

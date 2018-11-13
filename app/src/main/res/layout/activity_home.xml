@@ -68,9 +68,8 @@
     <ImageView
         android:id="@+id/leagueImage"
         android:layout_width="0dp"
-        android:layout_height="251dp"
+        android:layout_height="250dp"
         android:layout_marginBottom="8dp"
-
         app:layout_constraintBottom_toTopOf="@+id/practiceButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +92,6 @@
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
 
     <ImageView
-
         android:id="@+id/practiceButton"
         android:layout_width="600dp"
         android:layout_height="45dp"
@@ -163,6 +161,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/starsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/starsButton" />
-
 
 </android.support.constraint.ConstraintLayout>

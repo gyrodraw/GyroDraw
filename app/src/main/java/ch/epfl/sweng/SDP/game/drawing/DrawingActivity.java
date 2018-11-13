@@ -7,21 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import android.widget.ToggleButton;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
@@ -29,8 +20,6 @@ public class DrawingActivity extends Activity {
     protected static final String TAG = "DrawingActivity";
     protected PaintView paintView;
     protected Handler handler;
-
-    ToggleButton flyDraw;
 
     private ImageView[] colorButtons;
 

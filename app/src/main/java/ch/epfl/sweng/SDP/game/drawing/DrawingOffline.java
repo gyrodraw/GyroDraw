@@ -87,7 +87,7 @@ public class DrawingOffline extends DrawingActivity implements SensorEventListen
         paintView.setCircle((int) tempX, (int) tempY);
     }
 
-    private void exitClick(View view) {
+    public void exitClick(View view) {
         Log.d(TAG, "Exiting drawing view");
         this.finish();
     }

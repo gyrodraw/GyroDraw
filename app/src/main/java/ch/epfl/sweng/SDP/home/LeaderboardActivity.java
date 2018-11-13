@@ -214,9 +214,12 @@ public class LeaderboardActivity extends Activity {
 
             LinearLayout entry = addViews(new LinearLayout(context),
                     usernameView, trophiesView, friendsButton);
+
+            // set friendsButton to invisible to yourself
             if(username.equals(Account.getInstance(context).getUsername())) {
                 friendsButton.setVisibility(View.INVISIBLE);
             }
+
             entry.setBackgroundColor(Color.DKGRAY);
             entry.setPadding(30, 10, 30, 10);
 

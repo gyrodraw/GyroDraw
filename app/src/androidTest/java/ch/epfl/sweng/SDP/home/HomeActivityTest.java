@@ -61,7 +61,10 @@ public class HomeActivityTest {
 
     @Test
     public void testClickOnLeaderboardButtonOpensLeaderboardActivity() {
-        clickOpensClass(R.id.leaderboardButton, LeaderboardActivity.class);
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
+        intended(hasComponent(LeaderboardActivity.class.getName()));
+        Intents.release();
     }
 
     @Test

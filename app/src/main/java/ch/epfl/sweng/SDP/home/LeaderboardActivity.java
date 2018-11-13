@@ -102,7 +102,7 @@ public class LeaderboardActivity extends Activity {
     }
 
     /**
-     * Helper class to manage and display data from Firebase.
+     * Helper classes to manage and display data from Firebase.
      */
     private class Player implements Comparable {
 
@@ -179,6 +179,99 @@ public class LeaderboardActivity extends Activity {
             view.setTextColor(color);
             view.setTypeface(typeMuro);
             view.setLayoutParams(layoutParams);
+        }
+    }
+
+    private class Leaderboard {
+
+        private LinkedList<Player> allPlayers;
+        private LinkedList<Player> wantedPlayers;
+
+        private Leaderboard() {
+            allPlayers = new LinkedList<>();
+            wantedPlayers = new LinkedList<>();
+            update("");
+        }
+
+        /**
+         * Gets called when user entered a new search query.
+         * Processes inquiry locally if cache (allPlayers) is not empty.
+         * Else fetches data from Firebase and stores it in allPlayers.
+         * @param query new string to search
+         */
+        private void update(String query) {
+            if (!allPlayers.isEmpty()) {
+                filterWantedPlayers(query);
+                Collections.sort(wantedPlayers);
+                leaderboardView.removeAllViews();
+                addWantedPlayersToLayout();
+            } else {
+                fetchPlayersFromFirebase(query);
+            }
+        }
+
+        /**
+         * Copies all players that contain query into wantedPlayers.
+         * @param query string to search
+         */
+        private void filterWantedPlayers(String query) {
+            wantedPlayers.clear();
+            for (Player tempPlayer : allPlayers) {
+                if (tempPlayer.playerNameContainsString(query)) {
+                    wantedPlayers.add(tempPlayer);
+                }
+            }
+        }
+
+        /**
+         * Gets called when local cache of players is empty.
+         * Adds snapshots to a list, filters it by query,
+         * sorts it by trophies and adds players to LinearLayout
+         *
+         * @param query string to search
+         */
+        private void fetchPlayersFromFirebase(final String query) {
+            Database.INSTANCE.getReference("users")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot s : dataSnapshot.getChildren()) {
+                                if (s.child("userId") == null || s.child("username") == null
+                                        || s.child("trophies") == null) {
+                                    continue;
+                                }
+                                Player temp = new Player((String) s.child("userId").getValue(),
+                                        (String) s.child("username").getValue(),
+                                        (Long) s.child("trophies").getValue());
+
+                                allPlayers.add(temp);
+                            }
+                            filterWantedPlayers(query);
+                            Collections.sort(wantedPlayers);
+                            leaderboardView.removeAllViews();
+                            addWantedPlayersToLayout();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, FIREBASE_ERROR);
+                        }
+                    });
+        }
+
+        /**
+         * Adds wantedPlayers to the leaderboardView.
+         */
+        public void addWantedPlayersToLayout() {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 20, 0, 0);
+
+            // add all (max 10) players to the leaderboard
+            for (int i = 0; i < Math.min(10, wantedPlayers.size()); ++i) {
+                leaderboardView.addView(wantedPlayers.get(i)
+                        .toLayout(getApplicationContext(), i), layoutParams);
+            }
         }
     }
 
@@ -274,99 +367,6 @@ public class LeaderboardActivity extends Activity {
                     Log.d(TAG, FIREBASE_ERROR);
                 }
             };
-        }
-    }
-
-    private class Leaderboard {
-
-        private LinkedList<Player> allPlayers;
-        private LinkedList<Player> wantedPlayers;
-
-        private Leaderboard() {
-            allPlayers = new LinkedList<>();
-            wantedPlayers = new LinkedList<>();
-            update("");
-        }
-
-        /**
-         * Gets called when user entered a new search query.
-         * Processes inquiry locally if cache (allPlayers) is not empty.
-         * Else fetches data from Firebase and stores it in allPlayers.
-         * @param query new string to search
-         */
-        private void update(String query) {
-            if (!allPlayers.isEmpty()) {
-                filterWantedPlayers(query);
-                Collections.sort(wantedPlayers);
-                leaderboardView.removeAllViews();
-                addWantedPlayersToLayout();
-            } else {
-                fetchPlayersFromFirebase(query);
-            }
-        }
-
-        /**
-         * Copies all players that contain query into wantedPlayers.
-         * @param query string to search
-         */
-        private void filterWantedPlayers(String query) {
-            wantedPlayers.clear();
-            for (Player tempPlayer : allPlayers) {
-                if (tempPlayer.playerNameContainsString(query)) {
-                    wantedPlayers.add(tempPlayer);
-                }
-            }
-        }
-
-        /**
-         * Gets called when local cache of players is empty.
-         * Adds snapshots to a list, filters it by query,
-         * sorts it by trophies and adds players to LinearLayout
-         *
-         * @param query string to search
-         */
-        private void fetchPlayersFromFirebase(final String query) {
-            Database.INSTANCE.getReference("users")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s.child("userId") == null || s.child("username") == null
-                                        || s.child("trophies") == null) {
-                                    continue;
-                                }
-                                Player temp = new Player((String) s.child("userId").getValue(),
-                                        (String) s.child("username").getValue(),
-                                        (Long) s.child("trophies").getValue());
-
-                                allPlayers.add(temp);
-                            }
-                            filterWantedPlayers(query);
-                            Collections.sort(wantedPlayers);
-                            leaderboardView.removeAllViews();
-                            addWantedPlayersToLayout();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d(TAG, FIREBASE_ERROR);
-                        }
-                    });
-        }
-
-        /**
-         * Adds wantedPlayers to the leaderboardView.
-         */
-        public void addWantedPlayersToLayout() {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 20, 0, 0);
-
-            // add all (max 10) players to the leaderboard
-            for (int i = 0; i < Math.min(10, wantedPlayers.size()); ++i) {
-                leaderboardView.addView(wantedPlayers.get(i)
-                        .toLayout(getApplicationContext(), i), layoutParams);
-            }
         }
     }
 

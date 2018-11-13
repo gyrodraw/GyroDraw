@@ -55,6 +55,34 @@ public class DrawingOnline extends GyroDrawingActivity {
         }
     };
 
+    protected final ValueEventListener listenerState = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer state = dataSnapshot.getValue(Integer.class);
+            if(state != null) {
+                GameStates stateEnum = GameStates.convertValueIntoState(state);
+                switch(stateEnum) {
+                    case START_VOTING_ACTIVITY:
+                        stop();
+                        isVotingActivityLaunched = true;
+                        timerRef.removeEventListener(listenerTimer);
+                        Intent intent = new Intent(getApplicationContext(),
+                                VotingPageActivity.class);
+                        Log.d(TAG, winningWord);
+                        intent.putExtra("RoomID", roomId);
+                        startActivity(intent);
+                        break;
+                    default:
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Does nothing for the moment
+        }
+    };
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_drawing;
@@ -63,6 +91,11 @@ public class DrawingOnline extends GyroDrawingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        roomId = intent.getStringExtra("RoomID");
+        winningWord = intent.getStringExtra("WinningWord");
 
         time = 60000; //will be passed as variable in future, not hardcoded
         timeInterval = 1000;  //will be passed as variable in future, not hardcoded
@@ -75,12 +108,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         timerRef.addValueEventListener(listenerTimer);
         stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
-
-        Intent intent = getIntent();
-
-        roomId = intent.getStringExtra("RoomID");
-        winningWord = intent.getStringExtra("WinningWord");
-
     }
 
     @Override
@@ -102,33 +129,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         timerRef.removeEventListener(listenerTimer);
         stateRef.removeEventListener(listenerState);
     }
-
-    protected final ValueEventListener listenerState = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer state = dataSnapshot.getValue(Integer.class);
-            if(state != null) {
-                GameStates stateEnum = GameStates.convertValueIntoState(state);
-                switch(stateEnum) {
-                    case START_VOTING_ACTIVITY:
-                        isVotingActivityLaunched = true;
-                        timerRef.removeEventListener(listenerTimer);
-                        Intent intent = new Intent(getApplicationContext(),
-                                VotingPageActivity.class);
-                        Log.d(TAG,winningWord);
-                        intent.putExtra("RoomID", roomId);
-                        startActivity(intent);
-                        break;
-                    default:
-                }
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
-        }
-    };
 
 
     // MARK: COUNTDOWN METHODS

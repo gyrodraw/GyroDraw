@@ -20,7 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class DrawingOffline extends GyroDrawingActivity implements SensorEventListener {
+public class DrawingOffline extends GyroDrawingActivity {
 
     public void exitClick(View view) {
         Log.d(TAG, "Exiting drawing view");

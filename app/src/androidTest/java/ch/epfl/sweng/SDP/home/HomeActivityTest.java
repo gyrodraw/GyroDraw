@@ -1,7 +1,9 @@
 package ch.epfl.sweng.SDP.home;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -14,6 +16,7 @@ import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimati
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
+import android.app.Activity;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -22,6 +25,8 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +64,6 @@ public class HomeActivityTest {
     @Test
     public void testClickOnLeagueImageOpensLeaguesActivity() {
         Intents.init();
-        HomeActivity.disableBackgroundAnimation();
         onView(ViewMatchers.withId(R.id.leagueImage)).perform(click());
         intended(hasComponent(LeaguesActivity.class.getName()));
         Intents.release();
@@ -67,7 +71,6 @@ public class HomeActivityTest {
 
     @Test
     public void testClickOnLeaderboardButtonOpensLeaderboardActivity() {
-        HomeActivity.disableBackgroundAnimation();
         Intents.init();
         onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
         intended(hasComponent(LeaderboardActivity.class.getName()));
@@ -109,5 +112,13 @@ public class HomeActivityTest {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
+    }
+
+    @Test
+    public void testPressBackNothingHappens(){
+        Intents.init();
+        pressBack();
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
     }
 }

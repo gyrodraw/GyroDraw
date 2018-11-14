@@ -224,14 +224,6 @@ public class DrawingOnlineTest {
                 paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
     }
 
-    @Test
-    public void testPressBackNothingHappens(){
-        pressBack();
-        Activity drawingActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 1000);
-        Assert.assertNotNull(drawingActivity);
-    }
-
     private Paint initializedPaint(){
         Paint paint = new Paint();
         paint.setColor(Color.RED);

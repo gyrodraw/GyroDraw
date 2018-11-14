@@ -7,6 +7,7 @@ const admin = require('firebase-admin');
 const maxPlayers = 5;
 const mockMaxPlayers = 3;
 const maxWords = 6;
+const numberRoomsPerLeague = 100;
 
 // Waiting times
 const WAITING_TIME_CHOOSE_WORDS = 10;
@@ -151,7 +152,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
       // Check if the room is full, if the user already joined a room and if 
       // the game is not already playing
       if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
-        && playingVal !== PlayingEnum.Playing) {
+        && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true) {
         const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
         const path = parentRoomID + roomID.key;
         _roomID = roomID.key;
@@ -179,6 +180,11 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   });
 });
 
+function isRoomInLeagueRange(roomID, league) {
+  return parseInt(roomID, 10) >= league * numberRoomsPerLeague &&
+          parseInt(roomID, 10) < (league + 1) * numberRoomsPerLeague;
+}
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -205,8 +211,8 @@ function addWordsToDatabase(roomID) {
 }
 
 function generateRoomID(league, roomsList) {
-  const minRoomID = league * 100;
-  const maxRoomID = (league + 1) * 100 - 1
+  const minRoomID = league * numberRoomsPerLeague;
+  const maxRoomID = (league + 1) * numberRoomsPerLeague - 1
   let roomID;
   do {
     roomID = Math.floor(Math.random()*(maxRoomID - minRoomID + 1) + minRoomID);

@@ -17,12 +17,16 @@ import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
@@ -114,11 +118,15 @@ public class HomeActivityTest {
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
 
+    // Add a monitor for the home activity
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(HomeActivity.class.getName(), null, false);
+
     @Test
-    public void testPressBackNothingHappens(){
-        Intents.init();
+    public void testCanOpenLoginActivity() {
         pressBack();
-        intended(hasComponent(HomeActivity.class.getName()));
-        Intents.release();
+        Activity homeActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 3000);
+        Assert.assertNotNull(homeActivity);
     }
 }

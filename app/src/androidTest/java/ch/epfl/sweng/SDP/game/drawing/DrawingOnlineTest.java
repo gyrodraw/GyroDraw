@@ -1,9 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -13,8 +11,6 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -36,7 +32,6 @@ import com.google.firebase.database.DataSnapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,11 +55,6 @@ public class DrawingOnlineTest {
                     return intent;
                 }
             };
-
-
-    // Add a monitor for the drawing activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(DrawingActivity.class.getName(), null, false);
 
     private PaintView paintView;
     private Resources res;

@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.home;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -9,12 +10,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -36,8 +40,10 @@ import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
 public class HomeActivity extends Activity {
 
     private static final String TAG = "HomeActivity";
+    public static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
+    public static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
 
@@ -53,6 +59,7 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
 
@@ -69,6 +76,7 @@ public class HomeActivity extends Activity {
         final ImageView drawButton = findViewById(R.id.drawButton);
         final ImageView practiceButton = findViewById(R.id.practiceButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
+        final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
@@ -89,6 +97,7 @@ public class HomeActivity extends Activity {
         starsCount.setTypeface(typeMuro);
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
+        setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
         setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
         setListener(starsButton, getMainAmplitude(), getMainFrequency());
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
@@ -132,6 +141,7 @@ public class HomeActivity extends Activity {
     }
 
     private void setListener(final View view, final double amplitude, final int frequency) {
+        final Context context = this;
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -142,11 +152,11 @@ public class HomeActivity extends Activity {
                             ((ImageView) view)
                                     .setImageResource(R.drawable.draw_button_pressed);
                         }
-                        pressButton(view);
+                        pressButton(view, context);
                         break;
                     case MotionEvent.ACTION_UP:
                         listenerEventSelector(view, id);
-                        bounceButton(view, amplitude, frequency);
+                        bounceButton(view, amplitude, frequency, context);
                         break;
                     default:
                 }
@@ -165,7 +175,9 @@ public class HomeActivity extends Activity {
                     Toast.makeText(this, "No internet connection.",
                             Toast.LENGTH_LONG).show();
                 }
-
+                break;
+            case R.id.leaderboardButton:
+                launchActivity(LeaderboardActivity.class);
                 break;
             case R.id.leagueImage:
                 showLeagues();
@@ -184,20 +196,6 @@ public class HomeActivity extends Activity {
                 break;
             default:
         }
-    }
-
-    private void bounceButton(final View view, double amplitude, int frequency) {
-        assert amplitude != 0;
-        final Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
-        BounceInterpolator interpolator = new BounceInterpolator(amplitude, frequency);
-        bounce.setInterpolator(interpolator);
-        view.startAnimation(bounce);
-    }
-
-    private void pressButton(View view) {
-        final Animation press = AnimationUtils.loadAnimation(this, R.anim.press);
-        press.setFillAfter(true);
-        view.startAnimation(press);
     }
 
     private void setMuroFont() {

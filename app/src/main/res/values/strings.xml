@@ -37,6 +37,7 @@
     <string name="usernameMustNotBeEmpty">Username must not be empty</string>
     <string name="usernameAlreadyTaken">Username already taken, try again</string>
     <string name="usernameTaken">Username already taken, try again</string>
+    <string name="enter_name_here">Enter name here</string>
 
 
 </resources>

@@ -43,8 +43,7 @@ public class HomeActivityTest {
     @Test
     public void testLocalDb() {
         LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
-                mActivityRule.getActivity(), null,
-                1);
+                mActivityRule.getActivity(), null, 1);
         localDbHandler.saveAccount(Account.getInstance(mActivityRule.getActivity()));
         localDbHandler.retrieveAccount(Account.getInstance(mActivityRule.getActivity()));
     }
@@ -60,8 +59,18 @@ public class HomeActivityTest {
     @Test
     public void testClickOnLeagueImageOpensLeaguesActivity() {
         Intents.init();
+        HomeActivity.disableBackgroundAnimation();
         onView(ViewMatchers.withId(R.id.leagueImage)).perform(click());
         intended(hasComponent(LeaguesActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testClickOnLeaderboardButtonOpensLeaderboardActivity() {
+        HomeActivity.disableBackgroundAnimation();
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
+        intended(hasComponent(LeaderboardActivity.class.getName()));
         Intents.release();
     }
 

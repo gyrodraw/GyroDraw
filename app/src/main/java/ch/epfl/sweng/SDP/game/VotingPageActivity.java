@@ -426,11 +426,11 @@ public class VotingPageActivity extends Activity {
     }
 
     @VisibleForTesting
-    public void callSetLayoutVisibility() {
+    public void callOnStateChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setLayoutToVisible();
+                listenerState.onDataChange(dataSnapshot);
             }
         });
     }

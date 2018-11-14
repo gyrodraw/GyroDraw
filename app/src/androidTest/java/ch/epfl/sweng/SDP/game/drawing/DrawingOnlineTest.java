@@ -1,11 +1,9 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingActivityTest.java
-import android.app.Activity;
-import android.app.Instrumentation;
-=======
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -15,8 +13,9 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.when;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
->>>>>>> f3057675fcc746923b2d6b7b7fe2f28547a03846:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOnlineTest.java
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,39 +23,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingActivityTest.java
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
-=======
 import android.support.test.espresso.intent.Intents;
->>>>>>> f3057675fcc746923b2d6b7b7fe2f28547a03846:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOnlineTest.java
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import ch.epfl.sweng.SDP.R;
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingActivityTest.java
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-
-import org.junit.Assert;
-=======
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import com.google.firebase.database.DataSnapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
->>>>>>> f3057675fcc746923b2d6b7b7fe2f28547a03846:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOnlineTest.java
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

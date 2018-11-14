@@ -10,22 +10,30 @@
     <ImageView
         android:id="@+id/homeBackgroundImage"
         style="@style/BackGroundImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:alpha="1.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/home_background"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/homeBackgroundAnimation"
         style="@style/BackGroundImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:alpha="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
 
@@ -41,6 +49,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/home_trophies_button"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/leaderboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/starsButton"
+        app:srcCompat="@drawable/leaderboard_button"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -62,8 +84,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="80dp"
-        android:layout_marginTop="110dp"
-        app:layout_constraintBottom_toTopOf="@+id/drawButton"
+        android:layout_marginTop="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/practiceButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starsButton"
@@ -83,6 +105,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
+
+    <ImageView
+        android:id="@+id/practiceButton"
+        android:layout_width="600dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/drawButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/home_practice_button"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/drawButton"
@@ -105,6 +140,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="3dp"
         android:background="@android:color/transparent"
+        android:gravity="end"
         android:text="@string/user_name"
         android:textColor="@color/colorDrawYellow"
         android:textSize="25sp"
@@ -112,16 +148,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonVotingPage"
-        android:layout_width="127dp"
-        android:layout_height="39dp"
-        android:background="@null"
-        android:onClick="startVotingPage"
-        android:text="Voting page"
-        android:textColor="@color/colorGrey"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/trophiesCount"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/zero"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="45sp"
+        app:layout_constraintBottom_toBottomOf="@+id/trophiesButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/trophiesButton" />
+
+    <TextView
+        android:id="@+id/starsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/zero"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="45sp"
+        app:layout_constraintBottom_toBottomOf="@+id/starsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/starsButton" />
 
 </android.support.constraint.ConstraintLayout>

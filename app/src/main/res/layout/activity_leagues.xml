@@ -1,66 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".home.LeaguesActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/league3Image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/league_1" />
+    <ImageView
+      android:id="@+id/leaguesBackgroundImage"
+      style="@style/BackGroundImageView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:alpha="1.0"
+      app:srcCompat="@drawable/home_background"
+      tools:ignore="ContentDescription" />
 
-        <TextView
-            android:id="@+id/league3Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="League 3"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorLeague1" />
+    <ImageView
+      android:id="@+id/leaguesBackgroundAnimation"
+      style="@style/BackGroundImageView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:alpha="0.8"
+      app:srcCompat="@drawable/background_animation"
+      tools:ignore="ContentDescription" />
 
-        <ImageView
-            android:id="@+id/league2Image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/league_1" />
+    <ScrollView
+      android:id="@+id/scrollView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:context=".home.LeaguesActivity">
 
-        <TextView
-            android:id="@+id/league2Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="League 2"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorLeague1" />
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
 
+            <ImageView
+              android:id="@+id/league3Image"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:src="@drawable/league_1" />
 
-        <ImageView
-            android:id="@+id/league1Image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/league_1" />
+            <TextView
+              android:id="@+id/league3Name"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="20dp"
+              android:gravity="center"
+              android:text="League 3"
+              android:textAppearance="@style/TextAppearance.AppCompat.Large"
+              android:textColor="@color/colorLeague1" />
 
-        <TextView
-            android:id="@+id/league1Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="League 1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorLeague1" />
+            <ImageView
+              android:id="@+id/league2Image"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:src="@drawable/league_1" />
 
+            <TextView
+              android:id="@+id/league2Name"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="20dp"
+              android:gravity="center"
+              android:text="League 2"
+              android:textAppearance="@style/TextAppearance.AppCompat.Large"
+              android:textColor="@color/colorLeague1" />
 
-    </LinearLayout>
+            <ImageView
+              android:id="@+id/league1Image"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:src="@drawable/league_1" />
 
-</ScrollView>
+            <TextView
+              android:id="@+id/league1Name"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="20dp"
+              android:gravity="center"
+              android:text="League 1"
+              android:textAppearance="@style/TextAppearance.AppCompat.Large"
+              android:textColor="@color/colorLeague1" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

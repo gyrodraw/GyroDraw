@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP;
+package ch.epfl.sweng.SDP.localDatabase;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class LocalDbHandler extends SQLiteOpenHelper {
+public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "myImages.db";
     private static final String TABLE_NAME = "myImages";
@@ -22,7 +22,8 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     /**
      * Helper class to save images in local database.
      */
-    public LocalDbHandler(Context context, SQLiteDatabase.CursorFactory factory, int dbVersion) {
+    public LocalDbHandlerForImages(Context context, SQLiteDatabase.CursorFactory factory,
+            int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
@@ -42,7 +43,7 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db         database to look in
+     * @param db database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */

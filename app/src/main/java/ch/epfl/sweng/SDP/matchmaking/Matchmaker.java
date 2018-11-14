@@ -1,48 +1,56 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import ch.epfl.sweng.SDP.ConstantsWrapper;
+import android.support.annotation.NonNull;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
-
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Singleton class that represents the matchmaker.
+ */
 public class Matchmaker implements MatchmakingInterface {
 
-    private ConstantsWrapper constantsWrapper;
     private static Matchmaker singleInstance = null;
-    // static method to create instance of Singleton class
-    private DatabaseReference reference;
+
+    private DatabaseReference myRef;
+    private Account account;
 
     /**
-     * Create a singleton Instance.
+     * Get (eventually create) the instance.
      *
-     * @return returns a singleton instance.
+     * @return the unique instance.
      */
-    public static Matchmaker getInstance(ConstantsWrapper constantsWrapper) {
+    public static Matchmaker getInstance(Account account) {
         if (singleInstance == null) {
-            singleInstance = new Matchmaker(constantsWrapper);
+            singleInstance = new Matchmaker(account);
         }
 
         return singleInstance;
     }
 
-
-    /**
-     * Matchmaker init.
-     */
-    private Matchmaker(ConstantsWrapper constantsWrapper) {
-        this.constantsWrapper = constantsWrapper;
-        this.reference = constantsWrapper.getReference("rooms");
+    private Matchmaker(Account account) {
+        this.myRef = Database.INSTANCE.getReference("realRooms");
+        this.account = account;
     }
 
     /**
-     * join a room.
+     * Join a room.
+     *
+     * @return true if it was successful, false otherwise
      */
-    public Boolean joinRoom() {
+    public Boolean joinRoomOther() {
 
         Boolean successful = false;
         HttpURLConnection connection = null;
@@ -50,9 +58,10 @@ public class Matchmaker implements MatchmakingInterface {
         try {
             //Create connection
 
-            String userId = constantsWrapper.getFirebaseUserId();
+            String userId = account.getUserId();
             String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
-            URL url = new URL("https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
+            URL url = new URL(
+                    "https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
             connection = createConnection(url);
 
             //Send request
@@ -77,10 +86,33 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     /**
-     * Creates a connection.
+     * Create a connection.
      *
-     * @return set up connection
+     * @return a {@link Task} wrapping the result
      */
+    public Task<String> joinRoom() {
+        FirebaseFunctions mFunctions;
+        mFunctions = FirebaseFunctions.getInstance();
+
+        Map<String, Object> data = new HashMap<>();
+
+        // Pass the ID for the moment
+        data.put("id", account.getUserId());
+        data.put("username", account.getUsername());
+
+        return mFunctions.getHttpsCallable("joinGame2")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        return (String) task.getResult().getData();
+                    }
+                });
+    }
+
     private HttpURLConnection createConnection(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
@@ -95,15 +127,17 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     /**
-     * leave a room.
+     * Leave a room.
      *
      * @param roomId the id of the room.
      */
-    public Boolean leaveRoom(String roomId) {
-        reference.child(roomId)
-                .child("users")
-                .child(constantsWrapper.getFirebaseUserId())
-                .removeValue();
-        return true;
+    public void leaveRoom(String roomId) {
+        myRef.child(roomId).child("users")
+                .child(account.getUserId()).removeValue();
+
+        if (!account.getUsername().isEmpty()) {
+            myRef.child(roomId).child("ranking")
+                    .child(account.getUsername()).removeValue();
+        }
     }
 }

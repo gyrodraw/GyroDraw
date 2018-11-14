@@ -1,40 +1,23 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.LocalDbHandler;
-import ch.epfl.sweng.SDP.R;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
-public class DrawingActivity extends BaseActivity implements SensorEventListener {
-    private static final String TAG = "DrawingActivity";
-    private PaintView paintView;
-    private int speed;
-    private int time;
-    private int timeInterval;
-    private Handler handler;
-    private SensorManager sensorManager;
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+
+public class DrawingActivity extends BaseActivity {
+    protected static final String TAG = "DrawingActivity";
+    protected PaintView paintView;
+    protected Handler handler;
 
     private ImageView[] colorButtons;
 
@@ -42,12 +25,16 @@ public class DrawingActivity extends BaseActivity implements SensorEventListener
     private ImageView eraserButton;
     private ImageView bucketButton;
 
+    protected int getLayoutId() {
+        return R.layout.activity_drawing_offline;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fui_slide_in_right,
                 R.anim.fui_slide_out_left);
-        setContentView(R.layout.activity_drawing);
+        setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         colorButtons = new ImageView[]{findViewById(R.id.blackButton),
@@ -64,15 +51,6 @@ public class DrawingActivity extends BaseActivity implements SensorEventListener
         colorButtons[3].setColorFilter(res.getColor(R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
         colorButtons[4].setColorFilter(res.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
-
-        speed = 5; //will be passed as variable in future, not hardcoded
-        time = 60000; //will be passed as variable in future, not hardcoded
-        timeInterval = 1000; //will be passed as variable in future, not hardcoded
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
         paintView = findViewById(R.id.paintView);
 
         View decorView = getWindow().getDecorView();
@@ -81,9 +59,6 @@ public class DrawingActivity extends BaseActivity implements SensorEventListener
         // Set the content to appear under the system bars so that the
         // content doesn't resize when the system bars hide and show.
 
-        setCountdownTimer();
-
-        // informes the paintView that it has to be updated
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -102,27 +77,6 @@ public class DrawingActivity extends BaseActivity implements SensorEventListener
     }
 
     /**
-     * Initializes the countdown to a given time.
-     *
-     * @return the countdown
-     */
-    private CountDownTimer setCountdownTimer() {
-        return new CountDownTimer(time, timeInterval) {
-            public void onTick(long millisUntilFinished) {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setText(Long.toString(millisUntilFinished / timeInterval));
-            }
-
-            public void onFinish() {
-                TextView textView = findViewById(R.id.timeRemaining);
-                textView.setTextSize(20);
-                textView.setText("Time over!");
-                stop();
-            }
-        }.start();
-    }
-
-    /**
      * Clears the entire Path in paintView.
      *
      * @param view paintView
@@ -131,67 +85,6 @@ public class DrawingActivity extends BaseActivity implements SensorEventListener
         paintView.clear();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Register accelerometer sensor listener
-        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (accelerometer != null) {
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        } else {
-            Log.d(TAG, "We couldn't find the accelerometer on device.");
-        }
-    }
-
-    /**
-     * Fires when a sensor detected a change.
-     *
-     * @param sensorEvent the sensor that has changed
-     */
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        Sensor mySensor = sensorEvent.sensor;
-
-        // we only use accelerometer
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            updateValues(sensorEvent.values[0], sensorEvent.values[1]);
-            handler.sendEmptyMessage(0);
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        //does nothing
-    }
-
-    /**
-     * Called when accelerometer changed, circle coordinates are updated.
-     *
-     * @param coordinateX coordiate
-     * @param coordinateY coordinate
-     */
-    public void updateValues(float coordinateX, float coordinateY) {
-        float tempX = paintView.getCircleX();
-        float tempY = paintView.getCircleY();
-
-        tempX -= coordinateX * speed;
-        tempY += coordinateY * speed;
-
-        paintView.setCircle((int) tempX, (int) tempY);
-    }
-
-    /**
-     * Gets called when time is over.
-     * Saves drawing in database and storage and calls new activity.
-     */
-    private void stop() {
-        LocalDbHandler localDbHandler = new LocalDbHandler(this, null, 1);
-        paintView.saveCanvasInDb(localDbHandler);
-        paintView.saveCanvasInStorage();
-        // add redirection here
-    }
 
     /**
      * Sets the clicked button to selected and sets the corresponding color.
@@ -238,4 +131,5 @@ public class DrawingActivity extends BaseActivity implements SensorEventListener
             default:
         }
     }
+
 }

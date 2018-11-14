@@ -1,7 +1,22 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingActivityTest.java
 import android.app.Activity;
 import android.app.Instrumentation;
+=======
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.when;
+
+import android.content.Intent;
+>>>>>>> f3057675fcc746923b2d6b7b7fe2f28547a03846:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOnlineTest.java
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingActivityTest.java
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -16,12 +32,15 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+=======
+import android.support.test.espresso.intent.Intents;
+>>>>>>> f3057675fcc746923b2d6b7b7fe2f28547a03846:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOnlineTest.java
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import ch.epfl.sweng.SDP.LocalDbHandler;
 import ch.epfl.sweng.SDP.R;
+<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingActivityTest.java
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 
 import java.io.ByteArrayOutputStream;
@@ -31,18 +50,37 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 import org.junit.Assert;
+=======
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import com.google.firebase.database.DataSnapshot;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+>>>>>>> f3057675fcc746923b2d6b7b7fe2f28547a03846:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOnlineTest.java
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
-public class DrawingActivityTest {
+public class DrawingOnlineTest {
+
     @Rule
-    public final ActivityTestRule<DrawingActivity> activityRule =
-            new ActivityTestRule<>(DrawingActivity.class);
+    public final ActivityTestRule<DrawingOnline> activityRule =
+            new ActivityTestRule<DrawingOnline>(DrawingOnline.class){
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("RoomID", "0123457890");
+                    intent.putExtra("WinningWord", "word1Mock");
+
+                    return intent;
+                }
+            };
+
 
     // Add a monitor for the drawing activity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
@@ -50,11 +88,22 @@ public class DrawingActivityTest {
 
     private PaintView paintView;
     private Resources res;
+    private DataSnapshot dataSnapshotMock;
 
+    /**
+     * Initialise mock elements and get UI elements.
+     */
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+    }
+
+    @Test
+    public void testCorrectLayout() {
+        int layoutId = activityRule.getActivity().getLayoutId();
+        assertEquals(layoutId, R.layout.activity_drawing);
     }
 
     @Test
@@ -76,11 +125,27 @@ public class DrawingActivityTest {
         assertTrue(paintView.getCircleRadius() == 12);
     }
 
-    @Test
     public void testSetCircleWorks() {
         paintView.setCircle(30, -10);
         assertEquals(30, paintView.getCircleX());
         assertEquals(1, paintView.getCircleY());
+    }
+
+    @Test
+    public void testStateChange() {
+        Intents.init();
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
+        activityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+
+        intended(hasComponent(VotingPageActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testListenerTimer() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        activityRule.getActivity().callOnDataChangeTimer(dataSnapshotMock);
+        onView(withId(R.id.timeRemaining)).check(matches(withText("5")));
     }
 
     @Test
@@ -96,8 +161,8 @@ public class DrawingActivityTest {
         canvas.drawPath(path, paint);
         canvas.drawBitmap(bitmap, 0, 0, paint);
 
-        LocalDbHandler localDbHandler =
-                new LocalDbHandler(activityRule.getActivity(), null, 1);
+        LocalDbHandlerForImages localDbHandler =
+                new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 100);
 
         bitmap = compressBitmap(bitmap, 100);
@@ -106,7 +171,7 @@ public class DrawingActivityTest {
 
         for(int i = 0; i < 100; ++i){
             for(int j = 0; j < 100; ++j){
-                assertTrue(bitmap.getPixel(i,j) == newBitmap.getPixel(i,j));
+                assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
             }
         }
     }
@@ -214,4 +279,5 @@ public class DrawingActivityTest {
         }
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
+
 }

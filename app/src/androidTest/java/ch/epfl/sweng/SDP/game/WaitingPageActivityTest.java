@@ -11,6 +11,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -19,22 +20,59 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+
+import com.google.firebase.database.DataSnapshot;
+
+import static junit.framework.TestCase.assertEquals;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingActivity;
+import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {
 
+    private static final String ROOM_ID_TEST = "0123457890";
+
+    private DataSnapshot dataSnapshotMock;
+
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
-            new ActivityTestRule<>(WaitingPageActivity.class);
+            new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
+
+                @Override
+                protected void beforeActivityLaunched() {
+                    disableAnimations();
+                }
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("roomID", ROOM_ID_TEST);
+                    intent.putExtra("word1", "word1Mock");
+                    intent.putExtra("word2", "word2Mock");
+
+                    return intent;
+                }
+            };
+
+    @Before
+    public void init() {
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+    }
 
     /**
      * Perform action of waiting for a specific time.
@@ -78,7 +116,7 @@ public class WaitingPageActivityTest {
             onView(withId(R.id.incrementButton)).perform(click());
         }
 
-        intended(hasComponent(DrawingActivity.class.getName()));
+        intended(hasComponent(DrawingOnline.class.getName()));
         Intents.release();
     }
 
@@ -145,6 +183,56 @@ public class WaitingPageActivityTest {
 
         onView(withId(R.id.incrementButton)).perform(click());
         onView(withId(R.id.playersCounterText)).check(matches(withText("3/5")));
+    }
+
+    @Test
+    public void getWinningWordTest() {
+        String[] words = {"cat", "dog"};
+        String winningWord = WaitingPageActivity.getWinningWord(2, 1,
+                words);
+        assertEquals("cat", winningWord);
+
+        winningWord = WaitingPageActivity.getWinningWord(2, 2,
+                words);
+        assertEquals("cat", winningWord);
+
+        winningWord = WaitingPageActivity.getWinningWord(2, 3,
+                words);
+        assertEquals("dog", winningWord);
+    }
+
+    @Test
+    public void testGettersSettersWords() {
+        mActivityRule.getActivity().setWord1Votes(10);
+        assertEquals(10, mActivityRule.getActivity().getWord1Votes());
+
+        mActivityRule.getActivity().setWord2Votes(10);
+        assertEquals(10, mActivityRule.getActivity().getWord2Votes());
+    }
+
+    @Test
+    public void testOnState1Change() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(1);
+        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+    }
+
+    @Test
+    public void testOnState2Change() {
+        Intents.init();
+
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
+        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+
+        intended(hasComponent(DrawingOnline.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testListenerTimer() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        mActivityRule.getActivity().callOnDataChange(dataSnapshotMock);
+
+        onView(withId(R.id.waitingTime)).check(matches(withText("5")));
     }
 
     /**

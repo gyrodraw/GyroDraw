@@ -1,9 +1,10 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNull;
+
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,45 +19,45 @@ public class RoomTest {
 
     @Test
     public void getName() {
-        assertEquals(room.getName(), null);
+        assertNull(room.getName());
     }
 
     @Test
     public void setName() {
         room.setName("TEST");
-        assertEquals(room.getName(), "TEST");
+        assertThat(room.getName(), is("TEST"));
     }
 
     @Test
     public void getId() {
-        assertEquals(room.getId(), null);
+        assertNull(room.getId());
     }
 
     @Test
     public void setId() {
         room.setId("TEST");
-        assertEquals(room.getId(), "TEST");
+        assertThat(room.getId(), is("TEST"));
     }
 
     @Test
     public void getPlaying() {
-        assertEquals(room.getId(), null);
+        assertNull(room.getId());
     }
 
     @Test
     public void setPlaying() {
         room.setPlaying(true);
-        assertEquals(room.getPlaying(), true);
+        assertThat(room.getPlaying(), is(true));
     }
 
     @Test
     public void getInRoom() {
-        assertEquals(room.getInRoom(), null);
+        assertNull(room.getInRoom());
     }
 
     @Test
     public void setInRoom() {
         room.setInRoom(new ArrayList<String>());
-        assertEquals(room.getInRoom(), new ArrayList<String>());
+        assertThat(room.getInRoom(), is(new ArrayList<String>()));
     }
 }

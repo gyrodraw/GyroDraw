@@ -10,11 +10,10 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import ch.epfl.sweng.SDP.LocalDbHandler;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
-
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,6 +33,8 @@ public class PaintView extends View {
     private Bitmap bitmap;
     private Canvas canvas;
 
+    private final Context context;
+
     private int circleX = 0;
     private int circleY = 0;
 
@@ -41,7 +42,7 @@ public class PaintView extends View {
     private int height;
     private int circleRadius;
     private int color = 0;
-    private int previousColor = 1;
+    private int previousColor = 0;
 
     /**
      * Constructor for the view.
@@ -51,6 +52,7 @@ public class PaintView extends View {
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
 
         Resources res = getResources();
         colors[0] = getPaintWithColor(Color.BLACK);
@@ -257,7 +259,7 @@ public class PaintView extends View {
     /**
      * Saves the bitmap in the local database.
      */
-    public void saveCanvasInDb(LocalDbHandler localDbHandler) {
+    public void saveCanvasInDb(LocalDbHandlerForImages localDbHandler) {
         if (isDrawing) {
             drawEnd();
         }
@@ -267,18 +269,17 @@ public class PaintView extends View {
 
     /**
      * Gets called when time for drawing is over.
-     * Saves the bitmap in firebase.
+     * Saves the bitmap in Firebase.
      */
     public void saveCanvasInStorage() {
         if (isDrawing) {
             drawEnd();
         }
         canDraw = false;
-        // Create timestamp as name for image. Will include userID in future
-        Long tsLong = System.currentTimeMillis() / 1000;
-        String ts = tsLong.toString();
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child("" + ts + ".jpg");
+
+        // Use userId as the name for the image
+        String imageName = Account.getInstance(context).getUserId() + ".jpg";
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);
         FbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
     }
 }

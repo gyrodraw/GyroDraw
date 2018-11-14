@@ -24,7 +24,7 @@ public class Matchmaker implements MatchmakingInterface {
 
     private static Matchmaker singleInstance = null;
 
-    private DatabaseReference myRef;
+    private DatabaseReference roomsRef;
     private Account account;
 
     /**
@@ -41,48 +41,8 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     private Matchmaker(Account account) {
-        this.myRef = Database.INSTANCE.getReference("realRooms");
+        this.roomsRef = Database.INSTANCE.getReference("realRooms");
         this.account = account;
-    }
-
-    /**
-     * Join a room.
-     *
-     * @return true if it was successful, false otherwise
-     */
-    public Boolean joinRoomOther() {
-
-        Boolean successful = false;
-        HttpURLConnection connection = null;
-
-        try {
-            //Create connection
-
-            String userId = account.getUserId();
-            String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
-            URL url = new URL(
-                    "https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
-            connection = createConnection(url);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream(
-                    connection.getOutputStream());
-            wr.close();
-
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                // OK
-                successful = true;
-                // otherwise, if any other status code is returned, or no status
-                // code is returned, do stuff in the else block
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-        return successful;
     }
 
     /**
@@ -113,30 +73,17 @@ public class Matchmaker implements MatchmakingInterface {
                 });
     }
 
-    private HttpURLConnection createConnection(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded");
-
-        connection.setRequestProperty("Content-Language", "en-US");
-
-        connection.setUseCaches(false);
-        connection.setDoOutput(true);
-        return connection;
-    }
-
     /**
      * Leave a room.
      *
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        myRef.child(roomId).child("users")
+        roomsRef.child(roomId).child("users")
                 .child(account.getUserId()).removeValue();
 
         if (!account.getUsername().isEmpty()) {
-            myRef.child(roomId).child("ranking")
+            roomsRef.child(roomId).child("ranking")
                     .child(account.getUsername()).removeValue();
         }
     }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.epfl.sweng.SDP"
-    android:screenOrientation="portrait">
+    package="ch.epfl.sweng.SDP">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,23 +12,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".auth.LoginActivity" />
-        <activity android:name=".home.HomeActivity" />
-        <activity android:name=".game.WaitingPageActivity" />
-        <activity android:name=".game.drawing.DrawingOffline" />
-        <activity android:name=".game.drawing.DrawingOnline" />
-        <activity android:name=".game.drawing.DrawingActivity" />
-        <activity android:name=".auth.AccountCreationActivity" />
-        <activity android:name=".game.VotingPageActivity" />
-        <activity android:name=".home.LeaderboardActivity" />
-        <activity android:name=".home.LeaguesActivity" />
-        <activity android:name=".game.LoadingScreenActivity" />
+        <activity
+            android:name=".auth.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.WaitingPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.drawing.DrawingOffline"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.drawing.DrawingOnline"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".game.drawing.DrawingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".auth.AccountCreationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.VotingPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.LeaderboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.LeaguesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.LoadingScreenActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

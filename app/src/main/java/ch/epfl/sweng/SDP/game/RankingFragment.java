@@ -68,7 +68,9 @@ public class RankingFragment extends ListFragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 finalRanking = new HashMap<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                    if(ds.getValue(Integer.class) != null && ds.getKey() != null) {
+                        finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                    }
                 }
 
                 List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);

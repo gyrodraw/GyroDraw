@@ -429,8 +429,8 @@ public class WaitingPageActivity extends Activity {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if(hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
-                DatabaseReference wordRef = database.getReference(TOP_ROOM_NODE_ID + "." +
-                                                            roomID + ".words." + wordVoted);
+                DatabaseReference wordRef = database.getReference(TOP_ROOM_NODE_ID + "."
+                                                            + roomID + ".words." + wordVoted);
                 removeVote(wordRef);
             }
         }

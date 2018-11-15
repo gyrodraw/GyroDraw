@@ -123,7 +123,7 @@ public class VotingPageActivityTest {
     @Test
     public void testStateChange() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
-        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);

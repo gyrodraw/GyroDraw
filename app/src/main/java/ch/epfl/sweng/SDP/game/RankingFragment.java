@@ -88,7 +88,6 @@ public class RankingFragment extends ListFragment {
     private void setFinishedCollectingRanking() {
         finishedRef.child(Account.getInstance(getActivity()
                 .getApplicationContext()).getUsername()).setValue(1);
-
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

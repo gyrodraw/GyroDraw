@@ -19,6 +19,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -30,6 +31,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import com.google.firebase.database.DataSnapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,7 +55,6 @@ public class DrawingOnlineTest {
                     return intent;
                 }
             };
-
 
     private PaintView paintView;
     private Resources res;

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -24,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
 import java.util.List;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
     private static final String EMAIL = "email";
@@ -45,6 +46,9 @@ public class LoginActivity extends Activity {
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
     }
 
+    /**
+     * Creates signInIntent.
+     */
     private void createSignInIntent() {
         final List<IdpConfig> providers = Collections.singletonList(
                 new GoogleBuilder().build());
@@ -76,6 +80,10 @@ public class LoginActivity extends Activity {
         }
     }
 
+    /**
+     * Handle successful signIn.
+     * @param response contains the response.
+     */
     private void handleSuccessfulSignIn(IdpResponse response) {
         assert response != null;
 
@@ -117,7 +125,10 @@ public class LoginActivity extends Activity {
         }
     }
 
-
+    /**
+     * Handle failed signIn.
+     * @param response contains the response
+     */
     private void handleFailedSignIn(IdpResponse response) {
         TextView errorMessage = findViewById(R.id.error_message);
 

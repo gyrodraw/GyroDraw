@@ -137,7 +137,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   // Grab the text parameter.
   const id = data.id;
   const username = data.username;
-  const league = 1;
+  const league = 1 - 1;
   let _roomID;
   console.log(username);
   var alreadyJoined = false;

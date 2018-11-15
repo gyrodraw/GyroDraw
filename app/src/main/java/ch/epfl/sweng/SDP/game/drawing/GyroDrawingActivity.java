@@ -69,13 +69,7 @@ public class GyroDrawingActivity extends DrawingActivity implements SensorEventL
      * @param coordinateY coordinate
      */
     public void updateValues(float coordinateX, float coordinateY) {
-        float tempX = paintView.getCircleX();
-        float tempY = paintView.getCircleY();
-
-        tempX -= coordinateX * speed;
-        tempY += coordinateY * speed;
-
-        paintView.setCircle((int) tempX, (int) tempY);
+        paintView.updateCoordinates(coordinateX, coordinateY);
     }
 
 

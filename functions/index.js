@@ -185,16 +185,20 @@ function isRoomInLeagueRange(roomID, league) {
           parseInt(roomID, 10) < (league + 1) * numberRoomsPerLeague;
 }
 
+function findLeagueFromRoomID(roomID) {
+  return Math.floor(parseInt(roomID, 10) / numberRoomsPerLeague);
+}
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function generateTwoRandomNumbers() {
-  const firstNumber = getRandomInt(0, maxWords);
+  const firstNumber = getRandomInt(0, maxWords - 1);
   let secondNumber = firstNumber;
 
   while(firstNumber === secondNumber) {
-    secondNumber = getRandomInt(0, maxWords);
+    secondNumber = getRandomInt(0, maxWords - 1);
   }
 
   return [firstNumber, secondNumber];
@@ -202,7 +206,7 @@ function generateTwoRandomNumbers() {
 
 function addWordsToDatabase(roomID) {
   const numbers = generateTwoRandomNumbers();
-  return admin.database().ref("words").once('value', (snapshot) => {
+  return admin.database().ref("leagues/league" + findLeagueFromRoomID(roomID) + "/words").once('value', (snapshot) => {
     const word1 = snapshot.child(numbers[0]).val();
     const word2 = snapshot.child(numbers[1]).val();
     admin.database().ref(parentRoomID + roomID).update({"words": {[word1]:0,[word2]:0}});
@@ -224,7 +228,7 @@ function generateRoomID(league, roomsList) {
 function createRoomAndJoin(league, roomsList, username, id) {
   const roomID = generateRoomID(league, roomsList);
 
-  let roomObj = {[roomID]:{state : 0, playing : 0, timer :{observableTime:0}}};
+  let roomObj = {[roomID]:{state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
 
   admin.database().ref(parentRoomID).update(roomObj);
   admin.database().ref(parentRoomID + roomID).update({"users":{[id]:username}});
@@ -306,13 +310,16 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
   switch(state) {
     case StateEnum.Idle:
       playingRef.set(PlayingEnum.Idle);
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       break;
 
     case StateEnum.ChoosingWordsCountdown:
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       playingRef.set(PlayingEnum.PlayingButJoinable);
       return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage);
 
     case StateEnum.DrawingPage:
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_DRAWING);
       createNode(roomID, "ranking");
       createNode(roomID, "finished");
       createNode(roomID, "uploadDrawing")
@@ -320,6 +327,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.VotingPage);
 
     case StateEnum.VotingPage:
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_VOTING);
       return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
 
     case StateEnum.EndVoting:

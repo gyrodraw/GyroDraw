@@ -21,6 +21,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
@@ -97,8 +98,12 @@ public class WaitingPageActivity extends Activity {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case HOMESTATE:
+                        findViewById(R.id.waitingTime).setVisibility(View.GONE);
+                        findViewById(R.id.leaveButton).setVisibility(View.VISIBLE);
                         break;
                     case CHOOSE_WORDS_TIMER_START:
+                        findViewById(R.id.waitingTime).setVisibility(View.VISIBLE);
+                        findViewById(R.id.leaveButton).setVisibility(View.GONE);
                         timerRef = database.getReference(TOP_ROOM_NODE_ID + "."
                                 + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
@@ -167,7 +172,7 @@ public class WaitingPageActivity extends Activity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
             ((TextView) findViewById(R.id.playersCounterText)).setText(
-                    String.valueOf(usersCount) + "/5");
+                    String.format("%s/5", String.valueOf(usersCount)));
         }
 
         @Override
@@ -216,22 +221,24 @@ public class WaitingPageActivity extends Activity {
                 WordNumber.TWO);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.playersCounterText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.roomID)).setText("Room ID: " + roomID);
+
+        setTypeFace(typeMuro, findViewById(R.id.playersReadyText), findViewById(R.id.playersCounterText),
+                            findViewById(R.id.buttonWord1), findViewById(R.id.buttonWord2),
+                            findViewById(R.id.voteText), findViewById(R.id.waitingTime));
+
+        findViewById(R.id.waitingTime).setVisibility(View.GONE);
 
     }
 
-    //TODO Give this path
-//        // Select the words based on the user current league
-//        DatabaseReference wordsSelectionRef = database
-//                .getReference(format(Locale.getDefault(), "leagues.%s.%s",
-//                        Account.getInstance(this).getCurrentLeague(),
-//                        WORD_CHILDREN_DB_ID));
-//        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
+    private void setTypeFace(Typeface typeface, View ...views) {
+        for(View view: views) {
+            ((TextView) view).setTypeface(typeface);
+        }
+    }
+
+    public void onLeaveButtonClicked(View view) {
+        launchActivity(HomeActivity.class);
+    }
 
     protected void launchDrawingActivity() {
         Intent intent = new Intent(getApplicationContext(), DrawingOnline.class);
@@ -339,28 +346,6 @@ public class WaitingPageActivity extends Activity {
         b2.setEnabled(false);
     }
 
-    /**
-     * Increment the number of players logged in the room. This method exists only for testing
-     * purposes.
-     *
-     * @param view Button that will increase the count when pressed
-     */
-    public void incrementCount(View view) {
-        ++usersReadyCount;
-        TextView usersReady = findViewById(R.id.playersCounterText);
-        usersReady.setText(
-                format(Locale.getDefault(), "%d/%d", usersReadyCount,
-                        NUMBER_OF_PLAYERS_NEEDED));
-
-        // We should probably check if the database is ready too
-        if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            Intent intent = new Intent(this, DrawingOnline.class);
-            intent.putExtra("RoomID", roomID);
-            startActivity(intent);
-
-        }
-    }
-
     protected void removeVote(final DatabaseReference wordRef) {
         wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -434,6 +419,7 @@ public class WaitingPageActivity extends Activity {
                 removeVote(wordRef);
             }
         }
+
         removeAllListeners();
         finish();
     }

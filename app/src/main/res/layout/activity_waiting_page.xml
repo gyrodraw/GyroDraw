@@ -33,35 +33,20 @@
     tools:ignore="ContentDescription"/>
 
   <TextView
-    android:id="@+id/roomID"
-    android:layout_width="wrap_content"
-    android:layout_height="0dp"
-    android:layout_marginTop="52dp"
-    android:shadowColor="@android:color/black"
-    android:shadowDy="5"
-    android:shadowRadius="10"
-    android:text="@string/vote"
-    android:textColor="@color/colorLightGrey"
-    android:textSize="20sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/radioGroup"/>
-
-  <TextView
-    android:id="@+id/waitingTime"
-    android:layout_width="wrap_content"
-    android:layout_height="0dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:shadowColor="@android:color/black"
-    android:shadowDy="5"
-    android:shadowRadius="10"
-    android:textColor="@color/colorLightGrey"
-    android:textSize="20sp"
-    app:layout_constraintBottom_toTopOf="@+id/roomID"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/radioGroup"/>
+      android:id="@+id/waitingTime"
+      android:layout_width="wrap_content"
+      android:layout_height="0dp"
+      android:layout_marginTop="24dp"
+      android:shadowColor="@android:color/black"
+      android:shadowDy="5"
+      android:shadowRadius="10"
+      android:text="@string/initial_waiting_timer"
+      android:textColor="@color/colorLightGrey"
+      android:textSize="45sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.501"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
   <ImageView
     android:id="@+id/imageWord1"
@@ -191,20 +176,21 @@
     app:layout_constraintTop_toTopOf="parent"/>
 
   <Button
-    android:id="@+id/incrementButton"
-    android:textStyle="bold"
-    android:layout_width="307dp"
-    android:layout_height="27dp"
-    android:layout_marginBottom="10dp"
-    android:background="@null"
-    android:gravity="center"
-    android:onClick="incrementCount"
-    android:text="Increment users ready (for testing only)"
-    android:textColor="@color/colorGrey"
-    android:textSize="12sp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"/>
+      android:id="@+id/leaveButton"
+      android:layout_width="307dp"
+      android:layout_height="27dp"
+      android:layout_marginBottom="24dp"
+      android:background="@null"
+      android:gravity="center"
+      android:onClick="onLeaveButtonClicked"
+      android:text="Leave"
+      android:textColor="@color/colorGrey"
+      android:textSize="25sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.506"
+      app:layout_constraintStart_toStartOf="parent" />
 
   <TextView
     android:id="@+id/voteText"

@@ -166,7 +166,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
-    private final ValueEventListener listenerCountUsers = new ValueEventListener() {
+    protected final ValueEventListener listenerCountUsers = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();

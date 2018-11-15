@@ -300,4 +300,19 @@ public class WaitingPageActivityTest {
                 new DatabaseException("Cancelled listener word2"));
         mActivityRule.getActivity().listenerWord2.onCancelled(databaseErrorMock);
     }
+
+    @Test(expected = DatabaseException.class)
+    public void testOnCancelledListenerUsers() {
+        when(databaseErrorMock.toException()).thenReturn(
+                new DatabaseException("Cancelled listener users"));
+        mActivityRule.getActivity().listenerCountUsers.onCancelled(databaseErrorMock);
+    }
+
+    @Test
+    public void testVoteAndRemoveVote() {
+        Intents.init();
+        clickButtonsTest(R.id.buttonWord1);
+        clickButtonsTest(R.id.leaveButton);
+        intended(hasComponent(HomeActivity.class.getName()));
+    }
 }

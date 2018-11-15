@@ -122,6 +122,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void testStateChange() {
+        SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);

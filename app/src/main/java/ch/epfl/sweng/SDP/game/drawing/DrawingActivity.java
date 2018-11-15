@@ -11,10 +11,10 @@ import android.widget.ImageView;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 
-public class DrawingActivity extends Activity {
+public class DrawingActivity extends BaseActivity {
     protected static final String TAG = "DrawingActivity";
     protected PaintView paintView;
     protected Handler handler;
@@ -65,6 +65,15 @@ public class DrawingActivity extends Activity {
                 paintView.invalidate();
             }
         };
+
+        // hides UI bar
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     /**

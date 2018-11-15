@@ -1,5 +1,28 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Intent;
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+
+import com.google.firebase.database.DataSnapshot;
+
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -10,37 +33,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
-import android.content.Intent;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
-import com.google.firebase.database.DataSnapshot;
-
 import static junit.framework.TestCase.assertEquals;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
-
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -265,6 +260,6 @@ public class WaitingPageActivityTest {
 
     @Ignore
     public void waitForVisibility(final View view, final int visibility) {
-        Espresso.registerIdlingResources(new ViewVisibilityIdlingResource(view, visibility));
+        IdlingRegistry.getInstance().register(new ViewVisibilityIdlingResource(view, visibility));
     }
 }

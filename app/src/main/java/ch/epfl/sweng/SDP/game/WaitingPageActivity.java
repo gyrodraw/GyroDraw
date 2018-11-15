@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.game;
 
+import static java.lang.String.*;
+import static java.lang.String.format;
+
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,26 +16,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
-import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
-
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import static java.lang.String.format;
-
 import java.util.Locale;
 
 public class WaitingPageActivity extends BaseActivity {
@@ -80,7 +75,7 @@ public class WaitingPageActivity extends BaseActivity {
 
             if (value != null) {
                 ((TextView) findViewById(R.id.waitingTime))
-                        .setText(String.valueOf(value));
+                        .setText(valueOf(value));
             }
         }
 
@@ -168,7 +163,7 @@ public class WaitingPageActivity extends BaseActivity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
             ((TextView) findViewById(R.id.playersCounterText)).setText(
-                    String.valueOf(usersCount) + "/5");
+                    format("%s/5", valueOf(usersCount)));
         }
 
         @Override
@@ -222,7 +217,7 @@ public class WaitingPageActivity extends BaseActivity {
         ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.roomID)).setText("Room ID: " + roomID);
+        ((TextView) findViewById(R.id.roomID)).setText(format("Room ID: %s", roomID));
 
     }
 

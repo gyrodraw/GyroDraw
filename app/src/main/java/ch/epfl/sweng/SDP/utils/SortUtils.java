@@ -3,10 +3,10 @@ package ch.epfl.sweng.SDP.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class SortUtils {
 
@@ -31,8 +31,7 @@ public class SortUtils {
         });
 
         List<K> result = new ArrayList<>();
-        for (Iterator<Map.Entry<K, V>> it = list.iterator(); it.hasNext();) {
-            Map.Entry<K, V> entry = it.next();
+        for (Entry<K, V> entry : list) {
             result.add(entry.getKey());
         }
 

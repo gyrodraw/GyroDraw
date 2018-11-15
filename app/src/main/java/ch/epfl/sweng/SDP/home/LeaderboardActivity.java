@@ -1,5 +1,9 @@
 package ch.epfl.sweng.SDP.home;
 
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
+import static java.lang.String.format;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,20 +20,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -120,10 +118,11 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Allows one to call sort on a collection of Players.
-         * Sorts collection in descending order.
-         * @param object    Player to compare
-         * @return          1 if this is larger, -1 if this is smaller, 0 else
+         * Allows one to call sort on a collection of Players. Sorts collection in descending
+         * order.
+         *
+         * @param object Player to compare
+         * @return 1 if this is larger, -1 if this is smaller, 0 else
          */
         @Override
         public int compareTo(Object object) {
@@ -135,11 +134,11 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Converts this player into a LinearLayout
-         * that will be displayed in the leaderboard.
-         * @param context   of the app
-         * @param index     of the player
-         * @return          LinearLayout that will be displayed
+         * Converts this player into a LinearLayout that will be displayed in the leaderboard.
+         *
+         * @param context of the app
+         * @param index of the player
+         * @return LinearLayout that will be displayed
          */
         @SuppressLint("NewApi")
         private LinearLayout toLayout(final Context context, int index) {
@@ -168,7 +167,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         private LinearLayout addViews(LinearLayout layout, TextView usernameView,
-                              TextView trophiesView, ImageView addFriends) {
+                TextView trophiesView, ImageView addFriends) {
             layout.addView(usernameView);
             layout.addView(trophiesView);
             layout.addView(addFriends);
@@ -177,7 +176,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         private void styleView(TextView view, String text, int color,
-                                         LinearLayout.LayoutParams layoutParams) {
+                LinearLayout.LayoutParams layoutParams) {
             view.setText(text);
             view.setTextSize(25);
             view.setTextColor(color);
@@ -198,9 +197,9 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Gets called when user entered a new search query.
-         * Processes inquiry locally if cache (allPlayers) is not empty.
-         * Else fetches data from Firebase and stores it in allPlayers.
+         * Gets called when user entered a new search query. Processes inquiry locally if cache
+         * (allPlayers) is not empty. Else fetches data from Firebase and stores it in allPlayers.
+         *
          * @param query new string to search
          */
         private void update(String query) {
@@ -216,6 +215,7 @@ public class LeaderboardActivity extends Activity {
 
         /**
          * Copies all players that contain query into wantedPlayers.
+         *
          * @param query string to search
          */
         private void filterWantedPlayers(String query) {
@@ -228,9 +228,8 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Gets called when local cache of players is empty.
-         * Adds snapshots to a list, filters it by query,
-         * sorts it by trophies and adds players to LinearLayout
+         * Gets called when local cache of players is empty. Adds snapshots to a list, filters it by
+         * query, sorts it by trophies and adds players to LinearLayout
          *
          * @param query string to search
          */
@@ -312,24 +311,25 @@ public class LeaderboardActivity extends Activity {
             setTag("friendsButton" + index);
 
             // set friendsButton invisible to yourself
-            if(player.username.equals(Account.getInstance(context).getUsername())) {
+            if (player.username.equals(Account.getInstance(context).getUsername())) {
                 setVisibility(View.INVISIBLE);
             }
         }
 
         /**
-         * Gets data if users are friends, else null.
-         * Then applies listener.
-         * @param listener  how to handle response
+         * Gets data if users are friends, else null. Then applies listener.
+         *
+         * @param listener how to handle response
          */
         private void isFriendWithCurrentUser(ValueEventListener listener) {
-            Database.INSTANCE.getReference("users").child(player.userId).child("friends")
-                    .child(Account.getInstance(context).getUserId())
-                    .addListenerForSingleValueEvent(listener);
+            Database.constructBuilder().addChildren(
+                    format("users.%s.friends.%s", player.userId, Account.getInstance(context)
+                            .getUserId())).build().addListenerForSingleValueEvent(listener);
         }
 
         /**
          * Check if users are already friends and set background accordingly.
+         *
          * @return listener
          */
         private ValueEventListener initializeFriendsButton() {
@@ -352,7 +352,8 @@ public class LeaderboardActivity extends Activity {
 
         /**
          * Friends button got clicked, now add/remove friend and modify background.
-         * @return              listener
+         *
+         * @return listener
          */
         private ValueEventListener changeFriendsButtonBackgroundOnClick() {
             return new ValueEventListener() {

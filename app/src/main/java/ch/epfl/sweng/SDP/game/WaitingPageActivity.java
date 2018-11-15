@@ -54,8 +54,6 @@ public class WaitingPageActivity extends BaseActivity {
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-    private int usersReadyCount = 1;
 
     private DatabaseReference usersCountRef;
     private DatabaseReference wordsVotesRef;
@@ -223,9 +221,10 @@ public class WaitingPageActivity extends BaseActivity {
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
-        setTypeFace(typeMuro, findViewById(R.id.playersReadyText), findViewById(R.id.playersCounterText),
-                            findViewById(R.id.buttonWord1), findViewById(R.id.buttonWord2),
-                            findViewById(R.id.voteText), findViewById(R.id.waitingTime));
+        setTypeFace(typeMuro, findViewById(R.id.playersReadyText),
+                            findViewById(R.id.playersCounterText), findViewById(R.id.buttonWord1),
+                            findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
+                            findViewById(R.id.waitingTime));
 
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
 

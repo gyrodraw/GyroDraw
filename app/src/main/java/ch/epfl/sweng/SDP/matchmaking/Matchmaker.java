@@ -61,7 +61,8 @@ public class Matchmaker implements MatchmakingInterface {
         data.put("username", account.getUsername());
 
         // Use regex to extract the number from the league string
-        // TODO define a method in account that extracts directly the number corresponding to the league
+        // TODO define a method in account that extracts directly the number corresponding
+        // TODO to the league
         data.put("league", account.getCurrentLeague().replaceAll("\\D+", ""));
 
         return mFunctions.getHttpsCallable("joinGame2")

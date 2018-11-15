@@ -48,8 +48,7 @@ public class MatchmakerTest {
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
         when(mockAccount.getUserId()).thenReturn(USER_ID);
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
-        Task<String> result = Matchmaker.getInstance(mockAccount)
-                .joinRoom();
+        Matchmaker.getInstance(mockAccount).joinRoom();
     }
 
     @Test

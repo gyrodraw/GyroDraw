@@ -52,20 +52,6 @@
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/leaderboardButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/starsButton"
-        app:srcCompat="@drawable/leaderboard_button"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
         android:id="@+id/starsButton"
         android:layout_width="500dp"
         android:layout_height="35dp"
@@ -90,6 +76,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starsButton"
         app:srcCompat="@drawable/league_1"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/leaderboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/starsButton"
+        app:srcCompat="@drawable/leaderboard_button"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/battleLogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboardButton"
+        app:srcCompat="@drawable/battle_log_button"
         tools:ignore="ContentDescription" />
 
     <TextView

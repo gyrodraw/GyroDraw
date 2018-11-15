@@ -314,5 +314,6 @@ public class WaitingPageActivityTest {
         clickButtonsTest(R.id.buttonWord1);
         clickButtonsTest(R.id.leaveButton);
         intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
     }
 }

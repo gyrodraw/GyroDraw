@@ -24,6 +24,7 @@ import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import com.google.firebase.database.DataSnapshot;
 
@@ -98,6 +99,24 @@ public class WaitingPageActivityTest {
     }
 
     @Test
+    public void testLeaveButtonClick() {
+        Intents.init();
+        clickButtonsTest(R.id.leaveButton);
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testLeaveButtonDisplayed() {
+        isViewVisible(R.id.leaveButton);
+    }
+
+    @Test
+    public void testLeaveButtonClickable() {
+        isViewVisible(R.id.leaveButton);
+    }
+
+    @Test
     public void testRadioButton1() {
         clickButtonsTest(R.id.buttonWord1);
     }
@@ -105,19 +124,6 @@ public class WaitingPageActivityTest {
     @Test
     public void testRadioButton2() {
         clickButtonsTest(R.id.buttonWord2);
-    }
-
-    @Test
-    public void testButtonIncreasePeople() {
-        Intents.init();
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
-                View.VISIBLE);
-        for (int i = 0; i < 4; i++) {
-            onView(withId(R.id.incrementButton)).perform(click());
-        }
-
-        intended(hasComponent(DrawingOnline.class.getName()));
-        Intents.release();
     }
 
     @Test
@@ -174,18 +180,6 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void incrementingUsersCountShouldChangeProgressBarAndTextView() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.incrementButton),
-                View.VISIBLE);
-
-        onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.playersCounterText)).check(matches(withText("2/5")));
-
-        onView(withId(R.id.incrementButton)).perform(click());
-        onView(withId(R.id.playersCounterText)).check(matches(withText("3/5")));
-    }
-
-    @Test
     public void getWinningWordTest() {
         String[] words = {"cat", "dog"};
         String winningWord = WaitingPageActivity.getWinningWord(2, 1,
@@ -213,7 +207,7 @@ public class WaitingPageActivityTest {
     @Test
     public void testOnState1Change() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(1);
-        mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
+        mActivityRule.getActivity().callOnDataChange(dataSnapshotMock);
     }
 
     @Test

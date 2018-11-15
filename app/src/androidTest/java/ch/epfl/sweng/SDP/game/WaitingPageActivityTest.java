@@ -275,25 +275,29 @@ public class WaitingPageActivityTest {
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerState() {
-        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        when(databaseErrorMock.toException()).thenReturn(
+                new DatabaseException("Cancelled listener state"));
         mActivityRule.getActivity().listenerState.onCancelled(databaseErrorMock);
     }
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerTimer() {
-        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        when(databaseErrorMock.toException()).thenReturn(
+                new DatabaseException("Cancelled listener timer"));
         mActivityRule.getActivity().listenerTimer.onCancelled(databaseErrorMock);
     }
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerWord1() {
-        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        when(databaseErrorMock.toException()).thenReturn(
+                new DatabaseException("Cancelled listener word1"));
         mActivityRule.getActivity().listenerWord1.onCancelled(databaseErrorMock);
     }
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerWord2() {
-        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        when(databaseErrorMock.toException()).thenReturn(
+                new DatabaseException("Cancelled listener word2"));
         mActivityRule.getActivity().listenerWord2.onCancelled(databaseErrorMock);
     }
 }

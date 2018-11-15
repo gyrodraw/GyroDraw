@@ -186,7 +186,7 @@ function isRoomInLeagueRange(roomID, league) {
 }
 
 function findLeagueFromRoomID(roomID) {
-  return Math.floor(parseInt(roomID, 10) / numberRoomsPerLeague);
+  return Math.floor(parseInt(roomID, 10) / numberRoomsPerLeague) + 1;
 }
 
 function getRandomInt(min, max) {

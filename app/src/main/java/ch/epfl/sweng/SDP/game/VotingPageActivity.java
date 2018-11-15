@@ -359,39 +359,21 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void startRankingFragment() {
-        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String[] ranking = new String[NUMBER_OF_DRAWINGS];
-                short counter = 0;
+        // Prepare a Bundle for passing the ranking array to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString("roomID", roomID);
 
-                // Get the final ranking
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ranking[counter++] = snapshot.getKey();
-                }
+        // Clear the UI; buttonChangeImage and rankingButton need
+        // to be removed after testing
+        setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
+                R.id.playerNameView, R.id.timer);
 
-                // Prepare a Bundle for passing the ranking array to the fragment
-                Bundle bundle = new Bundle();
-                bundle.putString("roomID", roomID);
-
-                // Clear the UI; buttonChangeImage and rankingButton need
-                // to be removed after testing
-                setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
-                        R.id.playerNameView, R.id.timer);
-
-                // Create and show the final ranking in the new fragment
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.votingPageLayout,
-                                RankingFragment.instantiate(getApplicationContext(),
-                                        RankingFragment.class.getName(), bundle))
-                        .addToBackStack(null).commit();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+        // Create and show the final ranking in the new fragment
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.votingPageLayout,
+                        RankingFragment.instantiate(getApplicationContext(),
+                                RankingFragment.class.getName(), bundle))
+                .addToBackStack(null).commit();
     }
 
     /**
@@ -445,11 +427,11 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     @VisibleForTesting
-    public void callSetLayoutVisibility() {
+    public void callOnStateChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setLayoutToVisible();
+                listenerState.onDataChange(dataSnapshot);
             }
         });
     }

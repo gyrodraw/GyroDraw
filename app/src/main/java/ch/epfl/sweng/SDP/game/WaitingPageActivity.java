@@ -48,6 +48,9 @@ public class WaitingPageActivity extends BaseActivity {
     private static boolean enableSquareAnimation = true;
     private boolean isDrawingActivityLaunched = false;
 
+    private boolean hasVoted = false;
+    private boolean isWord1Voted = false;
+
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
@@ -281,6 +284,8 @@ public class WaitingPageActivity extends BaseActivity {
             case R.id.buttonWord1:
                 if (checked) {
                     // Vote for word1
+                    hasVoted = true;
+                    isWord1Voted = true;
                     voteForWord(WordNumber.ONE);
                     disableButtons();
                 }
@@ -288,6 +293,8 @@ public class WaitingPageActivity extends BaseActivity {
             case R.id.buttonWord2:
                 if (checked) {
                     // Vote for word2
+                    hasVoted = true;
+                    isWord1Voted = false;
                     voteForWord(WordNumber.TWO);
                     disableButtons();
                 }
@@ -356,6 +363,23 @@ public class WaitingPageActivity extends BaseActivity {
         }
     }
 
+    protected void removeVote(final DatabaseReference wordRef) {
+        wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+                if(value != null) {
+                    wordRef.setValue(--value);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
+
     /**
      * Getter of the number of votes for word 1.
      *
@@ -405,6 +429,12 @@ public class WaitingPageActivity extends BaseActivity {
         // drawing activity is launched.
         if (!isDrawingActivityLaunched) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+            if(hasVoted) {
+                String wordVoted = isWord1Voted ? word1 : word2;
+                DatabaseReference wordRef = database.getReference(TOP_ROOM_NODE_ID + "."
+                                                            + roomID + ".words." + wordVoted);
+                removeVote(wordRef);
+            }
         }
         removeAllListeners();
         finish();

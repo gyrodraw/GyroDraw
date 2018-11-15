@@ -124,7 +124,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
-    private final ValueEventListener listenerWord1 = new ValueEventListener() {
+    protected final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -145,7 +145,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
-    private final ValueEventListener listenerWord2 = new ValueEventListener() {
+    protected final ValueEventListener listenerWord2 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {

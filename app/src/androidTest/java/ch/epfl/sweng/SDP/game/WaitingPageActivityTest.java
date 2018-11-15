@@ -10,6 +10,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -44,6 +46,7 @@ public class WaitingPageActivityTest {
     private static final String ROOM_ID_TEST = "0123457890";
 
     private DataSnapshot dataSnapshotMock;
+    private DatabaseError databaseErrorMock;
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
@@ -68,6 +71,7 @@ public class WaitingPageActivityTest {
     @Before
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+        databaseErrorMock = Mockito.mock(DatabaseError.class);
     }
 
     /**
@@ -200,6 +204,12 @@ public class WaitingPageActivityTest {
     }
 
     @Test
+    public void testOnState0Change() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(0);
+        mActivityRule.getActivity().callOnDataChange(dataSnapshotMock);
+    }
+
+    @Test
     public void testOnState1Change() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(1);
         mActivityRule.getActivity().callOnDataChange(dataSnapshotMock);
@@ -261,5 +271,29 @@ public class WaitingPageActivityTest {
     @Ignore
     public void waitForVisibility(final View view, final int visibility) {
         IdlingRegistry.getInstance().register(new ViewVisibilityIdlingResource(view, visibility));
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testOnCancelledListenerState() {
+        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        mActivityRule.getActivity().listenerState.onCancelled(databaseErrorMock);
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testOnCancelledListenerTimer() {
+        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        mActivityRule.getActivity().listenerTimer.onCancelled(databaseErrorMock);
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testOnCancelledListenerWord1() {
+        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        mActivityRule.getActivity().listenerWord1.onCancelled(databaseErrorMock);
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void testOnCancelledListenerWord2() {
+        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        mActivityRule.getActivity().listenerWord2.onCancelled(databaseErrorMock);
     }
 }

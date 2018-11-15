@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
@@ -85,20 +86,8 @@ public class RankingFragment extends ListFragment {
     }
 
     private void setFinishedCollectingRanking() {
-        finishedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer value = dataSnapshot.getValue(Integer.class);
-                if (value != null) {
-                    finishedRef.setValue(++value);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+        finishedRef.child(Account.getInstance(getActivity()
+                .getApplicationContext()).getUsername()).setValue(1);
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

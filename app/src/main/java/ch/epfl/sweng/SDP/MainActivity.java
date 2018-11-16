@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 
         // Go to the home if the user has already logged in and created an account
         if (auth.getCurrentUser() != null) {
-            Database.INSTANCE.getReference("users").orderByChild("email")
+            Database.getReference("users").orderByChild("email")
                     .equalTo(auth.getCurrentUser().getEmail())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

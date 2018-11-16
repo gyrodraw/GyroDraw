@@ -6,16 +6,15 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import java.util.Locale;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
@@ -26,7 +25,6 @@ import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 public class BattleLogActivity extends Activity {
 
     private static final String TAG = "BattleLogActivity";
-    private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private Typeface typeMuro;
     private LinearLayout battleLogView;
     private GameResult[] battleLog;
@@ -51,9 +49,9 @@ public class BattleLogActivity extends Activity {
         Bitmap bmp = Bitmap.createBitmap(100, 100, conf);
 
         String[] players = {"Champion", "Singe_Des_Rues", "Onix", "Spectr0", "Bon_dernier"};
-        GameResult test = new GameResult(players, 3, bmp, 27, 8);
+        GameResult test = new GameResult(players, 3, bmp, 27, 8, this);
 
-        battleLogView.addView(test.toLayout(this));
+        battleLogView.addView(test.toLayout());
     }
 
     /**
@@ -86,13 +84,18 @@ public class BattleLogActivity extends Activity {
      */
     private class GameResult {
 
+        private static final int USERNAME_SIZE = 20;
+        private static final int REWARD_SIZE = 15;
         private final String[] rankedUsername;
         private final int rank;
         private final Bitmap drawing;
         private final int stars;
         private final int trophies;
+        private Context context;
+        private Resources res;
 
-        private GameResult(String[] rankedUsername, int rank, Bitmap drawing, int stars, int trophies) {
+        private GameResult(String[] rankedUsername, int rank, Bitmap drawing, int stars,
+                           int trophies, Context context) {
             assert 0 <= rank && rank < 5;
             assert rankedUsername.length <= 5;
             this.rankedUsername = rankedUsername;
@@ -100,75 +103,165 @@ public class BattleLogActivity extends Activity {
             this.drawing = drawing;
             this.stars = stars;
             this.trophies = trophies;
+            this.context = context;
+            res = getResources();
         }
 
         /**
          * Converts this game result into a LinearLayout
          * that will be displayed in the log battle.
          *
-         * @param context of the app
          * @return LinearLayout that will be displayed
          */
         @SuppressLint("NewApi")
-        private LinearLayout toLayout(final Context context) {
+        private LinearLayout toLayout() {
             LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
             for (int i = 0; i < rankedUsername.length; i++) {
                 String prefix = (i + 1) + ". ";
                 if (i == rank) {
-                    addUserLayout(context, prefix + rankedUsername[i], layout);
+                    layout.addView(userLayout());
                 } else {
-                    addRankLayout(context, prefix + rankedUsername[i], layout);
+                    layout.addView(rankLayout(prefix + rankedUsername[i]));
                 }
             }
 
-            layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setPadding(0, 0, 0, 18);
+            layout.setPadding(0, 0, 0, 10);
             return layout;
         }
 
-        private void addRankLayout(final Context context, String username, LinearLayout parent) {
+        private LinearLayout rankLayout(String username) {
             TextView rankAndUsername = new TextView(context);
-            Resources res = getResources();
-            styleView(rankAndUsername, username, 15, res.getColor(R.color.colorDrawYellow),
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            styleView(rankAndUsername, username, USERNAME_SIZE, res.getColor(R.color.colorDrawYellow),
+                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
 
-            LinearLayout item = new LinearLayout(context);
-            item.addView(rankAndUsername);
-            item.setBackgroundColor(res.getColor(R.color.colorLightGrey));
-            item.setPadding(30, 2, 30, 2);
+            LinearLayout fragment = new LinearLayout(context);
+            fragment.addView(rankAndUsername);
+            fragment.setBackgroundColor(res.getColor(R.color.colorLightGrey));
+            fragment.setPadding(30, 0, 30, 10);
 
-            parent.addView(item);
+            return fragment;
         }
 
-        private void addUserLayout(final Context context, String username, LinearLayout parent) {
-            LinearLayout item = new LinearLayout(context);
-            LayoutInflater.from(context).inflate(R.layout.battle_log_item, parent, false);
+        private LinearLayout userLayout() {
+            LinearLayout mainFragment = new LinearLayout(context);
+            mainFragment.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT));
+            mainFragment.setBackgroundColor(res.getColor(R.color.colorDrawYellowDark));
+            mainFragment.setPadding(0, 0, 0, 10);
 
-            TextView rankAndUsername = item.findViewById(R.id.playerName);
-            TextView starsWon = item.findViewById(R.id.starsWon);
-            TextView trophiesWon = item.findViewById(R.id.trophiesWon);
-            ImageView drawingView = item.findViewById(R.id.drawing);
+            mainFragment.addView(setTextFragment());
+            mainFragment.addView(setDrawingView());
 
-            rankAndUsername.setText(String.format(Locale.getDefault(),
-                    "%d. %s", rank + 1, username));
-            rankAndUsername.setTypeface(typeMuro);
+            return mainFragment;
+        }
 
-            starsWon.setText(String.format(Locale.getDefault(),
-                    "+ %d", stars));
-            rankAndUsername.setTypeface(typeMuro);
+        private LinearLayout setTextFragment() {
+            LinearLayout textFragment = new LinearLayout(context);
+            textFragment.setOrientation(LinearLayout.VERTICAL);
+            textFragment.setLayoutParams(new LayoutParams(0,
+                    LayoutParams.WRAP_CONTENT, 4));
+            textFragment.setPadding(30, 0, 0, 5);
 
+            textFragment.addView(setRankAndUsername());
+            textFragment.addView(setStarsFragment());
+            textFragment.addView(setTrophiesFragment());
+
+            return textFragment;
+        }
+
+        private TextView setRankAndUsername() {
+            TextView rankAndUsername = new TextView(context);
+            styleView(rankAndUsername, (rank + 1) + ". " + rankedUsername[rank], USERNAME_SIZE,
+                    res.getColor(R.color.colorDrawYellow),
+                    new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            rankAndUsername.setGravity(Gravity.CENTER_VERTICAL);
+            rankAndUsername.setGravity(Gravity.START);
+
+            return rankAndUsername;
+        }
+
+        private LinearLayout setStarsFragment() {
+            LinearLayout starsFragment = new LinearLayout(context);
+
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            params.setMargins(40, 0, 0, 0);
+
+            starsFragment.setLayoutParams(params);
+            starsFragment.addView(setStarsWon());
+            starsFragment.addView(setStar());
+            return starsFragment;
+        }
+
+        private TextView setStarsWon() {
+            int dark = res.getColor(R.color.colorPrimaryDark);
+
+            TextView starsWon = new TextView(context);
+            styleView(starsWon, "+" + String.valueOf(stars), REWARD_SIZE, dark,
+                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
+            starsWon.setGravity(Gravity.CENTER_VERTICAL);
+            starsWon.setGravity(Gravity.START);
+
+            return starsWon;
+        }
+
+        private ImageView setStar() {
+            ImageView star = new ImageView(context);
+            star.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
+            star.setPadding(0,0, 20, 0);
+            star.setImageResource(R.drawable.star);
+
+            return star;
+        }
+
+        private LinearLayout setTrophiesFragment() {
+            LinearLayout trophiesFragment = new LinearLayout(context);
+
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            params.setMargins(40, 0, 0, 0);
+
+            trophiesFragment.setLayoutParams(params);
+            trophiesFragment.addView(setTrophiesWon());
+            trophiesFragment.addView(setTrophy());
+            return trophiesFragment;
+        }
+
+        private TextView setTrophiesWon() {
+            int dark = res.getColor(R.color.colorPrimaryDark);
+
+            TextView trophiesWon = new TextView(context);
             String prefix = trophies >= 0 ? "+" : "";
-            trophiesWon.setText(String.format(Locale.getDefault(),
-                    "%s %d", prefix, trophies));
-            trophiesWon.setTypeface(typeMuro);
+            styleView(trophiesWon, prefix + String.valueOf(trophies), REWARD_SIZE, dark,
+                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
+            trophiesWon.setGravity(Gravity.CENTER_VERTICAL);
+            trophiesWon.setGravity(Gravity.START);
 
+            return trophiesWon;
+        }
+
+        private ImageView setTrophy() {
+            ImageView trophy = new ImageView(context);
+            trophy.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
+            trophy.setPadding(0,0, 20, 0);
+            trophy.setImageResource(R.drawable.trophy);
+
+            return trophy;
+        }
+
+        private ImageView setDrawingView() {
+            ImageView drawingView = new ImageView(context);
             drawingView.setImageBitmap(drawing);
+            drawingView.setLayoutParams(new LayoutParams(0,
+                    LayoutParams.MATCH_PARENT, 1));
+            drawingView.setPadding(0, 0, 30, 0);
 
-            parent.addView(item);
+            return drawingView;
         }
 
         private void styleView(TextView view, String text, int textSize, int color,
-                               LinearLayout.LayoutParams layoutParams) {
+                               LayoutParams layoutParams) {
             view.setText(text);
             view.setTextSize(textSize);
             view.setTextColor(color);
@@ -178,4 +271,3 @@ public class BattleLogActivity extends Activity {
     }
 
 }
-

@@ -15,7 +15,7 @@ const WAITING_TIME_DRAWING = 10;
 const WAITING_TIME_VOTING = 30;
 const parentRoomID = "realRooms/";
 
-var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "VotingPage": 3, "EndVoting" : 4});
+var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "WaitingUpload": 3, "VotingPage": 4, "EndVoting" : 5});
 var PlayingEnum = Object.freeze({"Idle": 0, "PlayingButJoinable": 1, "Playing": 2});
 var state = 0;
 
@@ -44,6 +44,17 @@ function checkNodeTrue(snapshot) {
   });
 
   return ready;
+}
+
+function checkNodeTrueTesting(snapshot, howMany) {
+  let count = 0;
+  snapshot.forEach((child) => {
+    if(child.val === 1) {
+      count++;
+    }
+  });
+
+  return count === howMany;
 }
 
 function functionTimer (seconds, state, roomID, call) {
@@ -324,7 +335,11 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       createNode(roomID, "finished");
       createNode(roomID, "uploadDrawing")
       playingRef.set(PlayingEnum.Playing);
-      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.VotingPage);
+      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload);
+
+    case StateEnum.WaitingUpload:
+      // Set timeout to pass to next activity
+      break;
 
     case StateEnum.VotingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_VOTING);
@@ -344,6 +359,15 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
   return admin.database().ref(parentRoomID + roomID + "/finished").once('value', (snapshot) => {
     if(checkNodeTrue(snapshot) === true && roomID !== "0123457890") {
       removeRoom(roomID);
+    }
+  });
+});
+
+exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
+  roomID = context.params.roomID;
+  admin.database().ref(parentRoomID + roomID + "uploadDrawing").once('value', (snapshot) => {
+    if(checkNodeTrueTesting(snapshot, 1) === true) {
+      admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }
   });
 });

@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 import android.widget.RatingBar;
 
 import com.google.firebase.database.DataSnapshot;
@@ -164,6 +165,8 @@ public class VotingPageActivityTest {
     public void testOnListenerTimerEqualsTimeForVoting() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(24);
         mActivityRule.getActivity().callOnCounterChange(dataSnapshotMock);
-        onView(withId(R.id.playerNameView)).check(matches(isDisplayed()));
+        SystemClock.sleep(1000);
+        assertEquals((mActivityRule.getActivity().findViewById(R.id.playerNameView))
+                        .getVisibility(), View.VISIBLE);
     }
 }

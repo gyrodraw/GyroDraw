@@ -1,25 +1,24 @@
 package ch.epfl.sweng.SDP.home;
 
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import org.junit.Test;
 
-import ch.epfl.sweng.SDP.firebase.Database;
-
-public class DatabaseUnitTest {
+public class DatabaseReferenceBuilderUnitTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalArgument() {
-        new Database.DatabaseReferenceBuilder(null);
+        new DatabaseReferenceBuilder(null);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testAddChildIllegalArgument() {
-        Database.DatabaseReferenceBuilder builder = new Database.DatabaseReferenceBuilder();
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         builder.addChild(null);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testAddChildrenIllegalArgument() {
-        Database.DatabaseReferenceBuilder builder = new Database.DatabaseReferenceBuilder();
+        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         builder.addChildren(null);
     }
 }

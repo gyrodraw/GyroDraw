@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import static java.lang.String.format;
+
 import android.support.annotation.NonNull;
 
 import ch.epfl.sweng.SDP.auth.Account;
@@ -85,17 +87,20 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        roomsRef.child(roomId).child("users")
-                .child(account.getUserId()).removeValue();
+        Database.constructBuilder(roomsRef)
+                .addChildren(format("%s.users.%s", roomId, account.getUserId())).build()
+                .removeValue();
 
         if (!account.getUsername().isEmpty()) {
-            roomsRef.child(roomId).child("ranking")
-                    .child(account.getUsername()).removeValue();
-            roomsRef.child(roomId).child("finished")
-                    .child(account.getUsername()).removeValue();
-            roomsRef.child(roomId).child("uploadDrawing")
-                    .child(account.getUsername()).removeValue();
-
+            Database.constructBuilder(roomsRef)
+                    .addChildren(format("%s.ranking.%s", roomId, account.getUsername())).build()
+                    .removeValue();
+            Database.constructBuilder(roomsRef)
+                    .addChildren(format("%s.finished.%s", roomId, account.getUsername())).build()
+                    .removeValue();
+            Database.constructBuilder(roomsRef)
+                    .addChildren(format("%s.uploadDrawing.%s", roomId, account.getUsername())).build()
+                    .removeValue();
         }
     }
 }

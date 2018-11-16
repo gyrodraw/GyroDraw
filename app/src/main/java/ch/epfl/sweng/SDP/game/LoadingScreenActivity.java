@@ -46,8 +46,6 @@ public class LoadingScreenActivity extends Activity {
     private String word1 = null;
     private String word2 = null;
 
-    private Database database;
-
     private BooleanVariableListener.ChangeListener listenerRoomReady =
             new BooleanVariableListener.ChangeListener() {
                 @Override
@@ -109,8 +107,6 @@ public class LoadingScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
 
-        database = Database.INSTANCE;
-
         if (!isTesting) {
             lookingForRoom();
         }
@@ -146,7 +142,7 @@ public class LoadingScreenActivity extends Activity {
                                 .leaveRoom(roomID);
                         finish();
                     } else {
-                        wordsVotesRef = database.getReference(
+                        wordsVotesRef = Database.getReference(
                                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
                         wordsVotesRef.addValueEventListener(listenerWords);
                         isRoomReady.setBoo(true);

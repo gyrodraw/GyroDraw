@@ -46,7 +46,8 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     /**
-     * Create a connection.
+     * Join a room by calling a FirebaseFunction that will handle
+     * which particular room a player should join.
      *
      * @return a {@link Task} wrapping the result
      */
@@ -90,6 +91,11 @@ public class Matchmaker implements MatchmakingInterface {
         if (!account.getUsername().isEmpty()) {
             roomsRef.child(roomId).child("ranking")
                     .child(account.getUsername()).removeValue();
+            roomsRef.child(roomId).child("finished")
+                    .child(account.getUsername()).removeValue();
+            roomsRef.child(roomId).child("uploadDrawing")
+                    .child(account.getUsername()).removeValue();
+
         }
     }
 }

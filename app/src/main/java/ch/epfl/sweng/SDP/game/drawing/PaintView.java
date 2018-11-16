@@ -16,6 +16,8 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 public class PaintView extends View {
 
@@ -48,7 +50,7 @@ public class PaintView extends View {
      * Constructor for the view.
      *
      * @param context Context of class
-     * @param attrs   Attributes of class
+     * @param attrs Attributes of class
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -171,7 +173,7 @@ public class PaintView extends View {
      * Keeps coordinates within screen boundaries.
      *
      * @param coordinate coordinate to sanitize
-     * @param maxBound   maximum bound
+     * @param maxBound maximum bound
      * @return sanitized coordinate
      */
     private int sanitizeCoordinate(int coordinate, int maxBound) {
@@ -268,10 +270,11 @@ public class PaintView extends View {
     }
 
     /**
-     * Gets called when time for drawing is over.
-     * Saves the bitmap in Firebase.
+     * Uploads the bitmap to Firebase Storage.
+     *
+     * @return the {@link StorageTask} in charge of the upload
      */
-    public void saveCanvasInStorage() {
+    public StorageTask<TaskSnapshot> saveCanvasInStorage() {
         if (isDrawing) {
             drawEnd();
         }
@@ -280,6 +283,6 @@ public class PaintView extends View {
         // Use userId as the name for the image
         String imageName = Account.getInstance(context).getUserId() + ".jpg";
         StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);
-        FbStorage.sendBitmapToFireBaseStorage(bitmap, imageRef);
+        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageRef);
     }
 }

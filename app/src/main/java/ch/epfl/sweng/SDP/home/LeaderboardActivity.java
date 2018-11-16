@@ -234,7 +234,7 @@ public class LeaderboardActivity extends Activity {
          * @param query string to search
          */
         private void fetchPlayersFromFirebase(final String query) {
-            Database.INSTANCE.getReference("users")
+            Database.getReference("users")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -323,8 +323,9 @@ public class LeaderboardActivity extends Activity {
          */
         private void isFriendWithCurrentUser(ValueEventListener listener) {
             Database.constructBuilder().addChildren(
-                    format("users.%s.friends.%s", player.userId, Account.getInstance(context)
-                            .getUserId())).build().addListenerForSingleValueEvent(listener);
+                    format("users.%s.friends.%s", player.userId,
+                            Account.getInstance(context).getUserId())).build()
+                                .addListenerForSingleValueEvent(listener);
         }
 
         /**

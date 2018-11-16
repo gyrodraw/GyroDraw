@@ -65,8 +65,6 @@ public class WaitingPageActivity extends BaseActivity {
     private String word2 = null;
     private String winningWord = null;
 
-    private Database database;
-
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -94,7 +92,7 @@ public class WaitingPageActivity extends BaseActivity {
                     case HOMESTATE:
                         break;
                     case CHOOSE_WORDS_TIMER_START:
-                        timerRef = database.getReference(TOP_ROOM_NODE_ID + "."
+                        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "."
                                 + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
                         break;
@@ -176,8 +174,6 @@ public class WaitingPageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = Database.INSTANCE;
-
         overridePendingTransition(0, 0);
 
         setContentView(R.layout.activity_waiting_page);
@@ -194,13 +190,13 @@ public class WaitingPageActivity extends BaseActivity {
                     .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
         }
 
-        wordsVotesRef = database.getReference(
+        wordsVotesRef = Database.getReference(
                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
 
-        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        usersCountRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
         usersCountRef.addValueEventListener(listenerCountUsers);
         word1Ref = wordsVotesRef.child(word1);
         word2Ref = wordsVotesRef.child(word2);
@@ -425,7 +421,7 @@ public class WaitingPageActivity extends BaseActivity {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if(hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
-                DatabaseReference wordRef = database.getReference(TOP_ROOM_NODE_ID + "."
+                DatabaseReference wordRef = Database.getReference(TOP_ROOM_NODE_ID + "."
                                                             + roomID + ".words." + wordVoted);
                 removeVote(wordRef);
             }

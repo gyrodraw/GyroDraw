@@ -29,7 +29,6 @@ public class DrawingOnline extends GyroDrawingActivity {
 
     private String roomId;
 
-    private final Database database = Database.INSTANCE;
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
     private boolean isVotingActivityLaunched = false;
@@ -99,9 +98,9 @@ public class DrawingOnline extends GyroDrawingActivity {
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
         String path = TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime";
-        timerRef = database.getReference(path);
+        timerRef = Database.getReference(path);
         timerRef.addValueEventListener(listenerTimer);
-        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
+        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
     }
 

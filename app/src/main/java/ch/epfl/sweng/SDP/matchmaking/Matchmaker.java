@@ -43,7 +43,7 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     private Matchmaker(Account account) {
-        this.myRef = Database.INSTANCE.getReference("realRooms");
+        this.myRef = Database.getReference("realRooms");
         this.account = account;
     }
 

@@ -19,7 +19,7 @@ public class ConstantsWrapper {
      * @return the desired reference
      */
     public DatabaseReference getReference(String path) {
-        return Database.INSTANCE.getReference(path);
+        return Database.getReference(path);
     }
 
     /**

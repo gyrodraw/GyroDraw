@@ -20,7 +20,7 @@ public enum Database {
      * @return the DatabaseReference associated to the given path
      * @throws IllegalArgumentException if the given string is null
      */
-    public DatabaseReference getReference(String path) {
+    public static DatabaseReference getReference(String path) {
         checkPrecondition(path != null, "path is null");
 
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();

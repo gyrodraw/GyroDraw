@@ -99,7 +99,8 @@ public class Matchmaker implements MatchmakingInterface {
                     .addChildren(format("%s.finished.%s", roomId, account.getUsername())).build()
                     .removeValue();
             Database.constructBuilder(roomsRef)
-                    .addChildren(format("%s.uploadDrawing.%s", roomId, account.getUsername())).build()
+                    .addChildren(format("%s.uploadDrawing.%s", roomId, account.getUsername()))
+                    .build()
                     .removeValue();
         }
     }

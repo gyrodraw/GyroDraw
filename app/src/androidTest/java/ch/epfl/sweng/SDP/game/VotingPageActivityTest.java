@@ -159,4 +159,11 @@ public class VotingPageActivityTest {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
         mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
     }
+
+    @Test
+    public void testOnListenerTimerEqualsTimeForVoting() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(24);
+        mActivityRule.getActivity().callOnCounterChange(dataSnapshotMock);
+        onView(withId(R.id.playerNameView)).check(matches(isDisplayed()));
+    }
 }

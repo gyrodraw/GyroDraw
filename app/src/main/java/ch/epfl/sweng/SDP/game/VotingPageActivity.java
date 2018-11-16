@@ -139,17 +139,16 @@ public class VotingPageActivity extends BaseActivity {
         playerNameView.setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
 
-        // Get the Database instance and the ranking reference
-        final Database database = Database.INSTANCE;
-        rankingRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        // Get the ranking reference
+        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
 
-        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
+        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerCounter);
 
-        usersRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        usersRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

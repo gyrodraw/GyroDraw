@@ -35,7 +35,6 @@ public class DrawingOnline extends GyroDrawingActivity {
 
     private String roomId;
 
-    private final Database database = Database.INSTANCE;
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
     private boolean isVotingActivityLaunched = false;
@@ -120,7 +119,7 @@ public class DrawingOnline extends GyroDrawingActivity {
 
         timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
-        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
+        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
     }
 

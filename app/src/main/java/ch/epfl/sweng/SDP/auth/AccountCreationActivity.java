@@ -51,7 +51,7 @@ public class AccountCreationActivity extends BaseActivity {
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {
-            Database.INSTANCE.getReference("users").orderByChild("username").equalTo(username)
+            Database.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
 

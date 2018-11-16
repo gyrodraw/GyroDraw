@@ -20,7 +20,7 @@ public enum Database {
      * @return the DatabaseReference associated to the given path
      * @throws IllegalArgumentException if the given string is null
      */
-    public DatabaseReference getReference(String path) {
+    public static DatabaseReference getReference(String path) {
         checkPrecondition(path != null, "path is null");
 
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
@@ -97,7 +97,7 @@ public enum Database {
          * Add multiple children to the reference under construction.
          *
          * @param path the sequence of keys, separated by dots, corresponding to the desired nesting
-         *     of children
+         * of children
          * @return the builder
          * @throws IllegalArgumentException if the given path is null
          */

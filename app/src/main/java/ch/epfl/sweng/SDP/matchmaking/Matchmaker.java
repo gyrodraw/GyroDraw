@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import static java.lang.String.format;
+
 import android.support.annotation.NonNull;
 
 import ch.epfl.sweng.SDP.auth.Account;
@@ -41,7 +43,7 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     private Matchmaker(Account account) {
-        this.myRef = Database.INSTANCE.getReference("realRooms");
+        this.myRef = Database.getReference("realRooms");
         this.account = account;
     }
 
@@ -132,12 +134,14 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        myRef.child(roomId).child("users")
-                .child(account.getUserId()).removeValue();
+        Database.constructBuilder(myRef)
+                .addChildren(format("%s.users.%s", roomId, account.getUserId())).build()
+                .removeValue();
 
         if (!account.getUsername().isEmpty()) {
-            myRef.child(roomId).child("ranking")
-                    .child(account.getUsername()).removeValue();
+            Database.constructBuilder(myRef)
+                    .addChildren(format("%s.ranking.%s", roomId, account.getUsername())).build()
+                    .removeValue();
         }
     }
 }

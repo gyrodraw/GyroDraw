@@ -49,7 +49,7 @@ function checkNodeTrue(snapshot) {
 function checkNodeTrueTesting(snapshot, howMany) {
   let count = 0;
   snapshot.forEach((child) => {
-    if(child.val === 1) {
+    if(child.val() === 1) {
       count++;
     }
   });
@@ -364,8 +364,8 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
 });
 
 exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
-  roomID = context.params.roomID;
-  admin.database().ref(parentRoomID + roomID + "uploadDrawing").once('value', (snapshot) => {
+  const roomID = context.params.roomID;
+  return admin.database().ref(parentRoomID + roomID + "/uploadDrawing").once('value', (snapshot) => {
     if(checkNodeTrueTesting(snapshot, 1) === true) {
       admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }

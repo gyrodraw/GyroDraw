@@ -12,16 +12,17 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +34,6 @@ public class VotingPageActivity extends BaseActivity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static final int TIME_FOR_VOTING = 24;
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -92,14 +92,10 @@ public class VotingPageActivity extends BaseActivity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
-                timer.setText(String.valueOf(value % 5));
+                timer.setText(value % 6 == 0 && value != 0 ? "6" : String.valueOf(value % 6));
 
-                if (value == TIME_FOR_VOTING) {
-                    setLayoutToVisible();
-                }
-
-                if (value < TIME_FOR_VOTING && (value % 5) == 4 && value != 0) {
-                    // Switch every 5 seconds
+                if (value != 30 && (value % 6) == 0 && value != 0) {
+                    // Switch every 6 seconds
                     changeImage();
                 }
             }
@@ -215,7 +211,7 @@ public class VotingPageActivity extends BaseActivity {
      * @param view the view corresponding to the button pressed
      */
     public void startHomeActivity(View view) {
-        // Remove the drawings from FirebaseStorage
+        // Remove the drawings from Firebase Storage
         for (String id : drawingsIds) {
             // Remove this after testing
             if (id != null && !id.substring(0, 4).equals("user")) {
@@ -288,26 +284,46 @@ public class VotingPageActivity extends BaseActivity {
                 for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
                     final String currentId = drawingsIds[i];
                     if (currentId != null) {
-                        refs[i] = storage.getReference().child(currentId + ".jpg");
+                        if (currentId
+                                .equals(Account.getInstance(getApplicationContext()).getUserId())) {
+                            // Get the image from the local database instead
+                            LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                                    getApplicationContext(), null, 1);
+                            storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
+                        } else {
+                            refs[i] = storage.getReference().child(currentId + ".jpg");
 
-                        // Download the image
-                        refs[i].getBytes(ONE_MEGABYTE)
-                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        final int OFFSET = 0;
+                            // Download the image
+                            refs[i].getBytes(ONE_MEGABYTE).addOnCompleteListener(
+                                    new OnCompleteListener<byte[]>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<byte[]> task) {
+                                            Bitmap bitmap;
+                                            if (task.isSuccessful()) {
+                                                final int OFFSET = 0;
 
-                                        // Convert the image downloaded as byte[] to Bitmap
-                                        Bitmap bitmap = BitmapFactory
-                                                .decodeByteArray(bytes, OFFSET, bytes.length);
+                                                // Convert the image downloaded as byte[] to Bitmap
+                                                bitmap = BitmapFactory
+                                                        .decodeByteArray(task.getResult(), OFFSET,
+                                                                task.getResult().length);
+                                            } else {
+                                                // Use a default image if unsuccessful
+                                                bitmap = BitmapFactory
+                                                        .decodeResource(getResources(),
+                                                                R.drawable.default_image);
+                                            }
 
-                                        // Store the image
-                                        storeBitmap(bitmap, currentId);
+                                            // Store the image
+                                            storeBitmap(bitmap, currentId);
 
-                                        // Display the first drawing
-                                        changeDrawing(drawings[0], playersNames[0]);
-                                    }
-                                });
+                                            // Display the first drawing
+                                            changeDrawing(drawings[0], playersNames[0]);
+
+                                            // Display the voting page layout
+                                            setLayoutToVisible();
+                                        }
+                                    });
+                        }
                     }
                 }
             }
@@ -363,8 +379,7 @@ public class VotingPageActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("roomID", roomID);
 
-        // Clear the UI; buttonChangeImage and rankingButton need
-        // to be removed after testing
+        // Clear the UI
         setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                 R.id.playerNameView, R.id.timer);
 
@@ -384,12 +399,10 @@ public class VotingPageActivity extends BaseActivity {
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {
         changeDrawing(img, winnerName);
-        // buttonChangeImage and rankingButton need to be removed after testing
         setVisibility(View.GONE, R.id.ratingBar);
     }
 
     private void removeAllListeners() {
-        // Clear listeners
         stateRef.removeEventListener(listenerState);
         timerRef.removeEventListener(listenerCounter);
     }

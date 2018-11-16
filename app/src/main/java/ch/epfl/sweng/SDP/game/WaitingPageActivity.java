@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static java.lang.String.*;
 import static java.lang.String.format;
 
 import android.content.Intent;
@@ -75,7 +74,7 @@ public class WaitingPageActivity extends BaseActivity {
 
             if (value != null) {
                 ((TextView) findViewById(R.id.waitingTime))
-                        .setText(valueOf(value));
+                        .setText(String.valueOf(value));
             }
         }
 
@@ -163,7 +162,7 @@ public class WaitingPageActivity extends BaseActivity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
             ((TextView) findViewById(R.id.playersCounterText)).setText(
-                    format("%s/5", valueOf(usersCount)));
+                    format("%s/5", String.valueOf(usersCount)));
         }
 
         @Override

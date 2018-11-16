@@ -1,6 +1,6 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 import android.support.annotation.NonNull;
 

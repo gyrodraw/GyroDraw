@@ -117,7 +117,7 @@ public class DrawingOnline extends GyroDrawingActivity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
-        timerRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
+        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);

@@ -18,6 +18,9 @@ import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
 
+/**
+ * Class representing a game result.
+ */
 public class GameResult {
 
     private static final int USERNAME_SIZE = 20;
@@ -48,6 +51,12 @@ public class GameResult {
         typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
     }
 
+    /**
+     * Converts a game result to a byte array.
+     *
+     * @param gameResult the game result to be converted
+     * @return the conversion to byte array
+     */
     public static byte[] toByteArray(GameResult gameResult) {
         byte[] byteArrayObject = null;
 
@@ -66,6 +75,12 @@ public class GameResult {
         return byteArrayObject;
     }
 
+    /**
+     * Converts a byte array to a game result.
+     *
+     * @param byteArray the byte array to be converted
+     * @return the conversion to game result
+     */
     public static GameResult fromByteArray(byte[] byteArray) {
         GameResult gameResult = null;
 

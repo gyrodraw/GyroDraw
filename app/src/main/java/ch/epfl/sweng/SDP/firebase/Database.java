@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.firebase;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -12,19 +14,37 @@ public enum Database {
 
     /**
      * Get and return the {@link DatabaseReference} associated to the given path. The path can be a
-     * single keyword or multiple nested keywords and has the format "root.child1.child2...childN"
+     * single keyword or multiple nested keywords and has the format "root.child1.child2...childN".
      *
      * @param path the path to follow inside the database in order to retrieve the reference
      * @return the DatabaseReference associated to the given path
      * @throws IllegalArgumentException if the given string is null
      */
-    public DatabaseReference getReference(String path) {
-        if (path == null) {
-            throw new IllegalArgumentException("path is null");
-        }
+    public static DatabaseReference getReference(String path) {
+        checkPrecondition(path != null, "path is null");
 
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         return builder.addChildren(path).build();
+    }
+
+    /**
+     * Return a new {@link DatabaseReferenceBuilder}.
+     *
+     * @return a DatabaseReferenceBuilder
+     */
+    public static DatabaseReferenceBuilder constructBuilder() {
+        return new DatabaseReferenceBuilder();
+    }
+
+    /**
+     * Return a new {@link DatabaseReferenceBuilder} starting from the given reference, used as
+     * root.
+     *
+     * @param initialRef the reference used to start building
+     * @return a DatabaseReferenceBuilder
+     */
+    public static DatabaseReferenceBuilder constructBuilder(DatabaseReference initialRef) {
+        return new DatabaseReferenceBuilder(initialRef);
     }
 
     /**
@@ -48,9 +68,8 @@ public enum Database {
          * @throws IllegalArgumentException if the given reference is null
          */
         public DatabaseReferenceBuilder(DatabaseReference initialRef) {
-            if (initialRef == null) {
-                throw new IllegalArgumentException("initialRef is null");
-            }
+            checkPrecondition(initialRef != null, "initialRef is null");
+
             ref = initialRef;
         }
 
@@ -62,9 +81,7 @@ public enum Database {
          * @throws IllegalArgumentException if the given key is null
          */
         public DatabaseReferenceBuilder addChild(String childKey) {
-            if (childKey == null) {
-                throw new IllegalArgumentException("childKey is null");
-            }
+            checkPrecondition(childKey != null, "childKey is null");
 
             if (ref == null) {
                 ref = FirebaseDatabase
@@ -85,9 +102,7 @@ public enum Database {
          * @throws IllegalArgumentException if the given path is null
          */
         public DatabaseReferenceBuilder addChildren(String path) {
-            if (path == null) {
-                throw new IllegalArgumentException("path is null");
-            }
+            checkPrecondition(path != null, "path is null");
 
             String[] keys = path.split("\\.");
             String root = keys[0];

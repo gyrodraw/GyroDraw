@@ -1,81 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".game.drawing.DrawingActivity">
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-
-        <ch.epfl.sweng.SDP.game.drawing.PaintView
-            android:id="@+id/paintView"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/pencilButton"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="toolClickHandler"
+            android:rotation="180"
+            app:srcCompat="@drawable/pencil_selected" />
+
+        <ImageView
+            android:id="@+id/eraserButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="toolClickHandler"
+            app:srcCompat="@drawable/eraser" />
+
+        <ImageView
+            android:id="@+id/bucketButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="toolClickHandler"
+            app:srcCompat="@drawable/bucket" />
+
+        <TextView
+            android:id="@+id/timeRemaining"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
+    <TextView
+        android:id="@+id/winningWord"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
-        <ToggleButton
-            android:id="@+id/flyOrDraw"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="flyOrDraw"
-            android:text="@string/fly"
-            android:textOff="@string/fly"
-            android:textOn="@string/draw"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.054"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.969" />
+    <ch.epfl.sweng.SDP.game.drawing.PaintView
+        android:id="@+id/paintView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/clearCanvas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:onClick="clear"
-            android:text="@string/clear"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.073"
-            app:layout_constraintStart_toEndOf="@+id/flyOrDraw"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.984" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/timeRemaining"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text=""
-            android:textSize="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.015" />
-    </android.support.constraint.ConstraintLayout>
-</FrameLayout>
+        <ImageView
+            android:id="@+id/blackButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="colorClickHandler"
+            app:srcCompat="@drawable/color_circle_selected" />
+
+        <ImageView
+            android:id="@+id/blueButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="colorClickHandler"
+            app:srcCompat="@drawable/color_circle" />
+
+        <ImageView
+            android:id="@+id/greenButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="colorClickHandler"
+            app:srcCompat="@drawable/color_circle" />
+
+        <ImageView
+            android:id="@+id/yellowButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="colorClickHandler"
+            app:srcCompat="@drawable/color_circle" />
+
+        <ImageView
+            android:id="@+id/redButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="colorClickHandler"
+            app:srcCompat="@drawable/color_circle" />
+    </LinearLayout>
+</LinearLayout>

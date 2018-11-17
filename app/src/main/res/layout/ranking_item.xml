@@ -9,12 +9,15 @@
     android:layout_height="88dp"
     android:gravity="center"
     android:text="1. "
-    android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+    android:textColor="@color/colorDrawYellow"/>
+
   <TextView
     android:id="@+id/playerName"
     android:layout_width="match_parent"
     android:layout_height="88dp"
     android:gravity="center"
     android:text="Player0"
-    android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+    android:textColor="@color/colorDrawYellow"/>
 </LinearLayout>

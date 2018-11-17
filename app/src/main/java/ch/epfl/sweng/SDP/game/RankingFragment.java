@@ -9,17 +9,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.utils.SortUtils;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
  */
 public class RankingFragment extends ListFragment {
 
-    private static final String RANKING_KEY = "Ranking";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
-    private String[] ranking;
+    private String roomID;
+
+    private DatabaseReference rankingRef;
+    private DatabaseReference finishedRef;
+
+    private Map<String, Integer> finalRanking;
 
     public RankingFragment() {
         // Empty constructor
@@ -27,25 +46,57 @@ public class RankingFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
         // Retrieve the ranking array, passed as argument on instantiation of the class
-        ranking = getArguments().getStringArray(RANKING_KEY);
+        roomID = getArguments().getString("roomID");
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ArrayAdapter<String> adapter = new RankingAdapter(getActivity(), ranking);
-        setListAdapter(adapter);
+        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+        retrieveFinalRanking();
     }
 
+    private void retrieveFinalRanking() {
+        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                finalRanking = new HashMap<>();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                }
+
+                List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
+                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
+                        rankingUsernames.toArray(new String[rankingUsernames.size()]));
+                setListAdapter(adapter);
+                setFinishedCollectingRanking();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
+
+    private void setFinishedCollectingRanking() {
+        finishedRef.child(Account.getInstance(getActivity()
+                .getApplicationContext()).getUsername()).setValue(1);
+    }
 
     private class RankingAdapter extends ArrayAdapter<String> {
 
+        private final String[] players;
+
         private RankingAdapter(Context context, String[] players) {
             super(context, 0, players);
+            this.players = players;
         }
 
         @NonNull
@@ -62,7 +113,7 @@ public class RankingFragment extends ListFragment {
             TextView name = convertView.findViewById(R.id.playerName);
 
             pos.setText(String.format(Locale.getDefault(), "%d. ", position + 1));
-            name.setText(ranking[position]);
+            name.setText(players[position]);
 
             // Return the completed view to render on screen
             return convertView;

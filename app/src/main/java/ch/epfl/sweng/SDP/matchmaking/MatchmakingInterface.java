@@ -1,9 +1,15 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+import com.google.android.gms.tasks.Task;
+
+
 public interface MatchmakingInterface {
+  
+    void leaveRoom(String roomId);
 
-    public void joinRoom(String roomId);
+    Task<String> joinRoom();
 
-    public void leaveRoom(String roomId);
+    Boolean joinRoomOther();
 
 }
+

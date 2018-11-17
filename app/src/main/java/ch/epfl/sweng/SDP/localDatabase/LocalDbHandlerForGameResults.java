@@ -20,7 +20,6 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "gameResults.db";
     private static final String TABLE_NAME = "gameResults";
     private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_TIMESTAMP = "timestamp";
     private static final String COLUMN_RANKED_USERNAME = "rankedUsername";
     private static final String COLUMN_RANK = "rank";
     private static final String COLUMN_STARS = "stars";
@@ -45,7 +44,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID
-                + " INTEGER PRIMARY KEY," + COLUMN_TIMESTAMP + " RESULT_ID,"
+                + " INTEGER PRIMARY KEY,"
                 + COLUMN_RANKED_USERNAME + " RANKED_USERNAME,"
                 + COLUMN_RANK + " RANK,"
                 + COLUMN_STARS + " STARS,"
@@ -73,8 +72,6 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
      * @param gameResult to insert
      */
     public void addGameResultToDb(GameResult gameResult) {
-        Long tsLong = System.currentTimeMillis() / 1000;
-
         // Convert the drawing to a byte array
         Bitmap bitmap = gameResult.getDrawing();
         byte[] byteArray = null;
@@ -92,7 +89,6 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         }
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_TIMESTAMP, tsLong.toString());
         values.put(COLUMN_RANKED_USERNAME, fromListToString(gameResult.getRankedUsername()));
         values.put(COLUMN_RANK, gameResult.getRank());
         values.put(COLUMN_STARS, gameResult.getStars());
@@ -123,16 +119,16 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         do {
-            List<String> rankedUsername = fromStringToList(cursor.getString(2));
-            int rank = cursor.getInt(3);
-            int stars = cursor.getInt(4);
-            int trophies = cursor.getInt(5);
-            byte[] byteArray = cursor.getBlob(6);
+            List<String> rankedUsername = fromStringToList(cursor.getString(1));
+            int rank = cursor.getInt(2);
+            int stars = cursor.getInt(3);
+            int trophies = cursor.getInt(4);
+            byte[] byteArray = cursor.getBlob(5);
             Bitmap drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
             recentResults.add(
                     new GameResult(rankedUsername, rank, stars, trophies, drawing, context));
-        } while (cursor.moveToNext());
+        } while (cursor.move(6));
 
         cursor.close();
         db.close();

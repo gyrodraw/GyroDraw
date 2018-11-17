@@ -53,7 +53,8 @@ public class BattleLogActivity extends Activity {
         players.add("Spectr0");
         players.add("Bon_dernier");
         GameResult test = new GameResult(players, 3, 23, 7, bmp, this);
-        battleLogView.addView(test.toLayout());
+        LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
+        localDb.addGameResultToDb(test);
         fetchGameResults();
     }
 
@@ -61,10 +62,11 @@ public class BattleLogActivity extends Activity {
         LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
         List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
 
+        // if (gameResults == null) throw new NullPointerException();
         for (GameResult gameResult: gameResults) {
             if (gameResult != null) {
                 battleLogView.addView(gameResult.toLayout());
-            }
+            } // else throw new NullPointerException();
         }
     }
 

@@ -12,15 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +23,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
+
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class VotingPageActivity extends BaseActivity {
 
@@ -172,7 +174,7 @@ public class VotingPageActivity extends BaseActivity {
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating,
-                            boolean fromUser) {
+                                                boolean fromUser) {
                         ratingBar.setIsIndicator(true);
                         ratingBar.setAlpha(0.8f);
                         // Store the rating
@@ -226,14 +228,16 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
-        List<String> rankedUsernames = rankingFragment.getRankedUsernames();
-        int rank = rankedUsernames.indexOf(Account.getInstance(this).getUsername());
-        // TODO: replace constants and drawing by the good values
-        GameResult gameResult = new GameResult(rankedUsernames, rank, 10, 15,
-                drawings[rank], this);
+        if (rankingFragment != null) {
+            List<String> rankedUsernames = rankingFragment.getRankedUsernames();
+            int rank = rankedUsernames.indexOf(Account.getInstance(this).getUsername());
+            // TODO: replace constants and drawing by the good values
+            GameResult gameResult = new GameResult(rankedUsernames, rank, 10, 15,
+                    drawings[rank], this);
 
-        LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
-        localDb.addGameResultToDb(gameResult);
+            LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
+            localDb.addGameResultToDb(gameResult);
+        }
 
         launchActivity(HomeActivity.class);
         finish();
@@ -391,7 +395,7 @@ public class VotingPageActivity extends BaseActivity {
     /**
      * Display the drawing of the winner.
      *
-     * @param img Drawing of the winner
+     * @param img        Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

@@ -13,8 +13,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 
 import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
@@ -22,9 +25,7 @@ import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 public class BattleLogActivity extends Activity {
 
     private static final String TAG = "BattleLogActivity";
-    private Typeface typeMuro;
     private LinearLayout battleLogView;
-    private GameResult[] battleLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class BattleLogActivity extends Activity {
         setContentView(R.layout.activity_battle_log);
         battleLogView = findViewById(R.id.battleLog);
 
-        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
@@ -42,25 +43,18 @@ public class BattleLogActivity extends Activity {
         ((TextView) findViewById(R.id.battleLogText)).setTypeface(typeMuro);
         setExitListener();
 
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.battle_log_button);
-
-        String[] players = {"Champion", "Singe_Des_Rues", "Onix", "Spectr0", "Bon_dernier"};
-        GameResult test = new GameResult(players, 3, 27, 8, bmp, this);
-
-        battleLogView.addView(test.toLayout());
-        battleLogView.addView(test.toLayout());
-        battleLogView.addView(test.toLayout());
-        battleLogView.addView(test.toLayout());
-    }
-
-    private void addViewsToLog() {
-        for (GameResult aBattleLog : battleLog) {
-            battleLogView.addView(aBattleLog.toLayout());
-        }
+        fetchGameResults();
     }
 
     private void fetchGameResults() {
+        LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
+        List<GameResult> gameResults = localDb.getLatestBitmapFromDb();
 
+        for (GameResult gameResult: gameResults) {
+            if (gameResult != null) {
+                battleLogView.addView(gameResult.toLayout());
+            }
+        }
     }
 
     /**

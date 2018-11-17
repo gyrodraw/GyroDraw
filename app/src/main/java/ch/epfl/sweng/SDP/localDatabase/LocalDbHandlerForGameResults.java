@@ -5,11 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.epfl.sweng.SDP.home.GameResult;
 
@@ -47,7 +45,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db database to look in
+     * @param db         database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -81,29 +79,34 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     }
 
     /**
-     * Retrieves the most recent game result from the table.
+     * Retrieves the 10th most recent game results from the table.
      *
      * @return the newest game result
      */
-    public GameResult getLatestBitmapFromDb() {
-        String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
+    public List<GameResult> getLatestBitmapFromDb() {
+        ArrayList<GameResult> recentResults = new ArrayList<>();
+
+
+        String query = "Select * FROM " + TABLE_NAME + " ORDER BY "
+                + COLUMN_ID + " DESC LIMIT 10";
 
         SQLiteDatabase db = this.getWritableDatabase();
-
         Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.getPosition() < 0) {
+            return recentResults;
+        }
 
         GameResult gameResult;
 
-        if (cursor.moveToFirst()) {
-            cursor.moveToFirst();
+        do {
             byte[] byteArray = cursor.getBlob(2);
             gameResult = GameResult.fromByteArray(byteArray);
-            cursor.close();
-        } else {
-            gameResult = null;
-        }
+            recentResults.add(gameResult);
+        } while (cursor.moveToNext() && gameResult != null);
 
+        cursor.close();
         db.close();
-        return gameResult;
+        return recentResults;
     }
 }

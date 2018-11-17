@@ -16,7 +16,9 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
@@ -27,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.List;
 
 public class VotingPageActivity extends BaseActivity {
 
@@ -48,6 +52,7 @@ public class VotingPageActivity extends BaseActivity {
 
     private String[] playersNames = new String[NUMBER_OF_DRAWINGS];
     private String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
+    private RankingFragment rankingFragment;
 
     private ImageView drawingView;
     private TextView playerNameView;
@@ -221,6 +226,15 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
+        List<String> rankedUsernames = rankingFragment.getRankedUsernames();
+        int rank = rankedUsernames.indexOf(Account.getInstance(this).getUsername());
+        // TODO: replace constants and drawing by the good values
+        GameResult gameResult = new GameResult(rankedUsernames, rank, 10, 15,
+                drawings[rank], this);
+
+        LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
+        localDb.addBitmapToDb(gameResult);
+
         launchActivity(HomeActivity.class);
         finish();
     }
@@ -367,10 +381,10 @@ public class VotingPageActivity extends BaseActivity {
                 R.id.playerNameView, R.id.timer);
 
         // Create and show the final ranking in the new fragment
+        rankingFragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
+                RankingFragment.class.getName(), bundle);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.votingPageLayout,
-                        RankingFragment.instantiate(getApplicationContext(),
-                                RankingFragment.class.getName(), bundle))
+                .add(R.id.votingPageLayout, rankingFragment)
                 .addToBackStack(null).commit();
     }
 

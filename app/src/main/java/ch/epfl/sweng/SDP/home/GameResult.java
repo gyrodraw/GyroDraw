@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
 
@@ -22,7 +23,7 @@ public class GameResult {
     private static final int USERNAME_SIZE = 20;
     private static final int REWARD_SIZE = 15;
 
-    private final String[] rankedUsername;
+    private final List<String> rankedUsername;
     private final int rank;
     private final Bitmap drawing;
     private final int stars;
@@ -32,10 +33,10 @@ public class GameResult {
     private Resources res;
     private Typeface typeMuro;
 
-    public GameResult(String[] rankedUsername, int rank, int stars,
+    public GameResult(List<String> rankedUsername, int rank, int stars,
                       int trophies, Bitmap drawing, Context context) {
         assert 0 <= rank && rank < 5;
-        assert rankedUsername.length <= 5;
+        assert rankedUsername.size() <= 5;
         this.rankedUsername = rankedUsername;
         this.rank = rank;
         this.drawing = drawing;
@@ -100,12 +101,12 @@ public class GameResult {
 
         layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.VERTICAL);
-        for (int i = 0; i < rankedUsername.length; i++) {
+        for (int i = 0; i < rankedUsername.size(); i++) {
             String prefix = (i + 1) + ". ";
             if (i == rank) {
                 layout.addView(userLayout());
             } else {
-                layout.addView(rankLayout(prefix + rankedUsername[i]));
+                layout.addView(rankLayout(prefix + rankedUsername.get(i)));
             }
         }
 
@@ -163,7 +164,7 @@ public class GameResult {
 
     private TextView setRankAndUsername() {
         TextView rankAndUsername = new TextView(context);
-        styleView(rankAndUsername, (rank + 1) + ". " + rankedUsername[rank], USERNAME_SIZE,
+        styleView(rankAndUsername, (rank + 1) + ". " + rankedUsername.get(rank), USERNAME_SIZE,
                 res.getColor(R.color.colorPrimaryDark),
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         rankAndUsername.setGravity(Gravity.CENTER_VERTICAL);

@@ -57,6 +57,16 @@ public class BattleLogActivity extends Activity {
         battleLogView.addView(test.toLayout());
     }
 
+    private void addViewsToLog() {
+        for (GameResult aBattleLog : battleLog) {
+            battleLogView.addView(aBattleLog.toLayout());
+        }
+    }
+
+    private void fetchGameResults() {
+
+    }
+
     /**
      * Sets listener and animation for exit button.
      */

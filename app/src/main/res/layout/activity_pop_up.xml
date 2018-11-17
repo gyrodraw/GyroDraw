@@ -17,10 +17,10 @@
             android:id="@+id/profileText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignBottom="@+id/crossText"
+            android:layout_centerHorizontal="true"
             android:text="@string/profile"
-            android:textColor="@color/colorGrey"
+            android:textColor="@color/colorLightGrey"
             android:textSize="30sp" />
 
         <TextView

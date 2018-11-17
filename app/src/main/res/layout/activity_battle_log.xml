@@ -53,7 +53,7 @@
                 android:layout_alignBottom="@+id/exitButton"
                 android:layout_centerHorizontal="true"
                 android:text="@string/battle_log"
-                android:textColor="@color/colorGrey"
+                android:textColor="@color/colorLightGrey"
                 android:textSize="30sp"/>
 
             <TextView

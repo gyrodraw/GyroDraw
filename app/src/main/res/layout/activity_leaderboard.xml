@@ -60,7 +60,7 @@
                 android:hint="@string/enter_name_here"
                 android:inputType="text"
                 android:textColor="@color/colorDrawYellow"
-                android:textColorHint="@color/colorLightGrey"
+                android:textColorHint="@color/colorGrey"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toStartOf="@+id/exitButton"
                 app:layout_constraintStart_toStartOf="parent" />

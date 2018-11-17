@@ -1,7 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.CountDownTimer;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 class SlowdownItem extends Item {
 
@@ -33,5 +36,12 @@ class SlowdownItem extends Item {
     @Override
     protected void deactivate(PaintView paintView) {
         paintView.speed /= SLOWDOWN_FACTOR;
+    }
+
+    @Override
+    protected TextView feedbackTextView(RelativeLayout paintViewHolder) {
+        TextView feedback = super.createFeedbackTextView(paintViewHolder);
+        feedback.setText("SLOW! ");
+        return feedback;
     }
 }

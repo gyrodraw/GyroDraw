@@ -1,9 +1,12 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
-import android.view.View;
+import android.graphics.Typeface;
+import android.os.CountDownTimer;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.R;
 
@@ -16,7 +19,7 @@ public abstract class Item {
     protected boolean active = false;
 
     private Context context;
-    private View view;
+    private ImageView view;
     private RelativeLayout.LayoutParams imageViewParam;
 
     protected Item(Context context, int x, int y, int radius, int interval) {
@@ -39,11 +42,11 @@ public abstract class Item {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    public View getView() {
+    public ImageView getView() {
         return view;
     }
 
-    private View toView(Context context) {
+    private ImageView toView(Context context) {
         ImageView view =  new ImageView(context);
         view.setX(x-radius);
         view.setY(y-radius);
@@ -55,5 +58,42 @@ public abstract class Item {
     protected abstract void activate(final PaintView paintView);
 
     protected abstract void deactivate(PaintView paintView);
+
+    protected abstract TextView feedbackTextView(RelativeLayout paintViewHolder);
+
+    protected TextView createFeedbackTextView(final RelativeLayout paintViewHolder) {
+        final FeedbackTextView feedback = new FeedbackTextView(context);
+
+        new CountDownTimer(800, 10) {
+
+            public void onTick(long millisUntilFinished) {
+                feedback.setTextSize(60-millisUntilFinished/15);
+            }
+
+            public void onFinish() {
+                paintViewHolder.removeView(feedback);
+            }
+        }.start();
+        return feedback;
+    }
+
+}
+
+class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
+
+    protected FeedbackTextView(Context context) {
+        super(context);
+        setTextColor(context.getResources().getColor(R.color.colorDrawYellow));
+        setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorGrey));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        setTextSize(1);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        setLayoutParams(layoutParams);
+        Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
+        setTypeface(typeMuro, Typeface.ITALIC);
+    }
+
 
 }

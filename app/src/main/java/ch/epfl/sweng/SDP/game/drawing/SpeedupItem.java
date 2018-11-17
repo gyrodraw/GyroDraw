@@ -1,7 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.CountDownTimer;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class SpeedupItem extends Item {
 
@@ -35,5 +38,12 @@ public class SpeedupItem extends Item {
     protected void deactivate(PaintView paintView) {
         super.active = false;
         paintView.speed /= SPEDUP_FACTOR;
+    }
+
+    @Override
+    protected TextView feedbackTextView(RelativeLayout paintViewHolder) {
+        TextView feedback = super.createFeedbackTextView(paintViewHolder);
+        feedback.setText("SPEED! ");
+        return feedback;
     }
 }

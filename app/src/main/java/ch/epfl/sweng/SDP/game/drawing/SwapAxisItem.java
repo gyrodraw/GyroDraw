@@ -2,10 +2,10 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 class SwapAxisItem extends Item {
-
-    private static final double SLOWDOWN_FACTOR = .5;
 
     private SwapAxisItem(Context context, int x, int y, int radius, int interval) {
         super(context, x, y, radius, interval);
@@ -33,5 +33,12 @@ class SwapAxisItem extends Item {
     @Override
     protected void deactivate(PaintView paintView) {
         paintView.speed *= -1;
+    }
+
+    @Override
+    protected TextView feedbackTextView(RelativeLayout paintViewHolder) {
+        TextView feedback = super.createFeedbackTextView(paintViewHolder);
+        feedback.setText("SWAP! ");
+        return feedback;
     }
 }

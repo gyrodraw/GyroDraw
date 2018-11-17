@@ -39,6 +39,7 @@ public class DrawingOnlineItems extends DrawingOnline {
         if(activatedItem != null) {
             activatedItem.activate(paintView);
             paintViewHolder.removeView(activatedItem.getView());
+            paintViewHolder.addView(activatedItem.feedbackTextView(paintViewHolder));
             displayedItems.remove(activatedItem);
         }
         paintView.updateCoordinates(coordinateX, coordinateY);

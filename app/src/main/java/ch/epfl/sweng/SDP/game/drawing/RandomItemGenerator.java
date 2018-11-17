@@ -9,7 +9,7 @@ import java.util.Random;
 public class RandomItemGenerator {
 
     private static final int INTERVAL = 10000;
-    private static final int ITEM_RADIUS = 50;
+    private static final int ITEM_RADIUS = 80;
 
     PaintView paintView;
 

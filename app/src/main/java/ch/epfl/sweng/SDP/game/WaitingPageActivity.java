@@ -223,12 +223,6 @@ public class WaitingPageActivity extends BaseActivity {
 
     }
 
-    private void setTypeFace(Typeface typeface, View ...views) {
-        for(View view: views) {
-            ((TextView) view).setTypeface(typeface);
-        }
-    }
-
     public void onLeaveButtonClicked(View view) {
         launchActivity(HomeActivity.class);
     }

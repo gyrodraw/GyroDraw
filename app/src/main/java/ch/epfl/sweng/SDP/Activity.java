@@ -1,9 +1,12 @@
 package ch.epfl.sweng.SDP;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -37,6 +40,18 @@ public abstract class Activity extends AppCompatActivity {
     public void setVisibility(int visibility, int... ids) {
         for (int id : ids) {
             findViewById(id).setVisibility(visibility);
+        }
+    }
+
+    /**
+     * Set typeface to the given text views.
+     *
+     * @param typeface the typeface to be set
+     * @param views the text views whose typeface is to be set
+     */
+    public void setTypeFace(Typeface typeface, View... views) {
+        for(View view: views) {
+            ((TextView) view).setTypeface(typeface);
         }
     }
 

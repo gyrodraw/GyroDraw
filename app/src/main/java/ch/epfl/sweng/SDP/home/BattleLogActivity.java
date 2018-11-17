@@ -52,6 +52,9 @@ public class BattleLogActivity extends Activity {
         GameResult test = new GameResult(players, 3, bmp, 27, 8, this);
 
         battleLogView.addView(test.toLayout());
+        battleLogView.addView(test.toLayout());
+        battleLogView.addView(test.toLayout());
+        battleLogView.addView(test.toLayout());
     }
 
     /**
@@ -116,6 +119,12 @@ public class BattleLogActivity extends Activity {
         @SuppressLint("NewApi")
         private LinearLayout toLayout() {
             LinearLayout layout = new LinearLayout(context);
+
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 0, 30);
+
+            layout.setLayoutParams(params);
             layout.setOrientation(LinearLayout.VERTICAL);
             for (int i = 0; i < rankedUsername.length; i++) {
                 String prefix = (i + 1) + ". ";
@@ -192,8 +201,7 @@ public class BattleLogActivity extends Activity {
         private LinearLayout setStarsFragment() {
             LinearLayout starsFragment = new LinearLayout(context);
 
-            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT);
+            LayoutParams params = new LayoutParams(120, LayoutParams.WRAP_CONTENT);
             params.setMargins(20, 0, 0, 0);
 
             starsFragment.setLayoutParams(params);
@@ -227,8 +235,7 @@ public class BattleLogActivity extends Activity {
         private LinearLayout setTrophiesFragment() {
             LinearLayout trophiesFragment = new LinearLayout(context);
 
-            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT);
+            LayoutParams params = new LayoutParams(120, LayoutParams.WRAP_CONTENT);
             params.setMargins(20, 0, 0, 0);
 
             trophiesFragment.setLayoutParams(params);

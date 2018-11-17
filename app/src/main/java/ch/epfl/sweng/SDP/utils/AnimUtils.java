@@ -41,6 +41,19 @@ public class AnimUtils {
     }
 
     /**
+     * Bounce the given view with default amplitude and default frequency.
+     *
+     * @param view      the view
+     * @param context   the context of the view
+     */
+    public static void bounceButton(final View view, Context context) {
+        final Animation bounce = AnimationUtils.loadAnimation(context, R.anim.bounce);
+        BounceInterpolator interpolator = new BounceInterpolator(MAIN_AMPLITUDE, MAIN_FREQUENCY);
+        bounce.setInterpolator(interpolator);
+        view.startAnimation(bounce);
+    }
+
+    /**
      * Press the given view.
      *
      * @param view      the view

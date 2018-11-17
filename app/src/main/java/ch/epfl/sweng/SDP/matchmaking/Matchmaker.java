@@ -26,7 +26,7 @@ public class Matchmaker implements MatchmakingInterface {
 
     private static Matchmaker singleInstance = null;
 
-    private DatabaseReference myRef;
+    private DatabaseReference roomsRef;
     private Account account;
 
     /**
@@ -43,52 +43,13 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     private Matchmaker(Account account) {
-        this.myRef = Database.getReference("realRooms");
+        this.roomsRef = Database.getReference("realRooms");
         this.account = account;
     }
 
     /**
-     * Join a room.
-     *
-     * @return true if it was successful, false otherwise
-     */
-    public Boolean joinRoomOther() {
-
-        Boolean successful = false;
-        HttpURLConnection connection = null;
-
-        try {
-            //Create connection
-
-            String userId = account.getUserId();
-            String urlParameters = "userId=" + URLEncoder.encode(userId, "UTF-8");
-            URL url = new URL(
-                    "https://us-central1-gyrodraw.cloudfunctions.net/joinGame?" + urlParameters);
-            connection = createConnection(url);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream(
-                    connection.getOutputStream());
-            wr.close();
-
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                // OK
-                successful = true;
-                // otherwise, if any other status code is returned, or no status
-                // code is returned, do stuff in the else block
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-        return successful;
-    }
-
-    /**
-     * Create a connection.
+     * Join a room by calling a FirebaseFunction that will handle
+     * which particular room a player should join.
      *
      * @return a {@link Task} wrapping the result
      */
@@ -101,6 +62,11 @@ public class Matchmaker implements MatchmakingInterface {
         // Pass the ID for the moment
         data.put("id", account.getUserId());
         data.put("username", account.getUsername());
+
+        // Use regex to extract the number from the league string
+        // TODO define a method in account that extracts directly the number corresponding
+        // TODO to the league
+        data.put("league", account.getCurrentLeague().replaceAll("\\D+", ""));
 
         return mFunctions.getHttpsCallable("joinGame2")
                 .call(data)
@@ -115,32 +81,26 @@ public class Matchmaker implements MatchmakingInterface {
                 });
     }
 
-    private HttpURLConnection createConnection(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded");
-
-        connection.setRequestProperty("Content-Language", "en-US");
-
-        connection.setUseCaches(false);
-        connection.setDoOutput(true);
-        return connection;
-    }
-
     /**
      * Leave a room.
      *
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        Database.constructBuilder(myRef)
+        Database.constructBuilder(roomsRef)
                 .addChildren(format("%s.users.%s", roomId, account.getUserId())).build()
                 .removeValue();
 
         if (!account.getUsername().isEmpty()) {
-            Database.constructBuilder(myRef)
+            Database.constructBuilder(roomsRef)
                     .addChildren(format("%s.ranking.%s", roomId, account.getUsername())).build()
+                    .removeValue();
+            Database.constructBuilder(roomsRef)
+                    .addChildren(format("%s.finished.%s", roomId, account.getUsername())).build()
+                    .removeValue();
+            Database.constructBuilder(roomsRef)
+                    .addChildren(format("%s.uploadDrawing.%s", roomId, account.getUsername()))
+                    .build()
                     .removeValue();
         }
     }

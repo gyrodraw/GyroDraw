@@ -1,19 +1,18 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +21,7 @@ public class MatchmakerTest {
     private static final String USER_ID = "123456789";
     private static final String FAKE_USERNAME = "IAmNotFake";
     private static final String FAKE_ROOM = "Testroom";
+    private static final String FAKE_LEAGUE = "league1";
     private ConstantsWrapper mockConstantsWrapper;
     private DatabaseReference mockReference;
     private Task mockTask;
@@ -48,7 +48,9 @@ public class MatchmakerTest {
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
         when(mockAccount.getUserId()).thenReturn(USER_ID);
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
-        Matchmaker.getInstance(mockAccount).joinRoom();
+        when(mockAccount.getCurrentLeague()).thenReturn(FAKE_LEAGUE);
+        Task<String> task = Matchmaker.getInstance(mockAccount).joinRoom();
+        assertNotNull(task);
     }
 
     @Test
@@ -56,14 +58,7 @@ public class MatchmakerTest {
         when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
         when(mockAccount.getUserId()).thenReturn(USER_ID);
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
+        when(mockAccount.getCurrentLeague()).thenReturn(FAKE_LEAGUE);
         Matchmaker.getInstance(mockAccount).leaveRoom(FAKE_ROOM);
-    }
-
-    @Test
-    public void testJoinRoomWithExceptionThrown() {
-        doThrow(IllegalArgumentException.class).when(mockConstantsWrapper).getFirebaseUserId();
-        when(mockAccount.getUserId()).thenReturn(USER_ID);
-        when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
-        Matchmaker.getInstance(mockAccount).joinRoom();
     }
 }

@@ -233,7 +233,7 @@ public class VotingPageActivity extends BaseActivity {
                 drawings[rank], this);
 
         LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
-        localDb.addBitmapToDb(gameResult);
+        localDb.addGameResultToDb(gameResult);
 
         launchActivity(HomeActivity.class);
         finish();

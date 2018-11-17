@@ -5,7 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +21,11 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "gameResults";
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_TIMESTAMP = "timestamp";
-    private static final String COLUMN_GAME_RESULT = "gameResult";
-
+    private static final String COLUMN_RANKED_USERNAME = "rankedUsername";
+    private static final String COLUMN_RANK = "rank";
+    private static final String COLUMN_STARS = "stars";
+    private static final String COLUMN_TROPHIES = "trophies";
+    private static final String COLUMN_DRAWING = "drawing";
 
     /**
      * Helper class to save game results in local database.
@@ -27,6 +34,8 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
                                         int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
+
+    // List<String> rankedUsername, int rank, int stars, int trophies, Bitmap drawing
 
     /**
      * Creates a new database table.
@@ -37,8 +46,11 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID
                 + " INTEGER PRIMARY KEY," + COLUMN_TIMESTAMP + " RESULT_ID,"
-                + COLUMN_GAME_RESULT + " GAME_RESULT )";
-
+                + COLUMN_RANKED_USERNAME + " RANKED_USERNAME,"
+                + COLUMN_RANK + " RANK,"
+                + COLUMN_STARS + " STARS,"
+                + COLUMN_TROPHIES + " TROPHIES,"
+                + COLUMN_DRAWING + " DRAWING )";
         db.execSQL(createTable);
     }
 
@@ -60,22 +72,36 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
      *
      * @param gameResult to insert
      */
-    public void addBitmapToDb(GameResult gameResult) {
-        if (gameResult != null) {
-            byte[] byteGameResult = GameResult.toByteArray(gameResult);
+    public void addGameResultToDb(GameResult gameResult) {
+        Long tsLong = System.currentTimeMillis() / 1000;
 
-            Long tsLong = System.currentTimeMillis() / 1000;
-            String ts = tsLong.toString();
+        // Convert the drawing to a byte array
+        Bitmap bitmap = gameResult.getDrawing();
+        byte[] byteArray = null;
 
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_TIMESTAMP, ts);
-            values.put(COLUMN_GAME_RESULT, byteGameResult);
-            SQLiteDatabase db = this.getWritableDatabase();
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
+            byteArray = byteArrayOutputStream.toByteArray();
 
-            db.insert(TABLE_NAME, null, values);
-
-            db.close();
+            try {
+                byteArrayOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TIMESTAMP, tsLong.toString());
+        values.put(COLUMN_RANKED_USERNAME, fromListToString(gameResult.getRankedUsername()));
+        values.put(COLUMN_RANK, gameResult.getRank());
+        values.put(COLUMN_STARS, gameResult.getStars());
+        values.put(COLUMN_TROPHIES, gameResult.getTrophies());
+        values.put(COLUMN_DRAWING, byteArray);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_NAME, null, values);
+        db.close();
     }
 
     /**
@@ -83,30 +109,59 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
      *
      * @return the newest game result
      */
-    public List<GameResult> getLatestBitmapFromDb() {
-        ArrayList<GameResult> recentResults = new ArrayList<>();
-
-
-        String query = "Select * FROM " + TABLE_NAME + " ORDER BY "
-                + COLUMN_ID + " DESC LIMIT 10";
+    public List<GameResult> getGameResultsFromDb(Context context) {
+        String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 10";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
+
+        ArrayList<GameResult> recentResults = new ArrayList<>();
 
         if (cursor.getPosition() < 0) {
             return recentResults;
         }
 
-        GameResult gameResult;
-
+        cursor.moveToFirst();
         do {
-            byte[] byteArray = cursor.getBlob(2);
-            gameResult = GameResult.fromByteArray(byteArray);
-            recentResults.add(gameResult);
-        } while (cursor.moveToNext() && gameResult != null);
+            List<String> rankedUsername = fromStringToList(cursor.getString(2));
+            int rank = cursor.getInt(3);
+            int stars = cursor.getInt(4);
+            int trophies = cursor.getInt(5);
+            byte[] byteArray = cursor.getBlob(6);
+            Bitmap drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+
+            recentResults.add(
+                    new GameResult(rankedUsername, rank, stars, trophies, drawing, context));
+        } while (cursor.moveToNext());
 
         cursor.close();
         db.close();
         return recentResults;
+    }
+
+    private static String fromListToString(List<String> list) {
+        StringBuilder concatList = new StringBuilder();
+
+        for (String username: list) {
+            concatList.append(username).append('\n');
+        }
+
+        return concatList.toString();
+    }
+
+    private static List<String> fromStringToList(String string) {
+        List<String> list = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+
+        for (char c: string.toCharArray()) {
+            if (c != '\n') {
+                builder.append(c);
+            } else {
+                list.add(builder.toString());
+                builder = new StringBuilder();
+            }
+        }
+
+        return list;
     }
 }

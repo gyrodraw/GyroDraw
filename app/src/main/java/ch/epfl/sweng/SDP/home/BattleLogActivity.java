@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.Activity;
@@ -43,12 +44,22 @@ public class BattleLogActivity extends Activity {
         ((TextView) findViewById(R.id.battleLogText)).setTypeface(typeMuro);
         setExitListener();
 
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = Bitmap.createBitmap(100, 100, conf);
+        List<String> players = new ArrayList<>();
+        players.add("Champion");
+        players.add("Singe_Des_Rues");
+        players.add("Onix");
+        players.add("Spectr0");
+        players.add("Bon_dernier");
+        GameResult test = new GameResult(players, 3, 23, 7, bmp, this);
+        battleLogView.addView(test.toLayout());
         fetchGameResults();
     }
 
     private void fetchGameResults() {
         LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
-        List<GameResult> gameResults = localDb.getLatestBitmapFromDb();
+        List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
 
         for (GameResult gameResult: gameResults) {
             if (gameResult != null) {

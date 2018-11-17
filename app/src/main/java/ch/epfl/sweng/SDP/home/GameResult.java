@@ -10,9 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
@@ -28,9 +32,9 @@ public class GameResult {
 
     private final List<String> rankedUsername;
     private final int rank;
-    private final Bitmap drawing;
     private final int stars;
     private final int trophies;
+    private final Bitmap drawing;
 
     private Context context;
     private Resources res;
@@ -51,53 +55,24 @@ public class GameResult {
         typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
     }
 
-    /**
-     * Converts a game result to a byte array.
-     *
-     * @param gameResult the game result to be converted
-     * @return the conversion to byte array
-     */
-    public static byte[] toByteArray(GameResult gameResult) {
-        byte[] byteArrayObject = null;
-
-        try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
-            objectStream.writeObject(gameResult);
-
-            objectStream.close();
-            byteStream.close();
-            byteArrayObject = byteStream.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return byteArrayObject;
+    public List<String> getRankedUsername() {
+        return rankedUsername;
     }
 
-    /**
-     * Converts a byte array to a game result.
-     *
-     * @param byteArray the byte array to be converted
-     * @return the conversion to game result
-     */
-    public static GameResult fromByteArray(byte[] byteArray) {
-        GameResult gameResult = null;
+    public int getRank() {
+        return rank;
+    }
 
-        ByteArrayInputStream byteStream;
-        ObjectInputStream objectStream;
-        try {
-            byteStream = new ByteArrayInputStream(byteArray);
-            objectStream = new ObjectInputStream(byteStream);
-            gameResult = (GameResult) objectStream.readObject();
+    public int getStars() {
+        return stars;
+    }
 
-            objectStream.close();
-            byteStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public int getTrophies() {
+        return trophies;
+    }
 
-        return gameResult;
+    public Bitmap getDrawing() {
+        return drawing;
     }
 
     /**

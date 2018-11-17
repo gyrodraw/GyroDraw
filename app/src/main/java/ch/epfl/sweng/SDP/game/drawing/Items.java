@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public enum Items {
-    SPEEDUP, SLOWDOWN, SWAPAXIS, ADDSTARS, LOSESTARS;
+    SPEEDUP, SLOWDOWN, SWAPAXIS;
 
     private static final List<Items> VALUES =
             Collections.unmodifiableList(Arrays.asList(values()));

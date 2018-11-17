@@ -36,8 +36,8 @@ public class PaintView extends View {
 
     private final Context context;
 
-    private int circleX = 0;
-    private int circleY = 0;
+    protected int circleX = 0;
+    protected int circleY = 0;
 
     private int width;
     private int height;

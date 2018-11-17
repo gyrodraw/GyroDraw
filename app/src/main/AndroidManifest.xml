@@ -53,6 +53,10 @@
         <activity
             android:name=".game.LoadingScreenActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.drawing.DrawingOnlineItems"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

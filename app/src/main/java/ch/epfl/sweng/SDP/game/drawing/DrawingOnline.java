@@ -26,8 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DrawingOnline extends GyroDrawingActivity {
 
-    private int time;
-    private int timeInterval;
     private String winningWord;
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -96,9 +94,6 @@ public class DrawingOnline extends GyroDrawingActivity {
 
         roomId = intent.getStringExtra("RoomID");
         winningWord = intent.getStringExtra("WinningWord");
-
-        time = 60000; //will be passed as variable in future, not hardcoded
-        timeInterval = 1000;  //will be passed as variable in future, not hardcoded
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);

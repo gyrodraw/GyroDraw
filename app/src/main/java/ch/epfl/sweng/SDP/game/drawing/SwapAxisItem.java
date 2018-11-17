@@ -3,22 +3,21 @@ package ch.epfl.sweng.SDP.game.drawing;
 import android.content.Context;
 import android.os.CountDownTimer;
 
-public class SpeedupItem extends Item {
+class SwapAxisItem extends Item {
 
-    private static final int SPEDUP_FACTOR = 2;
+    private static final double SLOWDOWN_FACTOR = .5;
 
-    private SpeedupItem(Context context, int x, int y, int radius, int interval) {
+    private SwapAxisItem(Context context, int x, int y, int radius, int interval) {
         super(context, x, y, radius, interval);
     }
 
-    protected static SpeedupItem createSpeedupItem(Context context, int x, int y, int radius, int interval) {
-        return new SpeedupItem(context, x, y, radius, interval);
+    public static SwapAxisItem createSwapAxisItem(Context context, int x, int y, int radius, int interval) {
+        return new SwapAxisItem(context, x, y, radius, interval);
     }
 
     @Override
     protected void activate(final PaintView paintView) {
-        super.active = true;
-        paintView.speed *= SPEDUP_FACTOR;
+        paintView.speed *= -1;
         new CountDownTimer(super.interval, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -33,7 +32,6 @@ public class SpeedupItem extends Item {
 
     @Override
     protected void deactivate(PaintView paintView) {
-        super.active = false;
-        paintView.speed /= SPEDUP_FACTOR;
+        paintView.speed *= -1;
     }
 }

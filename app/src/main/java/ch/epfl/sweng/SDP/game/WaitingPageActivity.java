@@ -1,11 +1,13 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,6 +31,8 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 import static java.lang.String.format;
 
 public class WaitingPageActivity extends BaseActivity {
@@ -215,16 +219,13 @@ public class WaitingPageActivity extends BaseActivity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         setTypeFace(typeMuro, findViewById(R.id.playersReadyText),
-                            findViewById(R.id.playersCounterText), findViewById(R.id.buttonWord1),
-                            findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
-                            findViewById(R.id.waitingTime));
+                findViewById(R.id.playersCounterText), findViewById(R.id.buttonWord1),
+                findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
+                findViewById(R.id.waitingTime), findViewById(R.id.leaveButton));
+
+        setLeaveButtonListener();
 
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
-
-    }
-
-    public void onLeaveButtonClicked(View view) {
-        launchActivity(HomeActivity.class);
     }
 
     protected void launchDrawingActivity() {
@@ -296,6 +297,27 @@ public class WaitingPageActivity extends BaseActivity {
         }
     }
 
+    private void setLeaveButtonListener() {
+        final Context context = this;
+        int id = R.id.leaveButton;
+        findViewById(id).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, context);
+                        launchActivity(HomeActivity.class);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
     // Vote for the specified word and update the database
     private void voteForWord(WordNumber wordNumber) {
         switch (wordNumber) {
@@ -339,7 +361,7 @@ public class WaitingPageActivity extends BaseActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
-                if(value != null) {
+                if (value != null) {
                     wordRef.setValue(--value);
                 }
             }
@@ -400,10 +422,10 @@ public class WaitingPageActivity extends BaseActivity {
         // drawing activity is launched.
         if (!isDrawingActivityLaunched) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
-            if(hasVoted) {
+            if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
                 DatabaseReference wordRef = Database.getReference(TOP_ROOM_NODE_ID + "."
-                                                            + roomID + ".words." + wordVoted);
+                        + roomID + ".words." + wordVoted);
                 removeVote(wordRef);
             }
         }

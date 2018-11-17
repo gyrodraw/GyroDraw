@@ -44,18 +44,6 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
-     * Set typeface to the given text views.
-     *
-     * @param typeface the typeface to be set
-     * @param views the text views whose typeface is to be set
-     */
-    public void setTypeFace(Typeface typeface, View... views) {
-        for(View view: views) {
-            ((TextView) view).setTypeface(typeface);
-        }
-    }
-
-    /**
      * Set the visibility of the given views to the given value.
      *
      * @param visibility the value to set the visibility at
@@ -64,6 +52,18 @@ public abstract class Activity extends AppCompatActivity {
     public void setVisibility(int visibility, View... views) {
         for (View view : views) {
             view.setVisibility(visibility);
+        }
+    }
+
+    /**
+     * Set typeface to the given text views.
+     *
+     * @param typeface the typeface to be set
+     * @param views the text views whose typeface is to be set
+     */
+    public void setTypeFace(Typeface typeface, View... views) {
+        for(View view: views) {
+            ((TextView) view).setTypeface(typeface);
         }
     }
 

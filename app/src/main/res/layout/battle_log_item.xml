@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorDrawYellowDark">
+    android:background="@color/colorDrawYellow">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -19,15 +19,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|start"
+            android:text="1. Spectr0"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorDrawYellow" />
+            android:textColor="@color/colorPrimaryDark" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginStart="10dp">
 
             <TextView
                 android:id="@+id/starsWon"
@@ -35,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical|start"
+                android:text="+32"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/colorPrimaryDark" />
 
@@ -58,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical|start"
+                android:text="+5"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/colorPrimaryDark" />
 

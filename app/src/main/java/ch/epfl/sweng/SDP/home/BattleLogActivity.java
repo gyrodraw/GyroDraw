@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -45,8 +46,7 @@ public class BattleLogActivity extends Activity {
         ((TextView) findViewById(R.id.battleLogText)).setTypeface(typeMuro);
         setExitListener();
 
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-        Bitmap bmp = Bitmap.createBitmap(100, 100, conf);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.battle_log_button);
 
         String[] players = {"Champion", "Singe_Des_Rues", "Onix", "Spectr0", "Bon_dernier"};
         GameResult test = new GameResult(players, 3, bmp, 27, 8, this);
@@ -126,29 +126,38 @@ public class BattleLogActivity extends Activity {
                 }
             }
 
-            layout.setPadding(0, 0, 0, 10);
             return layout;
         }
 
         private LinearLayout rankLayout(String username) {
             TextView rankAndUsername = new TextView(context);
-            styleView(rankAndUsername, username, USERNAME_SIZE, res.getColor(R.color.colorDrawYellow),
+
+            styleView(rankAndUsername, username, USERNAME_SIZE,
+                    res.getColor(R.color.colorDrawYellow),
                     new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
 
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 0, 10);
+
             LinearLayout fragment = new LinearLayout(context);
+            fragment.setLayoutParams(params);
             fragment.addView(rankAndUsername);
             fragment.setBackgroundColor(res.getColor(R.color.colorLightGrey));
-            fragment.setPadding(30, 0, 30, 10);
+            fragment.setPadding(30, 0, 30, 0);
 
             return fragment;
         }
 
         private LinearLayout userLayout() {
             LinearLayout mainFragment = new LinearLayout(context);
-            mainFragment.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT));
-            mainFragment.setBackgroundColor(res.getColor(R.color.colorDrawYellowDark));
-            mainFragment.setPadding(0, 0, 0, 10);
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 0, 10);
+
+            mainFragment.setLayoutParams(params);
+            mainFragment.setBackgroundColor(res.getColor(R.color.colorDrawYellow));
+            mainFragment.setPadding(30, 0, 30, 0);
 
             mainFragment.addView(setTextFragment());
             mainFragment.addView(setDrawingView());
@@ -161,7 +170,6 @@ public class BattleLogActivity extends Activity {
             textFragment.setOrientation(LinearLayout.VERTICAL);
             textFragment.setLayoutParams(new LayoutParams(0,
                     LayoutParams.WRAP_CONTENT, 4));
-            textFragment.setPadding(30, 0, 0, 5);
 
             textFragment.addView(setRankAndUsername());
             textFragment.addView(setStarsFragment());
@@ -173,7 +181,7 @@ public class BattleLogActivity extends Activity {
         private TextView setRankAndUsername() {
             TextView rankAndUsername = new TextView(context);
             styleView(rankAndUsername, (rank + 1) + ". " + rankedUsername[rank], USERNAME_SIZE,
-                    res.getColor(R.color.colorDrawYellow),
+                    res.getColor(R.color.colorPrimaryDark),
                     new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             rankAndUsername.setGravity(Gravity.CENTER_VERTICAL);
             rankAndUsername.setGravity(Gravity.START);
@@ -186,11 +194,13 @@ public class BattleLogActivity extends Activity {
 
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
-            params.setMargins(40, 0, 0, 0);
+            params.setMargins(20, 0, 0, 0);
 
             starsFragment.setLayoutParams(params);
             starsFragment.addView(setStarsWon());
             starsFragment.addView(setStar());
+            starsFragment.setPadding(0, 0, 0, 5);
+
             return starsFragment;
         }
 
@@ -209,7 +219,6 @@ public class BattleLogActivity extends Activity {
         private ImageView setStar() {
             ImageView star = new ImageView(context);
             star.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
-            star.setPadding(0,0, 20, 0);
             star.setImageResource(R.drawable.star);
 
             return star;
@@ -220,11 +229,13 @@ public class BattleLogActivity extends Activity {
 
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
-            params.setMargins(40, 0, 0, 0);
+            params.setMargins(20, 0, 0, 0);
 
             trophiesFragment.setLayoutParams(params);
             trophiesFragment.addView(setTrophiesWon());
             trophiesFragment.addView(setTrophy());
+            trophiesFragment.setPadding(0, 0, 0, 5);
+
             return trophiesFragment;
         }
 
@@ -244,7 +255,6 @@ public class BattleLogActivity extends Activity {
         private ImageView setTrophy() {
             ImageView trophy = new ImageView(context);
             trophy.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
-            trophy.setPadding(0,0, 20, 0);
             trophy.setImageResource(R.drawable.trophy);
 
             return trophy;
@@ -252,10 +262,9 @@ public class BattleLogActivity extends Activity {
 
         private ImageView setDrawingView() {
             ImageView drawingView = new ImageView(context);
-            drawingView.setImageBitmap(drawing);
             drawingView.setLayoutParams(new LayoutParams(0,
                     LayoutParams.MATCH_PARENT, 1));
-            drawingView.setPadding(0, 0, 30, 0);
+            drawingView.setImageBitmap(drawing);
 
             return drawingView;
         }

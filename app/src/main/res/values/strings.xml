@@ -1,6 +1,4 @@
 <resources>
-
-
     <string name="create_acc">Create Account</string>
     <string name="username">username</string>
     <string name="enter_username">Enter Username</string>
@@ -39,6 +37,6 @@
     <string name="usernameTaken">Username already taken, try again</string>
     <string name="enter_name_here">Enter name here</string>
     <string name="battle_log">Battle log</string>
-
-
+    <string name="initial_waiting_timer">10</string>
+    <string name="leave">Leave</string>
 </resources>

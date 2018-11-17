@@ -79,6 +79,14 @@
           }
         },
         {
+          "client_id": "360230838427-aehugl4j1ghtikvovdll2g81f8pdgjca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.SDP",
+            "certificate_hash": "775089f3360fd177521e7e5197c29b62689aef8a"
+          }
+        },
+        {
           "client_id": "360230838427-gvvbtb7n7db9f02epqv9aneahna7s42n.apps.googleusercontent.com",
           "client_type": 3
         }

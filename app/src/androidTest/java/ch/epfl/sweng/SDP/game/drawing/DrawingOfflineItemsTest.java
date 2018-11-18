@@ -64,6 +64,7 @@ public class DrawingOfflineItemsTest {
         Item item = (Item)activityRule.getActivity().getDisplayedItems()
                 .keySet().toArray()[0];
         paintView.setCircle(item.x, item.y);
+        SystemClock.sleep(1000);
         assertFalse(activityRule.getActivity().getDisplayedItems().containsKey(item));
     }
 

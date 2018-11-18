@@ -447,4 +447,14 @@ public class VotingPageActivity extends BaseActivity {
             }
         });
     }
+
+    @VisibleForTesting
+    public void callOnCounterChange(final DataSnapshot dataSnapshot) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listenerCounter.onDataChange(dataSnapshot);
+            }
+        });
+    }
 }

@@ -7,6 +7,7 @@ const admin = require('firebase-admin');
 const maxPlayers = 5;
 const mockMaxPlayers = 3;
 const maxWords = 6;
+const numberRoomsPerLeague = 100;
 
 // Waiting times
 const WAITING_TIME_CHOOSE_WORDS = 10;
@@ -14,7 +15,7 @@ const WAITING_TIME_DRAWING = 10;
 const WAITING_TIME_VOTING = 30;
 const parentRoomID = "realRooms/";
 
-var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "VotingPage": 3, "EndVoting" : 4});
+var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "WaitingUpload": 3, "VotingPage": 4, "EndVoting" : 5});
 var PlayingEnum = Object.freeze({"Idle": 0, "PlayingButJoinable": 1, "Playing": 2});
 var state = 0;
 
@@ -43,6 +44,17 @@ function checkNodeTrue(snapshot) {
   });
 
   return ready;
+}
+
+function checkNodeTrueTesting(snapshot, howMany) {
+  let count = 0;
+  snapshot.forEach((child) => {
+    if(child.val() === 1) {
+      count++;
+    }
+  });
+
+  return count === howMany;
 }
 
 function functionTimer (seconds, state, roomID, call) {
@@ -136,7 +148,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   // Grab the text parameter.
   const id = data.id;
   const username = data.username;
-  const league = 1;
+  const league = 1 - 1;
   let _roomID;
   console.log(username);
   var alreadyJoined = false;
@@ -151,7 +163,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
       // Check if the room is full, if the user already joined a room and if 
       // the game is not already playing
       if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
-        && playingVal !== PlayingEnum.Playing) {
+        && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true) {
         const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
         const path = parentRoomID + roomID.key;
         _roomID = roomID.key;
@@ -179,16 +191,25 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   });
 });
 
+function isRoomInLeagueRange(roomID, league) {
+  return parseInt(roomID, 10) >= league * numberRoomsPerLeague &&
+          parseInt(roomID, 10) < (league + 1) * numberRoomsPerLeague;
+}
+
+function findLeagueFromRoomID(roomID) {
+  return Math.floor(parseInt(roomID, 10) / numberRoomsPerLeague) + 1;
+}
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function generateTwoRandomNumbers() {
-  const firstNumber = getRandomInt(0, maxWords);
+  const firstNumber = getRandomInt(0, maxWords - 1);
   let secondNumber = firstNumber;
 
   while(firstNumber === secondNumber) {
-    secondNumber = getRandomInt(0, maxWords);
+    secondNumber = getRandomInt(0, maxWords - 1);
   }
 
   return [firstNumber, secondNumber];
@@ -196,7 +217,7 @@ function generateTwoRandomNumbers() {
 
 function addWordsToDatabase(roomID) {
   const numbers = generateTwoRandomNumbers();
-  return admin.database().ref("words").once('value', (snapshot) => {
+  return admin.database().ref("leagues/league" + findLeagueFromRoomID(roomID) + "/words").once('value', (snapshot) => {
     const word1 = snapshot.child(numbers[0]).val();
     const word2 = snapshot.child(numbers[1]).val();
     admin.database().ref(parentRoomID + roomID).update({"words": {[word1]:0,[word2]:0}});
@@ -205,8 +226,8 @@ function addWordsToDatabase(roomID) {
 }
 
 function generateRoomID(league, roomsList) {
-  const minRoomID = league * 100;
-  const maxRoomID = (league + 1) * 100 - 1
+  const minRoomID = league * numberRoomsPerLeague;
+  const maxRoomID = (league + 1) * numberRoomsPerLeague - 1
   let roomID;
   do {
     roomID = Math.floor(Math.random()*(maxRoomID - minRoomID + 1) + minRoomID);
@@ -218,7 +239,7 @@ function generateRoomID(league, roomsList) {
 function createRoomAndJoin(league, roomsList, username, id) {
   const roomID = generateRoomID(league, roomsList);
 
-  let roomObj = {[roomID]:{state : 0, playing : 0, timer :{observableTime:0}}};
+  let roomObj = {[roomID]:{state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
 
   admin.database().ref(parentRoomID).update(roomObj);
   admin.database().ref(parentRoomID + roomID).update({"users":{[id]:username}});
@@ -300,20 +321,28 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
   switch(state) {
     case StateEnum.Idle:
       playingRef.set(PlayingEnum.Idle);
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       break;
 
     case StateEnum.ChoosingWordsCountdown:
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       playingRef.set(PlayingEnum.PlayingButJoinable);
       return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage);
 
     case StateEnum.DrawingPage:
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_DRAWING);
       createNode(roomID, "ranking");
       createNode(roomID, "finished");
       createNode(roomID, "uploadDrawing")
       playingRef.set(PlayingEnum.Playing);
-      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.VotingPage);
+      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload);
+
+    case StateEnum.WaitingUpload:
+      // Set timeout to pass to next activity
+      break;
 
     case StateEnum.VotingPage:
+      admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_VOTING);
       return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
 
     case StateEnum.EndVoting:
@@ -330,6 +359,15 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
   return admin.database().ref(parentRoomID + roomID + "/finished").once('value', (snapshot) => {
     if(checkNodeTrue(snapshot) === true && roomID !== "0123457890") {
       removeRoom(roomID);
+    }
+  });
+});
+
+exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
+  const roomID = context.params.roomID;
+  return admin.database().ref(parentRoomID + roomID + "/uploadDrawing").once('value', (snapshot) => {
+    if(checkNodeTrueTesting(snapshot, 1) === true) {
+      admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }
   });
 });

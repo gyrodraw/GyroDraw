@@ -12,14 +12,11 @@ import android.util.Log;
 
 public class GyroDrawingActivity extends DrawingActivity implements SensorEventListener {
 
-    private int speed;
     private SensorManager sensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        speed = 5; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }

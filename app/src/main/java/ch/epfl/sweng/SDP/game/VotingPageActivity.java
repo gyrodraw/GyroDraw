@@ -228,32 +228,32 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
-        createAndStoreGameResult();
+        if (rankingFragment != null) {
+            createAndStoreGameResult();
+        }
         launchActivity(HomeActivity.class);
         finish();
     }
 
     private void createAndStoreGameResult() {
-        if (rankingFragment != null) {
-            List<String> rankedUsernames = rankingFragment.getRankedUsernames();
-            String username = Account.getInstance(this).getUsername();
-            int rank = rankedUsernames.indexOf(username);
-            Bitmap drawing = null;
+        List<String> rankedUsernames = rankingFragment.getRankedUsernames();
+        String username = Account.getInstance(this).getUsername();
+        int rank = rankedUsernames.indexOf(username);
+        Bitmap drawing = null;
 
-            for (int i = 0; i < playersNames.length; i++) {
-                if (playersNames[i].equals(username)) {
-                    drawing = drawings[i];
-                }
+        for (int i = 0; i < playersNames.length; i++) {
+            if (playersNames[i].equals(username)) {
+                drawing = drawings[i];
             }
-
-            // TODO: replace constants and drawing by the good values
-            GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
-                    drawing, this);
-
-            LocalDbHandlerForGameResults localDb =
-                    new LocalDbHandlerForGameResults(this, null, 1);
-            localDb.addGameResultToDb(gameResult);
         }
+
+        // TODO: replace constants and drawing by the good values
+        GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
+                drawing, this);
+
+        LocalDbHandlerForGameResults localDb =
+                new LocalDbHandlerForGameResults(this, null, 1);
+        localDb.addGameResultToDb(gameResult);
     }
 
     /**

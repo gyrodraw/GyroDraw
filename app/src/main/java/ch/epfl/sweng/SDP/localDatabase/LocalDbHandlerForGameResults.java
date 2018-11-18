@@ -34,8 +34,6 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
-    // List<String> rankedUsername, int rank, int stars, int trophies, Bitmap drawing
-
     /**
      * Creates a new database table.
      *

@@ -11,9 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Class representing a game result.
@@ -60,8 +63,10 @@ public class GameResult {
      */
     public GameResult(List<String> rankedUsername, int rank, int stars,
                       int trophies, Bitmap drawing, Context context) {
-        assert 0 <= rank && rank < 5;
-        assert rankedUsername.size() <= 5;
+        checkPrecondition(0 <= rank && rank < rankedUsername.size(),
+                "Rank is out of bounds");
+        checkPrecondition(rankedUsername.size() <= 5,
+                "The number of username is bigger than 5");
         this.rankedUsername = rankedUsername;
         this.rank = rank;
         this.drawing = drawing;
@@ -78,7 +83,7 @@ public class GameResult {
     }
 
     public List<String> getRankedUsername() {
-        return rankedUsername;
+        return new ArrayList<>(rankedUsername);
     }
 
     public int getRank() {
@@ -94,7 +99,7 @@ public class GameResult {
     }
 
     public Bitmap getDrawing() {
-        return drawing;
+        return drawing.copy(Bitmap.Config.ARGB_8888, false);
     }
 
     /**

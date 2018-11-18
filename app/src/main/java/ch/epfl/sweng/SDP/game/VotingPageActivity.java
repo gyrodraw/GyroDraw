@@ -167,6 +167,7 @@ public class VotingPageActivity extends BaseActivity {
                             boolean fromUser) {
                         ratingBar.setIsIndicator(true);
                         ratingBar.setAlpha(0.8f);
+
                         // Store the rating
                         ratings[changeDrawingCounter] = (int) rating;
 
@@ -223,16 +224,27 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     /**
-     * Switch the drawing when clicking the button.
+     * Change the drawing.
      */
     public void changeImage() {
         ++changeDrawingCounter;
         previousRating = 0;
-        changeDrawing(drawings[changeDrawingCounter], playersNames[changeDrawingCounter]);
+
+        String playerName = playersNames[changeDrawingCounter];
+        changeDrawing(drawings[changeDrawingCounter], playerName);
+
         addStarAnimationListener();
+
+        enableRatingBar(playerName);
+    }
+
+    private void enableRatingBar(String playerName) {
+        final boolean isCurrentPlayer = playerName.equals(Account.getInstance(this).getUsername());
+
+        // Enable the rating bar only if the image is not the player's one
         ratingBar.setRating(0f);
-        ratingBar.setIsIndicator(false);
-        ratingBar.setAlpha(1f);
+        ratingBar.setIsIndicator(isCurrentPlayer);
+        ratingBar.setAlpha(isCurrentPlayer ? 0.8f : 1f);
     }
 
     private void setLayoutToVisible() {
@@ -316,7 +328,11 @@ public class VotingPageActivity extends BaseActivity {
                                             storeBitmap(bitmap, currentId);
 
                                             // Display the first drawing
-                                            changeDrawing(drawings[0], playersNames[0]);
+                                            String playerName = playersNames[0];
+                                            changeDrawing(drawings[0], playerName);
+
+                                            // Enable the rating bar only if the image is not the player's one
+                                            enableRatingBar(playerName);
 
                                             // Display the voting page layout
                                             setLayoutToVisible();

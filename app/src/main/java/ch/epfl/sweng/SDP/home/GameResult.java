@@ -33,21 +33,31 @@ public class GameResult {
     private Resources res;
     private Typeface typeMuro;
 
-    private final static LayoutParams rankListParams =
+    private static final LayoutParams rankListParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    private final static LayoutParams rankParams =
+    private static final LayoutParams rankParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    private final static LayoutParams textFragmentParams =
+    private static final LayoutParams textFragmentParams =
             new LayoutParams(0, LayoutParams.WRAP_CONTENT, 4);
-    private final static LayoutParams usernameParams =
+    private static final LayoutParams usernameParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    private final static LayoutParams rewardFragmentParams =
+    private static final LayoutParams rewardFragmentParams =
             new LayoutParams(120, LayoutParams.WRAP_CONTENT);
-    private final static LayoutParams textParams =
+    private static final LayoutParams textParams =
             new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
-    private final static LayoutParams imagesParams =
+    private static final LayoutParams imagesParams =
             new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 
+    /**
+     * Creates a new game result.
+     *
+     * @param rankedUsername the list of usernames in ranking order
+     * @param rank           the rank of the user
+     * @param stars          the stars won during this game
+     * @param trophies       the trophies won during this game
+     * @param drawing        the drawing of the user
+     * @param context        the context of the caller
+     */
     public GameResult(List<String> rankedUsername, int rank, int stars,
                       int trophies, Bitmap drawing, Context context) {
         assert 0 <= rank && rank < 5;
@@ -112,9 +122,7 @@ public class GameResult {
     }
 
     private LinearLayout rankLayout(String username) {
-        TextView rankAndUsername = new TextView(context);
-
-        styleView(rankAndUsername, username, USERNAME_SIZE,
+        TextView rankAndUsername = styleView(username, USERNAME_SIZE,
                 res.getColor(R.color.colorDrawYellow), textParams);
 
         LinearLayout fragment = new LinearLayout(context);
@@ -155,10 +163,8 @@ public class GameResult {
     }
 
     private TextView setRankAndUsername() {
-        TextView rankAndUsername = new TextView(context);
-
-        styleView(rankAndUsername, (rank + 1) + ". " + rankedUsername.get(rank), USERNAME_SIZE,
-                res.getColor(R.color.colorPrimaryDark), usernameParams);
+        TextView rankAndUsername = styleView((rank + 1) + ". " + rankedUsername.get(rank),
+                USERNAME_SIZE, res.getColor(R.color.colorPrimaryDark), usernameParams);
 
         rankAndUsername.setGravity(Gravity.CENTER_VERTICAL);
         rankAndUsername.setGravity(Gravity.START);
@@ -178,12 +184,9 @@ public class GameResult {
     }
 
     private TextView setReward(int reward) {
-        int dark = res.getColor(R.color.colorPrimaryDark);
-
-        TextView rewardView = new TextView(context);
-
         String prefix = reward >= 0 ? "+" : "";
-        styleView(rewardView, prefix + String.valueOf(reward), REWARD_SIZE, dark, textParams);
+        TextView rewardView = styleView(prefix + String.valueOf(reward),
+                REWARD_SIZE, res.getColor(R.color.colorPrimaryDark), textParams);
 
         rewardView.setGravity(Gravity.CENTER_VERTICAL);
         rewardView.setGravity(Gravity.START);
@@ -209,12 +212,14 @@ public class GameResult {
         return drawingView;
     }
 
-    private void styleView(TextView view, String text, int textSize, int color,
-                           LayoutParams layoutParams) {
+    private TextView styleView(String text, int textSize, int color, LayoutParams layoutParams) {
+        TextView view = new TextView(context);
         view.setText(text);
         view.setTextSize(textSize);
         view.setTextColor(color);
         view.setTypeface(typeMuro);
         view.setLayoutParams(layoutParams);
+
+        return view;
     }
 }

@@ -39,6 +39,10 @@ public class DrawingOfflineItems extends DrawingOffline {
         generateItems();
     }
 
+    protected HashMap<Item, ImageView> getDisplayedItems() {
+        return new HashMap<>(displayedItems);
+    }
+
     /**
      * Gets called when sensor data changed. Updates the paintViews' circle coordinates
      * and checks if there are collisions with any displayed items.
@@ -120,7 +124,7 @@ public class DrawingOfflineItems extends DrawingOffline {
         final FeedbackTextView feedback = new FeedbackTextView(this);
         feedback.setText(item.textFeedback());
 
-        new CountDownTimer(800, 10) {
+        new CountDownTimer(800, 40) {
 
             public void onTick(long millisUntilFinished) {
                 feedback.setTextSize(60-millisUntilFinished/15);

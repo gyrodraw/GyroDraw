@@ -371,5 +371,3 @@ exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/
     }
   });
 });
-
-

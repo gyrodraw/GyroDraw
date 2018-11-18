@@ -2,23 +2,20 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.R;
+
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
-
-import ch.epfl.sweng.SDP.R;
 
 public class DrawingOfflineItems extends DrawingOffline {
 

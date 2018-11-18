@@ -1,9 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.os.CountDownTimer;
-import android.widget.RelativeLayout;
-
-import java.util.LinkedList;
 import java.util.Random;
 
 public class RandomItemGenerator {

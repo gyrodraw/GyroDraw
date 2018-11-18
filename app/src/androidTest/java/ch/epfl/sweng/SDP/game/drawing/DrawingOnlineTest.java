@@ -240,7 +240,7 @@ public class DrawingOnlineTest {
      *
      * @param bitmap  the given bitmap
      * @param quality the given quality
-     * @return
+     * @return the compressed bitmap
      */
     public static Bitmap compressBitmap(Bitmap bitmap, int quality) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

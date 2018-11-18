@@ -120,30 +120,16 @@ public class DrawingOnlineTest {
 
     @Test
     public void testLocalDbHandler(){
-        Paint paint = initializedPaint();
-
-        Path path = new Path();
-        path.lineTo(50, 50);
-
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        Canvas canvas = initializedCanvas(bitmap, paint, path);
-        canvas.drawColor(Color.WHITE);
-        canvas.drawPath(path, paint);
-        canvas.drawBitmap(bitmap, 0, 0, paint);
+        Bitmap bitmap = initializedBitmap();
 
         LocalDbHandlerForImages localDbHandler =
                 new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 100);
 
         bitmap = compressBitmap(bitmap, 100);
-
         Bitmap newBitmap = localDbHandler.getLatestBitmapFromDb();
 
-        for(int i = 0; i < 100; ++i){
-            for(int j = 0; j < 100; ++j){
-                assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
-            }
-        }
+        bitmapEqualsNewBitmap(bitmap, newBitmap);
     }
 
     @Test
@@ -214,7 +200,30 @@ public class DrawingOnlineTest {
                 paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
     }
 
-    private Paint initializedPaint(){
+    public static Bitmap initializedBitmap() {
+        Paint paint = initializedPaint();
+
+        Path path = new Path();
+        path.lineTo(50, 50);
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = initializedCanvas(bitmap, paint, path);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+
+        return bitmap;
+    }
+
+    public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
+        for(int i = 0; i < 100; ++i){
+            for(int j = 0; j < 100; ++j){
+                assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
+            }
+        }
+    }
+
+    private static Paint initializedPaint(){
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
@@ -222,7 +231,7 @@ public class DrawingOnlineTest {
         return paint;
     }
 
-    private Canvas initializedCanvas(Bitmap bitmap, Paint paint, Path path){
+    private static Canvas initializedCanvas(Bitmap bitmap, Paint paint, Path path){
         Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
         canvas.drawPath(path, paint);
@@ -230,7 +239,7 @@ public class DrawingOnlineTest {
         return canvas;
     }
 
-    private Bitmap compressBitmap(Bitmap bitmap, int quality){
+    public static Bitmap compressBitmap(Bitmap bitmap, int quality){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -241,5 +250,4 @@ public class DrawingOnlineTest {
         }
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
-
 }

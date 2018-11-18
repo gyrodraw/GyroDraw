@@ -113,18 +113,23 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
 
         ArrayList<GameResult> recentResults = new ArrayList<>();
 
+
+        cursor.moveToFirst();
         if (cursor.getPosition() < 0) {
             return recentResults;
         }
 
-        cursor.moveToFirst();
         do {
             List<String> rankedUsername = fromStringToList(cursor.getString(1));
             int rank = cursor.getInt(2);
             int stars = cursor.getInt(3);
             int trophies = cursor.getInt(4);
             byte[] byteArray = cursor.getBlob(5);
-            Bitmap drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            Bitmap drawing = null;
+            // TODO: If byteArray == null replace by the default bitmap
+            if (byteArray != null) {
+                drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            }
 
             recentResults.add(
                     new GameResult(rankedUsername, rank, stars, trophies, drawing, context));
@@ -138,7 +143,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     private static String fromListToString(List<String> list) {
         StringBuilder concatList = new StringBuilder();
 
-        for (String username: list) {
+        for (String username : list) {
             concatList.append(username).append('\n');
         }
 
@@ -149,7 +154,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         List<String> list = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
-        for (char c: string.toCharArray()) {
+        for (char c : string.toCharArray()) {
             if (c != '\n') {
                 builder.append(c);
             } else {

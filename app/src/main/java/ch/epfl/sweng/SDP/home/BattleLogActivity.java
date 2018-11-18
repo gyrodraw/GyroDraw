@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.home;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -27,6 +26,7 @@ public class BattleLogActivity extends Activity {
 
     private static final String TAG = "BattleLogActivity";
     private LinearLayout battleLogView;
+    private LocalDbHandlerForGameResults localDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +53,19 @@ public class BattleLogActivity extends Activity {
         players.add("Spectr0");
         players.add("Bon_dernier");
         GameResult test = new GameResult(players, 3, 23, 7, bmp, this);
-        LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
-        localDb.addGameResultToDb(test);
+        localDb = new LocalDbHandlerForGameResults(this, null, 1);
+        // localDb.addGameResultToDb(test);
         fetchGameResults();
     }
 
     private void fetchGameResults() {
-        LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
         List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
 
-        // if (gameResults == null) throw new NullPointerException();
+        if (gameResults == null) throw new NullPointerException();
         for (GameResult gameResult: gameResults) {
             if (gameResult != null) {
                 battleLogView.addView(gameResult.toLayout());
-            } // else throw new NullPointerException();
+            }
         }
     }
 

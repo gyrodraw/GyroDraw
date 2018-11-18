@@ -35,9 +35,6 @@
         <activity
             android:name=".game.drawing.DrawingOnline"
             android:screenOrientation="portrait" />
-        <activity 
-            android:name=".game.drawing.DrawingActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".auth.AccountCreationActivity"
             android:screenOrientation="portrait" />
@@ -55,8 +52,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".game.drawing.DrawingOfflineItems"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

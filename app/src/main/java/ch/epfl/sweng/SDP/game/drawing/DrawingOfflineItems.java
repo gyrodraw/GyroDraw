@@ -2,10 +2,8 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.RequiresApi;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,7 +13,6 @@ import ch.epfl.sweng.SDP.R;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class DrawingOfflineItems extends DrawingOffline {
 
@@ -47,15 +44,13 @@ public class DrawingOfflineItems extends DrawingOffline {
      * @param coordinateX new X coordinate for paintView
      * @param coordinateY new Y coordinate for paintView
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void updateValues(float coordinateX, float coordinateY) {
         paintView.updateCoordinates(coordinateX, coordinateY);
 
-        Optional<Item> collidingItemOptional = findCollidingElement();
+        Item collidingItem = findCollidingElement();
 
-        if(collidingItemOptional.isPresent()) {
-            Item collidingItem = collidingItemOptional.get();
+        if(collidingItem != null) {
             collidingItem.activate(paintView);
             paintViewHolder.removeView(displayedItems.get(collidingItem));
             paintViewHolder.addView(itemTextFeedback(collidingItem));
@@ -65,16 +60,15 @@ public class DrawingOfflineItems extends DrawingOffline {
 
     /**
      * Checks if the paintViews' circle collided with an item.
-     * @return Optional of the item that collided, or empty.
+     * @return item that collided, or null.
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private Optional<Item> findCollidingElement() {
+    private Item findCollidingElement() {
         for(Item item : displayedItems.keySet()) {
             if(item.collision(paintView.circleX, paintView.circleY, paintView.getCircleRadius())) {
-                return Optional.of(item);
+                return item;
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     /**

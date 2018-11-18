@@ -2,37 +2,22 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
 import android.os.SystemClock;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import ch.epfl.sweng.SDP.R;
+import java.util.HashMap;
 
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DrawingOfflineItemsTest {
 
     @Rule
     public final ActivityTestRule<DrawingOfflineItems> activityRule =
-            new ActivityTestRule<DrawingOfflineItems>(DrawingOfflineItems.class){
-
-                @Override
-                protected Intent getActivityIntent() {
-                    Intent intent = new Intent();
-                    return intent;
-                }
-            };
+            new ActivityTestRule<DrawingOfflineItems>(DrawingOfflineItems.class){};
 
     @Test
     public void testItemsGetAdded() {
@@ -51,9 +36,11 @@ public class DrawingOfflineItemsTest {
         Item item = (Item)displayedItems.keySet().toArray()[0];
         paintView.setCircle(item.x, item.y);
         SystemClock.sleep(400);
-        assertEquals("Assert 1, should be 2, is: "+paintViewHolder.getChildCount(), paintViewHolder.getChildCount(), 2);
+        assertEquals("Assert 1, should be 2, is: "+paintViewHolder.getChildCount(),
+                paintViewHolder.getChildCount(), 2);
         SystemClock.sleep(800);
-        assertEquals("Assert 2, should be 1, is: "+paintViewHolder.getChildCount(), paintViewHolder.getChildCount(), 1);
+        assertEquals("Assert 2, should be 1, is: "+paintViewHolder.getChildCount(),
+                paintViewHolder.getChildCount(), 1);
     }
 
 }

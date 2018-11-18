@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -96,7 +95,7 @@ public class LoginActivity extends BaseActivity {
             startActivity(intent);
             finish();
         } else {
-            Database.INSTANCE.getReference("users").orderByChild(EMAIL).equalTo(email)
+            Database.getReference("users").orderByChild(EMAIL).equalTo(email)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

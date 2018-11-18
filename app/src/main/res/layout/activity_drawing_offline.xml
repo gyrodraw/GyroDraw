@@ -55,7 +55,7 @@
             android:includeFontPadding="false"
             android:onClick="exitClick"
             android:text="@string/cross"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/colorExitRed"
             android:textSize="30sp"
             android:textStyle="bold" />
 

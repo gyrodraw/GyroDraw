@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -15,7 +14,6 @@ import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +27,6 @@ public class DrawingOnline extends GyroDrawingActivity {
 
     private String roomId;
 
-    private final Database database = Database.INSTANCE;
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
     private boolean isVotingActivityLaunched = false;
@@ -54,7 +51,7 @@ public class DrawingOnline extends GyroDrawingActivity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
-            if(state != null) {
+            if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch(stateEnum) {
                     case START_VOTING_ACTIVITY:
@@ -96,9 +93,9 @@ public class DrawingOnline extends GyroDrawingActivity {
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
         String path = TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime";
-        timerRef = database.getReference(path);
+        timerRef = Database.getReference(path);
         timerRef.addValueEventListener(listenerTimer);
-        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
+        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
     }
 

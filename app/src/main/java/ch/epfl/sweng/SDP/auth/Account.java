@@ -8,6 +8,7 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -275,19 +276,15 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void changeTrophies(final int change) throws DatabaseException {
-        DatabaseReferenceBuilder trophiesBuilder = new DatabaseReferenceBuilder(
-                usersRef);
         int newTrophies = Math.max(0, trophies + change);
-        trophiesBuilder.addChildren(userId + ".trophies").build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".trophies").build()
                 .setValue(newTrophies, createCompletionListener());
         trophies = newTrophies;
 
         updateCurrentLeague();
 
         if (trophies > maxTrophies) {
-            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                    usersRef);
-            builder.addChildren(userId + ".maxTrophies").build()
+            Database.constructBuilder(usersRef).addChildren(userId + ".maxTrophies").build()
                     .setValue(trophies, createCompletionListener());
             maxTrophies = trophies;
         }
@@ -297,15 +294,13 @@ public class Account {
 
     private void updateCurrentLeague() {
         // Update current league
-        DatabaseReferenceBuilder leagueBuilder = new DatabaseReferenceBuilder(
-                usersRef);
         for (League league : LEAGUES) {
             if (league.contains(trophies)) {
                 currentLeague = league.getName();
             }
         }
 
-        leagueBuilder.addChildren(userId + ".currentLeague").build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".currentLeague").build()
                 .setValue(currentLeague, createCompletionListener());
     }
 
@@ -320,9 +315,7 @@ public class Account {
         int newStars = amount + stars;
         checkPrecondition(newStars >= 0, "Negative Balance");
 
-        DatabaseReferenceBuilder starsBuilder = new DatabaseReferenceBuilder(
-                usersRef);
-        starsBuilder.addChildren(userId + ".stars").build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".stars").build()
                 .setValue(newStars, createCompletionListener());
         stars = newStars;
 
@@ -335,9 +328,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseMatchesWon() throws DatabaseException {
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                usersRef);
-        builder.addChildren(userId + ".matchesWon").build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".matchesWon").build()
                 .setValue(++matchesWon, createCompletionListener());
 
         localDbHandler.saveAccount(instance);
@@ -349,9 +340,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseTotalMatches() throws DatabaseException {
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                usersRef);
-        builder.addChildren(userId + ".totalMatches").build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".totalMatches").build()
                 .setValue(++totalMatches, createCompletionListener());
 
         localDbHandler.saveAccount(instance);
@@ -370,9 +359,7 @@ public class Account {
 
         double newAverageRating = averageRating == 0 ? rating
                 : (averageRating * (totalMatches - 1) + rating) / totalMatches;
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                usersRef);
-        builder.addChildren(userId + ".averageRating").build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".averageRating").build()
                 .setValue(newAverageRating, createCompletionListener());
         averageRating = newAverageRating;
 
@@ -389,11 +376,10 @@ public class Account {
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + FRIENDS_TAG + usernameId).build()
+        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
                 .setValue(usernameId, createCompletionListener());
-        builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(usernameId + FRIENDS_TAG + userId).build()
+
+        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
                 .setValue(userId, createCompletionListener());
     }
 
@@ -407,11 +393,10 @@ public class Account {
     public void removeFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(userId + FRIENDS_TAG + usernameId).build()
+        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
                 .removeValue(createCompletionListener());
-        builder = new DatabaseReferenceBuilder(usersRef);
-        builder.addChildren(usernameId + FRIENDS_TAG + userId).build()
+
+        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
                 .removeValue(createCompletionListener());
     }
 

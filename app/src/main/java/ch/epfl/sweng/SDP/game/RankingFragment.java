@@ -56,8 +56,8 @@ public class RankingFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        rankingRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
-        finishedRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
         retrieveFinalRanking();
     }
 
@@ -68,7 +68,9 @@ public class RankingFragment extends ListFragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 finalRanking = new HashMap<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                    if(ds.getValue(Integer.class) != null && ds.getKey() != null) {
+                        finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                    }
                 }
 
                 List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);

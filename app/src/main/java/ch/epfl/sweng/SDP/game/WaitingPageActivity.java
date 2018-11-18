@@ -1,11 +1,13 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,26 +16,24 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
-
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import static java.lang.String.format;
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
-import java.util.Locale;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
+import static java.lang.String.format;
 
 public class WaitingPageActivity extends BaseActivity {
 
@@ -53,8 +53,6 @@ public class WaitingPageActivity extends BaseActivity {
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static final int NUMBER_OF_PLAYERS_NEEDED = 5;
-    private int usersReadyCount = 1;
 
     private DatabaseReference usersCountRef;
     private DatabaseReference wordsVotesRef;
@@ -70,8 +68,6 @@ public class WaitingPageActivity extends BaseActivity {
     private String word1 = null;
     private String word2 = null;
     private String winningWord = null;
-
-    private Database database;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -98,9 +94,14 @@ public class WaitingPageActivity extends BaseActivity {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case HOMESTATE:
+                        findViewById(R.id.waitingTime).setVisibility(View.GONE);
+                        findViewById(R.id.leaveButton).setVisibility(View.VISIBLE);
                         break;
                     case CHOOSE_WORDS_TIMER_START:
-                        timerRef = database.getReference(TOP_ROOM_NODE_ID + "."
+                        findViewById(R.id.waitingTime).setVisibility(View.VISIBLE);
+                        findViewById(R.id.leaveButton).setVisibility(View.GONE);
+
+                        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "."
                                 + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
                         break;
@@ -121,7 +122,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
-    private final ValueEventListener listenerWord1 = new ValueEventListener() {
+    protected final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -142,7 +143,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
-    private final ValueEventListener listenerWord2 = new ValueEventListener() {
+    protected final ValueEventListener listenerWord2 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -163,12 +164,13 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
-    private final ValueEventListener listenerCountUsers = new ValueEventListener() {
+    protected final ValueEventListener listenerCountUsers = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
             ((TextView) findViewById(R.id.playersCounterText)).setText(
-                    String.valueOf(usersCount) + "/5");
+                    format("%s/5", String.valueOf(usersCount)));
+
         }
 
         @Override
@@ -181,8 +183,6 @@ public class WaitingPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        database = Database.INSTANCE;
 
         overridePendingTransition(0, 0);
 
@@ -200,13 +200,13 @@ public class WaitingPageActivity extends BaseActivity {
                     .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
         }
 
-        wordsVotesRef = database.getReference(
+        wordsVotesRef = Database.getReference(
                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
 
-        stateRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        usersCountRef = database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
         usersCountRef.addValueEventListener(listenerCountUsers);
         word1Ref = wordsVotesRef.child(word1);
         word2Ref = wordsVotesRef.child(word2);
@@ -217,22 +217,16 @@ public class WaitingPageActivity extends BaseActivity {
                 WordNumber.TWO);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.playersReadyText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.playersCounterText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.buttonWord1)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.buttonWord2)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.voteText)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.roomID)).setText("Room ID: " + roomID);
 
+        setTypeFace(typeMuro, findViewById(R.id.playersReadyText),
+                findViewById(R.id.playersCounterText), findViewById(R.id.buttonWord1),
+                findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
+                findViewById(R.id.waitingTime), findViewById(R.id.leaveButton));
+
+        setLeaveButtonListener();
+
+        findViewById(R.id.waitingTime).setVisibility(View.GONE);
     }
-
-    //TODO Give this path
-//        // Select the words based on the user current league
-//        DatabaseReference wordsSelectionRef = database
-//                .getReference(format(Locale.getDefault(), "leagues.%s.%s",
-//                        Account.getInstance(this).getCurrentLeague(),
-//                        WORD_CHILDREN_DB_ID));
-//        wordsSelectionRef.addListenerForSingleValueEvent(listenerWords);
 
     protected void launchDrawingActivity() {
         Intent intent = new Intent(getApplicationContext(), DrawingOnline.class);
@@ -303,6 +297,27 @@ public class WaitingPageActivity extends BaseActivity {
         }
     }
 
+    private void setLeaveButtonListener() {
+        final Context context = this;
+        int id = R.id.leaveButton;
+        findViewById(id).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, context);
+                        launchActivity(HomeActivity.class);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
     // Vote for the specified word and update the database
     private void voteForWord(WordNumber wordNumber) {
         switch (wordNumber) {
@@ -341,34 +356,12 @@ public class WaitingPageActivity extends BaseActivity {
         b2.setEnabled(false);
     }
 
-    /**
-     * Increment the number of players logged in the room. This method exists only for testing
-     * purposes.
-     *
-     * @param view Button that will increase the count when pressed
-     */
-    public void incrementCount(View view) {
-        ++usersReadyCount;
-        TextView usersReady = findViewById(R.id.playersCounterText);
-        usersReady.setText(
-                format(Locale.getDefault(), "%d/%d", usersReadyCount,
-                        NUMBER_OF_PLAYERS_NEEDED));
-
-        // We should probably check if the database is ready too
-        if (usersReadyCount == NUMBER_OF_PLAYERS_NEEDED) {
-            Intent intent = new Intent(this, DrawingOnline.class);
-            intent.putExtra("RoomID", roomID);
-            startActivity(intent);
-
-        }
-    }
-
     protected void removeVote(final DatabaseReference wordRef) {
         wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
-                if(value != null) {
+                if (value != null) {
                     wordRef.setValue(--value);
                 }
             }
@@ -429,13 +422,14 @@ public class WaitingPageActivity extends BaseActivity {
         // drawing activity is launched.
         if (!isDrawingActivityLaunched) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
-            if(hasVoted) {
+            if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
-                DatabaseReference wordRef = database.getReference(TOP_ROOM_NODE_ID + "."
-                                                            + roomID + ".words." + wordVoted);
+                DatabaseReference wordRef = Database.getReference(TOP_ROOM_NODE_ID + "."
+                        + roomID + ".words." + wordVoted);
                 removeVote(wordRef);
             }
         }
+
         removeAllListeners();
         finish();
     }

@@ -52,7 +52,7 @@ public class DrawingOfflineItems extends DrawingOffline {
     public void updateValues(float coordinateX, float coordinateY) {
         paintView.updateCoordinates(coordinateX, coordinateY);
 
-        Optional<Item> collidingItemOptional = hasCollision();
+        Optional<Item> collidingItemOptional = findCollidingElement();
 
         if(collidingItemOptional.isPresent()) {
             Item collidingItem = collidingItemOptional.get();
@@ -68,7 +68,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      * @return Optional of the item that collided, or empty.
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private Optional<Item> hasCollision() {
+    private Optional<Item> findCollidingElement() {
         for(Item item : displayedItems.keySet()) {
             if(item.collision(paintView.circleX, paintView.circleY, paintView.getCircleRadius())) {
                 return Optional.of(item);

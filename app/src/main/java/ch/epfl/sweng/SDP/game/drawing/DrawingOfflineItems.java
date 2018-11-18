@@ -20,14 +20,14 @@ import java.util.Optional;
 
 import ch.epfl.sweng.SDP.R;
 
-public class DrawingOnlineItems extends DrawingOnline {
+public class DrawingOfflineItems extends DrawingOffline {
 
     private static final int INTERVAL = 10000;
 
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     protected RandomItemGenerator randomItemGenerator;
-    private Map<Item, View[]> displayedItems;
+    private Map<Item, ImageView> displayedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +56,8 @@ public class DrawingOnlineItems extends DrawingOnline {
         if(collidingItemOptional.isPresent()) {
             Item collidingItem = collidingItemOptional.get();
             collidingItem.activate(paintView);
-            paintViewHolder.removeView(displayedItems.get(collidingItem)[0]);
-            paintViewHolder.addView(displayedItems.get(collidingItem)[1]);
+            paintViewHolder.removeView(displayedItems.get(collidingItem));
+            paintViewHolder.addView(itemTextFeedback(collidingItem));
             displayedItems.remove(collidingItem);
         }
     }
@@ -89,8 +89,8 @@ public class DrawingOnlineItems extends DrawingOnline {
             public void onFinish() {
                 Item newItem = randomItemGenerator.generateItem();
                 ImageView imageView = itemToImageView(newItem);
-                TextView feedback = itemTextFeedback(newItem);
-                displayedItems.put(newItem, new View[]{imageView, feedback});
+                paintViewHolder.addView(imageView);
+                displayedItems.put(newItem, imageView);
                 generateItems();
             }
         }.start();

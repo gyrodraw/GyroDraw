@@ -54,7 +54,7 @@
             android:name=".game.LoadingScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOnlineItems"
+            android:name=".game.drawing.DrawingOfflineItems"
             android:screenOrientation="portrait">
         </activity>
     </application>

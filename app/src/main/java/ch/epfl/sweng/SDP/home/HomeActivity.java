@@ -31,8 +31,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 public class HomeActivity extends BaseActivity {
@@ -190,7 +189,7 @@ public class HomeActivity extends BaseActivity {
                 profileWindow.dismiss();
                 break;
             case R.id.practiceButton:
-                launchActivity(DrawingOnlineItems.class);
+                launchActivity(DrawingOfflineItems.class);
                 break;
             default:
         }

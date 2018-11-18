@@ -24,15 +24,15 @@ public class RandomItemGenerator {
         int y = 2*ITEM_RADIUS + random.nextInt(paintView.getHeight() - 4*ITEM_RADIUS);
         switch (item) {
             case SPEEDUP:
-                return SpeedupItem.createSpeedupItem(paintView.getContext(), x, y, ITEM_RADIUS, INTERVAL);
+                return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS, INTERVAL);
             case SLOWDOWN:
-                return SlowdownItem.createSlowdownItem(paintView.getContext(), x, y, ITEM_RADIUS, INTERVAL);
+                return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS, INTERVAL);
             case SWAPAXIS:
-                return SwapAxisItem.createSwapAxisItem(paintView.getContext(), x, y, ITEM_RADIUS, INTERVAL);
+                return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS, INTERVAL);
             //case ADDSTARS:
-            //    return AddStarsItem.createAddStarsItem(paintView.getContext(), x, y, ITEM_RADIUS, INTERVAL);
+            //    return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS, INTERVAL);
             //case LOSESTARS:
-            //    return LoseStarsItem.createLoseStarsItem(paintView.getContext(), x, y, ITEM_RADIUS, INTERVAL);
+            //    return LoseStarsItem.createLoseStarsItem(x, y, ITEM_RADIUS, INTERVAL);
 
             default:
                 throw new IllegalArgumentException("Unknown item type");

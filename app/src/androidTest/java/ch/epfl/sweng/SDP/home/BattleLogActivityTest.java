@@ -28,11 +28,12 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class BattleLogActivityTest {
 
-    private static final List<String> rankedUsernames = getUsernameList();
-    private static final int rank = 2;
-    private static final int stars = 15;
-    private static final int trophies = -5;
-    private static final Bitmap drawing = initializedBitmap();
+    private static List<String> rankedUsernames = getUsernameList();
+
+    private static final int RANK = 2;
+    private static final int STARS = 15;
+    private static final int TROPHIES = -5;
+    private static final Bitmap DRAWING = initializedBitmap();
 
     private GameResult gameResult;
     private LocalDbHandlerForGameResults localDbHandler;
@@ -41,9 +42,12 @@ public class BattleLogActivityTest {
     public final ActivityTestRule<BattleLogActivity> activityRule =
             new ActivityTestRule<>(BattleLogActivity.class);
 
+    /**
+     * Initialize the game result and the local database handler.
+     */
     @Before
     public void init() {
-        gameResult = new GameResult(rankedUsernames, rank, stars, trophies, drawing,
+        gameResult = new GameResult(rankedUsernames, RANK, STARS, TROPHIES, DRAWING,
                 activityRule.getActivity());
         localDbHandler = new LocalDbHandlerForGameResults(
                 activityRule.getActivity(), null, 1);
@@ -57,26 +61,24 @@ public class BattleLogActivityTest {
     @Test
     public void testLocalDb() {
         localDbHandler.addGameResultToDb(gameResult);
-
-        Bitmap compressedDrawing = compressBitmap(drawing, 20);
-
         GameResult newGameResult =
                 localDbHandler.getGameResultsFromDb(activityRule.getActivity()).get(0);
 
         assertEquals(rankedUsernames, newGameResult.getRankedUsername());
-        assertEquals(rank, newGameResult.getRank());
-        assertEquals(stars, newGameResult.getStars());
-        assertEquals(trophies, newGameResult.getTrophies());
+        assertEquals(RANK, newGameResult.getRank());
+        assertEquals(STARS, newGameResult.getStars());
+        assertEquals(TROPHIES, newGameResult.getTrophies());
+        Bitmap compressedDrawing = compressBitmap(DRAWING, 20);
         bitmapEqualsNewBitmap(compressedDrawing, newGameResult.getDrawing());
     }
 
     @Test
     public void testGameResult() {
         assertEquals(rankedUsernames, gameResult.getRankedUsername());
-        assertEquals(rank, gameResult.getRank());
-        assertEquals(stars, gameResult.getStars());
-        assertEquals(trophies, gameResult.getTrophies());
-        bitmapEqualsNewBitmap(drawing, gameResult.getDrawing());
+        assertEquals(RANK, gameResult.getRank());
+        assertEquals(STARS, gameResult.getStars());
+        assertEquals(TROPHIES, gameResult.getTrophies());
+        bitmapEqualsNewBitmap(DRAWING, gameResult.getDrawing());
     }
 
     @Test

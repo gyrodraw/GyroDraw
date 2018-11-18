@@ -31,6 +31,7 @@ import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import org.junit.Assert;

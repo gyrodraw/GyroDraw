@@ -25,7 +25,7 @@ public class ItemTest {
     @Test
     public void testCollisions() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10, 10);
-        assertFalse(speedupItem.collision(20, 0, 10));
+        assertFalse(speedupItem.collision(21, 0, 10));
         assertTrue(speedupItem.collision(20, 0, 11));
     }
 

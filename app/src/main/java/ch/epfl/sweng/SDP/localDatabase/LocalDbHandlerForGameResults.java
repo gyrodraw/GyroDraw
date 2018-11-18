@@ -114,8 +114,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         ArrayList<GameResult> recentResults = new ArrayList<>();
 
 
-        cursor.moveToFirst();
-        if (cursor.getPosition() < 0) {
+        if (cursor == null || !cursor.moveToFirst()) {
             return recentResults;
         }
 

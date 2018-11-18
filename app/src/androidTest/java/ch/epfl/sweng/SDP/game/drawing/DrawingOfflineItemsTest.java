@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,30 +18,51 @@ public class DrawingOfflineItemsTest {
 
     @Rule
     public final ActivityTestRule<DrawingOfflineItems> activityRule =
-            new ActivityTestRule<DrawingOfflineItems>(DrawingOfflineItems.class){};
+            new ActivityTestRule<DrawingOfflineItems>(DrawingOfflineItems.class){
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    return intent;
+                }
+            };
+
+    @Test
+    public void testInitialStateOfLayout() {
+        RelativeLayout paintViewHolder = activityRule.getActivity().paintViewHolder;
+        assertEquals(paintViewHolder.getChildCount(), 1);
+    }
 
     @Test
     public void testItemsGetAdded() {
         RelativeLayout paintViewHolder = activityRule.getActivity().paintViewHolder;
-        assertEquals(paintViewHolder.getChildCount(), 1);
-        SystemClock.sleep(11000);
+        SystemClock.sleep(10500);
         assertEquals(paintViewHolder.getChildCount(), 2);
     }
 
     @Test
-    public void testItemsGetCollected() {
+    public void testTextFeedbackgetsDisplayed() {
         RelativeLayout paintViewHolder = activityRule.getActivity().paintViewHolder;
         PaintView paintView = activityRule.getActivity().paintView;
-        SystemClock.sleep(11000);
+        SystemClock.sleep(10000);
+        int viewsBefore = paintViewHolder.getChildCount();
         HashMap<Item, ImageView> displayedItems = activityRule.getActivity().getDisplayedItems();
         Item item = (Item)displayedItems.keySet().toArray()[0];
         paintView.setCircle(item.x, item.y);
-        SystemClock.sleep(400);
-        assertEquals("Assert 1, should be 2, is: "+paintViewHolder.getChildCount(),
-                paintViewHolder.getChildCount(), 2);
-        SystemClock.sleep(800);
-        assertEquals("Assert 2, should be 1, is: "+paintViewHolder.getChildCount(),
-                paintViewHolder.getChildCount(), 1);
+        assertEquals(paintViewHolder.getChildCount(), viewsBefore);
+    }
+
+    @Test
+    public void testItemsGetRemovedAfterCollision() {
+        RelativeLayout paintViewHolder = activityRule.getActivity().paintViewHolder;
+        PaintView paintView = activityRule.getActivity().paintView;
+        SystemClock.sleep(10000);
+        int viewsBefore = paintViewHolder.getChildCount();
+        HashMap<Item, ImageView> displayedItems = activityRule.getActivity().getDisplayedItems();
+        Item item = (Item)displayedItems.keySet().toArray()[0];
+        paintView.setCircle(item.x, item.y);
+        SystemClock.sleep(1000);
+        assertEquals(paintViewHolder.getChildCount(), viewsBefore-1);
     }
 
 }

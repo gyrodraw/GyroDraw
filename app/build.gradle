@@ -84,7 +84,6 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:2.7.22'
 
 
-
 }
 
 apply plugin: 'com.google.gms.google-services'

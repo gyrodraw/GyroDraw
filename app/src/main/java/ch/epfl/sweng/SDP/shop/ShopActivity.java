@@ -1,18 +1,29 @@
 package ch.epfl.sweng.SDP.shop;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.home.LeaderboardActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,14 +35,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Activity allowing the purchase of items such as colors.
  */
 public class ShopActivity extends Activity {
     //to be replaced with whatever we use to store all these refs
     protected FirebaseDatabase database;
-    protected DatabaseReference dbRef;
-    protected DatabaseReference usersRef;
     protected DatabaseReference currentUser;
     protected DatabaseReference shopColorsRef;
 
@@ -43,34 +58,38 @@ public class ShopActivity extends Activity {
     private TextView shopTextView;
     private Button retFromShop;
     private Button refresh;
+    private LinearLayout shopItems;
+    private Map<String, Integer> itemsList;
 
-    //private final IntegerWrapper stars = new IntegerWrapper(-1);
-    //private final IntegerWrapper price = new IntegerWrapper(-1);
+    private Typeface typeMuro;
+    private Typeface typeOptimus;
 
-    /**
-     * Not sure if we keep this in the final version.
-     */
-    protected void initializeReferences() {
-        database = FirebaseDatabase.getInstance("https://gyrodraw.firebaseio.com/");
-        dbRef = database.getReference();
-        usersRef = dbRef.child("users");
-        currentUser = usersRef.child(FirebaseAuth.getInstance()
-                .getCurrentUser().getUid());
-        shopColorsRef = dbRef.child(items).child(colors);
-    }
+    private Shop shop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeReferences();
+
+        shopColorsRef = Database.getReference("shop.colors");
+
+        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+
         setContentView(R.layout.shop_activity);
         shopTextView = findViewById(R.id.shopMessages);
-        LinearLayout layout = findViewById(R.id.linearLayout);
-        getColorsFromDatabase(shopColorsRef, shopTextView, layout);
+
+        getColorsFromDatabase(shopColorsRef, shopTextView);
+
         retFromShop = findViewById(R.id.returnFromShop);
         setReturn(retFromShop);
         refresh = findViewById(R.id.refreshShop);
         setRefresh(refresh);
+
+        shopItems = findViewById(R.id.ShopItems);
+
+        ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
+        ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.yourStars)).setText(""+Account.getInstance(this).getStars());
     }
 
     /**
@@ -80,11 +99,12 @@ public class ShopActivity extends Activity {
      * @param textView TextView to display user relevant messages.
      */
     protected void getColorsFromDatabase(DatabaseReference shopColorsReference,
-                                         final TextView textView, final LinearLayout layout) {
+                                         final TextView textView) {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                extractColorsFromDataSnapshot(dataSnapshot, textView, layout);
+                extractColorsFromDataSnapshot(dataSnapshot, textView);
+                addColorsToShop();
             }
 
             @Override
@@ -98,51 +118,86 @@ public class ShopActivity extends Activity {
      * Tries to extract colors from a snapshot and creates a Button for each.
      * @param dataSnapshot DataSnapshot from which colors should be extracted.
      * @param textView TextView for user relevant messages.
-     * @param layout LinearLayout to which buttons are added.
      */
-    protected void extractColorsFromDataSnapshot(DataSnapshot dataSnapshot, TextView textView,
-                                                 LinearLayout layout) {
-        if (dataSnapshot == null || textView == null || layout == null) {
+    protected void extractColorsFromDataSnapshot(DataSnapshot dataSnapshot, TextView textView) {
+        if (dataSnapshot == null || textView == null) {
             throw new NullPointerException();
         }
+
         if(dataSnapshot.exists()) {
-            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                Button btn = initializeButton(snapshot.getKey());
-                addPurchaseOnClickListenerToButton(btn);
-                layout.addView(btn);
+            itemsList = new LinkedHashMap<>();
+
+            for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                itemsList.put(ds.getKey(), ds.getValue(Integer.class));
             }
-        }
-        else {
+
+            shop = new Shop(itemsList);
+
+        } else {
             setTextViewMessage(textView,"Currently no purchasable items in shop.");
             resetTextViewMessage(textView, delayToClear);
         }
     }
 
-    /**
-     * Initializes a button with the text it shows.
-     * @param itemName String to be displayed on the button.
-     * @return Button displaying itemName.
-     */
-    protected Button initializeButton(String itemName) {
-        Button btn = new Button(this);
-        btn.setText(itemName);
-        return btn;
+    public void addColorsToShop() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 40, 0, 0);
+
+        for (int i = 0; i < itemsList.size(); ++i) {
+            shopItems.addView(toLayout(i), layoutParams);
+        }
     }
 
-    /**
-     * Adds an onClickListener to a button, which on Click tries to purchase the item the button
-     * corresponds to.
-     * @param btn Button to which a listener is added.
-     */
-    protected void addPurchaseOnClickListenerToButton(final Button btn) {
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+    @SuppressLint("NewApi")
+    private LinearLayout toLayout(int index) {
+        Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>)itemsList.entrySet().toArray()[index];
+        String color = entry.getKey();
+        String price = entry.getValue().toString();
 
-            @Override
-            public void onClick(View view) {
-                purchaseItem(btn.getText().toString());
-            }
-        };
-        btn.setOnClickListener(onClickListener);
+        TextView colorView = new TextView(this);
+        Resources res = getResources();
+        styleView(colorView, color, res.getColor(R.color.colorDrawYellow),
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+
+        TextView priceView = new TextView(this);
+        styleView(priceView, price,
+                res.getColor(R.color.colorPrimaryDark),
+                new LinearLayout.LayoutParams(0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
+        priceView.setPadding(0, 0, 20, 0);
+
+        ImageView image = new ImageView(this);
+        image.setBackgroundResource(R.drawable.star_shop);
+        image.setPadding(0, 0, 30, 0);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+        image.setLayoutParams(layoutParams);
+
+        LinearLayout layout = addViews(new LinearLayout(this),
+                colorView, priceView, image);
+
+        layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
+        layout.setPadding(30, 10, 30, 10);
+
+        return layout;
+    }
+
+    private LinearLayout addViews(LinearLayout layout, View... views) {
+        for(View view: views) {
+            layout.addView(view);
+        }
+
+        return layout;
+    }
+
+    private void styleView(TextView view, String text, int color,
+                           LinearLayout.LayoutParams layoutParams) {
+        view.setText(text);
+        view.setTextSize(30);
+        view.setTextColor(color);
+        view.setTypeface(typeMuro);
+        view.setLayoutParams(layoutParams);
     }
 
     /**

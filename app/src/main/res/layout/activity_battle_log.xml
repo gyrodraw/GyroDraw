@@ -35,6 +35,7 @@
         android:background="@color/darkAlpha" />
 
     <LinearLayout
+        android:id="@+id/gameResults"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

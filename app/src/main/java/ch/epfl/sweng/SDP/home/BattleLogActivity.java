@@ -2,11 +2,13 @@ package ch.epfl.sweng.SDP.home;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
 
@@ -39,7 +41,11 @@ public class BattleLogActivity extends Activity {
         fetchGameResults();
     }
 
-    private void fetchGameResults() {
+    /**
+     * Fetch the latest game results in the local database, convert them to views
+     * and add them to the layout.
+     */
+    public void fetchGameResults() {
         LocalDbHandlerForGameResults localDb =
                 new LocalDbHandlerForGameResults(this, null, 1);
         List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
@@ -49,5 +55,13 @@ public class BattleLogActivity extends Activity {
                 battleLogView.addView(gameResult.toLayout());
             }
         }
+    }
+
+    /**
+     * Return the number of game result currently displayed.
+     */
+    @VisibleForTesting
+    public int getGameResultsCount() {
+        return ((LinearLayout) findViewById(R.id.gameResults)).getChildCount();
     }
 }

@@ -133,7 +133,8 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
 
             recentResults.add(
                     new GameResult(rankedUsername, rank, stars, trophies, drawing, context));
-        } while (cursor.moveToNext());
+        }
+        while (cursor.moveToNext());
 
         cursor.close();
         db.close();

@@ -228,6 +228,12 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
+        createAndStoreGameResult();
+        launchActivity(HomeActivity.class);
+        finish();
+    }
+
+    private void createAndStoreGameResult() {
         if (rankingFragment != null) {
             List<String> rankedUsernames = rankingFragment.getRankedUsernames();
             String username = Account.getInstance(this).getUsername();
@@ -244,12 +250,10 @@ public class VotingPageActivity extends BaseActivity {
             GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
                     drawing, this);
 
-            LocalDbHandlerForGameResults localDb = new LocalDbHandlerForGameResults(this, null, 1);
+            LocalDbHandlerForGameResults localDb =
+                    new LocalDbHandlerForGameResults(this, null, 1);
             localDb.addGameResultToDb(gameResult);
         }
-
-        launchActivity(HomeActivity.class);
-        finish();
     }
 
     /**

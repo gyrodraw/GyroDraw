@@ -1,18 +1,15 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.Context;
 import android.os.CountDownTimer;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 class SwapAxisItem extends Item {
 
-    private SwapAxisItem(Context context, int x, int y, int radius, int interval) {
-        super(context, x, y, radius, interval);
+    private SwapAxisItem(int x, int y, int radius, int interval) {
+        super(x, y, radius, interval);
     }
 
-    public static SwapAxisItem createSwapAxisItem(Context context, int x, int y, int radius, int interval) {
-        return new SwapAxisItem(context, x, y, radius, interval);
+    public static SwapAxisItem createSwapAxisItem(int x, int y, int radius, int interval) {
+        return new SwapAxisItem(x, y, radius, interval);
     }
 
     @Override
@@ -36,9 +33,9 @@ class SwapAxisItem extends Item {
     }
 
     @Override
-    protected TextView feedbackTextView(RelativeLayout paintViewHolder) {
-        TextView feedback = super.createFeedbackTextView(paintViewHolder);
-        feedback.setText("SWAP! ");
-        return feedback;
+    protected String textFeedback() {
+        return "SWAPPED! ";
     }
+
+
 }

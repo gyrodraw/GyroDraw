@@ -49,10 +49,7 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testClickOnExitButtonOpensHomeActivity() {
-        Intents.init();
-        onView(ViewMatchers.withId(R.id.exitButton)).perform(click());
-        intended(hasComponent(HomeActivity.class.getName()));
-        Intents.release();
+        testExitButtonBody();
     }
 
     @Test
@@ -69,5 +66,15 @@ public class LeaderboardActivityTest {
                 .perform(typeText(""), ViewActions.closeSoftKeyboard());
         SystemClock.sleep(3000);
         onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
+    }
+
+    /**
+     * Body of a test that tests if an exit button opens the home page.
+     */
+    public static void testExitButtonBody() {
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.exitButton)).perform(click());
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
     }
 }

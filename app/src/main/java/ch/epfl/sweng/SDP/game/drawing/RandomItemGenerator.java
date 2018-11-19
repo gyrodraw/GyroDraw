@@ -15,9 +15,8 @@ public class RandomItemGenerator {
 
     protected Item generateItem() {
         Items item = Items.randomItem();
-        Random random = new Random();
-        int x = 2*ITEM_RADIUS + random.nextInt(paintView.getWidth() - 4*ITEM_RADIUS);
-        int y = 2*ITEM_RADIUS + random.nextInt(paintView.getHeight() - 4*ITEM_RADIUS);
+        int x = randomIntWithinBounds(paintView.getWidth());
+        int y = randomIntWithinBounds(paintView.getHeight());
         switch (item) {
             case SPEEDUP:
                 return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS, INTERVAL);
@@ -35,6 +34,23 @@ public class RandomItemGenerator {
         }
     }
 
+    protected Item[] generateAllDifferentItems() {
+        int x = randomIntWithinBounds(paintView.getWidth());
+        int y = randomIntWithinBounds(paintView.getHeight());
+        SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(x, y, 10, 10);
+        x = randomIntWithinBounds(paintView.getWidth());
+        y = randomIntWithinBounds(paintView.getHeight());
+        SlowdownItem slowdownItem = SlowdownItem.createSlowdownItem(x, y, 10, 10);
+        x = randomIntWithinBounds(paintView.getWidth());
+        y = randomIntWithinBounds(paintView.getHeight());
+        SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(x, y, 10, 10);
+        return new Item[]{speedupItem, slowdownItem, swapAxisItem};
+    }
+
+    private int randomIntWithinBounds(int max) {
+        Random random = new Random();
+        return 2*ITEM_RADIUS + random.nextInt(max - 4*ITEM_RADIUS);
+    }
 
 
 }

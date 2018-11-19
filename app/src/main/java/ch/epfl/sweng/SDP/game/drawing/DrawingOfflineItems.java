@@ -82,13 +82,16 @@ public class DrawingOfflineItems extends DrawingOffline {
             }
 
             public void onFinish() {
-                Item newItem = randomItemGenerator.generateItem();
-                ImageView imageView = itemToImageView(newItem);
-                paintViewHolder.addView(imageView);
-                displayedItems.put(newItem, imageView);
+                convertAndAddItem(randomItemGenerator.generateItem());
                 generateItems();
             }
         }.start();
+    }
+
+    private void convertAndAddItem(Item item) {
+        ImageView imageView = itemToImageView(item);
+        paintViewHolder.addView(imageView);
+        displayedItems.put(item, imageView);
     }
 
     /**
@@ -126,6 +129,13 @@ public class DrawingOfflineItems extends DrawingOffline {
             }
         }.start();
         return feedback;
+    }
+
+    protected void addAllDifferentItemsToView() {
+        Item[] items = randomItemGenerator.generateAllDifferentItems();
+        for(int i = 0; i < items.length; ++i) {
+            convertAndAddItem(items[i]);
+        }
     }
 
     /**

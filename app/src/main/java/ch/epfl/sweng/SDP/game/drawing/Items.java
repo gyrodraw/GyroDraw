@@ -13,8 +13,20 @@ public enum Items {
     private static final int SIZE = VALUES.size();
     private static final Random RANDOM = new Random();
 
-    public static Items randomItem()  {
+    protected static Items randomItem()  {
         return VALUES.get(RANDOM.nextInt(SIZE));
+    }
+
+    protected static Items itemToEnum(Item item) {
+        if(item instanceof SpeedupItem) {
+            return SPEEDUP;
+        } else if (item instanceof SlowdownItem) {
+            return SLOWDOWN;
+        } else if (item instanceof SwapAxisItem) {
+            return SWAPAXIS;
+        } else {
+            throw new IllegalArgumentException("Unknown Item Type");
+        }
     }
 
 }

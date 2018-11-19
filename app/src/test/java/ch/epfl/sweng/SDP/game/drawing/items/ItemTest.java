@@ -45,7 +45,7 @@ public class ItemTest {
         SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(0, 0, 10);
         assertEquals("SWAPPED! ", swapAxisItem.textFeedback());
         AddStarsItem addStarsItem = AddStarsItem.createAddStarsItem(0, 0, 10);
-        assertEquals("+10 STARS! ", addStarsItem.textFeedback());
+        assertEquals("+3 STARS! ", addStarsItem.textFeedback());
         BumpingItem bumpingItem = BumpingItem.createBumpingItem(0, 0, 10);
         assertEquals(" ", bumpingItem.textFeedback());
     }

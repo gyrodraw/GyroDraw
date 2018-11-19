@@ -116,16 +116,12 @@ public class DrawingOfflineItemsTest {
     }
 
     private void activateItem(final Item item) throws Throwable {
-        try {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    item.activate(paintView);
-                }
-            });
-        } catch (Exception exception) {
-            throw new IllegalStateException("Something went wrong when activating the item");
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                item.activate(paintView);
+            }
+        });
     }
 
 }

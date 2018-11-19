@@ -15,6 +15,8 @@ public class RandomItemGenerator {
 
     private static final int ITEM_RADIUS = 80;
 
+    private RandomItemGenerator() {}
+
     /**
      * Generates a random item at a random position.
      * @return the generated item

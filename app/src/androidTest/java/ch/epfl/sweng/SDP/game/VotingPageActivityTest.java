@@ -165,7 +165,7 @@ public class VotingPageActivityTest {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(29);
         mActivityRule.getActivity().callOnCounterChange(dataSnapshotMock);
         SystemClock.sleep(2000);
-        
+
         TextView timerView = mActivityRule.getActivity().findViewById(R.id.timer);
         assertThat(timerView.getText().toString(), is("5"));
     }

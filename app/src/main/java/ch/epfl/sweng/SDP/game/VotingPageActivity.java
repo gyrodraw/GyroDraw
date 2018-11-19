@@ -318,7 +318,7 @@ public class VotingPageActivity extends BaseActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];
-                final long ONE_MEGABYTE = 1024 * 1024; // Maximum image size
+                final long FIFTY_KBS = 51200; // Maximum image size
 
                 for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
                     final String currentId = drawingsIds[i];
@@ -333,7 +333,7 @@ public class VotingPageActivity extends BaseActivity {
                             refs[i] = storage.getReference().child(currentId + ".jpg");
 
                             // Download the image
-                            refs[i].getBytes(ONE_MEGABYTE).addOnCompleteListener(
+                            refs[i].getBytes(FIFTY_KBS).addOnCompleteListener(
                                     new OnCompleteListener<byte[]>() {
                                         @Override
                                         public void onComplete(@NonNull Task<byte[]> task) {

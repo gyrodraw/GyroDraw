@@ -137,7 +137,7 @@ public class Account {
 
         return instance;
     }
-    
+
     public static void deleteAccount() {
         instance = null;
     }

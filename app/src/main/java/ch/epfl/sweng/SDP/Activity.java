@@ -10,10 +10,17 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.Shop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -84,7 +91,9 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("matchesWon")).intValue(),
                         ((Long) user.get("totalMatches")).intValue(),
                         ((Long) user.get("averageRating")).doubleValue(),
-                        ((Long) user.get("maxTrophies")).intValue());
+                        ((Long) user.get("maxTrophies")).intValue(),
+                        Shop.firebaseToListShopItem((HashMap<String, String>)
+                                                    user.get("itemBought")));
 
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);

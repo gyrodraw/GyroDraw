@@ -1,6 +1,8 @@
 package ch.epfl.sweng.SDP.shop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,16 +11,13 @@ public class Shop {
     private static Shop instance = null;
     private List<ShopItem> itemList;
 
-    public Shop(Map<String, Integer> itemsList) {
+    public Shop() {
         itemList = new ArrayList<>();
-        for(Map.Entry<String, Integer> item: itemsList.entrySet()) {
-            itemList.add(new ShopItem(item.getKey(), item.getValue()));
-        }
     }
 
-    public static Shop getInstance(Map<String, Integer> itemsList) {
+    public static Shop getInstance() {
         if(instance == null) {
-            instance = new Shop(itemsList);
+            instance = new Shop();
         }
 
         return instance;
@@ -35,7 +34,26 @@ public class Shop {
         itemList.remove(shopItem);
     }
 
+    public void addItem(ShopItem shopItem) {
+        itemList.add(shopItem);
+    }
+
     public List<ShopItem> getItemList() {
         return itemList;
+    }
+
+    public static List<ShopItem> firebaseToListShopItem(HashMap<String, String> map) {
+        List<ShopItem> listItem = new ArrayList<>();
+
+        if(map != null) {
+            Iterator it = map.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                int value = Integer.parseInt(entry.getValue().toString());
+                listItem.add(new ShopItem(entry.getKey().toString(), value));
+            }
+        }
+
+        return listItem;
     }
 }

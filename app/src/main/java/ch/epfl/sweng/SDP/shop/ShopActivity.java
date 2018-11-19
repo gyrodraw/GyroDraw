@@ -1,14 +1,19 @@
 package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,11 +52,9 @@ import java.util.Map;
 public class ShopActivity extends Activity {
     //to be replaced with whatever we use to store all these refs
     protected FirebaseDatabase database;
-    protected DatabaseReference currentUser;
     protected DatabaseReference shopColorsRef;
 
-    private final String colors = "colors";
-    private final String items = "items";
+    private Dialog buyDialog;
 
     private final int delayToClear = 5000;
 
@@ -59,7 +62,6 @@ public class ShopActivity extends Activity {
     private Button retFromShop;
     private Button refresh;
     private LinearLayout shopItems;
-    private Map<String, Integer> itemsList;
 
     private Typeface typeMuro;
     private Typeface typeOptimus;
@@ -69,6 +71,8 @@ public class ShopActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        buyDialog = new Dialog(this);
 
         shopColorsRef = Database.getReference("shop.colors");
 
@@ -90,6 +94,7 @@ public class ShopActivity extends Activity {
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
         ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.yourStars)).setText(""+Account.getInstance(this).getStars());
+
     }
 
     /**
@@ -125,13 +130,11 @@ public class ShopActivity extends Activity {
         }
 
         if(dataSnapshot.exists()) {
-            itemsList = new LinkedHashMap<>();
+            shop = new Shop();
 
             for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                itemsList.put(ds.getKey(), ds.getValue(Integer.class));
+                shop.addItem(new ShopItem(ds.getKey(), ds.getValue(Integer.class)));
             }
-
-            shop = new Shop(itemsList);
 
         } else {
             setTextViewMessage(textView,"Currently no purchasable items in shop.");
@@ -144,16 +147,17 @@ public class ShopActivity extends Activity {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, 40, 0, 0);
 
+        List<ShopItem> itemsList = shop.getItemList();
+
         for (int i = 0; i < itemsList.size(); ++i) {
-            shopItems.addView(toLayout(i), layoutParams);
+            shopItems.addView(toLayout(itemsList.get(i), i), layoutParams);
         }
     }
 
     @SuppressLint("NewApi")
-    private LinearLayout toLayout(int index) {
-        Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>)itemsList.entrySet().toArray()[index];
-        String color = entry.getKey();
-        String price = entry.getValue().toString();
+    private LinearLayout toLayout(ShopItem item, final int index) {
+        String color = item.getColorItem();
+        String price = Integer.toString(item.getPriceItem());
 
         TextView colorView = new TextView(this);
         Resources res = getResources();
@@ -180,8 +184,55 @@ public class ShopActivity extends Activity {
         layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         layout.setPadding(30, 10, 30, 10);
 
+        layout.setClickable(true);
+
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                touchItem(index);
+                return true;
+            }
+        });
+
         return layout;
     }
+
+    @SuppressLint("DefaultLocale")
+    private void touchItem(int index) {
+        buyDialog.setContentView(R.layout.shop_pop_up);
+
+        List<ShopItem> list = shop.getItemList();
+
+        ((TextView) buyDialog.findViewById(R.id.infoMessageView)).setText(String.format(
+                "Do you really want to buy %s color for %d stars", list.get(index).getColorItem(),
+                list.get(index).getPriceItem()));
+
+        setOnBuyClick(((Button) buyDialog.findViewById(R.id.buyButton)), index);
+
+        buyDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        buyDialog.show();
+    }
+
+    private void setOnBuyClick(final Button button, final int index) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if the user has enough stars
+                if(Account.getInstance(getApplicationContext()).getStars() -
+                        (shop.getItemList()).get(index).getPriceItem() >= 0) {
+                    Account.getInstance(getApplicationContext()).changeStars(
+                            -(shop.getItemList()).get(index).getPriceItem());
+                }
+
+                // shop.buy()
+            }
+        });
+    }
+
+    public void onCancelPopUp(View view) {
+        buyDialog.dismiss();
+    }
+
 
     private LinearLayout addViews(LinearLayout layout, View... views) {
         for(View view: views) {
@@ -227,241 +278,6 @@ public class ShopActivity extends Activity {
             }
         });
     }
-
-    /**
-     * Tries to purchase a given item.
-     * @param itemName Item to be purchased.
-     */
-    protected void purchaseItem(String itemName) {
-        alreadyOwned(currentUser.child(items).child(colors), itemName, shopTextView);
-    }
-
-    /**
-     * Checks if an item is already owned by the user. If not, gets the users current Stars and
-     * the items price, verifies if the user has enough Stars and if so, updates the users
-     * inventory.
-     * @param itemName Item to be purchased.
-     * @param userColorsReference Reference to where the colors of current user are stored.
-     * @param textView TextView to display user relevant messages.
-     * @throws DatabaseException If read does go wrong.
-     */
-    private void alreadyOwned(DatabaseReference userColorsReference, final String itemName,
-                              final TextView textView)
-            throws DatabaseException {
-        userColorsReference.orderByKey().equalTo(itemName).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    setTextViewMessage(textView,"Item already owned.");
-                    resetTextViewMessage(textView, delayToClear);
-                }
-                else {
-                    final IntegerWrapper stars = new IntegerWrapper(-1);
-                    final IntegerWrapper price = new IntegerWrapper(-1);
-                    getStars(currentUser.child("stars"), stars);
-                    getPrice(shopColorsRef, itemName, price);
-                    new CountDownTimer(5000, 500) {
-
-                        public void onTick(long millisUntilFinished) {
-                            if(stars.getInt() > -1 && price.getInt() > -1) {
-                                this.cancel();
-                                updateUserIf(currentUser, itemName, textView,
-                                        stars.getInt(), price.getInt());
-                            }
-                        }
-
-                        public void onFinish() {
-                            if(stars.getInt() < 0 || price.getInt() < 0) {
-                                setTextViewMessage(textView,
-                                        "Unable to read from database in time.");
-                                resetTextViewMessage(textView, delayToClear);
-                            }
-                            else {
-                                updateUserIf(currentUser, itemName, textView,
-                                        stars.getInt(), price.getInt());
-                            }
-                        }
-                    }.start();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-    }
-
-
-    /**
-     * Updates the users inventory with new Stars and item if he has enough Stars to buy it.
-     * @param itemName Item to be purchased.
-     * @param textView TextView to display user relevant messages.
-     */
-    protected void updateUserIf(DatabaseReference currentUserRef, String itemName,
-                                TextView textView, int stars, int price) {
-        if(sufficientCurrency(stars, price)) {
-            updateUser(currentUserRef, itemName, stars - price,
-                    shopTextView);
-        }
-        else {
-            setTextViewMessage(textView, "Not enough stars to purchase item.");
-            resetTextViewMessage(textView, delayToClear);
-        }
-    }
-
-    /**
-     * Accesses the database, and puts the users current stars into the wrapper.
-     * @param starsWrapper Wrapper to retrieve stars from database.
-     * @param userStarsReference Reference to where the stars of the current user are stored.
-     * @throws DatabaseException If read does go wrong.
-     */
-    protected void getStars(DatabaseReference userStarsReference, final IntegerWrapper starsWrapper)
-            throws DatabaseException {
-        if(userStarsReference == null) {
-            throw new NullPointerException();
-        }
-        userStarsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                wrapDataSnapshotValue(dataSnapshot, starsWrapper);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-    }
-
-    /**
-     * Accesses the database and puts the price of the current item into the wrapper.
-     * @param priceWrapper Wrapper to retrieve price from database.
-     * @param itemName Name if the item whose price we want to get.
-     * @param shopColorsReference Reference to where colors are stored in shop.
-     * @throws DatabaseException If read does go wrong.
-     */
-    protected void getPrice(DatabaseReference shopColorsReference, final String itemName,
-                            final IntegerWrapper priceWrapper) throws DatabaseException {
-        if(shopColorsReference == null || itemName == null) {
-            throw new NullPointerException();
-        }
-        shopColorsReference.child(itemName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    wrapDataSnapshotValue(dataSnapshot, priceWrapper);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-    }
-
-    /**
-     * Extracts the long value of a DataSnapshot and wraps in into an IntegerWrapper, or sets the
-     * value of the IntegerWraper to -1 if any problems occur.
-     * @param wrapper Wrapper that is given value.
-     * @param dataSnapshot Snapshot to extract value from.
-     */
-    public void wrapDataSnapshotValue(DataSnapshot dataSnapshot, final IntegerWrapper wrapper) {
-        if(wrapper == null) {
-            throw new NullPointerException();
-        }
-        if (dataSnapshot.exists()) {
-            try {
-                wrapper.setInt((int) Math.max(Math.min((long) dataSnapshot.getValue(),
-                        Integer.MAX_VALUE), Integer.MIN_VALUE));
-            }
-            catch (Exception e) {
-                wrapper.setInt(-1);
-            }
-        }
-        else {
-            wrapper.setInt(-1);
-        }
-    }
-
-    /**
-     * Checks if the user has enough currency to buy an item.
-     * @param stars Current stars of user.
-     * @param price Price of the item to purchase.
-     * @return true iff stars >= price.
-     */
-    protected boolean sufficientCurrency(int stars, int price) {
-        boolean sufficient = stars >= 0 && stars >= price;
-        return sufficient;
-    }
-
-    /**
-     * Updates the users data in the database, e.g. sets their stars to newStars and adds the item
-     * to their inventory.
-     * @param itemName Name of the item added.
-     * @param newStars New amount of stars after purchase.
-     * @param currentUserRef Reference to the current user in database.
-     */
-    protected void updateUser(DatabaseReference currentUserRef, String itemName, int newStars,
-                            final TextView textView) {
-        if (itemName == null || textView == null) {
-            throw new NullPointerException();
-        }
-        updateUserStars(currentUserRef.child("stars"), newStars);
-        addUserItem(currentUserRef.child(items).child(colors).child(itemName));
-        setTextViewMessage(textView, "Purchase successful.");
-        resetTextViewMessage(textView, delayToClear);
-    }
-
-    /**
-     * Updates the users stars after a purchase.
-     * @param newStars New amount of stars the user posesses.
-     * @param currentUserStarsRef Reference to where the users stars are stored in the database.
-     */
-    protected void updateUserStars(DatabaseReference currentUserStarsRef, int newStars) {
-        if (currentUserStarsRef == null) {
-            throw new NullPointerException();
-        }
-        if (newStars < 0) {
-            throw new IllegalArgumentException("newStars must be bigger/equal zero");
-        }
-        currentUserStarsRef.setValue(newStars, new DatabaseReference.CompletionListener() {
-
-                    @Override
-                    public void onComplete(@Nullable DatabaseError databaseError,
-                                           @NonNull DatabaseReference databaseReference) {
-                        if (databaseError != null) {
-                            throw databaseError.toException();
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Adds an item to a users database account after a purchase.
-     * @param currentUserSpecificItem Reference to where the users items are stored in the
-     *                                database.
-     */
-    protected void addUserItem(DatabaseReference currentUserSpecificItem) {
-        if(currentUserSpecificItem == null) {
-            throw new NullPointerException();
-        }
-        currentUserSpecificItem.setValue(true, new DatabaseReference.CompletionListener() {
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    throw databaseError.toException();
-                }
-            }
-        });
-    }
-
 
     /**
      * Sets the message of a TextView.

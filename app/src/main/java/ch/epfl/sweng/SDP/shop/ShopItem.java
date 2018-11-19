@@ -4,6 +4,7 @@ public class ShopItem {
 
     private int price;
     private String color;
+    private boolean owned;
 
 
     public ShopItem(String color, int price) {

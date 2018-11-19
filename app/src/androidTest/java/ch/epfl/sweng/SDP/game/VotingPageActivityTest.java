@@ -159,14 +159,4 @@ public class VotingPageActivityTest {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
         mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
     }
-
-    @Test
-    public void testOnDataChangeListenerCounter() {
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(29);
-        mActivityRule.getActivity().callOnCounterChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
-
-        TextView timerView = mActivityRule.getActivity().findViewById(R.id.timer);
-        assertThat(timerView.getText().toString(), is("5"));
-    }
 }

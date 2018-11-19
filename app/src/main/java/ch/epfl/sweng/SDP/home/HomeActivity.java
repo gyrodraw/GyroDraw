@@ -199,7 +199,7 @@ public class HomeActivity extends BaseActivity {
             case R.id.practiceButton:
                 launchActivity(DrawingOffline.class);
                 break;
-            case R.id.practiceButton2:
+            case R.id.itemsButton:
                 launchActivity(DrawingOfflineItems.class);
                 break;
             default:

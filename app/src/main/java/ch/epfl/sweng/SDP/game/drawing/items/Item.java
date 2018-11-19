@@ -50,18 +50,8 @@ public abstract class Item {
      * @return          true if there is collision, else false
      */
     protected boolean collision(int x, int y, int radius) {
-        return norm(this.x - x, this.y - y)
+        return Math.hypot(this.x - x, this.y - y)
                 < this.radius + radius;
-    }
-
-    /**
-     * Calculates the distance between this item and the given parameters.
-     * @param x coordinate
-     * @param y coordinate
-     * @return  distance between item and (x,y)
-     */
-    protected double norm(int x, int y) {
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
     /**

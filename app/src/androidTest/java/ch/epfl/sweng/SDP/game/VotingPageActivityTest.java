@@ -15,7 +15,6 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -131,11 +130,6 @@ public class VotingPageActivityTest {
         Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
-        SystemClock.sleep(3000);
-
-        TextView playerNameView = mActivityRule.getActivity()
-                .findViewById(R.id.playerNameView);
-        assertThat(playerNameView.getText().toString(), is("Champion"));
     }
 
     @Test

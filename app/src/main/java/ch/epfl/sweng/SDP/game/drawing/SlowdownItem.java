@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.CountDownTimer;
 
-class SlowdownItem extends Item {
+class SlowdownItem extends Item implements Deactivable {
 
     private static final double SLOWDOWN_FACTOR = .5;
 
@@ -29,7 +29,7 @@ class SlowdownItem extends Item {
         }.start();
     }
 
-    protected void deactivate(PaintView paintView) {
+    public void deactivate(PaintView paintView) {
         paintView.speed /= SLOWDOWN_FACTOR;
     }
 

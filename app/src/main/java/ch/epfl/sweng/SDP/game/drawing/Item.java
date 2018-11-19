@@ -19,7 +19,7 @@ public abstract class Item {
     }
 
     /**
-     * Calculates if there is a collision between the item and the given parameters.
+     * Calculates if there is a collision between the item and the given paintView.
      * @param paintView reference to compare with
      * @return          true if there is a collision, else false
      */
@@ -29,17 +29,38 @@ public abstract class Item {
                 paintView.getCircleRadius());
     }
 
+    /**
+     * Calculates if there is a collision between the item and the given parameters.
+     * @param x         x coordinate to check
+     * @param y         y coordinate to check
+     * @param radius    radius of circle
+     * @return          true if there is collision, else false
+     */
     protected boolean collision(int x, int y, int radius) {
         return norm(this.x - x, this.y - y)
                 < this.radius + radius;
     }
 
+    /**
+     * Calculates the distance between this item and the given parameters.
+     * @param x coordinate
+     * @param y coordinate
+     * @return  distance between item and (x,y)
+     */
     protected double norm(int x, int y) {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
+    /**
+     * Activates the items' ability.
+     * @param paintView to apply the ability on
+     */
     protected abstract void activate(final PaintView paintView);
 
+    /**
+     * String to show to the player which item class was picked.
+     * @return feedback text
+     */
     protected abstract String textFeedback();
 
 }

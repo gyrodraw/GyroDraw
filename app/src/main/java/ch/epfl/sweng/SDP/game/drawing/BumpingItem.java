@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.os.CountDownTimer;
-
 class BumpingItem extends Item {
 
     private BumpingItem(int x, int y, int radius) {

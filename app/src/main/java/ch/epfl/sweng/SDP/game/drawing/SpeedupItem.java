@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.CountDownTimer;
 
-public class SpeedupItem extends Item {
+public class SpeedupItem extends Item implements Deactivable {
 
     private static final int SPEDUP_FACTOR = 2;
 
@@ -29,7 +29,7 @@ public class SpeedupItem extends Item {
         }.start();
     }
 
-    protected void deactivate(PaintView paintView) {
+    public void deactivate(PaintView paintView) {
         paintView.speed /= SPEDUP_FACTOR;
     }
 

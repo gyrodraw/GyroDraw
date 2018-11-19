@@ -12,6 +12,10 @@ public class RandomItemGenerator {
         this.paintView = paintView;
     }
 
+    /**
+     * Generates a random item at a random position.
+     * @return the generated item
+     */
     protected Item generateItem() {
         Items item = Items.randomItem();
         int x = randomIntWithinBounds(paintView.getWidth());
@@ -33,6 +37,11 @@ public class RandomItemGenerator {
         }
     }
 
+    /**
+     * Random position which is fully visible on screen.
+     * @param max upper bound of screen
+     * @return random position
+     */
     private int randomIntWithinBounds(int max) {
         Random random = new Random();
         return 2*ITEM_RADIUS + random.nextInt(max - 4*ITEM_RADIUS);

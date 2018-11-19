@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.CountDownTimer;
 
-class SwapAxisItem extends Item {
+class SwapAxisItem extends Item implements Deactivable {
 
     private SwapAxisItem(int x, int y, int radius) {
         super(x, y, radius);
@@ -27,7 +27,7 @@ class SwapAxisItem extends Item {
         }.start();
     }
 
-    protected void deactivate(PaintView paintView) {
+    public void deactivate(PaintView paintView) {
         paintView.speed *= -1;
     }
 

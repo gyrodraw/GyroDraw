@@ -15,8 +15,8 @@ public class ItemTest {
     public void testItemGetsInitializedCorrectly() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
         assertThat(0, is(equalTo(speedupItem.x)));
-        assertEquals(0, is(equalTo(speedupItem.y)));
-        assertEquals(10, is(equalTo(speedupItem.radius)));
+        assertThat(0, is(equalTo(speedupItem.y)));
+        assertThat(10, is(equalTo(speedupItem.radius)));
     }
 
     @Test(expected = IllegalArgumentException.class)

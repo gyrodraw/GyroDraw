@@ -61,7 +61,7 @@ public class DrawingOfflineItemsTest {
         HashMap<Item, ImageView> displayedItems = activityRule.getActivity().getDisplayedItems();
         Item item = (Item)displayedItems.keySet().toArray()[0];
         paintView.setCircle(item.getX(), item.getY());
-        assertThat(viewsBefore, is(equalTo(paintViewHolder.getChildCount())));
+        assertThat(paintViewHolder.getChildCount(), is(equalTo(viewsBefore)));
     }
 
     @Test
@@ -78,21 +78,21 @@ public class DrawingOfflineItemsTest {
     public void testSpeedupItemSpeedsUpPaintView() throws Throwable {
         double init = paintView.getSpeed();
         activateItem(SpeedupItem.createSpeedupItem(20, 20, 10));
-        assertThat(init*2, is(equalTo(paintView.getSpeed())));
+        assertThat(paintView.getSpeed(), is(equalTo(init*2)));
     }
 
     @Test
     public void testSlowdownItemSlowsDownPaintView() throws Throwable {
-        double initSpeed = paintView.speed;
+        double initSpeed = paintView.getSpeed();
         activateItem(SlowdownItem.createSlowdownItem(21, 21, 11));
-        assertThat(initSpeed/2, is(equalTo(paintView.speed)));
+        assertThat(paintView.getSpeed(), is(equalTo(initSpeed/2)));
     }
 
     @Test
     public void testSwapAxisItemSwapsSpeedPaintView() throws Throwable {
         double initSpeed = paintView.getSpeed();
         activateItem(SwapAxisItem.createSwapAxisItem(22, 22, 12));
-        assertThat(-initSpeed, is(equalTo(paintView.speed)));
+        assertThat(paintView.getSpeed(), is(equalTo(-initSpeed)));
     }
 
     @Test
@@ -100,8 +100,8 @@ public class DrawingOfflineItemsTest {
         int initStars = Account.getInstance(activityRule.getActivity()
                 .getApplicationContext()).getStars();
         activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
-        assertThat(initStars+10, is(equalTo(Account.getInstance(activityRule.getActivity()
-                .getApplicationContext()).getStars())));
+        assertThat(Account.getInstance(activityRule.getActivity()
+                .getApplicationContext()).getStars(), is(equalTo(initStars+10)));
     }
 
     @Test
@@ -111,8 +111,8 @@ public class DrawingOfflineItemsTest {
         double angle = Math.atan2(1, 1);
         int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));
         int newY = 200 + (int) (Math.sin(angle) * (10 + paintView.getCircleRadius() + 5));
-        assertThat(newX, is(equalTo(paintView.getCircleX())));
-        assertThat(newY, is(equalTo(paintView.getCircleY())));
+        assertThat(paintView.getCircleX(), is(equalTo(newX)));
+        assertThat(paintView.getCircleY(), is(equalTo(newY)));
     }
 
     private void activateItem(final Item item) throws Throwable {

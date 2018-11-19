@@ -19,10 +19,10 @@ public class SpeedupItem extends Item {
     @Override
     public void activate(final PaintView paintView) {
         paintView.multSpeed(SPEDUP_FACTOR);
-        new CountDownTimer(super.ITEM_DURATION, 1000) {
+        new CountDownTimer(super.ITEM_DURATION, super.ITEM_DURATION) {
 
             public void onTick(long millisUntilFinished) {
-                // nüt
+                // Is never called
             }
 
             public void onFinish() {

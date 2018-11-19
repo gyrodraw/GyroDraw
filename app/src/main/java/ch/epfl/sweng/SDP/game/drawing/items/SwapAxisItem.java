@@ -17,10 +17,10 @@ public class SwapAxisItem extends Item {
     @Override
     public void activate(final PaintView paintView) {
         paintView.multSpeed(-1);
-        new CountDownTimer(super.ITEM_DURATION, 1000) {
+        new CountDownTimer(super.ITEM_DURATION, super.ITEM_DURATION) {
 
             public void onTick(long millisUntilFinished) {
-                // nüt
+                // Is never called
             }
 
             public void onFinish() {

@@ -22,7 +22,7 @@ public class SlowdownItem extends Item {
         new CountDownTimer(super.ITEM_DURATION, super.ITEM_DURATION) {
 
             public void onTick(long millisUntilFinished) {
-                // nüt
+                // Is never called
             }
 
             public void onFinish() {

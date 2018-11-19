@@ -5,7 +5,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 public class AddStarsItem extends Item {
 
-    private static final int ADD_STARS = 10;
+    private static final int ADD_STARS = 3;
 
     private AddStarsItem(int x, int y, int radius) {
         super(x, y, radius);
@@ -22,6 +22,6 @@ public class AddStarsItem extends Item {
 
     @Override
     public String textFeedback() {
-        return "+10 STARS! ";
+        return "+"+ADD_STARS+" STARS! ";
     }
 }

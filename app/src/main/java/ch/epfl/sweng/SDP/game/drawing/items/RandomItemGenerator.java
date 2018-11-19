@@ -13,7 +13,7 @@ import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
 
 public class RandomItemGenerator {
 
-    private static final int ITEM_RADIUS = 80;
+    private static final int ITEM_RADIUS = 50;
 
     private RandomItemGenerator() {}
 

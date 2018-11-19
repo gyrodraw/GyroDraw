@@ -116,6 +116,11 @@ public class PaintView extends View {
         this.circleRadius = circleRadius;
     }
 
+    /**
+     * Sets the x and y coordinates of the painting circle.
+     * @param x coordinate
+     * @param y coordinate
+     */
     public void updateCoordinates(float x, float y) {
         circleX -= x * speed;
         circleY += y * speed;

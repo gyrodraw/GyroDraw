@@ -20,13 +20,16 @@ class BumpingItem extends Item {
 
     @Override
     protected void activate(final PaintView paintView) {
-        if (super.norm(this.x - paintView.getCircleX(), this.y - paintView.getCircleY())
+        if (super.norm(this.x - paintView.getCircleX(),
+                this.y - paintView.getCircleY())
                 < this.radius + paintView.getCircleRadius()) {
             double angle = Math.atan2(paintView.getCircleY() - this.y,
                                         paintView.getCircleX() - this.x);
             paintView.setCircle(
-                    this.x + (int) (Math.cos(angle) * (this.radius + paintView.getCircleRadius() + 5)),
-                    this.y + (int) (Math.sin(angle) * (this.radius + paintView.getCircleRadius() + 5)));
+                    this.x + (int) (Math.cos(angle) *
+                            (this.radius + paintView.getCircleRadius() + 5)),
+                    this.y + (int) (Math.sin(angle) *
+                            (this.radius + paintView.getCircleRadius() + 5)));
         }
     }
 

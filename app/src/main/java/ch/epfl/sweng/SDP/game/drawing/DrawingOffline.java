@@ -7,6 +7,10 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 
 public class DrawingOffline extends GyroDrawingActivity {
 
+    /**
+     * Function to leave the activity.
+     * @param view clicked button
+     */
     public void exitClick(View view) {
         LocalDbHandlerForImages localDbHandlerForImages =
                 new LocalDbHandlerForImages(this, null, 1);

@@ -29,6 +29,9 @@ public class DrawingOfflineItemsTest {
     public final ActivityTestRule<DrawingOfflineItems> activityRule =
             new ActivityTestRule<>(DrawingOfflineItems.class);
 
+    /**
+     * Initializes variables.
+     */
     @Before
     public void init() {
         paintViewHolder = activityRule.getActivity().paintViewHolder;
@@ -72,14 +75,14 @@ public class DrawingOfflineItemsTest {
     @Test
     public void testSlowdownItemSlowsDownPaintView() throws Throwable {
         double initSpeed = paintView.speed;
-        activateItem(SlowdownItem.createSlowdownItem(20, 20, 10));
+        activateItem(SlowdownItem.createSlowdownItem(21, 21, 11));
         assertThat(initSpeed/2, is(equalTo(paintView.speed)));
     }
 
     @Test
     public void testSwapAxisItemSwapsSpeedPaintView() throws Throwable {
         double initSpeed = paintView.speed;
-        activateItem(SwapAxisItem.createSwapAxisItem(20, 20, 10));
+        activateItem(SwapAxisItem.createSwapAxisItem(22, 22, 12));
         assertThat(-initSpeed, is(equalTo(paintView.speed)));
     }
 
@@ -94,11 +97,11 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() throws Throwable {
+        paintView.setCircle(201, 201);
+        activateItem(BumpingItem.createBumpingItem(200, 200, 10));
         double angle = Math.atan2(1, 1);
         int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));
         int newY = 200 + (int) (Math.sin(angle) * (10 + paintView.getCircleRadius() + 5));
-        paintView.setCircle(201, 201);
-        activateItem(BumpingItem.createBumpingItem(200, 200, 10));
         assertThat(newX, is(equalTo(paintView.getCircleX())));
         assertThat(newY, is(equalTo(paintView.getCircleY())));
     }

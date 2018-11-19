@@ -24,8 +24,14 @@ public abstract class Item {
      * @return          true if there is a collision, else false
      */
     protected boolean collision(PaintView paintView) {
-        return norm(this.x - paintView.getCircleX(), this.y - paintView.getCircleY())
-                < this.radius + paintView.getCircleRadius();
+        return collision(paintView.getCircleX(),
+                paintView.getCircleY(),
+                paintView.getCircleRadius());
+    }
+
+    protected boolean collision(int x, int y, int radius) {
+        return norm(this.x - x, this.y - y)
+                < this.radius + radius;
     }
 
     protected double norm(int x, int y) {

@@ -8,6 +8,7 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
@@ -138,6 +139,7 @@ public class Account {
         return instance;
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static void deleteAccount() {
         instance = null;
     }

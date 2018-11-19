@@ -1,5 +1,11 @@
 package ch.epfl.sweng.SDP.game;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -8,32 +14,14 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 import android.widget.RatingBar;
-
+import android.widget.TextView;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.when;
-
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -75,6 +63,11 @@ public class VotingPageActivityTest {
         databaseErrorMock = Mockito.mock(DatabaseError.class);
     }
 
+    @After
+    public void freeResources() {
+        mActivityRule.getActivity().freeResources();
+    }
+
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
         SystemClock.sleep(2000);
@@ -95,7 +88,7 @@ public class VotingPageActivityTest {
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         int stars = starsAnimation.getNumStars();
-        assert (5 == stars);
+        assertThat(stars, is(5));
     }
 
     @Test
@@ -108,7 +101,7 @@ public class VotingPageActivityTest {
         starsAnimation.addStars(-10);
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
-        assert (0 == starsAnimation.getNumStars());
+        assertThat(starsAnimation.getNumStars(), is(0));
     }
 
     @Test
@@ -118,18 +111,19 @@ public class VotingPageActivityTest {
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
         Assert.assertNotNull(homeActivity);
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        assertThat(mActivityRule.getActivity().isFinishing(), is(true));
     }
 
     @Test
     public void testStateChange() {
         SystemClock.sleep(1000);
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
+
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
-        assertTrue(myFragment.isVisible());
+        assertThat(myFragment.isVisible(), is(true));
     }
 
     @Test
@@ -137,6 +131,11 @@ public class VotingPageActivityTest {
         Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
+        SystemClock.sleep(3000);
+
+        TextView playerNameView = mActivityRule.getActivity()
+                .findViewById(R.id.playerNameView);
+        assertThat(playerNameView.getText().toString(), is("Champion"));
     }
 
     @Test
@@ -144,9 +143,9 @@ public class VotingPageActivityTest {
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(1000);
         mActivityRule.getActivity().callChangeImage();
+        SystemClock.sleep(2000);
 
-        SystemClock.sleep(1000);
-        assertEquals(counter + 1, mActivityRule.getActivity().getChangeDrawingCounter());
+        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(), is(counter + 1));
     }
 
     @Test(expected = DatabaseException.class)
@@ -162,11 +161,12 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void testOnListenerTimerEqualsTimeForVoting() {
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(24);
+    public void testOnDataChangeListenerCounter() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(29);
         mActivityRule.getActivity().callOnCounterChange(dataSnapshotMock);
-        SystemClock.sleep(1000);
-        assertEquals((mActivityRule.getActivity().findViewById(R.id.playerNameView))
-                        .getVisibility(), View.VISIBLE);
+        SystemClock.sleep(2000);
+        
+        TextView timerView = mActivityRule.getActivity().findViewById(R.id.timer);
+        assertThat(timerView.getText().toString(), is("5"));
     }
 }

@@ -1,40 +1,21 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.net.nsd.NsdManager;
 import android.os.SystemClock;
-import android.provider.ContactsContract;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
-import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.WaitingPageActivity;
-
-import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.doubleClick;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import java.util.HashMap;
+
+import ch.epfl.sweng.SDP.auth.Account;
+
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.sweng.SDP.game.drawing.Items.SLOWDOWN;
-import static ch.epfl.sweng.SDP.game.drawing.Items.SPEEDUP;
-import static ch.epfl.sweng.SDP.game.drawing.Items.SWAPAXIS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -84,22 +65,42 @@ public class DrawingOfflineItemsTest {
     @Test
     public void testSpeedupItemSpeedsUpPaintView() throws Throwable {
         double initSpeed = paintView.speed;
-        activateItem(SpeedupItem.createSpeedupItem(20, 20, 10, 10));
+        activateItem(SpeedupItem.createSpeedupItem(20, 20, 10));
         assertThat(initSpeed*2, is(equalTo(paintView.speed)));
     }
 
     @Test
     public void testSlowdownItemSlowsDownPaintView() throws Throwable {
         double initSpeed = paintView.speed;
-        activateItem(SlowdownItem.createSlowdownItem(20, 20, 10, 10));
+        activateItem(SlowdownItem.createSlowdownItem(20, 20, 10));
         assertThat(initSpeed/2, is(equalTo(paintView.speed)));
     }
 
     @Test
     public void testSwapAxisItemSwapsSpeedPaintView() throws Throwable {
         double initSpeed = paintView.speed;
-        activateItem(SwapAxisItem.createSwapAxisItem(20, 20, 10, 10));
+        activateItem(SwapAxisItem.createSwapAxisItem(20, 20, 10));
         assertThat(-initSpeed, is(equalTo(paintView.speed)));
+    }
+
+    @Test
+    public void testAddStarsItemAddsStarsToAccount() throws Throwable {
+        int initStars = Account.getInstance(activityRule.getActivity()
+                .getApplicationContext()).getStars();
+        activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
+        assertThat(initStars+10, is(equalTo(Account.getInstance(activityRule.getActivity()
+                .getApplicationContext()).getStars())));
+    }
+
+    @Test
+    public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() throws Throwable {
+        double angle = Math.atan2(1, 1);
+        int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));
+        int newY = 200 + (int) (Math.sin(angle) * (10 + paintView.getCircleRadius() + 5));
+        paintView.setCircle(201, 201);
+        activateItem(BumpingItem.createBumpingItem(200, 200, 10));
+        assertThat(newX, is(equalTo(paintView.getCircleX())));
+        assertThat(newY, is(equalTo(paintView.getCircleY())));
     }
 
     private void activateItem(final Item item) throws Throwable {

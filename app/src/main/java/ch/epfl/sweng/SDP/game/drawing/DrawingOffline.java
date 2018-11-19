@@ -3,11 +3,15 @@ package ch.epfl.sweng.SDP.game.drawing;
 import android.util.Log;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+
 public class DrawingOffline extends GyroDrawingActivity {
 
     public void exitClick(View view) {
+        LocalDbHandlerForImages localDbHandlerForImages =
+                new LocalDbHandlerForImages(this, null, 1);
+        paintView.saveCanvasInDb(localDbHandlerForImages);
         Log.d(TAG, "Exiting drawing view");
         this.finish();
     }
-
 }

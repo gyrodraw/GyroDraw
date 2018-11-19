@@ -64,7 +64,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      */
     private Item findCollidingElement() {
         for(Item item : displayedItems.keySet()) {
-            if(item.collision(paintView.circleX, paintView.circleY, paintView.getCircleRadius())) {
+            if(item.collision(paintView)) {
                 return item;
             }
         }
@@ -75,20 +75,20 @@ public class DrawingOfflineItems extends DrawingOffline {
      * Generates a random item every INTERVAL seconds.
      */
     private void generateItems() {
-        new CountDownTimer(INTERVAL, 1000) {
+        new CountDownTimer(INTERVAL, INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
-                // nüt
+                // Does nothing
             }
 
             public void onFinish() {
-                convertAndAddItem(randomItemGenerator.generateItem());
+                convertAndAddItemToLayout(randomItemGenerator.generateItem());
                 generateItems();
             }
         }.start();
     }
 
-    private void convertAndAddItem(Item item) {
+    private void convertAndAddItemToLayout(Item item) {
         ImageView imageView = itemToImageView(item);
         paintViewHolder.addView(imageView);
         displayedItems.put(item, imageView);
@@ -129,13 +129,6 @@ public class DrawingOfflineItems extends DrawingOffline {
             }
         }.start();
         return feedback;
-    }
-
-    protected void addAllDifferentItemsToView() {
-        Item[] items = randomItemGenerator.generateAllDifferentItems();
-        for(int i = 0; i < items.length; ++i) {
-            convertAndAddItem(items[i]);
-        }
     }
 
     /**

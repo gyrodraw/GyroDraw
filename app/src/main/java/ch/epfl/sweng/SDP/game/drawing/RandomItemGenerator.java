@@ -4,10 +4,9 @@ import java.util.Random;
 
 public class RandomItemGenerator {
 
-    private static final int INTERVAL = 10000;
     private static final int ITEM_RADIUS = 80;
 
-    PaintView paintView;
+    private PaintView paintView;
 
     protected RandomItemGenerator(PaintView paintView) {
         this.paintView = paintView;
@@ -19,32 +18,19 @@ public class RandomItemGenerator {
         int y = randomIntWithinBounds(paintView.getHeight());
         switch (item) {
             case SPEEDUP:
-                return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS, INTERVAL);
+                return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS);
             case SLOWDOWN:
-                return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS, INTERVAL);
+                return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS);
             case SWAPAXIS:
-                return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS, INTERVAL);
-            //case ADDSTARS:
-            //    return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS, INTERVAL);
-            //case LOSESTARS:
-            //    return LoseStarsItem.createLoseStarsItem(x, y, ITEM_RADIUS, INTERVAL);
+                return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS);
+            case ADDSTARS:
+                return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS);
+            case BUMP:
+                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
 
             default:
                 throw new IllegalArgumentException("Unknown item type");
         }
-    }
-
-    protected Item[] generateAllDifferentItems() {
-        int x = randomIntWithinBounds(paintView.getWidth());
-        int y = randomIntWithinBounds(paintView.getHeight());
-        SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(x, y, 10, 10);
-        x = randomIntWithinBounds(paintView.getWidth());
-        y = randomIntWithinBounds(paintView.getHeight());
-        SlowdownItem slowdownItem = SlowdownItem.createSlowdownItem(x, y, 10, 10);
-        x = randomIntWithinBounds(paintView.getWidth());
-        y = randomIntWithinBounds(paintView.getHeight());
-        SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(x, y, 10, 10);
-        return new Item[]{speedupItem, slowdownItem, swapAxisItem};
     }
 
     private int randomIntWithinBounds(int max) {

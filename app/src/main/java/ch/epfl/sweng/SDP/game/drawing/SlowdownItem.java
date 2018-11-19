@@ -6,18 +6,18 @@ class SlowdownItem extends Item {
 
     private static final double SLOWDOWN_FACTOR = .5;
 
-    private SlowdownItem(int x, int y, int radius, int interval) {
-        super(x, y, radius, interval);
+    private SlowdownItem(int x, int y, int radius) {
+        super(x, y, radius);
     }
 
-    public static SlowdownItem createSlowdownItem(int x, int y, int radius, int interval) {
-        return new SlowdownItem(x, y, radius, interval);
+    public static SlowdownItem createSlowdownItem(int x, int y, int radius) {
+        return new SlowdownItem(x, y, radius);
     }
 
     @Override
     protected void activate(final PaintView paintView) {
         paintView.speed *= SLOWDOWN_FACTOR;
-        new CountDownTimer(super.interval, 1000) {
+        new CountDownTimer(super.ITEM_DURATION, super.ITEM_DURATION) {
 
             public void onTick(long millisUntilFinished) {
                 // nüt
@@ -29,7 +29,6 @@ class SlowdownItem extends Item {
         }.start();
     }
 
-    @Override
     protected void deactivate(PaintView paintView) {
         paintView.speed /= SLOWDOWN_FACTOR;
     }

@@ -31,6 +31,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
@@ -72,6 +73,7 @@ public class HomeActivity extends BaseActivity {
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final ImageView practiceButton = findViewById(R.id.practiceButton);
+        final ImageView itemsButton = findViewById(R.id.itemsButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
@@ -102,6 +104,7 @@ public class HomeActivity extends BaseActivity {
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
+        setListener(itemsButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -194,6 +197,9 @@ public class HomeActivity extends BaseActivity {
                 profileWindow.dismiss();
                 break;
             case R.id.practiceButton:
+                launchActivity(DrawingOffline.class);
+                break;
+            case R.id.practiceButton2:
                 launchActivity(DrawingOfflineItems.class);
                 break;
             default:

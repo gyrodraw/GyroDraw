@@ -462,7 +462,7 @@ public class VotingPageActivity extends BaseActivity {
         return changeDrawingCounter;
     }
 
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callShowWinnerDrawing(final Bitmap image, final String winner) {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -472,7 +472,7 @@ public class VotingPageActivity extends BaseActivity {
         });
     }
 
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callChangeImage() {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -482,7 +482,7 @@ public class VotingPageActivity extends BaseActivity {
         });
     }
 
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnStateChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -492,7 +492,7 @@ public class VotingPageActivity extends BaseActivity {
         });
     }
 
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnCounterChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -500,5 +500,10 @@ public class VotingPageActivity extends BaseActivity {
                 listenerCounter.onDataChange(dataSnapshot);
             }
         });
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public void freeResources() {
+        drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     }
 }

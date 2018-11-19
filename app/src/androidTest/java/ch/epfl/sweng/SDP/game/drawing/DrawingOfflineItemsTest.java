@@ -70,15 +70,15 @@ public class DrawingOfflineItemsTest {
         Item item = (Item)activityRule.getActivity().getDisplayedItems()
                 .keySet().toArray()[0];
         paintView.setCircle(item.getX(), item.getY());
-        SystemClock.sleep(1000);
+        SystemClock.sleep(1000); 
         assertFalse(activityRule.getActivity().getDisplayedItems().containsKey(item));
     }
 
     @Test
     public void testSpeedupItemSpeedsUpPaintView() throws Throwable {
-        double initSpeed = paintView.speed;
+        double init = paintView.getSpeed();
         activateItem(SpeedupItem.createSpeedupItem(20, 20, 10));
-        assertThat(initSpeed*2, is(equalTo(paintView.speed)));
+        assertThat(init*2, is(equalTo(paintView.getSpeed())));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testSwapAxisItemSwapsSpeedPaintView() throws Throwable {
-        double initSpeed = paintView.speed;
+        double initSpeed = paintView.getSpeed();
         activateItem(SwapAxisItem.createSwapAxisItem(22, 22, 12));
         assertThat(-initSpeed, is(equalTo(paintView.speed)));
     }

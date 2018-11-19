@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.utils;
 
+/**
+ * Utility class containing methods for checking preconditions.
+ */
 public final class Preconditions {
 
     private Preconditions() {

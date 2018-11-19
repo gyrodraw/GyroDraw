@@ -39,6 +39,7 @@ public class RankingFragment extends ListFragment {
     private DatabaseReference finishedRef;
 
     private Map<String, Integer> finalRanking;
+    private List<String> rankedUsernames;
 
     public RankingFragment() {
         // Empty constructor
@@ -61,6 +62,10 @@ public class RankingFragment extends ListFragment {
         retrieveFinalRanking();
     }
 
+    public List<String> getRankedUsernames() {
+        return rankedUsernames;
+    }
+
     private void retrieveFinalRanking() {
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -73,9 +78,9 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
-                List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
+                rankedUsernames = SortUtils.sortByValue(finalRanking);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
-                        rankingUsernames.toArray(new String[rankingUsernames.size()]));
+                        rankedUsernames.toArray(new String[rankedUsernames.size()]));
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }

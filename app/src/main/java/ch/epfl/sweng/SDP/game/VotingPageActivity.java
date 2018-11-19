@@ -12,7 +12,16 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,23 +31,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.List;
-
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 public class VotingPageActivity extends BaseActivity {
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+    private final String username = Account.getInstance(this).getUsername();
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
@@ -234,7 +233,6 @@ public class VotingPageActivity extends BaseActivity {
 
     private void createAndStoreGameResult() {
         List<String> rankedUsernames = rankingFragment.getRankedUsernames();
-        String username = Account.getInstance(this).getUsername();
         int rank = rankedUsernames.indexOf(username);
         Bitmap drawing = null;
 
@@ -269,7 +267,7 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void enableRatingBar(String playerName) {
-        final boolean isCurrentPlayer = playerName.equals(Account.getInstance(this).getUsername());
+        final boolean isCurrentPlayer = playerName.equals(username);
 
         // Enable the rating bar only if the image is not the player's one
         ratingBar.setRating(0f);

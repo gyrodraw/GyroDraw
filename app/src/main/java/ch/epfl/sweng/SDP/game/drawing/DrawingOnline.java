@@ -156,7 +156,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         return paintView.saveCanvasInStorage();
     }
 
-
     /**
      * Method that call onDataChange on the UI thread.
      *
@@ -171,6 +170,4 @@ public class DrawingOnline extends GyroDrawingActivity {
             }
         });
     }
-
-
 }

@@ -48,6 +48,9 @@
             android:name=".home.LeaderboardActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".home.BattleLogActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".home.LeaguesActivity"
             android:screenOrientation="portrait" />
         <activity

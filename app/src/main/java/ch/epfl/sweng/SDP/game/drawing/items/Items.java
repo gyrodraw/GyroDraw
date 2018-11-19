@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.items;
 
 import java.util.Arrays;
 import java.util.Collections;

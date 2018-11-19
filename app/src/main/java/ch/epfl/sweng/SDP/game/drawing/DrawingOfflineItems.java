@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,6 @@ public class DrawingOfflineItems extends DrawingOffline {
 
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
-    protected RandomItemGenerator randomItemGenerator;
     private Map<Item, ImageView> displayedItems;
 
     @Override
@@ -28,7 +29,6 @@ public class DrawingOfflineItems extends DrawingOffline {
         super.onCreate(savedInstanceState);
         paintViewHolder = findViewById(R.id.paintViewHolder);
         paintView = super.paintView;
-        randomItemGenerator = new RandomItemGenerator(paintView);
         displayedItems = new HashMap<>();
         generateItems();
     }
@@ -82,7 +82,7 @@ public class DrawingOfflineItems extends DrawingOffline {
             }
 
             public void onFinish() {
-                convertAndAddItemToLayout(randomItemGenerator.generateItem());
+                convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
                 generateItems();
             }
         }.start();
@@ -101,9 +101,9 @@ public class DrawingOfflineItems extends DrawingOffline {
      */
     private ImageView itemToImageView(Item item) {
         ImageView view =  new ImageView(this);
-        view.setX(item.x-item.radius);
-        view.setY(item.y-item.radius);
-        view.setLayoutParams(new RelativeLayout.LayoutParams(2*item.radius, 2*item.radius));
+        view.setX(item.getX()-item.getRadius());
+        view.setY(item.getY()-item.getRadius());
+        view.setLayoutParams(new RelativeLayout.LayoutParams(2*item.getRadius(), 2*item.getRadius()));
         view.setBackgroundResource(R.drawable.mystery_box);
         return view;
     }

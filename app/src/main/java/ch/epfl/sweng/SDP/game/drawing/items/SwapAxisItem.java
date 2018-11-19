@@ -1,8 +1,10 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.items;
 
 import android.os.CountDownTimer;
 
-class SwapAxisItem extends Item implements Deactivable {
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
+
+public class SwapAxisItem extends Item {
 
     private SwapAxisItem(int x, int y, int radius) {
         super(x, y, radius);
@@ -13,8 +15,8 @@ class SwapAxisItem extends Item implements Deactivable {
     }
 
     @Override
-    protected void activate(final PaintView paintView) {
-        paintView.speed *= -1;
+    public void activate(final PaintView paintView) {
+        paintView.multSpeed(-1);
         new CountDownTimer(super.ITEM_DURATION, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -27,12 +29,12 @@ class SwapAxisItem extends Item implements Deactivable {
         }.start();
     }
 
-    public void deactivate(PaintView paintView) {
-        paintView.speed *= -1;
+    private void deactivate(PaintView paintView) {
+        paintView.multSpeed(-1);
     }
 
     @Override
-    protected String textFeedback() {
+    public String textFeedback() {
         return "SWAPPED! ";
     }
 

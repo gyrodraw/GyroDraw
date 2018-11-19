@@ -1,5 +1,6 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.items;
 
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.utils.Preconditions;
 
 public abstract class Item {
@@ -18,12 +19,24 @@ public abstract class Item {
         this.radius = radius;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
     /**
      * Calculates if there is a collision between the item and the given paintView.
      * @param paintView reference to compare with
      * @return          true if there is a collision, else false
      */
-    protected boolean collision(PaintView paintView) {
+    public boolean collision(PaintView paintView) {
         return collision(paintView.getCircleX(),
                 paintView.getCircleY(),
                 paintView.getCircleRadius());
@@ -55,12 +68,12 @@ public abstract class Item {
      * Activates the items' ability.
      * @param paintView to apply the ability on
      */
-    protected abstract void activate(final PaintView paintView);
+    public abstract void activate(final PaintView paintView);
 
     /**
      * String to show to the player which item class was picked.
      * @return feedback text
      */
-    protected abstract String textFeedback();
+    public abstract String textFeedback();
 
 }

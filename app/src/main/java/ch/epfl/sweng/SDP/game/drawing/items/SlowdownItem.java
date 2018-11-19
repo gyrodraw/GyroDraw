@@ -1,8 +1,10 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.items;
 
 import android.os.CountDownTimer;
 
-class SlowdownItem extends Item implements Deactivable {
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
+
+public class SlowdownItem extends Item {
 
     private static final double SLOWDOWN_FACTOR = .5;
 
@@ -15,8 +17,8 @@ class SlowdownItem extends Item implements Deactivable {
     }
 
     @Override
-    protected void activate(final PaintView paintView) {
-        paintView.speed *= SLOWDOWN_FACTOR;
+    public void activate(final PaintView paintView) {
+        paintView.multSpeed(SLOWDOWN_FACTOR);
         new CountDownTimer(super.ITEM_DURATION, super.ITEM_DURATION) {
 
             public void onTick(long millisUntilFinished) {
@@ -29,12 +31,12 @@ class SlowdownItem extends Item implements Deactivable {
         }.start();
     }
 
-    public void deactivate(PaintView paintView) {
-        paintView.speed /= SLOWDOWN_FACTOR;
+    private void deactivate(PaintView paintView) {
+        paintView.multSpeed(1/SLOWDOWN_FACTOR);
     }
 
     @Override
-    protected String textFeedback() {
+    public String textFeedback() {
         return "SLOWDOWN! ";
     }
 

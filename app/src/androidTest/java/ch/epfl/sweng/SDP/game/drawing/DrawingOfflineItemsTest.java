@@ -1,21 +1,30 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.SystemClock;
+
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
 import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
+import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
+import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
+import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
+import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
+
+import java.util.HashMap;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.HashMap;
-
-import ch.epfl.sweng.SDP.auth.Account;
-
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +60,7 @@ public class DrawingOfflineItemsTest {
         int viewsBefore = paintViewHolder.getChildCount();
         HashMap<Item, ImageView> displayedItems = activityRule.getActivity().getDisplayedItems();
         Item item = (Item)displayedItems.keySet().toArray()[0];
-        paintView.setCircle(item.x, item.y);
+        paintView.setCircle(item.getX(), item.getY());
         assertThat(viewsBefore, is(equalTo(paintViewHolder.getChildCount())));
     }
 
@@ -60,7 +69,7 @@ public class DrawingOfflineItemsTest {
         SystemClock.sleep(10000);
         Item item = (Item)activityRule.getActivity().getDisplayedItems()
                 .keySet().toArray()[0];
-        paintView.setCircle(item.x, item.y);
+        paintView.setCircle(item.getX(), item.getY());
         SystemClock.sleep(1000);
         assertFalse(activityRule.getActivity().getDisplayedItems().containsKey(item));
     }
@@ -107,12 +116,16 @@ public class DrawingOfflineItemsTest {
     }
 
     private void activateItem(final Item item) throws Throwable {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                item.activate(paintView);
-            }
-        });
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    item.activate(paintView);
+                }
+            });
+        } catch (Exception exception) {
+            throw new IllegalStateException("Something went wrong when activating the item");
+        }
     }
 
 }

@@ -112,6 +112,18 @@ public class PaintView extends View {
         return circleRadius;
     }
 
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void multSpeed(double factor) {
+        speed *= factor;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
     }

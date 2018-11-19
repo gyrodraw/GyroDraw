@@ -1,8 +1,9 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.items;
 
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
-class AddStarsItem extends Item {
+public class AddStarsItem extends Item {
 
     private static final int ADD_STARS = 10;
 
@@ -15,12 +16,12 @@ class AddStarsItem extends Item {
     }
 
     @Override
-    protected void activate(final PaintView paintView) {
+    public void activate(final PaintView paintView) {
         Account.getInstance(paintView.getContext()).changeStars(ADD_STARS);
     }
 
     @Override
-    protected String textFeedback() {
+    public String textFeedback() {
         return "+10 STARS! ";
     }
 }

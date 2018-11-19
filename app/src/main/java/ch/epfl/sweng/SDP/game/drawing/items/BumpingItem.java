@@ -1,6 +1,8 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.items;
 
-class BumpingItem extends Item {
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
+
+public class BumpingItem extends Item {
 
     private BumpingItem(int x, int y, int radius) {
         super(x, y, radius);
@@ -11,28 +13,28 @@ class BumpingItem extends Item {
     }
 
     @Override
-    protected boolean collision(PaintView paintView) {
+    public boolean collision(PaintView paintView) {
         activate(paintView);
         return false;
     }
 
     @Override
-    protected void activate(final PaintView paintView) {
+    public void activate(final PaintView paintView) {
         if (super.norm(this.x - paintView.getCircleX(),
                 this.y - paintView.getCircleY())
                 < this.radius + paintView.getCircleRadius()) {
             double angle = Math.atan2(paintView.getCircleY() - this.y,
                                         paintView.getCircleX() - this.x);
             paintView.setCircle(
-                    this.x + (int) (Math.cos(angle) *
-                            (this.radius + paintView.getCircleRadius() + 5)),
-                    this.y + (int) (Math.sin(angle) *
-                            (this.radius + paintView.getCircleRadius() + 5)));
+                    this.x + (int) (Math.cos(angle)
+                            * (this.radius + paintView.getCircleRadius() + 5)),
+                    this.y + (int) (Math.sin(angle)
+                            * (this.radius + paintView.getCircleRadius() + 5)));
         }
     }
 
     @Override
-    protected String textFeedback() {
+    public String textFeedback() {
         return " ";
     }
 }

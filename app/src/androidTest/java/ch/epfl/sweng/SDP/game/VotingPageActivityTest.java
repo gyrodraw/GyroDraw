@@ -1,17 +1,17 @@
 package ch.epfl.sweng.SDP.game;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.SystemClock;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.RatingBar;
@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,9 +52,9 @@ public class VotingPageActivityTest {
                 }
             };
 
-    // Add a monitor for the home activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
+//    // Add a monitor for the home activity
+//    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+//            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Before
     public void init() {
@@ -106,12 +105,12 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity(){
+        Intents.init();
+        SystemClock.sleep(2000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
-        Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(homeActivity);
-        assertThat(mActivityRule.getActivity().isFinishing(), is(true));
+        intended(hasComponent(HomeActivity.class.getName()));
+        Intents.release();
     }
 
     @Test

@@ -20,7 +20,7 @@ public class BumpingItem extends Item {
 
     @Override
     public void activate(final PaintView paintView) {
-        if (super.norm(this.x - paintView.getCircleX(),
+        if (Math.hypot(this.x - paintView.getCircleX(),
                 this.y - paintView.getCircleY())
                 < this.radius + paintView.getCircleRadius()) {
             double angle = Math.atan2(paintView.getCircleY() - this.y,

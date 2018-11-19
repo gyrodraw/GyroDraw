@@ -154,9 +154,9 @@ public class VotingPageActivityTest {
         mActivityRule.getActivity().listenerState.onCancelled(databaseErrorMock);
     }
 
-//    @Test(expected = DatabaseException.class)
-//    public void testOnCancelledListenerCounter() {
-//        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
-//        mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
-//    }
+    @Test(expected = DatabaseException.class)
+    public void testOnCancelledListenerCounter() {
+        when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
+        mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
+    }
 }

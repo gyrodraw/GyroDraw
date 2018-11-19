@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -169,7 +170,7 @@ public class VotingPageActivity extends BaseActivity {
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating,
-                                                boolean fromUser) {
+                            boolean fromUser) {
                         ratingBar.setIsIndicator(true);
                         ratingBar.setAlpha(0.8f);
 
@@ -342,14 +343,12 @@ public class VotingPageActivity extends BaseActivity {
                                                 final int OFFSET = 0;
 
                                                 // Convert the image downloaded as byte[] to Bitmap
-                                                bitmap = BitmapFactory
-                                                        .decodeByteArray(task.getResult(), OFFSET,
-                                                                task.getResult().length);
+                                                bitmap = decodeSampledBitmapFromByteArray(task.getResult(), OFFSET,
+                                                                task.getResult().length, 339, 450);
                                             } else {
                                                 // Use a default image if unsuccessful
-                                                bitmap = BitmapFactory
-                                                        .decodeResource(getResources(),
-                                                                R.drawable.default_image);
+                                                bitmap = decodeSampledBitmapFromResource(getResources(),
+                                                                R.drawable.default_image, 339, 450);
                                             }
 
                                             // Store the image
@@ -376,6 +375,60 @@ public class VotingPageActivity extends BaseActivity {
                 throw databaseError.toException();
             }
         });
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    private Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+            int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    private Bitmap decodeSampledBitmapFromByteArray(byte[] array, int offset, int length,
+            int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(array, offset, length, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(array, offset, length, options);
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {
@@ -437,7 +490,7 @@ public class VotingPageActivity extends BaseActivity {
     /**
      * Display the drawing of the winner.
      *
-     * @param img        Drawing of the winner
+     * @param img Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

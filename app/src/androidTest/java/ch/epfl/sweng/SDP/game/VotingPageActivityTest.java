@@ -34,6 +34,7 @@ public class VotingPageActivityTest {
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
+    private StarAnimationView starsAnimation;
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
@@ -60,6 +61,8 @@ public class VotingPageActivityTest {
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
+        starsAnimation = mActivityRule.getActivity()
+                .findViewById(R.id.starsAnimation);
     }
 
     @After
@@ -78,8 +81,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesBigNumber() {
-        StarAnimationView starsAnimation = mActivityRule.getActivity()
-                .findViewById(R.id.starsAnimation);
+        int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
         starsAnimation.onDraw(canvas);
@@ -87,20 +89,19 @@ public class VotingPageActivityTest {
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         int stars = starsAnimation.getNumStars();
-        assertThat(stars, is(5));
+        assertThat(stars, is(previousStars + 5));
     }
 
     @Test
     public void addStarsHandlesNegativeNumber() {
-        StarAnimationView starsAnimation = mActivityRule.getActivity()
-                .findViewById(R.id.starsAnimation);
+        int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
         starsAnimation.onDraw(canvas);
         starsAnimation.addStars(-10);
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
-        assertThat(starsAnimation.getNumStars(), is(0));
+        assertThat(starsAnimation.getNumStars(), is(previousStars));
     }
 
     @Test

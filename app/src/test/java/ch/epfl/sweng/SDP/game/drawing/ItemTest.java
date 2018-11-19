@@ -3,17 +3,20 @@ package ch.epfl.sweng.SDP.game.drawing;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 public class ItemTest {
 
     @Test
     public void testItemGetsInitializedCorrectly() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertEquals(speedupItem.x, 0);
-        assertEquals(speedupItem.y, 0);
-        assertEquals(speedupItem.radius, 10);
+        assertThat(0, is(equalTo(speedupItem.x)));
+        assertEquals(0, is(equalTo(speedupItem.y)));
+        assertEquals(10, is(equalTo(speedupItem.radius)));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -36,10 +39,14 @@ public class ItemTest {
     @Test
     public void testTextFeedbacksFromDifferentItemClasses() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertEquals(speedupItem.textFeedback(), "SPEEDUP! ");
+        assertEquals("SPEEDUP! ", speedupItem.textFeedback());
         SlowdownItem slowdownItem = SlowdownItem.createSlowdownItem(0, 0, 10);
-        assertEquals(slowdownItem.textFeedback(), "SLOWDOWN! ");
+        assertEquals("SLOWDOWN! ", slowdownItem.textFeedback());
         SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(0, 0, 10);
-        assertEquals(swapAxisItem.textFeedback(), "SWAPPED! ");
+        assertEquals("SWAPPED! ", swapAxisItem.textFeedback());
+        AddStarsItem addStarsItem = AddStarsItem.createAddStarsItem(0, 0, 10);
+        assertEquals("+10 STARS! ", addStarsItem.textFeedback());
+        BumpingItem bumpingItem = BumpingItem.createBumpingItem(0, 0, 10);
+        assertEquals(" ", bumpingItem.textFeedback());
     }
 }

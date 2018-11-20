@@ -53,7 +53,7 @@ public class RankingFragment extends ListFragment {
     private List<String> rankedUsernames;
 
     private Bitmap[] drawings;
-
+    private String[] playerNames;
 
     public RankingFragment() {
         // Empty constructor
@@ -66,6 +66,7 @@ public class RankingFragment extends ListFragment {
         // Retrieve the ranking array, passed as argument on instantiation of the class
         roomID = getArguments().getString("roomID");
         this.drawings =(Bitmap[]) getArguments().getParcelableArray("drawings");
+        this.playerNames = getArguments().getStringArray("playerNames");
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
 
@@ -82,6 +83,15 @@ public class RankingFragment extends ListFragment {
 
     public List<String> getRankedUsernames() {
         return rankedUsernames;
+    }
+
+    private int getIndexForUserName(String username) throws Exception {
+        for (int i = 0; i < this.playerNames.length; i++) {
+            if(username == playerNames[i]) {
+                return i;
+            }
+        }
+        throw new Exception("Index does not exist");
     }
 
     private void retrieveFinalRanking() {
@@ -229,7 +239,12 @@ public class RankingFragment extends ListFragment {
 
             int pos = position;
 
-            // imageview.setImageBitmap(drawings[pos]);
+            try {
+                imageview.setImageBitmap(drawings[getIndexForUserName(players[pos])]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             name.setText(players[pos]);
             trophies.setText(Integer.toString(this.trophies[pos]));
             ranking.setText(Integer.toString((int) this.rankings[pos]));

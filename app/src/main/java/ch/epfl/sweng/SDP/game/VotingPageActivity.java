@@ -396,6 +396,7 @@ public class VotingPageActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("roomID", roomID);
                 bundle.putParcelableArray("drawings", drawings);
+                bundle.putStringArray("playerNames", playersNames);
 
                 // Clear the UI; buttonChangeImage and rankingButton need
                 // to be removed after testing

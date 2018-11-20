@@ -61,7 +61,7 @@ public class DrawingOfflineItemsTest {
         HashMap<Item, ImageView> displayedItems = activityRule.getActivity().getDisplayedItems();
         Item item = (Item)displayedItems.keySet().toArray()[0];
         paintView.setCircle(item.getX(), item.getY());
-        assertThat(paintViewHolder.getChildCount(), is(equalTo(viewsBefore)));
+        assertThat(paintViewHolder.getChildCount(), is(viewsBefore));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class DrawingOfflineItemsTest {
                 .getApplicationContext()).getStars();
         activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
         assertThat(Account.getInstance(activityRule.getActivity()
-                .getApplicationContext()).getStars(), is(equalTo(initStars+3)));
+                .getApplicationContext()).getStars(), is(initStars+3));
     }
 
     @Test
@@ -108,14 +108,14 @@ public class DrawingOfflineItemsTest {
         double angle = Math.atan2(1, 1);
         int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));
         int newY = 200 + (int) (Math.sin(angle) * (10 + paintView.getCircleRadius() + 5));
-        assertThat(paintView.getCircleX(), is(equalTo(newX)));
-        assertThat(paintView.getCircleY(), is(equalTo(newY)));
+        assertThat(paintView.getCircleX(), is(newX));
+        assertThat(paintView.getCircleY(), is(newY));
     }
 
     private void checkItemHasCorrectBehaviourOnPaintView(Item item, double factor) {
         double init = paintView.getSpeed();
         activateItem(item);
-        assertThat(paintView.getSpeed(), is(equalTo(init*factor)));
+        assertThat(paintView.getSpeed(), is(init*factor));
     }
 
     private void activateItem(final Item item) {

@@ -14,9 +14,9 @@ public class ItemTest {
     @Test
     public void testItemGetsInitializedCorrectly() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertThat(0, is(equalTo(speedupItem.x)));
-        assertThat(0, is(equalTo(speedupItem.y)));
-        assertThat(10, is(equalTo(speedupItem.radius)));
+        assertThat(speedupItem.x, is(0));
+        assertThat(speedupItem.y, is(0);
+        assertThat(speedupItem.radius, is(10);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -39,14 +39,14 @@ public class ItemTest {
     @Test
     public void testTextFeedbacksFromDifferentItemClasses() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertEquals("SPEEDUP! ", speedupItem.textFeedback());
+        assertThat(speedupItem.textFeedback(), is("SPEEDUP! "));
         SlowdownItem slowdownItem = SlowdownItem.createSlowdownItem(0, 0, 10);
-        assertEquals("SLOWDOWN! ", slowdownItem.textFeedback());
+        assertThat(slowdownItem.textFeedback(), is("SLOWDOWN! "));
         SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(0, 0, 10);
-        assertEquals("SWAPPED! ", swapAxisItem.textFeedback());
+        assertThat(swapAxisItem.textFeedback(), is("SWAPPED! "));
         AddStarsItem addStarsItem = AddStarsItem.createAddStarsItem(0, 0, 10);
-        assertEquals("+3 STARS! ", addStarsItem.textFeedback());
+        assertThat(addStarsItem.textFeedback(), is("+3 STARS! "));
         BumpingItem bumpingItem = BumpingItem.createBumpingItem(0, 0, 10);
-        assertEquals(" ", bumpingItem.textFeedback());
+        assertThat(bumpingItem.textFeedback(), is(" "));
     }
 }

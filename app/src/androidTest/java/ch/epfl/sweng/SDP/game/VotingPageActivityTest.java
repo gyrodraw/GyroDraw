@@ -71,6 +71,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
 
@@ -80,6 +82,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesBigNumber() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
@@ -93,6 +97,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesNegativeNumber() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
@@ -106,6 +112,8 @@ public class VotingPageActivityTest {
     @Test
     public void startHomeActivityStartsHomeActivity(){
         Intents.init();
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
@@ -127,6 +135,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void testShowDrawingImage() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
@@ -134,6 +144,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void testChangeImage() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(1000);
         mActivityRule.getActivity().callChangeImage();
@@ -144,12 +156,16 @@ public class VotingPageActivityTest {
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerState() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
         mActivityRule.getActivity().listenerState.onCancelled(databaseErrorMock);
     }
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerCounter() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
         mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
     }

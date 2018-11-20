@@ -1,6 +1,8 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
@@ -24,6 +27,7 @@ public class DrawingOfflineItems extends DrawingOffline {
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     private Map<Item, ImageView> displayedItems;
+    private Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +115,15 @@ public class DrawingOfflineItems extends DrawingOffline {
                 2 * item.getRadius(),
                 2 * item.getRadius()));
         view.setImageResource(R.drawable.mystery_box);
-        view.setColorFilter(item.getColor(), PorterDuff.Mode.SRC_ATOP);
+
+        int color = Color.rgb(getRandomByte(), getRandomByte(), getRandomByte());
+        view.setColorFilter(new LightingColorFilter(Color.WHITE, color));
+
         return view;
+    }
+
+    private int getRandomByte() {
+        return random.nextInt(100) + 155;
     }
 
     /**

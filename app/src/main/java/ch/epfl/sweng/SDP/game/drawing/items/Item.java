@@ -1,9 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import android.graphics.Color;
-
-import java.util.Random;
-
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.utils.Preconditions;
 
@@ -14,7 +10,6 @@ public abstract class Item {
     protected int x;
     protected int y;
     protected int radius;
-    protected int color;
 
     protected Item(int x, int y, int radius) {
         Preconditions.checkPrecondition(x >= 0 && y >= 0 && radius >= 0,
@@ -22,11 +17,6 @@ public abstract class Item {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        Random random = new Random();
-        int r = random.nextInt(255);
-        int g = random.nextInt(255);
-        int b = random.nextInt(255);
-        color =  Color.rgb(r, g, b);
     }
 
     public int getX() {
@@ -39,10 +29,6 @@ public abstract class Item {
 
     public int getRadius() {
         return radius;
-    }
-
-    public int getColor() {
-        return color;
     }
 
     /**

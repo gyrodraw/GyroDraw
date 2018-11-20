@@ -199,12 +199,14 @@ public class VotingPageActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
         /*if (rankingRef != null) {
             // Remove the ranking reference in the database
             rankingRef.removeValue(); has to be decommented when a method for creating the entries
                                       corresponding to the ranking in the DB has been implemented
         }
         */
+
         if (roomID != null) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
@@ -231,6 +233,7 @@ public class VotingPageActivity extends BaseActivity {
         if (rankingFragment != null) {
             createAndStoreGameResult();
         }
+
         launchActivity(HomeActivity.class);
         finish();
     }
@@ -388,22 +391,26 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void startRankingFragment() {
-        // Prepare a Bundle for passing the ranking array to the fragment
-        Bundle bundle = new Bundle();
-        bundle.putString("roomID", roomID);
 
-        // Clear the UI; buttonChangeImage and rankingButton need
-        // to be removed after testing
-        setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
-                R.id.playerNameView, R.id.timer);
+                // Prepare a Bundle for passing the ranking array to the fragment
+                Bundle bundle = new Bundle();
+                bundle.putString("roomID", roomID);
+                bundle.putParcelableArray("drawings", drawings);
 
-        // Create and show the final ranking in the new fragment
-        rankingFragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
-                RankingFragment.class.getName(), bundle);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.votingPageLayout, rankingFragment)
-                .addToBackStack(null).commit();
+                // Clear the UI; buttonChangeImage and rankingButton need
+                // to be removed after testing
+                setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
+                        R.id.playerNameView, R.id.timer);
+
+                // Create and show the final ranking in the new fragment
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.votingPageLayout,
+                                RankingFragment.instantiate(getApplicationContext(),
+                                        RankingFragment.class.getName(), bundle))
+                        .addToBackStack(null).commit();
+
     }
+
 
     /**
      * Display the drawing of the winner.

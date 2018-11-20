@@ -1,18 +1,24 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.R;
@@ -20,6 +26,8 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -35,11 +43,16 @@ public class RankingFragment extends ListFragment {
 
     private String roomID;
 
+    private DatabaseReference currentUserRef;
     private DatabaseReference rankingRef;
     private DatabaseReference finishedRef;
 
     private Map<String, Integer> finalRanking;
+
     private List<String> rankedUsernames;
+
+    private Bitmap[] drawings;
+
 
     public RankingFragment() {
         // Empty constructor
@@ -51,14 +64,18 @@ public class RankingFragment extends ListFragment {
 
         // Retrieve the ranking array, passed as argument on instantiation of the class
         roomID = getArguments().getString("roomID");
+        this.drawings =(Bitmap[]) getArguments().getParcelableArray("drawings");
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
-        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+
+        currentUserRef = Database.INSTANCE.getReference("users" + "." + Account.getInstance(getActivity().getApplicationContext()).getUserId());
+        rankingRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        finishedRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+
         retrieveFinalRanking();
     }
 
@@ -78,14 +95,20 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
+
                 String accountId = Account.getInstance(getActivity().getApplicationContext()).getUserId();
+                String userNameId = Account.getInstance(getActivity().getApplicationContext()).getUsername();
 
-                rankedUsernames = SortUtils.sortByValue(finalRanking);
+                DataSnapshot currentUserScoreRef = dataSnapshot.child(Account.getInstance(getActivity().getApplicationContext()).getUserId());
+
+                // Sort the rankings
+                List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
+                updateUserStats(dataSnapshot.child(accountId).getValue(Integer.class), rankingUsernames.indexOf(userNameId)*(rankingUsernames.size()*2)-rankingUsernames.size()*5);
+                List<Integer> rankings = new ArrayList<Integer>(finalRanking.values());
+                Collections.sort(rankings);
+
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
-                        rankedUsernames.toArray(new String[rankedUsernames.size()]));
-
-                updateUserStats(dataSnapshot.child(accountId).getValue(Integer.class), 0);
-
+                        rankingUsernames.toArray(new String[rankingUsernames.size()]), rankings.toArray(), drawings);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }
@@ -97,6 +120,7 @@ public class RankingFragment extends ListFragment {
         });
     }
 
+
     private void updateUserStats(int starIncrease, int trophiesIncrease) {
         Account account = Account.getInstance(getActivity()
                 .getApplicationContext());
@@ -106,18 +130,76 @@ public class RankingFragment extends ListFragment {
         account.increaseTotalMatches();
     }
 
-    private void setFinishedCollectingRanking() {
-        finishedRef.child(Account.getInstance(getActivity()
-                .getApplicationContext()).getUsername()).setValue(1);
+    // TODO: Implement
+    private void calculateTrophies() {
+
     }
 
+    // TODO: Implement
+    private void updateScoresToCurrentUser(final DataSnapshot data) {
+
+        currentUserRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(final MutableData currentData) {
+                if (currentData.getValue() == null) {
+                    currentData.setValue(0);
+                } else {
+                    currentData.setValue((Long) currentData.getValue() + (Long) data.getValue());
+                }
+
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    System.out.println("Firebase counter increment failed.");
+                } else {
+                    System.out.println("Firebase counter increment succeeded.");
+                }
+            }
+
+
+        });
+        // Set user stars to stars + stars
+        // Set trophies to trophies + position*10-20
+    }
+
+    private void setFinishedCollectingRanking() {
+        finishedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+                if (value != null) {
+                    finishedRef.setValue(++value);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
+    }
     private class RankingAdapter extends ArrayAdapter<String> {
 
         private final String[] players;
+        private final Object[] rankings;
+        private final String[] trophies;
+        private final Bitmap[] drawings;
 
-        private RankingAdapter(Context context, String[] players) {
+
+        private RankingAdapter(Context context, String[] players, Object[] rankings, Bitmap[] drawings) {
             super(context, 0, players);
             this.players = players;
+            this.rankings = rankings;
+            this.trophies =  new String[players.length];
+            for (int i = 0; i < players.length; i++) {
+                trophies[i] = String.valueOf(i*(players.length*2)-players.length*5);
+            }
+            this.drawings = null;
         }
 
         @NonNull
@@ -130,11 +212,17 @@ public class RankingFragment extends ListFragment {
                         .inflate(R.layout.ranking_item, parent, false);
             }
 
-            TextView pos = convertView.findViewById(R.id.position);
+            ImageView imageview = convertView.findViewById(R.id.drawing);
             TextView name = convertView.findViewById(R.id.playerName);
+            TextView ranking = convertView.findViewById(R.id.ranking);
+            TextView trophies = convertView.findViewById(R.id.trophies);
 
-            pos.setText(String.format(Locale.getDefault(), "%d. ", position + 1));
-            name.setText(players[position]);
+         //   pos.setText(String.format(Locale.getDefault(), "%d. ", position + 1));
+            int pos = players.length-position;
+
+            name.setText(players[pos]);
+            trophies.setText(this.trophies[pos]);
+            ranking.setText(Integer.toString((int) this.rankings[pos]));
 
             // Return the completed view to render on screen
             return convertView;

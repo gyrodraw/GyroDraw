@@ -12,25 +12,37 @@ public class BumpingItem extends Item {
         return new BumpingItem(x, y, radius);
     }
 
+    /**
+     * This method overrides the parent's collision method because,
+     * different from the other items, BumpingItem is not removed when
+     * there was a collision. So instead it places the paintView outside
+     * of its radius again.
+     * @param paintView reference to compare with
+     * @return          always false, because this item will never be removed
+     */
     @Override
     public boolean collision(PaintView paintView) {
-        activate(paintView);
-        return false;
-    }
-
-    @Override
-    public void activate(final PaintView paintView) {
         if (Math.hypot(this.x - paintView.getCircleX(),
                 this.y - paintView.getCircleY())
                 < this.radius + paintView.getCircleRadius()) {
-            double angle = Math.atan2(paintView.getCircleY() - this.y,
-                                        paintView.getCircleX() - this.x);
-            paintView.setCircle(
-                    this.x + (int) (Math.cos(angle)
-                            * (this.radius + paintView.getCircleRadius() + 5)),
-                    this.y + (int) (Math.sin(angle)
-                            * (this.radius + paintView.getCircleRadius() + 5)));
+            activate(paintView);
         }
+        return false;
+    }
+
+    /**
+     * Places the drawingCircle from paintView outside of the items radius.
+     * @param paintView to apply the ability on
+     */
+    @Override
+    public void activate(final PaintView paintView) {
+        double angle = Math.atan2(paintView.getCircleY() - this.y,
+                                    paintView.getCircleX() - this.x);
+        paintView.setCircle(
+                this.x + (int) (Math.cos(angle)
+                        * (this.radius + paintView.getCircleRadius() + 5)),
+                this.y + (int) (Math.sin(angle)
+                        * (this.radius + paintView.getCircleRadius() + 5)));
     }
 
     @Override

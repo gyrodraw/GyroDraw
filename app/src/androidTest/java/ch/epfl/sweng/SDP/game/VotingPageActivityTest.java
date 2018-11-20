@@ -16,6 +16,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.RatingBar;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,6 +69,7 @@ public class VotingPageActivityTest {
     @After
     public void freeResources() {
         mActivityRule.getActivity().freeResources();
+        Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
     }
 
     @Test
@@ -104,7 +106,7 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void startHomeActivityStartsHomeActivity(){
+    public void startHomeActivityStartsHomeActivity() {
         Intents.init();
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);

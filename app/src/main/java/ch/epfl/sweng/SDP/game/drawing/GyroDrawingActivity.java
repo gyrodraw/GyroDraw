@@ -65,7 +65,7 @@ public class GyroDrawingActivity extends DrawingActivity implements SensorEventL
     /**
      * Called when accelerometer changed, circle coordinates are updated.
      *
-     * @param coordinateX coordiate
+     * @param coordinateX coordinate
      * @param coordinateY coordinate
      */
     public void updateValues(float coordinateX, float coordinateY) {

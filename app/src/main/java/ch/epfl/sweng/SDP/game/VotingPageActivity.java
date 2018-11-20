@@ -500,16 +500,6 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public void callOnCounterChange(final DataSnapshot dataSnapshot) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listenerCounter.onDataChange(dataSnapshot);
-            }
-        });
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void freeResources() {
         drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     }

@@ -284,26 +284,28 @@ public class VotingPageActivity extends BaseActivity {
 
     private void addStarAnimationListener() {
         final String playerName = playersNames[changeDrawingCounter];
-        final DatabaseReference playerRating = rankingRef
-                .child(playerName);
+        if (playerName != null) {
+            final DatabaseReference playerRating = rankingRef
+                    .child(playerName);
 
-        playerRating.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Get the current rating
-                Long value = dataSnapshot.getValue(Long.class);
+            playerRating.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Get the current rating
+                    Long value = dataSnapshot.getValue(Long.class);
 
-                if (value != null) {
-                    starsAnimation.addStars((int) (value - previousRating));
-                    previousRating = value.intValue();
+                    if (value != null) {
+                        starsAnimation.addStars((int) (value - previousRating));
+                        previousRating = value.intValue();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    throw databaseError.toException();
+                }
+            });
+        }
     }
 
     // Change drawing and player name in the UI.

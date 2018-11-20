@@ -27,6 +27,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -103,14 +104,14 @@ public class RankingFragment extends ListFragment {
 
                 // Sort the rankings
                 List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
-                updateUserStats(dataSnapshot.child(accountId).getValue(Integer.class), rankingUsernames.indexOf(userNameId)*(rankingUsernames.size()*2)-rankingUsernames.size()*5);
-                List<Integer> rankings = new ArrayList<Integer>(finalRanking.values());
-                Collections.sort(rankings);
+                updateUserStats(dataSnapshot.child(userNameId).getValue(Integer.class), rankingUsernames.indexOf(userNameId)*(rankingUsernames.size()*2)-rankingUsernames.size()*5);
+                Integer[] rankings = (Integer[])(finalRanking.values().toArray(new Integer[finalRanking.values().size()]));
+                Arrays.sort(rankings, Collections.reverseOrder());
 
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
-                        rankingUsernames.toArray(new String[rankingUsernames.size()]), rankings.toArray(), drawings);
+                        rankingUsernames.toArray(new String[rankingUsernames.size()]), rankings, drawings);
                 setListAdapter(adapter);
-                setFinishedCollectingRanking();
+              //  setFinishedCollectingRanking();
             }
 
             @Override
@@ -186,18 +187,25 @@ public class RankingFragment extends ListFragment {
     private class RankingAdapter extends ArrayAdapter<String> {
 
         private final String[] players;
-        private final Object[] rankings;
+        private final Integer[] rankings;
         private final String[] trophies;
         private final Bitmap[] drawings;
 
 
-        private RankingAdapter(Context context, String[] players, Object[] rankings, Bitmap[] drawings) {
+        private RankingAdapter(Context context, String[] players, Integer[] rankings, Bitmap[] drawings) {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
             this.trophies =  new String[players.length];
-            for (int i = 0; i < players.length; i++) {
-                trophies[i] = String.valueOf(i*(players.length*2)-players.length*5);
+
+            int rank = 10;
+            int lastRank = 0;
+            for (int i = 0; i < rankings.length; i++) {
+                trophies[i] = String.valueOf(rank);
+                if (rankings[i] != lastRank) {
+                    rank -= 5;
+                }
+                lastRank = rankings[i];
             }
             this.drawings = null;
         }
@@ -218,7 +226,7 @@ public class RankingFragment extends ListFragment {
             TextView trophies = convertView.findViewById(R.id.trophies);
 
          //   pos.setText(String.format(Locale.getDefault(), "%d. ", position + 1));
-            int pos = players.length-position;
+            int pos = position;
 
             name.setText(players[pos]);
             trophies.setText(this.trophies[pos]);

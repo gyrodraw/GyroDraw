@@ -31,6 +31,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+import ch.epfl.sweng.SDP.game.RankingFragment;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -54,12 +55,32 @@ public class HomeActivity extends BaseActivity {
         enableBackgroundAnimation = false;
     }
 
+
+    private void startRankingFragment() {
+        // Prepare a Bundle for passing the ranking array to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString("roomID", "71");
+
+        // Clear the UI; buttonChangeImage and rankingButton need
+        // to be removed after testing
+
+
+        // Create and show the final ranking in the new fragment
+        RankingFragment rankingFragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
+                RankingFragment.class.getName(), bundle);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.home, rankingFragment)
+                .addToBackStack(null).commit();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
+
 
         overridePendingTransition(0, 0);
 
@@ -105,6 +126,8 @@ public class HomeActivity extends BaseActivity {
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(itemsButton, getMainAmplitude(), getMainFrequency());
+
+        this.startRankingFragment();
     }
 
     // Launch the LeaguesActivity.

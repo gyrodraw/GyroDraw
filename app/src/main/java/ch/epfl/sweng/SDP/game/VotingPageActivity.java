@@ -237,18 +237,19 @@ public class VotingPageActivity extends BaseActivity {
         Bitmap drawing = null;
 
         for (int i = 0; i < playersNames.length; i++) {
-            if (playersNames[i].equals(username)) {
+            if (playersNames[i] != null && playersNames[i].equals(username)) {
                 drawing = drawings[i];
             }
         }
 
         // TODO: replace constants and drawing by the good values
-        GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
-                drawing, this);
-
-        LocalDbHandlerForGameResults localDb =
-                new LocalDbHandlerForGameResults(this, null, 1);
-        localDb.addGameResultToDb(gameResult);
+        if (drawing != null) {
+            GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
+                    drawing, this);
+            LocalDbHandlerForGameResults localDb =
+                    new LocalDbHandlerForGameResults(this, null, 1);
+            localDb.addGameResultToDb(gameResult);
+        }
     }
 
     /**

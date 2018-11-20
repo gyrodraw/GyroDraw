@@ -96,20 +96,37 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
-
                 String accountId = Account.getInstance(getActivity().getApplicationContext()).getUserId();
                 String userNameId = Account.getInstance(getActivity().getApplicationContext()).getUsername();
 
-                DataSnapshot currentUserScoreRef = dataSnapshot.child(Account.getInstance(getActivity().getApplicationContext()).getUserId());
-
                 // Sort the rankings
                 List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
-                updateUserStats(dataSnapshot.child(userNameId).getValue(Integer.class), rankingUsernames.indexOf(userNameId)*(rankingUsernames.size()*2)-rankingUsernames.size()*5);
                 Integer[] rankings = (Integer[])(finalRanking.values().toArray(new Integer[finalRanking.values().size()]));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
+                int rankingForUser = dataSnapshot.child(userNameId).getValue(Integer.class);
+
+                // Calculate trophies
+                Integer[] trophies = new Integer[rankings.length];
+                int rank = 10;
+                int lastRank = 0;
+                int trophiesForUser = 0;
+                for (int i = 0; i < rankings.length; i++) {
+                    if (rankingForUser == rankings[i]) {
+                        trophiesForUser = rank;
+                    }
+                    trophies[i] = rank;
+                    if (rankings[i] != lastRank) {
+                        rank -= 5;
+                    }
+                    lastRank = rankings[i];
+                }
+
+                updateUserStats(rankingForUser, trophiesForUser);
+
+                // Start ranking fragment
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
-                        rankingUsernames.toArray(new String[rankingUsernames.size()]), rankings, drawings);
+                        rankingUsernames.toArray(new String[rankingUsernames.size()]), rankings, trophies,drawings);
                 setListAdapter(adapter);
               //  setFinishedCollectingRanking();
             }
@@ -121,7 +138,6 @@ public class RankingFragment extends ListFragment {
         });
     }
 
-
     private void updateUserStats(int starIncrease, int trophiesIncrease) {
         Account account = Account.getInstance(getActivity()
                 .getApplicationContext());
@@ -129,11 +145,6 @@ public class RankingFragment extends ListFragment {
         account.changeTrophies(trophiesIncrease);
         account.changeAverageRating(starIncrease);
         account.increaseTotalMatches();
-    }
-
-    // TODO: Implement
-    private void calculateTrophies() {
-
     }
 
     // TODO: Implement
@@ -184,30 +195,21 @@ public class RankingFragment extends ListFragment {
 
         });
     }
+
     private class RankingAdapter extends ArrayAdapter<String> {
 
         private final String[] players;
         private final Integer[] rankings;
-        private final String[] trophies;
+        private final Integer[] trophies;
         private final Bitmap[] drawings;
 
 
-        private RankingAdapter(Context context, String[] players, Integer[] rankings, Bitmap[] drawings) {
+        private RankingAdapter(Context context, String[] players, Integer[] rankings, Integer[] trophies, Bitmap[] drawings) {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
-            this.trophies =  new String[players.length];
-
-            int rank = 10;
-            int lastRank = 0;
-            for (int i = 0; i < rankings.length; i++) {
-                trophies[i] = String.valueOf(rank);
-                if (rankings[i] != lastRank) {
-                    rank -= 5;
-                }
-                lastRank = rankings[i];
-            }
-            this.drawings = null;
+            this.trophies = trophies;
+            this.drawings = drawings;
         }
 
         @NonNull
@@ -225,11 +227,11 @@ public class RankingFragment extends ListFragment {
             TextView ranking = convertView.findViewById(R.id.ranking);
             TextView trophies = convertView.findViewById(R.id.trophies);
 
-         //   pos.setText(String.format(Locale.getDefault(), "%d. ", position + 1));
             int pos = position;
 
+            // imageview.setImageBitmap(drawings[pos]);
             name.setText(players[pos]);
-            trophies.setText(this.trophies[pos]);
+            trophies.setText(Integer.toString(this.trophies[pos]));
             ranking.setText(Integer.toString((int) this.rankings[pos]));
 
             // Return the completed view to render on screen

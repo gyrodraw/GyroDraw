@@ -36,6 +36,7 @@
       android:id="@+id/drawing"
       android:layout_width="88dp"
       android:layout_height="88dp"
-      android:layout_weight="1" />
+      android:layout_weight="1"
+      app:srcCompat="@drawable/user1" />
 
 </LinearLayout>

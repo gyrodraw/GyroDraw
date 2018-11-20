@@ -266,12 +266,14 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void enableRatingBar(String playerName) {
-        final boolean isCurrentPlayer = playerName.equals(username);
+        if (playerName != null) {
+            final boolean isCurrentPlayer = playerName.equals(username);
 
-        // Enable the rating bar only if the image is not the player's one
-        ratingBar.setRating(0f);
-        ratingBar.setIsIndicator(isCurrentPlayer);
-        ratingBar.setAlpha(isCurrentPlayer ? 0.8f : 1f);
+            // Enable the rating bar only if the image is not the player's one
+            ratingBar.setRating(0f);
+            ratingBar.setIsIndicator(isCurrentPlayer);
+            ratingBar.setAlpha(isCurrentPlayer ? 0.8f : 1f);
+        }
     }
 
     private void setLayoutToVisible() {

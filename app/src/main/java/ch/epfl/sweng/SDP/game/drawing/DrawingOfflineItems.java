@@ -3,7 +3,6 @@ package ch.epfl.sweng.SDP.game.drawing;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -89,7 +88,8 @@ public class DrawingOfflineItems extends DrawingOffline {
             }
 
             public void onFinish() {
-                convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
+                convertAndAddItemToLayout(
+                        RandomItemGenerator.generateItem(paintView, displayedItems));
                 generateItems();
             }
         }.start();

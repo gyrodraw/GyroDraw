@@ -1,7 +1,11 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import android.widget.ImageView;
+
+import java.util.Map;
 import java.util.Random;
 
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
@@ -21,7 +25,7 @@ public class RandomItemGenerator {
      * Generates a random item at a random position.
      * @return the generated item
      */
-    public static Item generateItem(PaintView paintView) {
+    public static Item generateItem(PaintView paintView, Map<Item, ImageView> displayedItems) {
         Items item = Items.randomItem();
         int x = randomIntWithinBounds(paintView.getWidth());
         int y = randomIntWithinBounds(paintView.getHeight());
@@ -35,7 +39,7 @@ public class RandomItemGenerator {
             case ADDSTARS:
                 return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS);
             case BUMP:
-                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
+                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS, displayedItems);
 
             default:
                 throw new IllegalArgumentException("Unknown item type");

@@ -1,15 +1,24 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import android.widget.ImageView;
+
+import java.util.Map;
+
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 public class BumpingItem extends Item {
 
-    private BumpingItem(int x, int y, int radius) {
+    private Map<Item, ImageView> displayedItems;
+
+    private BumpingItem(int x, int y, int radius, Map<Item, ImageView> displayedItems) {
         super(x, y, radius);
+        this.displayedItems = displayedItems;
     }
 
-    public static BumpingItem createBumpingItem(int x, int y, int radius) {
-        return new BumpingItem(x, y, radius);
+    public static BumpingItem createBumpingItem(int x, int y, int radius,
+                                                Map<Item, ImageView> displayedItems) {
+        return new BumpingItem(x, y, radius, displayedItems);
     }
 
     /**
@@ -26,6 +35,7 @@ public class BumpingItem extends Item {
                 this.y - paintView.getCircleY())
                 < this.radius + paintView.getCircleRadius()) {
             activate(paintView);
+            displayedItems.get(this).setImageResource(R.drawable.bumping_item);
         }
         return false;
     }

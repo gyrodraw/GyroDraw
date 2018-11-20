@@ -36,15 +36,15 @@ public class PaintView extends View {
 
     private final Context context;
 
-    protected int circleX = 0;
-    protected int circleY = 0;
+    private int circleX = 0;
+    private int circleY = 0;
 
     private int width;
     private int height;
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
-    protected double speed;
+    private double speed;
 
     /**
      * Constructor for the view.

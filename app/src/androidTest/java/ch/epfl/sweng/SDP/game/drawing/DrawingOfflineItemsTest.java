@@ -106,7 +106,7 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() throws Throwable {
-        paintView.setCircle(201, 201);
+        paintView.setCircle(202, 202);
         activateItem(BumpingItem.createBumpingItem(200, 200, 10));
         double angle = Math.atan2(1, 1);
         int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));

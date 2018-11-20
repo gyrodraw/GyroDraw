@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -9,12 +10,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class DrawingOfflineItems extends DrawingOffline {
 
@@ -41,6 +42,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      * Gets called when sensor data changed. Updates the paintViews' circle coordinates
      * and checks if there are collisions with any displayed items.
      * If there is, the item gets activated and removed from the displayedItems.
+     *
      * @param coordinateX new X coordinate for paintView
      * @param coordinateY new Y coordinate for paintView
      */
@@ -50,7 +52,7 @@ public class DrawingOfflineItems extends DrawingOffline {
 
         Item collidingItem = findCollidingElement();
 
-        if(collidingItem != null) {
+        if (collidingItem != null) {
             collidingItem.activate(paintView);
             paintViewHolder.removeView(displayedItems.get(collidingItem));
             paintViewHolder.addView(itemTextFeedback(collidingItem));
@@ -60,11 +62,12 @@ public class DrawingOfflineItems extends DrawingOffline {
 
     /**
      * Checks if the paintViews' circle collided with an item.
+     *
      * @return item that collided, or null.
      */
     private Item findCollidingElement() {
-        for(Item item : displayedItems.keySet()) {
-            if(item.collision(paintView)) {
+        for (Item item : displayedItems.keySet()) {
+            if (item.collision(paintView)) {
                 return item;
             }
         }
@@ -96,23 +99,26 @@ public class DrawingOfflineItems extends DrawingOffline {
 
     /**
      * Converts an item into an ImageView to be displayed on the Activity.
+     *
      * @param item to be converted
      * @return ImageView of the item
      */
     private ImageView itemToImageView(Item item) {
-        ImageView view =  new ImageView(this);
-        view.setX(item.getX()-item.getRadius());
-        view.setY(item.getY()-item.getRadius());
+        ImageView view = new ImageView(this);
+        view.setX(item.getX() - item.getRadius());
+        view.setY(item.getY() - item.getRadius());
         view.setLayoutParams(new RelativeLayout.LayoutParams(
-                2*item.getRadius(),
-                2*item.getRadius()));
-        view.setBackgroundResource(R.drawable.mystery_box);
+                2 * item.getRadius(),
+                2 * item.getRadius()));
+        view.setImageResource(R.drawable.mystery_box);
+        view.setColorFilter(item.getColor(), PorterDuff.Mode.SRC_ATOP);
         return view;
     }
 
     /**
      * Creates a text feedback to inform the player which item
      * has been picked up.
+     *
      * @param item that was activated
      * @return feedback text
      */
@@ -123,7 +129,7 @@ public class DrawingOfflineItems extends DrawingOffline {
         new CountDownTimer(800, 40) {
 
             public void onTick(long millisUntilFinished) {
-                feedback.setTextSize(60-millisUntilFinished/15);
+                feedback.setTextSize(60 - millisUntilFinished / 15);
             }
 
             public void onFinish() {

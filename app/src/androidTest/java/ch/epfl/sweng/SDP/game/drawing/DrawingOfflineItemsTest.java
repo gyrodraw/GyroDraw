@@ -75,28 +75,25 @@ public class DrawingOfflineItemsTest {
     }
 
     @Test
-    public void testSpeedupItemSpeedsUpPaintView() throws Throwable {
-        double init = paintView.getSpeed();
-        activateItem(SpeedupItem.createSpeedupItem(20, 20, 10));
-        assertThat(paintView.getSpeed(), is(equalTo(init*2)));
+    public void testSpeedupItemSpeedsUpPaintView() {
+        checkItemHasCorrectBehaviourOnPaintView(
+                SpeedupItem.createSpeedupItem(20, 20, 10), 2);
     }
 
     @Test
-    public void testSlowdownItemSlowsDownPaintView() throws Throwable {
-        double initSpeed = paintView.getSpeed();
-        activateItem(SlowdownItem.createSlowdownItem(21, 21, 11));
-        assertThat(paintView.getSpeed(), is(equalTo(initSpeed/2)));
+    public void testSlowdownItemSlowsDownPaintView() {
+        checkItemHasCorrectBehaviourOnPaintView(
+                SlowdownItem.createSlowdownItem(20, 20, 10), .5);
     }
 
     @Test
-    public void testSwapAxisItemSwapsSpeedPaintView() throws Throwable {
-        double initSpeed = paintView.getSpeed();
-        activateItem(SwapAxisItem.createSwapAxisItem(22, 22, 12));
-        assertThat(paintView.getSpeed(), is(equalTo(-initSpeed)));
+    public void testSwapAxisItemSwapsSpeedPaintView() {
+        checkItemHasCorrectBehaviourOnPaintView(
+                SwapAxisItem.createSwapAxisItem(20, 20, 10), -1);
     }
 
     @Test
-    public void testAddStarsItemAddsStarsToAccount() throws Throwable {
+    public void testAddStarsItemAddsStarsToAccount() {
         int initStars = Account.getInstance(activityRule.getActivity()
                 .getApplicationContext()).getStars();
         activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
@@ -105,7 +102,7 @@ public class DrawingOfflineItemsTest {
     }
 
     @Test
-    public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() throws Throwable {
+    public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() {
         paintView.setCircle(202, 202);
         activateItem(BumpingItem.createBumpingItem(200, 200, 10));
         double angle = Math.atan2(1, 1);
@@ -115,13 +112,23 @@ public class DrawingOfflineItemsTest {
         assertThat(paintView.getCircleY(), is(equalTo(newY)));
     }
 
-    private void activateItem(final Item item) throws Throwable {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                item.activate(paintView);
-            }
-        });
+    private void checkItemHasCorrectBehaviourOnPaintView(Item item, double factor) {
+        double init = paintView.getSpeed();
+        activateItem(item);
+        assertThat(paintView.getSpeed(), is(equalTo(init*factor)));
+    }
+
+    private void activateItem(final Item item) {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    item.activate(paintView);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
 }

@@ -103,7 +103,9 @@ public class DrawingOfflineItems extends DrawingOffline {
         ImageView view =  new ImageView(this);
         view.setX(item.getX()-item.getRadius());
         view.setY(item.getY()-item.getRadius());
-        view.setLayoutParams(new RelativeLayout.LayoutParams(2*item.getRadius(), 2*item.getRadius()));
+        view.setLayoutParams(new RelativeLayout.LayoutParams(
+                2*item.getRadius(),
+                2*item.getRadius()));
         view.setBackgroundResource(R.drawable.mystery_box);
         return view;
     }

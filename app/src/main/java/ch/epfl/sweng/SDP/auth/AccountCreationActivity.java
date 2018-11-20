@@ -47,7 +47,7 @@ public class AccountCreationActivity extends BaseActivity {
      * Gets called when user entered username and clicked on create account.
      */
     public void createAccClicked(View view) {
-        final String username = usernameInput.getText().toString();
+        final String username = usernameInput.getText().toString().toUpperCase();
         if (username.isEmpty()) {
             usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
         } else {

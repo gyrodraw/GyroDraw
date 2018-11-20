@@ -127,9 +127,7 @@ public class VotingPageActivity extends BaseActivity {
         starsAnimation = findViewById(R.id.starsAnimation);
         ratingBar = findViewById(R.id.ratingBar);
 
-        if (!enableAnimations) {
-            setVisibility(View.GONE, R.id.starsAnimation);
-        } else {
+        if (enableAnimations) {
             Glide.with(getApplicationContext()).load(R.drawable.background_animation)
                     .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
             Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
@@ -278,8 +276,10 @@ public class VotingPageActivity extends BaseActivity {
 
     private void setLayoutToVisible() {
         setVisibility(View.GONE, findViewById(R.id.waitingAnimationDots));
-        setVisibility(View.VISIBLE, ratingBar, playerNameView,
-                drawingView, timer, starsAnimation);
+        setVisibility(View.VISIBLE, ratingBar, playerNameView, drawingView, timer);
+        if (enableAnimations) {
+            setVisibility(View.VISIBLE, starsAnimation);
+        }
     }
 
     private void addStarAnimationListener() {

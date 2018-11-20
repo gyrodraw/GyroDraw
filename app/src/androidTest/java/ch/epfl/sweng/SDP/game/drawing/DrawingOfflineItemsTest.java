@@ -101,7 +101,7 @@ public class DrawingOfflineItemsTest {
                 .getApplicationContext()).getStars();
         activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
         assertThat(Account.getInstance(activityRule.getActivity()
-                .getApplicationContext()).getStars(), is(equalTo(initStars+10)));
+                .getApplicationContext()).getStars(), is(equalTo(initStars+3)));
     }
 
     @Test

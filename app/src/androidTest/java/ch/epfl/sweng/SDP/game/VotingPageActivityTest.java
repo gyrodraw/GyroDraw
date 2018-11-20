@@ -88,8 +88,7 @@ public class VotingPageActivityTest {
         starsAnimation.addStars(1000);
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
-        int stars = starsAnimation.getNumStars();
-        assertThat(stars, is(previousStars + 5));
+        assertThat(starsAnimation.getNumStars(), is(previousStars + 5));
     }
 
     @Test

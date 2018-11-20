@@ -12,14 +12,11 @@ import android.util.Log;
 
 public class GyroDrawingActivity extends DrawingActivity implements SensorEventListener {
 
-    private int speed;
     private SensorManager sensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        speed = 5; //will be passed as variable in future, not hardcoded
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
@@ -69,13 +66,7 @@ public class GyroDrawingActivity extends DrawingActivity implements SensorEventL
      * @param coordinateY coordinate
      */
     public void updateValues(float coordinateX, float coordinateY) {
-        float tempX = paintView.getCircleX();
-        float tempY = paintView.getCircleY();
-
-        tempX -= coordinateX * speed;
-        tempY += coordinateY * speed;
-
-        paintView.setCircle((int) tempX, (int) tempY);
+        paintView.updateCoordinates(coordinateX, coordinateY);
     }
 
 

@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -80,6 +82,22 @@ public class HomeActivityTest {
     }
 
     @Test
+    public void testClickOnPracticeButtonOpensDrawingOffline() {
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.practiceButton)).perform(click());
+        intended(hasComponent(DrawingOffline.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testClickOnItemsButtonOpensDrawingOfflineItems() {
+        Intents.init();
+        onView(ViewMatchers.withId(R.id.itemsButton)).perform(click());
+        intended(hasComponent(DrawingOfflineItems.class.getName()));
+        Intents.release();
+    }
+
+    @Test
     public void testTrophiesButtonIsClickable() {
         onView(withId(R.id.trophiesButton)).check(matches(isClickable()));
     }
@@ -121,7 +139,7 @@ public class HomeActivityTest {
             .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Test
-    public void testCanOpenLoginActivity() {
+    public void testClickingOnBackButtonDoesNothing() {
         pressBack();
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 3000);

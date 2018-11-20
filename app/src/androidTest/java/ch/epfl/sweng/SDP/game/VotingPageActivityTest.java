@@ -1,12 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,18 +8,27 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.RatingBar;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -53,23 +55,12 @@ public class VotingPageActivityTest {
                 }
             };
 
-//    // Add a monitor for the home activity
-//    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-//            .addMonitor(HomeActivity.class.getName(), null, false);
-
     @Before
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
-        //Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
-    }
-
-    @After
-    public void freeResources() {
-        mActivityRule.getActivity().freeResources();
-        Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
     }
 
     @Test
@@ -131,6 +122,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void testShowDrawingImage() {
+        Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
         Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");

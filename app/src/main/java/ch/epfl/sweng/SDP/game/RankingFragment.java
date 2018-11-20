@@ -78,9 +78,14 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
+                String accountId = Account.getInstance(getActivity().getApplicationContext()).getUserId();
+
                 rankedUsernames = SortUtils.sortByValue(finalRanking);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
                         rankedUsernames.toArray(new String[rankedUsernames.size()]));
+
+                updateUserStats(dataSnapshot.child(accountId).getValue(Integer.class), 0);
+
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }
@@ -90,6 +95,15 @@ public class RankingFragment extends ListFragment {
                 throw databaseError.toException();
             }
         });
+    }
+
+    private void updateUserStats(int starIncrease, int trophiesIncrease) {
+        Account account = Account.getInstance(getActivity()
+                .getApplicationContext());
+        account.changeStars(starIncrease);
+        account.changeTrophies(trophiesIncrease);
+        account.changeAverageRating(starIncrease);
+        account.increaseTotalMatches();
     }
 
     private void setFinishedCollectingRanking() {

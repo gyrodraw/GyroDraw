@@ -23,7 +23,7 @@ admin.initializeApp();
 
 function checkUsersReady(path, snapshot) {
   if(snapshot.child("users").numChildren() === maxPlayers) {
-    if(snapshot.child("state").val() === StateEnum.Idle || 
+    if(snapshot.child("state").val() === StateEnum.Idle ||
       snapshot.child("state").val() === StateEnum.EndVoting) {
       admin.database().ref(path + "/state").set(StateEnum.ChoosingWordsCountdown);
     }
@@ -95,7 +95,7 @@ function functionTimer (seconds, state, roomID, call) {
       elapsedSeconds++;
     }
   }).catch(function(error) {
-    // log and rethrow 
+    // log and rethrow
     console.log(error);
     throw error;
   });
@@ -160,7 +160,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
       const playingVal = roomID.child("playing").val();
       roomsList.push(parseInt(roomID.key, 10));
 
-      // Check if the room is full, if the user already joined a room and if 
+      // Check if the room is full, if the user already joined a room and if
       // the game is not already playing
       if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
         && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true) {
@@ -247,6 +247,18 @@ function createRoomAndJoin(league, roomsList, username, id) {
   return roomID.toString();
 }
 
+function updateUserStats(starIncrease,trophieIncrease,uid) {
+
+  admin.database().ref('users').child(uid).transaction(function(user) {
+  if (user) {
+      user.stars += starIncrease;
+      user.trophies += trophieIncrease;
+    }
+  return user;
+});
+
+}
+
 function removeRoomData(roomID) {
   admin.database().ref(parentRoomID + roomID).child("users").remove();
   admin.database().ref(parentRoomID + roomID).child("ranking").remove();
@@ -257,7 +269,7 @@ function removeRoomData(roomID) {
 }
 
 function removeRoom(roomID) {
-  // Do not remove the testing room 
+  // Do not remove the testing room
   if(roomID !== "0123457890") {
     admin.database().ref(parentRoomID + roomID).remove();
   }
@@ -371,4 +383,3 @@ exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/
     }
   });
 });
-

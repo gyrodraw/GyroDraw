@@ -94,6 +94,8 @@ public class HomeActivity extends BaseActivity {
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         trophiesCount.setTypeface(typeMuro);
+        practiceButton.setTypeface(typeMuro);
+        itemsButton.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);

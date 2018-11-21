@@ -201,8 +201,6 @@ public class RankingFragment extends ListFragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
-
         });
     }
 

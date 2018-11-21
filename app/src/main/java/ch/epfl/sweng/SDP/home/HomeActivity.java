@@ -25,6 +25,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -127,7 +129,12 @@ public class HomeActivity extends BaseActivity {
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(itemsButton, getMainAmplitude(), getMainFrequency());
 
-        this.startRankingFragment();
+        // ArrayList<String> usernames = new ArrayList<String>();
+       // usernames.add("12");
+       // usernames.add("12");
+      // usernames.add("12");
+      //  this.addContentView(new GameResult(usernames,2,1,1,null,getApplicationContext()).toLayout(), null);
+      //  this.startRankingFragment();
     }
 
     // Launch the LeaguesActivity.

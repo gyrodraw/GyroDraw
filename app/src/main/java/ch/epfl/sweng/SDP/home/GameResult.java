@@ -99,7 +99,7 @@ public class GameResult {
     }
 
     public Bitmap getDrawing() {
-        return drawing.copy(Bitmap.Config.ARGB_8888, false);
+        return drawing == null ? null : drawing.copy(Bitmap.Config.ARGB_8888, false);
     }
 
     /**

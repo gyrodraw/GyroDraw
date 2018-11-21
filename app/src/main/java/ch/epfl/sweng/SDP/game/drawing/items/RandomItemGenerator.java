@@ -1,7 +1,11 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import android.widget.ImageView;
+
+import java.util.Map;
 import java.util.Random;
 
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;

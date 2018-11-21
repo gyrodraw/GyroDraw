@@ -25,10 +25,9 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
-import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.RankingFragment;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 import com.bumptech.glide.Glide;
@@ -55,24 +54,6 @@ public class HomeActivity extends BaseActivity {
      */
     public static void disableBackgroundAnimation() {
         enableBackgroundAnimation = false;
-    }
-
-
-    private void startRankingFragment() {
-        // Prepare a Bundle for passing the ranking array to the fragment
-        Bundle bundle = new Bundle();
-        bundle.putString("roomID", "24");
-
-        // Clear the UI; buttonChangeImage and rankingButton need
-        // to be removed after testing
-
-
-        // Create and show the final ranking in the new fragment
-        RankingFragment rankingFragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
-                RankingFragment.class.getName(), bundle);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.home, rankingFragment)
-                .addToBackStack(null).commit();
     }
 
     @Override

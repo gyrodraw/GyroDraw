@@ -47,7 +47,6 @@ public class RankingFragment extends ListFragment {
     private static final int RANK = 10;
     private String roomID;
 
-    private DatabaseReference currentUserRef;
     private DatabaseReference rankingRef;
     private DatabaseReference finishedRef;
 
@@ -78,7 +77,6 @@ public class RankingFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         String uid = Account.getInstance(getActivity().getApplicationContext()).getUserId();
-        currentUserRef = Database.INSTANCE.getReference("users" + "." + uid);
         rankingRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
         finishedRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
@@ -143,8 +141,8 @@ public class RankingFragment extends ListFragment {
 
                 // Start ranking fragment
 
-                List<String> rankingUsernames = SortUtils.sortByValue(finalRanking);
-                String[] tmpUserNames = rankingUsernames.toArray(new String[rankingUsernames.size()]);
+                List<String> usernames = SortUtils.sortByValue(finalRanking);
+                String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames
                         , rankings, trophies,drawings);
                 setListAdapter(adapter);
@@ -180,8 +178,8 @@ public class RankingFragment extends ListFragment {
         private final Bitmap[] drawings;
 
 
-        private RankingAdapter(Context context, String[] players, Integer[]
-                rankings, Integer[] trophies, Bitmap[] drawings) {
+        private RankingAdapter(Context context, String[] players, Integer[] rankings,
+                               Integer[] trophies, Bitmap[] drawings) {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
@@ -200,6 +198,7 @@ public class RankingFragment extends ListFragment {
             AssetManager assets = getActivity().getAssets();
             Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");
 
+            // Set user
             ImageView imageview = convertView.findViewById(R.id.drawing);
             TextView name = convertView.findViewById(R.id.playerName);
             name.setTypeface(typeMuro);
@@ -208,10 +207,8 @@ public class RankingFragment extends ListFragment {
             TextView trophiesText = convertView.findViewById(R.id.trophiesWon);
             trophiesText.setTypeface(typeMuro);
 
-            int pos = position;
-
             try {
-                imageview.setImageBitmap(drawings[getIndexForUserName(players[pos])]);
+                imageview.setImageBitmap(drawings[getIndexForUserName(players[position])]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -220,16 +217,16 @@ public class RankingFragment extends ListFragment {
             int darkColor = getResources().getColor(R.color.colorPrimaryDark);
 
             Account account = Account.getInstance(getActivity().getApplicationContext());
-            if (!players[pos].equals(account.getUsername())) {
+            if (!players[position].equals(account.getUsername())) {
                 name.setTextColor(yellowColor);
                 ranking.setTextColor(yellowColor);
                 trophiesText.setTextColor(yellowColor);
                 convertView.setBackgroundColor(darkColor);
             }
 
-            name.setText(players[pos]);
-            trophiesText.setText(Integer.toString(this.trophies[pos]));
-            ranking.setText(Integer.toString((int) this.rankings[pos]));
+            name.setText(players[position]);
+            trophiesText.setText(Integer.toString(this.trophies[position]));
+            ranking.setText(Integer.toString((int) this.rankings[position]));
 
             // Return the completed view to render on screen
             return convertView;

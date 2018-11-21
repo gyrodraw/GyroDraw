@@ -72,7 +72,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="80dp"
         android:layout_marginTop="80dp"
-        app:layout_constraintBottom_toTopOf="@+id/practiceButton"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starsButton"
@@ -122,35 +122,7 @@
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
 
     <ImageView
-        android:id="@+id/practiceButton"
-        android:layout_width="600dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="4dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/drawButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/home_practice_button"
-        tools:ignore="ContentDescription" />
 
-    <ImageView
-        android:id="@+id/itemsButton"
-        android:layout_width="600dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="52dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginStart="13dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/drawButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/home_practice_button"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
         android:id="@+id/drawButton"
         android:layout_width="500dp"
         android:layout_height="90dp"
@@ -162,6 +134,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/draw_button"
         tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/drawButton">
+
+        <Button
+            android:id="@+id/practiceButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:background="@color/colorPractice"
+            android:gravity="center"
+            android:text="@string/practice"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/itemsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@color/colorSpecial"
+            android:gravity="center"
+            android:text="@string/special"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/usernameButton"

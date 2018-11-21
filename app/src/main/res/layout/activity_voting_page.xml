@@ -1,98 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/votingPageLayout"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/votingPageLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/colorPrimaryDark"
+  tools:context=".game.VotingPageActivity">
+
+  <ImageView
+    android:id="@+id/votingBackgroundImage"
+    style="@style/BackGroundImageView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:context=".game.VotingPageActivity">
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:alpha="1.0"
+    app:srcCompat="@drawable/home_background"
+    tools:ignore="ContentDescription"/>
 
-    <ImageView
-        android:id="@+id/votingBackgroundImage"
-        style="@style/BackGroundImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:alpha="1.0"
-        app:srcCompat="@drawable/home_background"
-        tools:ignore="ContentDescription" />
+  <ImageView
+    android:id="@+id/votingBackgroundAnimation"
+    style="@style/BackGroundImageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:alpha="0.8"
+    app:srcCompat="@drawable/background_animation"
+    tools:ignore="ContentDescription"/>
 
-    <ImageView
-        android:id="@+id/votingBackgroundAnimation"
-        style="@style/BackGroundImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:alpha="0.8"
-        app:srcCompat="@drawable/background_animation"
-        tools:ignore="ContentDescription" />
+  <RatingBar
+    android:id="@+id/ratingBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:progressDrawable="@drawable/custom_rating_bar"
+    android:stepSize="1.0"
+    app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/playerNameView"/>
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:progressDrawable="@drawable/custom_rating_bar"
-        android:stepSize="1.0"
-        app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerNameView" />
+  <ImageView
+    android:id="@+id/drawing"
+    android:layout_width="339dp"
+    android:layout_height="450dp"
+    android:layout_marginTop="15dp"
+    android:contentDescription="@string/drawing"
+    android:scaleType="fitXY"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/timer"
+    app:srcCompat="@android:drawable/sym_def_app_icon"/>
 
-    <ImageView
-        android:id="@+id/drawing"
-        android:layout_width="339dp"
-        android:layout_height="450dp"
-        android:layout_marginTop="15dp"
-        android:contentDescription="@string/drawing"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timer"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+  <TextView
+    android:id="@+id/playerNameView"
+    android:textStyle="bold"
+    android:layout_width="wrap_content"
+    android:layout_height="31dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/user_name"
+    android:textColor="@color/colorDrawYellow"
+    android:textSize="25sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/drawing"/>
 
-    <TextView
-        android:id="@+id/playerNameView"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/user_name"
-        android:textColor="@color/colorDrawYellow"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drawing" />
+  <TextView
+    android:id="@+id/timer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:text="30"
+    android:textColor="@color/colorDrawYellow"
+    android:textSize="40sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="20"/>
 
-    <TextView
-        android:id="@+id/timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="20"
-        android:textColor="@color/colorDrawYellow"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="20" />
+  <ch.epfl.sweng.SDP.game.StarAnimationView
+    android:id="@+id/starsAnimation"
+    style="@style/BackGroundImageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"/>
 
-    <ch.epfl.sweng.SDP.game.StarAnimationView
-        android:id="@+id/starsAnimation"
-        style="@style/BackGroundImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true" />
-
-    <ImageView
-        android:id="@+id/waitingAnimationDots"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+  <ImageView
+    android:id="@+id/waitingAnimationDots"
+    android:layout_width="100dp"
+    android:layout_height="50dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="ContentDescription"/>
 
 </android.support.constraint.ConstraintLayout>

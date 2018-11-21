@@ -7,13 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.GameResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import ch.epfl.sweng.SDP.home.GameResult;
 
 public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
 
@@ -30,7 +29,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
      * Helper class to save game results in local database.
      */
     public LocalDbHandlerForGameResults(Context context, SQLiteDatabase.CursorFactory factory,
-                                        int dbVersion) {
+            int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
@@ -54,7 +53,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db         database to look in
+     * @param db database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -111,7 +110,6 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
 
         ArrayList<GameResult> recentResults = new ArrayList<>();
 
-
         if (cursor == null || !cursor.moveToFirst()) {
             return recentResults;
         }
@@ -122,10 +120,15 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
             int stars = cursor.getInt(3);
             int trophies = cursor.getInt(4);
             byte[] byteArray = cursor.getBlob(5);
-            Bitmap drawing = null;
-            // TODO: If byteArray == null replace by the default bitmap
+
+            Bitmap drawing;
+
             if (byteArray != null) {
                 drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            } else {
+                // Use default image
+                drawing = BitmapFactory
+                        .decodeResource(context.getResources(), R.drawable.default_image);
             }
 
             recentResults.add(

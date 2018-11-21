@@ -193,20 +193,8 @@ public class RankingFragment extends ListFragment {
     }
 
     private void setFinishedCollectingRanking() {
-        finishedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer value = dataSnapshot.getValue(Integer.class);
-                if (value != null) {
-                    finishedRef.setValue(++value);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        finishedRef.child(Account.getInstance(getActivity()
+                .getApplicationContext()).getUsername()).setValue(1);
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {
@@ -230,10 +218,8 @@ public class RankingFragment extends ListFragment {
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
             // Check if an existing view is being reused, otherwise inflate the view
-           // if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
+            convertView = LayoutInflater.from(getContext())
                         .inflate(R.layout.ranking_item, parent, false);
-           // }
 
             Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
 
@@ -255,10 +241,6 @@ public class RankingFragment extends ListFragment {
 
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);
             int darkColor = getResources().getColor(R.color.colorPrimaryDark);
-
-            System.out.println("CurrentUser:");
-            System.out.println(Account.getInstance(getActivity().getApplicationContext()).getUsername());
-            System.out.println(players[pos]);
 
             if (!players[pos].equals(Account.getInstance(getActivity().getApplicationContext()).getUsername())) {
                 name.setTextColor(yellowColor);

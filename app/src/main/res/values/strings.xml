@@ -39,4 +39,6 @@
     <string name="battle_log">Battle log</string>
     <string name="initial_waiting_timer">10</string>
     <string name="leave">Leave</string>
+    <string name="practice">PRACTICE !</string>
+    <string name="special">SPECIAL !</string>
 </resources>

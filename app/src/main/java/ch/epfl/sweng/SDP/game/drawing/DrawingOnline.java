@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static java.lang.String.format;
+
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -7,12 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -20,6 +16,14 @@ import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 public class DrawingOnline extends GyroDrawingActivity {
 
@@ -56,15 +60,29 @@ public class DrawingOnline extends GyroDrawingActivity {
             if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
-                    case START_VOTING_ACTIVITY:
-                        stop();
-                        isVotingActivityLaunched = true;
-                        timerRef.removeEventListener(listenerTimer);
-                        Intent intent = new Intent(getApplicationContext(),
-                                VotingPageActivity.class);
-                        Log.d(TAG, winningWord);
-                        intent.putExtra("RoomID", roomId);
-                        startActivity(intent);
+                    case WAITING_UPLOAD:
+                        uploadDrawing().addOnCompleteListener(
+                                new OnCompleteListener<TaskSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<TaskSnapshot> task) {
+                                        Database.constructBuilder().addChildren(
+                                                format("%s.%s.uploadDrawing.%s", TOP_ROOM_NODE_ID,
+                                                        roomId,
+                                                        Account.getInstance(getApplicationContext())
+                                                                .getUsername())).build()
+                                                .setValue(1);
+                                        Log.d(TAG, "Upload completed");
+
+                                        Log.d(TAG, winningWord);
+                                        isVotingActivityLaunched = true;
+                                        timerRef.removeEventListener(listenerTimer);
+
+                                        Intent intent = new Intent(getApplicationContext(),
+                                                VotingPageActivity.class);
+                                        intent.putExtra("RoomID", roomId);
+                                        startActivity(intent);
+                                    }
+                                });
                         break;
                     default:
                 }
@@ -94,8 +112,7 @@ public class DrawingOnline extends GyroDrawingActivity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
-        String path = TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime";
-        timerRef = Database.getReference(path);
+        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
@@ -124,21 +141,20 @@ public class DrawingOnline extends GyroDrawingActivity {
     // MARK: COUNTDOWN METHODS
 
     /**
-     * Gets called when time is over.
-     * Saves drawing in database and storage and calls new activity.
+     * Saves drawing in the local database and uploads it to Firebase Storage.
+     *
+     * @return the {@link StorageTask} in charge of the upload
      */
-    private void stop() {
+    private StorageTask<TaskSnapshot> uploadDrawing() {
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
         paintView.saveCanvasInDb(localDbHandler);
-        paintView.saveCanvasInStorage();
-        // add redirection here
+        return paintView.saveCanvasInStorage();
     }
 
     /**
      * Method that call onDataChange on the UI thread.
      *
-     * @param dataSnapshot Snapshot of the database (mock snapshot
-     *                     in out case).
+     * @param dataSnapshot Snapshot of the database (mock snapshot in out case).
      */
     @VisibleForTesting
     public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {

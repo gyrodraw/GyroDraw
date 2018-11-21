@@ -22,9 +22,12 @@ public class GameStatesUnitTest {
         assertThat(gameStates, is(GameStates.START_DRAWING_ACTIVITY));
 
         gameStates = GameStates.convertValueIntoState(3);
-        assertThat(gameStates, is(GameStates.START_VOTING_ACTIVITY));
+        assertThat(gameStates, is(GameStates.WAITING_UPLOAD));
 
         gameStates = GameStates.convertValueIntoState(4);
+        assertThat(gameStates, is(GameStates.START_VOTING_ACTIVITY));
+
+        gameStates = GameStates.convertValueIntoState(5);
         assertThat(gameStates, is(GameStates.END_VOTING_ACTIVITY));
     }
 }

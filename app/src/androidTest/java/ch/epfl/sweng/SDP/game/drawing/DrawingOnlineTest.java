@@ -1,33 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import com.google.firebase.database.DataSnapshot;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -38,6 +10,31 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.when;
+
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.os.SystemClock;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import com.google.firebase.database.DataSnapshot;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -107,7 +104,7 @@ public class DrawingOnlineTest {
         Intents.init();
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
         activityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
-
+        SystemClock.sleep(2000);
         intended(hasComponent(VotingPageActivity.class.getName()));
         Intents.release();
     }

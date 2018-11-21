@@ -339,7 +339,7 @@ public class AccountCreationActivityAndAccountTest {
     @Test
     public void testCreateAccountWithValidInput() {
         onView(withId(R.id.usernameInput))
-                .perform(typeText("Max Muster"), closeSoftKeyboard());
+                .perform(typeText("PICASSO"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
         assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
     }

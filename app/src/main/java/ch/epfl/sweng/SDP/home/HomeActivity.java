@@ -32,6 +32,7 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -73,8 +74,10 @@ public class HomeActivity extends BaseActivity {
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final ImageView practiceButton = findViewById(R.id.practiceButton);
+        final ImageView itemsButton = findViewById(R.id.itemsButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
+        final ImageView battleLogButton = findViewById(R.id.battleLogButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
@@ -96,11 +99,13 @@ public class HomeActivity extends BaseActivity {
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
+        setListener(battleLogButton, getMainAmplitude(), getMainFrequency());
         setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
         setListener(starsButton, getMainAmplitude(), getMainFrequency());
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
+        setListener(itemsButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -177,6 +182,9 @@ public class HomeActivity extends BaseActivity {
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
                 break;
+            case R.id.battleLogButton:
+                launchActivity(BattleLogActivity.class);
+                break;
             case R.id.leagueImage:
                 showLeagues();
                 break;
@@ -191,6 +199,9 @@ public class HomeActivity extends BaseActivity {
                 break;
             case R.id.practiceButton:
                 launchActivity(DrawingOffline.class);
+                break;
+            case R.id.itemsButton:
+                launchActivity(DrawingOfflineItems.class);
                 break;
             default:
         }

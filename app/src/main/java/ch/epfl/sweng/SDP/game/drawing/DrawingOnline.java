@@ -7,6 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -14,15 +20,9 @@ import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 public class DrawingOnline extends GyroDrawingActivity {
 
-    private int time;
-    private int timeInterval;
     private String winningWord;
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -55,7 +55,7 @@ public class DrawingOnline extends GyroDrawingActivity {
             Integer state = dataSnapshot.getValue(Integer.class);
             if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
-                switch(stateEnum) {
+                switch (stateEnum) {
                     case START_VOTING_ACTIVITY:
                         stop();
                         isVotingActivityLaunched = true;
@@ -91,9 +91,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         roomId = intent.getStringExtra("RoomID");
         winningWord = intent.getStringExtra("WinningWord");
 
-        time = 60000; //will be passed as variable in future, not hardcoded
-        timeInterval = 1000;  //will be passed as variable in future, not hardcoded
-
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
@@ -124,7 +121,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         stateRef.removeEventListener(listenerState);
     }
 
-
     // MARK: COUNTDOWN METHODS
 
     /**
@@ -137,7 +133,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         paintView.saveCanvasInStorage();
         // add redirection here
     }
-
 
     /**
      * Method that call onDataChange on the UI thread.
@@ -154,6 +149,4 @@ public class DrawingOnline extends GyroDrawingActivity {
             }
         });
     }
-
-
 }

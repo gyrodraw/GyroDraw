@@ -1,9 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
-import static java.lang.String.format;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,23 +9,28 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.Collections;
 import java.util.LinkedList;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.utils.AnimUtils;
+
+import static java.lang.String.format;
 
 public class LeaderboardActivity extends Activity {
 
@@ -53,9 +54,10 @@ public class LeaderboardActivity extends Activity {
 
         EditText searchField = findViewById(R.id.searchField);
 
-        ((TextView) findViewById(R.id.exitButton)).setTypeface(typeMuro);
+        TextView exitButton = findViewById(R.id.exitButton);
+        AnimUtils.setExitListener(exitButton, this);
+        exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
-        setExitListener();
 
         leaderboard = new Leaderboard();
 
@@ -73,31 +75,6 @@ public class LeaderboardActivity extends Activity {
             @Override
             public void afterTextChanged(Editable query) {
                 leaderboard.update(query.toString());
-            }
-        });
-    }
-
-    /**
-     * Sets listener and animation for exit button.
-     */
-    private void setExitListener() {
-        final TextView exit = findViewById(R.id.exitButton);
-        final Context context = this;
-        exit.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(exit, context);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, HomeActivity.MAIN_AMPLITUDE,
-                                HomeActivity.MAIN_FREQUENCY, context);
-                        launchActivity(HomeActivity.class);
-                        break;
-                    default:
-                }
-                return true;
             }
         });
     }
@@ -137,7 +114,7 @@ public class LeaderboardActivity extends Activity {
          * Converts this player into a LinearLayout that will be displayed in the leaderboard.
          *
          * @param context of the app
-         * @param index of the player
+         * @param index   of the player
          * @return LinearLayout that will be displayed
          */
         @SuppressLint("NewApi")
@@ -167,7 +144,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         private LinearLayout addViews(LinearLayout layout, TextView usernameView,
-                TextView trophiesView, ImageView addFriends) {
+                                      TextView trophiesView, ImageView addFriends) {
             layout.addView(usernameView);
             layout.addView(trophiesView);
             layout.addView(addFriends);
@@ -176,7 +153,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         private void styleView(TextView view, String text, int color,
-                LinearLayout.LayoutParams layoutParams) {
+                               LinearLayout.LayoutParams layoutParams) {
             view.setText(text);
             view.setTextSize(25);
             view.setTextColor(color);
@@ -325,7 +302,7 @@ public class LeaderboardActivity extends Activity {
             Database.constructBuilder().addChildren(
                     format("users.%s.friends.%s", player.userId,
                             Account.getInstance(context).getUserId())).build()
-                                .addListenerForSingleValueEvent(listener);
+                    .addListenerForSingleValueEvent(listener);
         }
 
         /**

@@ -21,6 +21,7 @@ public class PaintView extends View {
 
     private static final int DRAW_WIDTH = 30;
     private static final int QUALITY = 20;
+    private static final double INIT_SPEED = 5;
 
     private boolean canDraw = true;
     private boolean isDrawing = false;
@@ -43,6 +44,7 @@ public class PaintView extends View {
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
+    private double speed;
 
     /**
      * Constructor for the view.
@@ -67,6 +69,7 @@ public class PaintView extends View {
         paintC.setStrokeWidth(DRAW_WIDTH / 2);
 
         circleRadius = DRAW_WIDTH;
+        speed = INIT_SPEED;
     }
 
     private Paint getPaintWithColor(int color) {
@@ -109,8 +112,32 @@ public class PaintView extends View {
         return circleRadius;
     }
 
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void multSpeed(double factor) {
+        speed *= factor;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
+    }
+
+    /**
+     * Sets the x and y coordinates of the painting circle.
+     * @param x coordinate
+     * @param y coordinate
+     */
+    public void updateCoordinates(float x, float y) {
+        circleX -= x * speed;
+        circleY += y * speed;
+
+        setCircle(circleX, circleY);
     }
 
     /**

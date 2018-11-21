@@ -1,15 +1,15 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-
 import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.util.HashMap;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -20,15 +20,8 @@ import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
 
-import java.util.HashMap;
-
-import static org.hamcrest.CoreMatchers.equalTo;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.CoreMatchers.is;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -36,8 +29,8 @@ import static org.junit.Assert.assertTrue;
 
 public class DrawingOfflineItemsTest {
 
-    RelativeLayout paintViewHolder;
-    PaintView paintView;
+    private RelativeLayout paintViewHolder;
+    private PaintView paintView;
 
     @Rule
     public final ActivityTestRule<DrawingOfflineItems> activityRule =

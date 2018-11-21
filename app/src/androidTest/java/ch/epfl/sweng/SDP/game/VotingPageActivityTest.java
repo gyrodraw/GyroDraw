@@ -128,16 +128,6 @@ public class VotingPageActivityTest {
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
     }
 
-    @Test
-    public void testChangeImage() {
-        short counter = mActivityRule.getActivity().getChangeDrawingCounter();
-        SystemClock.sleep(1000);
-        mActivityRule.getActivity().callChangeImage();
-        SystemClock.sleep(2000);
-
-        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(), is(counter + 1));
-    }
-
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerState() {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));

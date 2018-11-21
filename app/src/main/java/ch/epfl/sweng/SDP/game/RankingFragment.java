@@ -76,7 +76,6 @@ public class RankingFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String uid = Account.getInstance(getActivity().getApplicationContext()).getUserId();
         rankingRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
         finishedRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
@@ -139,8 +138,6 @@ public class RankingFragment extends ListFragment {
 
                 updateUserStats(rankingForUser, trophiesForUser);
 
-                // Start ranking fragment
-
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames
@@ -178,8 +175,7 @@ public class RankingFragment extends ListFragment {
         private final Bitmap[] drawings;
 
 
-        private RankingAdapter(Context context, String[] players, Integer[] rankings,
-                               Integer[] trophies, Bitmap[] drawings) {
+        private RankingAdapter(Context context, String[] players, Integer[] rankings, Integer[] trophies, Bitmap[] drawings) {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
@@ -198,7 +194,7 @@ public class RankingFragment extends ListFragment {
             AssetManager assets = getActivity().getAssets();
             Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");
 
-            // Set user
+            // Set the font
             ImageView imageview = convertView.findViewById(R.id.drawing);
             TextView name = convertView.findViewById(R.id.playerName);
             name.setTypeface(typeMuro);
@@ -216,6 +212,7 @@ public class RankingFragment extends ListFragment {
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);
             int darkColor = getResources().getColor(R.color.colorPrimaryDark);
 
+            // Set the color
             Account account = Account.getInstance(getActivity().getApplicationContext());
             if (!players[position].equals(account.getUsername())) {
                 name.setTextColor(yellowColor);
@@ -224,6 +221,7 @@ public class RankingFragment extends ListFragment {
                 convertView.setBackgroundColor(darkColor);
             }
 
+            // set the texts
             name.setText(players[position]);
             trophiesText.setText(Integer.toString(this.trophies[position]));
             ranking.setText(Integer.toString((int) this.rankings[position]));

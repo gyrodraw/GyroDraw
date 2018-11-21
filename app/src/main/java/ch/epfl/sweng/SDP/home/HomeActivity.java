@@ -72,8 +72,8 @@ public class HomeActivity extends BaseActivity {
         localDb.retrieveAccount(Account.getInstance(this));
 
         final ImageView drawButton = findViewById(R.id.drawButton);
-        final ImageView practiceButton = findViewById(R.id.practiceButton);
-        final ImageView itemsButton = findViewById(R.id.itemsButton);
+        final Button practiceButton = findViewById(R.id.practiceButton);
+        final Button itemsButton = findViewById(R.id.itemsButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
@@ -94,6 +94,8 @@ public class HomeActivity extends BaseActivity {
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         trophiesCount.setTypeface(typeMuro);
+        practiceButton.setTypeface(typeMuro);
+        itemsButton.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);

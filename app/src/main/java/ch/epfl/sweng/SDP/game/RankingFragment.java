@@ -15,15 +15,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.utils.SortUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.utils.SortUtils;
 
 
 /**
@@ -73,7 +73,7 @@ public class RankingFragment extends ListFragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 finalRanking = new HashMap<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(ds.getValue(Integer.class) != null && ds.getKey() != null) {
+                    if (ds.getValue(Integer.class) != null && ds.getKey() != null) {
                         finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
                     }
                 }

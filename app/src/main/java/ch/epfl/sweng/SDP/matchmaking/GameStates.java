@@ -1,17 +1,18 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
 public enum GameStates {
-    HOMESTATE, CHOOSE_WORDS_TIMER_START, START_DRAWING_ACTIVITY,
+    HOMESTATE, CHOOSE_WORDS_TIMER_START, START_DRAWING_ACTIVITY, WAITING_UPLOAD,
     START_VOTING_ACTIVITY, END_VOTING_ACTIVITY;
 
     /**
      * Convert the an integer value into its corresponding GameStates.
+     *
      * @param value Integer value to be converted
      * @return Returns the game state
      */
     public static GameStates convertValueIntoState(int value) {
         GameStates state;
-        switch(value) {
+        switch (value) {
             case 0:
                 state = HOMESTATE;
                 break;
@@ -22,9 +23,12 @@ public enum GameStates {
                 state = START_DRAWING_ACTIVITY;
                 break;
             case 3:
-                state = START_VOTING_ACTIVITY;
+                state = WAITING_UPLOAD;
                 break;
             case 4:
+                state = START_VOTING_ACTIVITY;
+                break;
+            case 5:
                 state = END_VOTING_ACTIVITY;
                 break;
             default:

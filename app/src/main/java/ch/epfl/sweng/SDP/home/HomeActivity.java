@@ -20,13 +20,6 @@ import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import java.util.ArrayList;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -37,6 +30,13 @@ import ch.epfl.sweng.SDP.game.RankingFragment;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends BaseActivity {
 

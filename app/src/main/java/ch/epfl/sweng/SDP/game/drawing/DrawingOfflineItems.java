@@ -126,7 +126,7 @@ public class DrawingOfflineItems extends DrawingOffline {
     }
 
     private int getRandomByte() {
-        return random.nextInt(100) + 155;
+        return random.nextInt(155) + 100;
     }
 
     /**

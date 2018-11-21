@@ -25,7 +25,7 @@ public class RandomItemGenerator {
      * Generates a random item at a random position.
      * @return the generated item
      */
-    public static Item generateItem(PaintView paintView, Map<Item, ImageView> displayedItems) {
+    public static Item generateItem(PaintView paintView) {
         Items item = Items.randomItem();
         int x = randomIntWithinBounds(paintView.getWidth());
         int y = randomIntWithinBounds(paintView.getHeight());
@@ -39,7 +39,7 @@ public class RandomItemGenerator {
             case ADDSTARS:
                 return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS);
             case BUMP:
-                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS, displayedItems);
+                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
 
             default:
                 throw new IllegalArgumentException("Unknown item type");

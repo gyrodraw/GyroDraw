@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
 
@@ -88,8 +89,7 @@ public class DrawingOfflineItems extends DrawingOffline {
             }
 
             public void onFinish() {
-                convertAndAddItemToLayout(
-                        RandomItemGenerator.generateItem(paintView, displayedItems));
+                convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
                 generateItems();
             }
         }.start();
@@ -119,6 +119,9 @@ public class DrawingOfflineItems extends DrawingOffline {
         int color = Color.rgb(getRandomByte(), getRandomByte(), getRandomByte());
         view.setColorFilter(new LightingColorFilter(Color.WHITE, color));
 
+        if (item instanceof BumpingItem) {
+            ((BumpingItem) item).setImageView(view);
+        }
         return view;
     }
 

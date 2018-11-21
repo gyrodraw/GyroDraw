@@ -1,6 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -87,6 +89,16 @@ public class BattleLogActivityTest {
         onView(withId(R.id.exitButton)).perform(click());
         onView(withId(R.id.battleLogButton)).perform(click());
         assertTrue(activityRule.getActivity().getGameResultsCount() >= 1);
+    }
+
+    @Test
+    public void testNullBitmapToDatabase() {
+        localDbHandler.addGameResultToDb(new GameResult(
+                rankedUsernames, RANK, STARS, TROPHIES, null, activityRule.getActivity()));
+        Activity activity = activityRule.getActivity();
+        GameResult newGameResult = localDbHandler.getGameResultsFromDb(activity).get(0);
+        assertTrue(newGameResult.getDrawing().sameAs(
+                BitmapFactory.decodeResource(activity.getResources(), R.drawable.default_image)));
     }
 
     private static List<String> getUsernameList() {

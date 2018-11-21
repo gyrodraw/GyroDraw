@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.graphics.Color;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -8,6 +11,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
@@ -25,6 +29,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -112,6 +117,23 @@ public class DrawingOfflineItemsTest {
         assertThat(paintView.getCircleY(), is(newY));
     }
 
+    @Test
+    public void testBumpingItemChangesItsDrawable() {
+        paintView.setCircle(200, 200);
+        BumpingItem item = BumpingItem.createBumpingItem(200, 200, 10);
+        ImageView view = new ImageView(activityRule.getActivity());
+        view.setX(item.getX() - item.getRadius());
+        view.setY(item.getY() - item.getRadius());
+        view.setLayoutParams(new RelativeLayout.LayoutParams(
+                2 * item.getRadius(),
+                2 * item.getRadius()));
+        view.setImageResource(R.drawable.mystery_box);
+        item.setImageView(view);
+        collisionItem(item);
+        assertThat(item.getImageView().getDrawable(),
+                is(not(activityRule.getActivity().getDrawable(R.drawable.mystery_box))));
+    }
+
     private void checkItemHasCorrectBehaviourOnPaintView(Item item, double factor) {
         double init = paintView.getSpeed();
         activateItem(item);
@@ -131,4 +153,16 @@ public class DrawingOfflineItemsTest {
         }
     }
 
+    private void collisionItem(final Item item) {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    item.collision(paintView);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
 }

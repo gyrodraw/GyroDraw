@@ -53,13 +53,12 @@
 
     <ImageView
         android:id="@+id/starsButton"
-        android:layout_width="500dp"
+        android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginTop="10dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trophiesButton"
         app:srcCompat="@drawable/home_stars_button"
@@ -204,15 +203,16 @@
         android:id="@+id/starsCount"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:drawablePadding="8dp"
+        android:drawableRight="@drawable/star"
+        android:drawableEnd="@drawable/star"
         android:gravity="center"
-        android:includeFontPadding="false"
         android:text="@string/zero"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="45sp"
+        android:textColor="@color/colorGreenStar"
+        android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="@+id/starsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/starsButton" />
-
 </android.support.constraint.ConstraintLayout>

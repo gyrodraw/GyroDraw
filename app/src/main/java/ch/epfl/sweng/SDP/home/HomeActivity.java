@@ -34,6 +34,7 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.utils.AnimUtils.AnimMode;
 
 public class HomeActivity extends BaseActivity {
 
@@ -150,17 +151,19 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 int id = view.getId();
+                AnimMode animMode = (id == R.id.starsButton) || (id == R.id.trophiesButton)
+                        ? AnimMode.LEFT : AnimMode.CENTER;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (id == R.id.drawButton) {
                             ((ImageView) view)
                                     .setImageResource(R.drawable.draw_button_pressed);
                         }
-                        pressButton(view, context);
+                        pressButton(view, animMode, context);
                         break;
                     case MotionEvent.ACTION_UP:
                         listenerEventSelector(view, id);
-                        bounceButton(view, amplitude, frequency, context);
+                        bounceButton(view, amplitude, frequency, animMode, context);
                         break;
                     default:
                 }

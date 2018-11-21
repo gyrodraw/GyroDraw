@@ -128,7 +128,7 @@ public class VotingPageActivityTest {
     @Test
     public void testShowDrawingImage() {
         Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
-        Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
+        Bitmap image = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
     }
@@ -158,8 +158,7 @@ public class VotingPageActivityTest {
     @Test
     public void testDecodeSampledBitmapFromResource() {
         Bitmap bitmap = BitmapManipulator.decodeSampledBitmapFromResource(
-                mActivityRule.getActivity().getResources(), R.drawable.default_image,
-                20, 20);
+                mActivityRule.getActivity().getResources(), R.drawable.default_image, 2, 2);
         assertNotNull(bitmap);
     }
 

@@ -96,9 +96,12 @@ public class BattleLogActivityTest {
         localDbHandler.addGameResultToDb(new GameResult(
                 rankedUsernames, RANK, STARS, TROPHIES, null, activityRule.getActivity()));
         Activity activity = activityRule.getActivity();
-        GameResult newGameResult = localDbHandler.getGameResultsFromDb(activity).get(0);
-        assertTrue(newGameResult.getDrawing().sameAs(
-                BitmapFactory.decodeResource(activity.getResources(), R.drawable.default_image)));
+        Bitmap drawing = localDbHandler.getGameResultsFromDb(activity).get(0).getDrawing();
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                drawing.getPixel(i, j);
+            }
+        }
     }
 
     private static List<String> getUsernameList() {

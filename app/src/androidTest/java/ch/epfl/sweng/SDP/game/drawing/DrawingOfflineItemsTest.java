@@ -63,16 +63,6 @@ public class DrawingOfflineItemsTest {
     }
 
     @Test
-    public void testItemsGetRemovedAfterCollision() {
-        SystemClock.sleep(10000);
-        Item item = (Item)activityRule.getActivity().getDisplayedItems()
-                .keySet().toArray()[0];
-        paintView.setCircle(item.getX(), item.getY());
-        SystemClock.sleep(1000);
-        assertFalse(activityRule.getActivity().getDisplayedItems().containsKey(item));
-    }
-
-    @Test
     public void testSpeedupItemSpeedsUpPaintView() {
         checkItemHasCorrectBehaviourOnPaintView(
                 SpeedupItem.createSpeedupItem(20, 20, 10), 2);

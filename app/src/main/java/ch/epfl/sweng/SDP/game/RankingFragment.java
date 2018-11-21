@@ -76,8 +76,8 @@ public class RankingFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        rankingRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
-        finishedRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
         Button button = getActivity().findViewById(R.id.button);
         button.setTypeface(typeMuro);

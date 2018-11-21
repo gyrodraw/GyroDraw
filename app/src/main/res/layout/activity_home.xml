@@ -39,13 +39,12 @@
 
     <ImageView
         android:id="@+id/trophiesButton"
-        android:layout_width="500dp"
+        android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginTop="40dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/home_trophies_button"
@@ -79,7 +78,21 @@
 
     <ImageView
         android:id="@+id/leaderboardButton"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="@+id/homeBackgroundAnimation"
+        app:layout_constraintTop_toBottomOf="@+id/starsButton"
+        app:srcCompat="@drawable/leaderboard_button"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/battleLogButton"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
@@ -88,20 +101,6 @@
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starsButton"
-        app:srcCompat="@drawable/leaderboard_button"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
-        android:id="@+id/battleLogButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leaderboardButton"
         app:srcCompat="@drawable/battle_log_button"
         tools:ignore="ContentDescription" />
 
@@ -188,13 +187,15 @@
         android:id="@+id/trophiesCount"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:drawableEnd="@drawable/trophy"
+        android:drawablePadding="8dp"
+        android:drawableRight="@drawable/trophy"
         android:gravity="center"
-        android:includeFontPadding="false"
         android:text="@string/zero"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="45sp"
+        android:textColor="@color/colorBlueTrophy"
+        android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="@+id/trophiesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/trophiesButton" />
@@ -205,9 +206,9 @@
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:drawableEnd="@drawable/star"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/star"
-        android:drawableEnd="@drawable/star"
         android:gravity="center"
         android:text="@string/zero"
         android:textColor="@color/colorGreenStar"

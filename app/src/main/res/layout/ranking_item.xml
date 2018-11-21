@@ -1,69 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/relativeLayout">
-
+    android:layout_height="wrap_content"
+    android:background="@color/colorDrawYellow">
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="5dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginStart="16dp"
+      android:layout_weight="4"
+      android:orientation="vertical">
+    <TextView
+        android:id="@+id/playerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:text="1. Spectr0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorPrimaryDark" />
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp">
+      <TextView
+          android:id="@+id/starsWon"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center_vertical|start"
+          android:text="+32"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          android:textColor="@color/colorPrimaryDark" />
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          app:srcCompat="@drawable/star" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp">
+      <TextView
+          android:id="@+id/trophiesWon"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center_vertical|start"
+          android:text="+5"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          android:textColor="@color/colorPrimaryDark" />
+      <ImageView
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          app:srcCompat="@drawable/trophy" />
+    </LinearLayout>
+  </LinearLayout>
   <ImageView
-      android:id="@+id/imageView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      app:layout_constraintBottom_toTopOf="@+id/imageView3"
-      app:layout_constraintStart_toStartOf="@+id/playerName"
-      app:srcCompat="@drawable/star" />
-
-  <ImageView
-      android:id="@+id/imageView3"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      app:layout_constraintStart_toStartOf="@+id/imageView"
-      app:srcCompat="@drawable/trophy"
-      tools:layout_editor_absoluteY="85dp" />
-
-  <TextView
-      android:id="@+id/playerName"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginLeft="30dp"
-      android:layout_marginStart="30dp"
-      android:layout_marginTop="8dp"
-      android:text="playerName"
-      app:layout_constraintBottom_toTopOf="@+id/imageView"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-
-  <ImageView
-      android:id="@+id/imageView4"
-      android:layout_width="78dp"
-      android:layout_height="86dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginRight="8dp"
-      android:layout_marginTop="30dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:srcCompat="@drawable/add_friend" />
-
-  <TextView
-      android:id="@+id/trophies"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="8dp"
-      android:layout_marginStart="8dp"
-      android:text="TextView"
-      app:layout_constraintStart_toEndOf="@+id/imageView3"
-      tools:layout_editor_absoluteY="97dp" />
-
-  <TextView
-      android:id="@+id/ranking"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="8dp"
-      android:layout_marginStart="8dp"
-      android:text="TextView"
-      app:layout_constraintStart_toEndOf="@+id/imageView"
-      tools:layout_editor_absoluteY="48dp" />
-</android.support.constraint.ConstraintLayout>
+      android:id="@+id/drawing"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_marginEnd="20dp"
+      android:layout_marginRight="20dp"
+      android:layout_weight="1"
+      app:srcCompat="@drawable/battle_log_button" />
+</LinearLayout> 

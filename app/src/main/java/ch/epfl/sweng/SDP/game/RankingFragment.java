@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -125,10 +126,10 @@ public class RankingFragment extends ListFragment {
                     if (rankingForUser == rankings[i]) {
                         trophiesForUser = rank;
                     }
-                    trophies[i] = rank;
                     if (rankings[i] != lastRank) {
                         rank -= 5;
                     }
+                    trophies[i] = rank+5;
                     lastRank = rankings[i];
                 }
 
@@ -225,15 +226,20 @@ public class RankingFragment extends ListFragment {
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
             // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
+           // if (convertView == null) {
                 convertView = LayoutInflater.from(getContext())
                         .inflate(R.layout.ranking_item, parent, false);
-            }
+           // }
+
+            Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
 
             ImageView imageview = convertView.findViewById(R.id.drawing);
             TextView name = convertView.findViewById(R.id.playerName);
-            TextView ranking = convertView.findViewById(R.id.ranking);
-            TextView trophies = convertView.findViewById(R.id.trophies);
+            name.setTypeface(typeMuro);
+            TextView ranking = convertView.findViewById(R.id.starsWon);
+            ranking.setTypeface(typeMuro);
+            TextView trophies = convertView.findViewById(R.id.trophiesWon);
+            trophies.setTypeface(typeMuro);
 
             int pos = position;
 
@@ -241,6 +247,20 @@ public class RankingFragment extends ListFragment {
                 imageview.setImageBitmap(drawings[getIndexForUserName(players[pos])]);
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+            int yellowColor = getResources().getColor(R.color.colorDrawYellow);
+            int darkColor = getResources().getColor(R.color.colorPrimaryDark);
+
+            System.out.println("CurrentUser:");
+            System.out.println(Account.getInstance(getActivity().getApplicationContext()).getUsername());
+            System.out.println(players[pos]);
+
+            if (!players[pos].equals(Account.getInstance(getActivity().getApplicationContext()).getUsername())) {
+                name.setTextColor(yellowColor);
+                ranking.setTextColor(yellowColor);
+                trophies.setTextColor(yellowColor);
+                convertView.setBackgroundColor(darkColor);
             }
 
             name.setText(players[pos]);

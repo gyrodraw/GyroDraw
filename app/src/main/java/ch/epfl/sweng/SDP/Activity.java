@@ -83,7 +83,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("stars")).intValue(),
                         ((Long) user.get("matchesWon")).intValue(),
                         ((Long) user.get("totalMatches")).intValue(),
-                        ((Long) user.get("averageRating")).doubleValue(),
+                        ((Double) user.get("averageRating")).doubleValue(),
                         ((Long) user.get("maxTrophies")).intValue());
 
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(

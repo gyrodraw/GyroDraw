@@ -140,8 +140,7 @@ public class RankingFragment extends ListFragment {
 
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
-                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames
-                        , rankings, trophies,drawings);
+                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames, rankings, trophies,drawings);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }
@@ -175,7 +174,8 @@ public class RankingFragment extends ListFragment {
         private final Bitmap[] drawings;
 
 
-        private RankingAdapter(Context context, String[] players, Integer[] rankings, Integer[] trophies, Bitmap[] drawings) {
+        private RankingAdapter(Context context, String[] players, Integer[] rankings,
+                               Integer[] trophies, Bitmap[] drawings) {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;

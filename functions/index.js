@@ -250,12 +250,12 @@ function createRoomAndJoin(league, roomsList, username, id) {
 function updateUserStats(starIncrease,trophieIncrease,uid) {
 
   admin.database().ref('users').child(uid).transaction(function(user) {
-  if (user) {
+    if (user) {
       user.stars += starIncrease;
       user.trophies += trophieIncrease;
     }
-  return user;
-});
+    return user;
+  });
 
 }
 

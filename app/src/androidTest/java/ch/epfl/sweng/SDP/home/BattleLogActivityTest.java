@@ -37,7 +37,7 @@ public class BattleLogActivityTest {
     private static final int RANK = 2;
     private static final int STARS = 15;
     private static final int TROPHIES = -5;
-    private static final Bitmap DRAWING = initializedBitmap();
+    private final Bitmap DRAWING = initializedBitmap();
 
     private GameResult gameResult;
     private LocalDbHandlerForGameResults localDbHandler;

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,6 +79,9 @@ public class RankingFragment extends ListFragment {
         currentUserRef = Database.INSTANCE.getReference("users" + "." + Account.getInstance(getActivity().getApplicationContext()).getUserId());
         rankingRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
         finishedRef = Database.INSTANCE.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+        Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
+        Button button = getActivity().findViewById(R.id.button);
+        button.setTypeface(typeMuro);
 
         retrieveFinalRanking();
     }
@@ -139,7 +143,7 @@ public class RankingFragment extends ListFragment {
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
                         rankingUsernames.toArray(new String[rankingUsernames.size()]), rankings, trophies,drawings);
                 setListAdapter(adapter);
-              //  setFinishedCollectingRanking();
+                setFinishedCollectingRanking();
             }
 
             @Override

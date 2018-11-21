@@ -61,7 +61,7 @@ public class HomeActivity extends BaseActivity {
     private void startRankingFragment() {
         // Prepare a Bundle for passing the ranking array to the fragment
         Bundle bundle = new Bundle();
-        bundle.putString("roomID", "18");
+        bundle.putString("roomID", "24");
 
         // Clear the UI; buttonChangeImage and rankingButton need
         // to be removed after testing
@@ -129,7 +129,6 @@ public class HomeActivity extends BaseActivity {
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(itemsButton, getMainAmplitude(), getMainFrequency());
 
-        // gthis.startRankingFragment();
     }
 
     // Launch the LeaguesActivity.

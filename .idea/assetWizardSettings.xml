@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/home/vescovo/usr/local/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_group_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/home/vescovo/usr/local/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/device/ic_access_time_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +33,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="remove_friend" />
+                                      <entry key="outputName" value="pending_friend" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="e3d26f" />
                                     </map>
@@ -54,6 +54,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>

@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.FriendsStates;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.AnimUtils;
 
@@ -36,6 +37,9 @@ public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
+    private static final int REQUESTED = FriendsStates.REQUESTED;
+    private static final int NEEDS_CONFIRMATION = FriendsStates.NEEDS_CONFIRMATION;
+    private static final int FRIENDS = FriendsStates.FRIENDS;
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
@@ -300,8 +304,9 @@ public class LeaderboardActivity extends Activity {
          */
         private void isFriendWithCurrentUser(ValueEventListener listener) {
             Database.constructBuilder().addChildren(
-                    format("users.%s.friends.%s", player.userId,
-                            Account.getInstance(context).getUserId())).build()
+                    format("users.%s.friends.%s",
+                            Account.getInstance(context).getUserId(),
+                            player.userId)).build()
                     .addListenerForSingleValueEvent(listener);
         }
 
@@ -315,7 +320,14 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        setBackgroundResource(R.drawable.remove_friend);
+                        int status = (int)(long)dataSnapshot.getValue();
+                        if (status == REQUESTED) {
+                            setBackgroundResource(R.drawable.pending_friend);
+                        } else if (status == FRIENDS) {
+                            setBackgroundResource(R.drawable.remove_friend);
+                        } else {
+                            setBackgroundResource(R.drawable.add_friend);
+                        }
                     } else {
                         setBackgroundResource(R.drawable.add_friend);
                     }
@@ -338,11 +350,17 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Account.getInstance(context).removeFriend(player.userId);
-                        setBackgroundResource(R.drawable.add_friend);
+                        int status = (int)(long)dataSnapshot.getValue();
+                        if (status == NEEDS_CONFIRMATION) {
+                            Account.getInstance(context).addFriend(player.userId);
+                            setBackgroundResource(R.drawable.remove_friend);
+                        } else if (status == FRIENDS) {
+                            Account.getInstance(context).removeFriend(player.userId);
+                            setBackgroundResource(R.drawable.add_friend);
+                        }
                     } else {
                         Account.getInstance(context).addFriend(player.userId);
-                        setBackgroundResource(R.drawable.remove_friend);
+                        setBackgroundResource(R.drawable.pending_friend);
                     }
                 }
 

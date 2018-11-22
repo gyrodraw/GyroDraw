@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,11 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -32,9 +28,13 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.utils.AnimUtils.AnimMode;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 public class HomeActivity extends BaseActivity {
 
@@ -73,8 +73,8 @@ public class HomeActivity extends BaseActivity {
         localDb.retrieveAccount(Account.getInstance(this));
 
         final ImageView drawButton = findViewById(R.id.drawButton);
-        final Button practiceButton = findViewById(R.id.practiceButton);
-        final Button itemsButton = findViewById(R.id.itemsButton);
+        final ImageView practiceButton = findViewById(R.id.practiceButton);
+        // final Button itemsButton = findViewById(R.id.itemsButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
@@ -83,6 +83,9 @@ public class HomeActivity extends BaseActivity {
         final ImageView starsButton = findViewById(R.id.starsButton);
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+
+        practiceButton.setColorFilter(new LightingColorFilter(Color.WHITE,
+                getResources().getColor(R.color.colorPractice)));
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
@@ -95,8 +98,6 @@ public class HomeActivity extends BaseActivity {
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         trophiesCount.setTypeface(typeMuro);
-        practiceButton.setTypeface(typeMuro);
-        itemsButton.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
@@ -107,7 +108,7 @@ public class HomeActivity extends BaseActivity {
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
-        setListener(itemsButton, getMainAmplitude(), getMainFrequency());
+        // setListener(itemsButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -204,9 +205,9 @@ public class HomeActivity extends BaseActivity {
             case R.id.practiceButton:
                 launchActivity(DrawingOffline.class);
                 break;
-            case R.id.itemsButton:
+            /* case R.id.itemsButton:
                 launchActivity(DrawingOfflineItems.class);
-                break;
+                break; */
             default:
         }
     }

@@ -377,10 +377,42 @@ public class Account {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
         Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
-                .setValue(usernameId, createCompletionListener());
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+git
+                                            } else {
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                        } else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
+                .setValue(FriendsStates.REQUESTED, createCompletionListener());
 
         Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
-                .setValue(userId, createCompletionListener());
+                .setValue(FriendsStates.NEEDS_CONFIRMATION, createCompletionListener());
     }
 
     /**

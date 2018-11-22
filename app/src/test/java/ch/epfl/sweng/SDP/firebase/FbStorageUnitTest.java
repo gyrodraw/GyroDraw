@@ -35,6 +35,6 @@ public class FbStorageUnitTest {
                 .thenReturn(mockStorageTask);
         when(mockBitmap.compress(isA(Bitmap.CompressFormat.class),
                 isA(Integer.class), isA(ByteArrayOutputStream.class))).thenReturn(true);
-        FbStorage.sendBitmapToFireBaseStorage(mockBitmap, mockReference);
+        FbStorage.sendBitmapToFirebaseStorage(mockBitmap, mockReference);
     }
 }

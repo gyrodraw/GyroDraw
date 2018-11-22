@@ -16,10 +16,17 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -184,13 +191,49 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testAddFriend() {
-        account.addFriend("EPFLien");
+    public void testAddNewFriend() {
+        final CountingIdlingResource countingResource =
+                new CountingIdlingResource("WaitForFirebase");
+        countingResource.increment();
+        account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
+        SystemClock.sleep(1000);
+        Database.getReference("users."
+                + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
+                + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                assertThat(dataSnapshot.exists(), is(true));
+                countingResource.decrement();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     @Test
     public void testRemoveFriend() {
-        account.removeFriend("EPFLien");
+        final CountingIdlingResource countingResource =
+                new CountingIdlingResource("WaitForFirebase");
+        countingResource.increment();
+        account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
+        SystemClock.sleep(1000);
+        Database.getReference("users."
+                + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
+                + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                assertThat(dataSnapshot.exists(), is(false));
+                countingResource.decrement();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     @Test

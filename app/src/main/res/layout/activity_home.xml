@@ -67,7 +67,7 @@
         android:id="@+id/leagueImage"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:layout_marginTop="80dp"
         app:layout_constraintBottom_toTopOf="@+id/practiceButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -121,8 +121,8 @@
     <ImageView
         android:id="@+id/drawButton"
         android:layout_width="500dp"
-        android:layout_height="90dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -135,13 +135,25 @@
         android:id="@+id/practiceButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/mysteryButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/home_practice_button"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/mysteryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toTopOf="@+id/drawButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/home_practice_button"
+        app:srcCompat="@drawable/home_mystery_button"
         tools:ignore="ContentDescription" />
 
     <Button

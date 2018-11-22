@@ -28,6 +28,7 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.utils.AnimUtils.AnimMode;
 
@@ -74,7 +75,7 @@ public class HomeActivity extends BaseActivity {
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final ImageView practiceButton = findViewById(R.id.practiceButton);
-        // final Button itemsButton = findViewById(R.id.itemsButton);
+        final ImageView mysteryButton = findViewById(R.id.mysteryButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
@@ -85,7 +86,9 @@ public class HomeActivity extends BaseActivity {
         final ImageView leagueImage = findViewById(R.id.leagueImage);
 
         practiceButton.setColorFilter(new LightingColorFilter(Color.WHITE,
-                getResources().getColor(R.color.colorPractice)));
+                getResources().getColor(R.color.colorButtonBlue)));
+        mysteryButton.setColorFilter(new LightingColorFilter(Color.WHITE,
+                getResources().getColor(R.color.colorButtonBlue)));
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
@@ -108,7 +111,7 @@ public class HomeActivity extends BaseActivity {
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
-        // setListener(itemsButton, getMainAmplitude(), getMainFrequency());
+        setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
     }
 
     // Launch the LeaguesActivity.
@@ -152,8 +155,25 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 int id = view.getId();
-                AnimMode animMode = (id == R.id.starsButton) || (id == R.id.trophiesButton)
-                        ? AnimMode.LEFT : AnimMode.CENTER;
+                AnimMode animMode;
+
+                switch (id) {
+                    case R.id.starsButton:
+                        animMode = AnimMode.LEFT;
+                        break;
+                    case R.id.trophiesButton:
+                        animMode = AnimMode.LEFT;
+                        break;
+                    case R.id.practiceButton:
+                        animMode = AnimMode.LEFT;
+                        break;
+                    case R.id.mysteryButton:
+                        animMode = AnimMode.RIGHT;
+                        break;
+                    default:
+                        animMode = AnimMode.CENTER;
+                }
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (id == R.id.drawButton) {
@@ -205,9 +225,9 @@ public class HomeActivity extends BaseActivity {
             case R.id.practiceButton:
                 launchActivity(DrawingOffline.class);
                 break;
-            /* case R.id.itemsButton:
+            case R.id.mysteryButton:
                 launchActivity(DrawingOfflineItems.class);
-                break; */
+                break;
             default:
         }
     }

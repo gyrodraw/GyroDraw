@@ -92,7 +92,7 @@ public class HomeActivityTest {
     @Test
     public void testClickOnItemsButtonOpensDrawingOfflineItems() {
         Intents.init();
-        onView(ViewMatchers.withId(R.id.itemsButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.mysteryButton)).perform(click());
         intended(hasComponent(DrawingOfflineItems.class.getName()));
         Intents.release();
     }

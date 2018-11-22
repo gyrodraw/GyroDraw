@@ -112,6 +112,8 @@ public class HomeActivity extends BaseActivity {
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
+
+        setLeague();
     }
 
     // Launch the LeaguesActivity.
@@ -281,5 +283,10 @@ public class HomeActivity extends BaseActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
+    }
+
+    private void setLeague() {
+        TextView leagueText = findViewById(R.id.leagueText);
+        leagueText.setText(Account.getInstance(this).getLayoutLeagueText());
     }
 }

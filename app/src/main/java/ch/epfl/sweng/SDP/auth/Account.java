@@ -427,4 +427,13 @@ public class Account {
             }
         };
     }
+
+    /**
+     * Get the displayable league's name.
+     *
+     * @return the league's name
+     */
+    public String getLayoutLeagueText() {
+        return "League " + currentLeague.charAt(currentLeague.length() - 1);
+    }
 }

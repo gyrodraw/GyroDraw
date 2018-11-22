@@ -95,13 +95,13 @@ public class RankingFragment extends ListFragment {
         return rankedUsernames;
     }
 
-    private int getIndexForUserName(String username) throws IndexOutOfBoundsException {
+    private int getIndexForUserName(String username) throws IllegalArgumentException {
         for (int i = 0; i < this.playerNames.length; i++) {
             if(username.equals(playerNames[i])) {
                 return i;
             }
         }
-        throw new IndexOutOfBoundsException("Index not found");
+        throw new IllegalArgumentException("Index not found");
     }
 
     private void retrieveFinalRanking() {
@@ -121,7 +121,7 @@ public class RankingFragment extends ListFragment {
 
                 // Sort the rankings
                 Integer[] tmp = new Integer[finalRanking.values().size()];
-                Integer[] rankings = (Integer[])(finalRanking.values().toArray(tmp));
+                Integer[] rankings = (finalRanking.values().toArray(tmp));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
                 int rankingForUser = dataSnapshot.child(userNameId).getValue(Integer.class);
@@ -145,7 +145,7 @@ public class RankingFragment extends ListFragment {
                 updateUserStats(rankingForUser, trophiesForUser);
 
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
-                String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
+                String[] tmpUserNames = (String[]) usernames.toArray();
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames, rankings, trophies,drawings);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
@@ -209,11 +209,7 @@ public class RankingFragment extends ListFragment {
             TextView trophiesText = convertView.findViewById(R.id.trophiesWon);
             trophiesText.setTypeface(typeMuro);
 
-            try {
-                imageview.setImageBitmap(drawings[getIndexForUserName(players[position])]);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            imageview.setImageBitmap(drawings[getIndexForUserName(players[position])]);
 
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);
             int darkColor = getResources().getColor(R.color.colorPrimaryDark);
@@ -229,8 +225,8 @@ public class RankingFragment extends ListFragment {
 
             // set the texts
             name.setText(players[position]);
-            trophiesText.setText(Integer.toString(this.trophies[position]));
-            ranking.setText(Integer.toString((int) this.rankings[position]));
+            trophiesText.setText(String.valueOf(this.trophies[position]));
+            ranking.setText(String.valueOf(this.rankings[position]));
 
             // Return the completed view to render on screen
             return convertView;

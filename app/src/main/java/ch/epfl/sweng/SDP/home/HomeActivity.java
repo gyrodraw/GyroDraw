@@ -35,8 +35,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.ArrayList;
-
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";

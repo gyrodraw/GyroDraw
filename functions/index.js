@@ -247,18 +247,6 @@ function createRoomAndJoin(league, roomsList, username, id) {
   return roomID.toString();
 }
 
-function updateUserStats(starIncrease,trophieIncrease,uid) {
-
-  admin.database().ref('users').child(uid).transaction(function(user) {
-    if (user) {
-      user.stars += starIncrease;
-      user.trophies += trophieIncrease;
-    }
-    return user;
-  });
-
-}
-
 function removeRoomData(roomID) {
   admin.database().ref(parentRoomID + roomID).child("users").remove();
   admin.database().ref(parentRoomID + roomID).child("ranking").remove();

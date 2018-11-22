@@ -453,7 +453,6 @@ public class VotingPageActivity extends BaseActivity {
                                 RankingFragment.instantiate(getApplicationContext(),
                                         RankingFragment.class.getName(), bundle))
                         .addToBackStack(null).commit();
-
     }
 
 

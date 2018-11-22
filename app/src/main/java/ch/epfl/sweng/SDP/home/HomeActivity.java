@@ -15,25 +15,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
-
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
+import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
+import static java.lang.String.format;
 
 public class HomeActivity extends BaseActivity {
 
@@ -46,6 +51,7 @@ public class HomeActivity extends BaseActivity {
     private static boolean enableBackgroundAnimation = true;
 
     private Dialog profileWindow;
+    private Dialog friendRequestWindow;
 
     /**
      * Disables the background animation. Call this method in every HomeActivity test
@@ -60,6 +66,8 @@ public class HomeActivity extends BaseActivity {
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
+        friendRequestWindow = new Dialog(this);
+        friendRequestWindow.setCancelable(false);
 
         overridePendingTransition(0, 0);
 
@@ -70,6 +78,36 @@ public class HomeActivity extends BaseActivity {
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
+
+        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId())).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    Integer state = child.getValue(Integer.class);
+                    // 1 has to be replaced with the right value and possibly extracted as a constant
+                    if (state != null && state == 1) {
+                        final String id = child.getKey();
+                        Database.getReference(format("users.%s.username", id)).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String name = dataSnapshot.getValue(String.class);
+                                showFriendRequestPopup(name, id);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                throw databaseError.toException();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button practiceButton = findViewById(R.id.practiceButton);
@@ -169,6 +207,28 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
+    // Set the listener for the friend request popup buttons using the given userId as the id of the sender of the request
+    private void setListener(final View view, final double amplitude, final int frequency, final String userId) {
+        final Context context = this;
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                int id = view.getId();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        listenerEventSelector(id, userId);
+                        bounceButton(view, amplitude, frequency, context);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
     private void listenerEventSelector(final View view, int id) {
         switch (id) {
             case R.id.drawButton:
@@ -190,7 +250,7 @@ public class HomeActivity extends BaseActivity {
                 showLeagues();
                 break;
             case R.id.usernameButton:
-                showPopup();
+                showProfilePopup();
                 break;
             case R.id.signOutButton:
                 signOut();
@@ -203,6 +263,28 @@ public class HomeActivity extends BaseActivity {
                 break;
             case R.id.itemsButton:
                 launchActivity(DrawingOfflineItems.class);
+                break;
+            default:
+        }
+    }
+
+    // Listener for the friend request popup buttons
+    private void listenerEventSelector(int id, String userId) {
+        switch (id) {
+            case R.id.acceptButton:
+                // Update the user's friends' list
+                Database.getReference(format("users.%s.friends.%s",
+                        Account.getInstance(this).getUserId(), userId)).setValue(2);
+
+                // Update the sender's friends' list
+                Database.getReference(format("users.%s.friends.%s",
+                        userId, Account.getInstance(this).getUserId())).setValue(2);
+                friendRequestWindow.dismiss();
+                break;
+            case R.id.rejectButton:
+                Database.getReference(format("users.%s.friends.%s",
+                        Account.getInstance(this).getUserId(), userId)).removeValue();
+                friendRequestWindow.dismiss();
                 break;
             default:
         }
@@ -235,8 +317,8 @@ public class HomeActivity extends BaseActivity {
         signOutButton.setTypeface(typeMuro);
     }
 
-    private void showPopup() {
-        profileWindow.setContentView(R.layout.activity_pop_up);
+    private void showProfilePopup() {
+        profileWindow.setContentView(R.layout.activity_profile_pop_up);
 
         Account userAccount = Account.getInstance(this);
 
@@ -257,5 +339,30 @@ public class HomeActivity extends BaseActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
+    }
+
+    private void showFriendRequestPopup(String name, String id) {
+        assert name != null : "name is null";
+        friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        TextView requestSender = friendRequestWindow.findViewById(R.id.requestSender);
+        requestSender.setTypeface(typeMuro);
+        requestSender.setText(name);
+
+        TextView requestMessage = friendRequestWindow.findViewById(R.id.requestMessage);
+        requestMessage.setTypeface(typeMuro);
+
+        Button acceptButton = friendRequestWindow.findViewById(R.id.acceptButton);
+        acceptButton.setTypeface(typeMuro);
+        setListener(acceptButton, getMainAmplitude(), getMainFrequency(), id);
+
+        Button rejectButton = friendRequestWindow.findViewById(R.id.rejectButton);
+        setListener(rejectButton, getMainAmplitude(), getMainFrequency(), id);
+        rejectButton.setTypeface(typeMuro);
+
+        friendRequestWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        friendRequestWindow.show();
     }
 }

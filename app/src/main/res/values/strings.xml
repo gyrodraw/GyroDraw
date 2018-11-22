@@ -41,4 +41,7 @@
     <string name="leave">Leave</string>
     <string name="practice">PRACTICE !</string>
     <string name="special">SPECIAL !</string>
+    <string name="accept">Accept!</string>
+    <string name="reject">Reject</string>
+    <string name="a_new_friend_request_from">New friend request</string>
 </resources>

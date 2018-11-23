@@ -1,18 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.mockito.Mockito.when;
-
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,17 +12,32 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+
 import com.google.firebase.database.DataSnapshot;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -55,7 +58,6 @@ public class DrawingOnlineTest {
             };
 
     private PaintView paintView;
-    private Resources res;
     private DataSnapshot dataSnapshotMock;
 
     /**
@@ -64,7 +66,6 @@ public class DrawingOnlineTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
-        res = activityRule.getActivity().getResources();
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
     }
 
@@ -122,9 +123,9 @@ public class DrawingOnlineTest {
 
         LocalDbHandlerForImages localDbHandler =
                 new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap, 100);
+        localDbHandler.addBitmapToDb(bitmap, 2);
 
-        bitmap = compressBitmap(bitmap, 100);
+        bitmap = compressBitmap(bitmap, 2);
         Bitmap newBitmap = localDbHandler.getLatestBitmapFromDb();
 
         bitmapEqualsNewBitmap(bitmap, newBitmap);
@@ -142,62 +143,6 @@ public class DrawingOnlineTest {
         assertEquals(Color.WHITE, bitmap.getPixel(1, 1));
     }
 
-    @Test
-    public void testBlackButton() {
-        onView(ViewMatchers.withId(R.id.blackButton)).perform(click());
-        assertEquals(Color.BLACK, paintView.getColor());
-    }
-
-    @Test
-    public void testBlueButton() {
-        onView(ViewMatchers.withId(R.id.blueButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorBlue), paintView.getColor());
-    }
-
-    @Test
-    public void testGreenButton() {
-        onView(ViewMatchers.withId(R.id.greenButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorGreen), paintView.getColor());
-    }
-
-    @Test
-    public void testYellowButton() {
-        onView(ViewMatchers.withId(R.id.yellowButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorYellow), paintView.getColor());
-    }
-
-    @Test
-    public void testRedButton() {
-        onView(ViewMatchers.withId(R.id.redButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorRed), paintView.getColor());
-    }
-
-    @Test
-    public void testPencilTool() {
-        onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
-        onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
-        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(Color.WHITE,
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
-    }
-
-    @Test
-    public void testEraserTool() {
-        onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
-        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(Color.WHITE,
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
-    }
-
-    @Test
-    public void testBucketTool() {
-        activityRule.getActivity().clear(null);
-        onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
-        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(paintView.getColor(),
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
-    }
-
     /**
      * Create a new non empty bitmap.
      *
@@ -207,9 +152,9 @@ public class DrawingOnlineTest {
         Paint paint = initializedPaint();
 
         Path path = new Path();
-        path.lineTo(50, 50);
+        path.lineTo(2, 2);
 
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888);
         Canvas canvas = initializedCanvas(bitmap, paint, path);
         canvas.drawColor(Color.WHITE);
         canvas.drawPath(path, paint);
@@ -225,8 +170,8 @@ public class DrawingOnlineTest {
      * @param newBitmap the second bitmap
      */
     public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
-        for (int i = 0; i < 100; ++i) {
-            for (int j = 0; j < 100; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
                 assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
             }
         }

@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
@@ -19,15 +20,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayOutputStream;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 
@@ -148,5 +153,27 @@ public class VotingPageActivityTest {
     public void testOnCancelledListenerCounter() {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
         mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
+    }
+
+    @Test
+    public void testDecodeSampledBitmapFromResource() {
+        Bitmap bitmap = BitmapManipulator.decodeSampledBitmapFromResource(
+                mActivityRule.getActivity().getResources(), R.drawable.default_image,
+                20, 20);
+        assertNotNull(bitmap);
+    }
+
+    @Test
+    public void testDecodeSampledBitmapFromByteArray() {
+        ByteArrayOutputStream byteArrayOutputStream =
+                new ByteArrayOutputStream();
+        int[] source = {Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE};
+        Bitmap bitmap = Bitmap.createBitmap(source, 2, 2, Bitmap.Config.ARGB_8888)
+                .copy(Bitmap.Config.ARGB_8888, true);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,
+                1, byteArrayOutputStream);
+        byte[] data = byteArrayOutputStream.toByteArray();
+        Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
+        assertNotNull(newBitmap);
     }
 }

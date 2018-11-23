@@ -208,21 +208,27 @@ public class AccountCreationActivityAndAccountTest {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
+        final ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                assertThat(dataSnapshot.exists(), is(friends));
+                countingResource.decrement();
+                Database.getReference("users."
+                        + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
+                        + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+                        .removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        };
+
         Database.getReference("users."
                 + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
                 + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        assertThat(dataSnapshot.exists(), is(friends));
-                        countingResource.decrement();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+                .addValueEventListener(valueEventListener);
     }
 
     @Test

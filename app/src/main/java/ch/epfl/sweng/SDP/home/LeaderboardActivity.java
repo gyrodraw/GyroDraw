@@ -242,14 +242,13 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s.getKey().equals("123456789")) {
-                                    continue;
-                                }
-                                Player temp = new Player((String) s.child("userId").getValue(),
-                                        (String) s.child("username").getValue(),
-                                        (Long) s.child("trophies").getValue());
+                                if (!s.getKey().equals("123456789")) {
+                                    Player temp = new Player((String) s.child("userId").getValue(),
+                                            (String) s.child("username").getValue(),
+                                            (Long) s.child("trophies").getValue());
 
-                                allPlayers.add(temp);
+                                    allPlayers.add(temp);
+                                }
                             }
                             filterWantedPlayers(query);
                             Collections.sort(wantedPlayers);
@@ -271,10 +270,8 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s == null || s.getValue() == null
-                                        || s.equals("123456789")) {
-                                    continue;
-                                } else if ((int)(long)s.getValue() == FriendsStates.FRIENDS) {
+                                if (!s.equals("123456789")
+                                && (int)(long)s.getValue() == FRIENDS.ordinal()) {
                                     findAndAddPlayer(s.getKey(), query);
                                 }
                             }

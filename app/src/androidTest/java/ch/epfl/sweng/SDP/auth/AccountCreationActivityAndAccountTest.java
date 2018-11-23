@@ -194,41 +194,14 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testAddNewFriend() {
-        setListenerToFirebaseForFriendsTest();
+        setListenerAndAsserToFirebaseForFriendsTest();
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
     @Test
     public void testRemoveFriend() {
-        setListenerToFirebaseForFriendsTest();
+        setListenerAndAsserToFirebaseForFriendsTest();
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
-    }
-
-    private void setListenerToFirebaseForFriendsTest() {
-        final CountingIdlingResource countingResource =
-                new CountingIdlingResource("WaitForFirebase");
-        countingResource.increment();
-        final ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                assertThat(dataSnapshot.exists(), is(true));
-                Database.getReference("users."
-                        + mockAccount.getUserId()
-                        + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                        .removeEventListener(this);
-                countingResource.decrement();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        };
-
-        Database.getReference("users."
-                + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
-                + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .addValueEventListener(valueEventListener);
     }
 
     @Test
@@ -382,5 +355,31 @@ public class AccountCreationActivityAndAccountTest {
         assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
     }
 
+    private void setListenerAndAsserToFirebaseForFriendsTest() {
+        final CountingIdlingResource countingResource =
+                new CountingIdlingResource("WaitForFirebase");
+        countingResource.increment();
+        final ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                assertThat(dataSnapshot.exists(), is(true));
+                Database.getReference("users."
+                        + mockAccount.getUserId()
+                        + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+                        .removeEventListener(this);
+                countingResource.decrement();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        };
+
+        Database.getReference("users."
+                + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
+                + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+                .addValueEventListener(valueEventListener);
+    }
 
 }

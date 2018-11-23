@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static ch.epfl.sweng.SDP.home.FriendsState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.FriendsState.RECEIVED;
+import static ch.epfl.sweng.SDP.home.FriendsState.SENT;
 import static ch.epfl.sweng.SDP.home.League.createLeague1;
 import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
@@ -10,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
-import ch.epfl.sweng.SDP.home.FriendsState;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.google.firebase.database.DataSnapshot;
@@ -380,31 +382,14 @@ public class Account {
         Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull final DataSnapshot dataSnapshotOne) {
-                        if (dataSnapshotOne.exists()) {
-                            Database.constructBuilder(usersRef)
-                                    .addChildren(usernameId + FRIENDS_TAG + userId).build()
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshotTwo) {
-                                            if (dataSnapshotTwo.exists()) {
-                                                if ((int)(long)dataSnapshotOne.getValue()
-                                                        == FriendsState.RECEIVED.ordinal()
-                                                        && (int)(long)dataSnapshotTwo.getValue() == REQUESTED) {
-                                                    confirmedFriendship(usernameId);
-                                                } else {
-                                                    initializeFriendship(usernameId);
-                                                }
-                                            } else {
-                                                initializeFriendship(usernameId);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            checkForDatabaseError(databaseError);
-                                        }
-                                    });
+                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            if ((int)(long)dataSnapshot.getValue()
+                                    == RECEIVED.ordinal()) {
+                                confirmedFriendship(usernameId);
+                            } else {
+                                initializeFriendship(usernameId);
+                            }
                         } else {
                             initializeFriendship(usernameId);
                         }
@@ -419,10 +404,10 @@ public class Account {
 
     private void initializeFriendship(String friendId) {
         Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + friendId).build()
-                .setValue(REQUESTED, createCompletionListener());
+                .setValue(SENT.ordinal(), createCompletionListener());
 
         Database.constructBuilder(usersRef).addChildren(friendId + FRIENDS_TAG + userId).build()
-                .setValue(NEEDS_CONFIRMATION, createCompletionListener());
+                .setValue(RECEIVED.ordinal(), createCompletionListener());
     }
 
     private void confirmedFriendship(String friendId) {

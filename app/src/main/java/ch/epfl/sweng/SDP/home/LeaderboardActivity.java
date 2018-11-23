@@ -30,15 +30,15 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.AnimUtils;
 
+import static ch.epfl.sweng.SDP.home.FriendsState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.FriendsState.RECEIVED;
+import static ch.epfl.sweng.SDP.home.FriendsState.SENT;
 import static java.lang.String.format;
 
 public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
-    private static final int REQUESTED = FriendsState.REQUESTED;
-    private static final int NEEDS_CONFIRMATION = FriendsState.NEEDS_CONFIRMATION;
-    private static final int FRIENDS = FriendsState.FRIENDS;
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
@@ -320,9 +320,9 @@ public class LeaderboardActivity extends Activity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         int status = (int)(long)dataSnapshot.getValue();
-                        if (status == REQUESTED) {
+                        if (status == SENT.ordinal()) {
                             setBackgroundResource(R.drawable.pending_friend);
-                        } else if (status == FRIENDS) {
+                        } else if (status == FRIENDS.ordinal()) {
                             setBackgroundResource(R.drawable.remove_friend);
                         } else {
                             setBackgroundResource(R.drawable.add_friend);
@@ -350,10 +350,10 @@ public class LeaderboardActivity extends Activity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         int status = (int)(long)dataSnapshot.getValue();
-                        if (status == NEEDS_CONFIRMATION) {
+                        if (status == RECEIVED.ordinal()) {
                             Account.getInstance(context).addFriend(player.userId);
                             setBackgroundResource(R.drawable.remove_friend);
-                        } else if (status == FRIENDS) {
+                        } else if (status == FRIENDS.ordinal()) {
                             Account.getInstance(context).removeFriend(player.userId);
                             setBackgroundResource(R.drawable.add_friend);
                         }

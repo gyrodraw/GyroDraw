@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+import ch.epfl.sweng.SDP.home.FriendsState;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.google.firebase.database.DataSnapshot;
@@ -32,9 +33,6 @@ public class Account {
     };
 
     private static final String FRIENDS_TAG = ".friends.";
-    private static final int REQUESTED = FriendsStates.REQUESTED;
-    private static final int NEEDS_CONFIRMATION = FriendsStates.NEEDS_CONFIRMATION;
-    private static final int FRIENDS = FriendsStates.FRIENDS;
 
     private String userId;
     private String username;
@@ -390,7 +388,8 @@ public class Account {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshotTwo) {
                                             if (dataSnapshotTwo.exists()) {
-                                                if ((int)(long)dataSnapshotOne.getValue() == NEEDS_CONFIRMATION
+                                                if ((int)(long)dataSnapshotOne.getValue()
+                                                        == FriendsState.RECEIVED.ordinal()
                                                         && (int)(long)dataSnapshotTwo.getValue() == REQUESTED) {
                                                     confirmedFriendship(usernameId);
                                                 } else {

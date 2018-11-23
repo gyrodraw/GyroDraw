@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.FriendsStates;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.AnimUtils;
 
@@ -37,9 +36,9 @@ public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
-    private static final int REQUESTED = FriendsStates.REQUESTED;
-    private static final int NEEDS_CONFIRMATION = FriendsStates.NEEDS_CONFIRMATION;
-    private static final int FRIENDS = FriendsStates.FRIENDS;
+    private static final int REQUESTED = FriendsState.REQUESTED;
+    private static final int NEEDS_CONFIRMATION = FriendsState.NEEDS_CONFIRMATION;
+    private static final int FRIENDS = FriendsState.FRIENDS;
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;

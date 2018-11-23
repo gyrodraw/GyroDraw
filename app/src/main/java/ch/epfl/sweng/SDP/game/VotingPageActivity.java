@@ -228,10 +228,6 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
-        if (rankingFragment != null) {
-            rankingFragment.createAndStoreGameResult();
-        }
-
         launchActivity(HomeActivity.class);
         finish();
     }

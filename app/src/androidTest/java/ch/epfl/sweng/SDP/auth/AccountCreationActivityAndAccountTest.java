@@ -213,7 +213,7 @@ public class AccountCreationActivityAndAccountTest {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 assertThat(dataSnapshot.exists(), is(true));
                 Database.getReference("users."
-                        + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
+                        + mockAccount.getUserId()
                         + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                         .removeEventListener(this);
                 countingResource.decrement();

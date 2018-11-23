@@ -10,15 +10,25 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.BounceInterpolator;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.home.League;
 
+import static ch.epfl.sweng.SDP.home.League.createLeague1;
+import static ch.epfl.sweng.SDP.home.League.createLeague2;
+import static ch.epfl.sweng.SDP.home.League.createLeague3;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
-public class AnimUtils {
+public class LayoutUtils {
 
     private static final int MAIN_FREQUENCY = 10;
     private static final double MAIN_AMPLITUDE = 0.1;
 
-    private AnimUtils() {
+    public static final League[] LEAGUES = new League[]{
+            createLeague1(),
+            createLeague2(),
+            createLeague3()
+    };
+
+    private LayoutUtils() {
     }
 
     public static int getMainFrequency() {
@@ -135,6 +145,54 @@ public class AnimUtils {
                     return R.anim.bounce_left;
             }
             return R.anim.bounce;
+        }
+
+        /**
+         * Get the league's image id.
+         *
+         * @param league the requested league
+         * @return the league's image id
+         */
+        public static int getLeagueImageId(String league) {
+            if (league.equals(LEAGUES[0].getName())) {
+                return R.drawable.league_1;
+            }
+            if (league.equals(LEAGUES[1].getName())) {
+                return R.drawable.league_2;
+            }
+            return R.drawable.league_3;
+        }
+
+        /**
+         * Get the league's color id.
+         *
+         * @param league the requested league
+         * @return the league's color id
+         */
+        public static int getLeagueColorId(String league) {
+            if (league.equals(LEAGUES[0].getName())) {
+                return R.color.colorLeague1;
+            }
+            if (league.equals(LEAGUES[1].getName())) {
+                return R.color.colorLeague2;
+            }
+            return R.color.colorLeague3;
+        }
+
+        /**
+         * Get the league's name id.
+         *
+         * @param league the requested league
+         * @return the league's name id
+         */
+        public static int getLeagueTextId(String league) {
+            if (league.equals(LEAGUES[0].getName())) {
+                return R.string.league_1;
+            }
+            if (league.equals(LEAGUES[1].getName())) {
+                return R.string.league_2;
+            }
+            return R.string.league_3;
         }
     }
 }

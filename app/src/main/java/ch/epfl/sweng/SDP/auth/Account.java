@@ -19,6 +19,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import static ch.epfl.sweng.SDP.home.League.createLeague1;
 import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
@@ -27,12 +28,6 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 public class Account {
 
     private static Account instance = null;
-
-    private static final League[] LEAGUES = new League[]{
-            createLeague1(),
-            createLeague2(),
-            createLeague3()
-    };
 
     private static final String FRIENDS_TAG = ".friends.";
 
@@ -429,50 +424,5 @@ public class Account {
                 checkForDatabaseError(databaseError);
             }
         };
-    }
-
-    /**
-     * Get the league's name id.
-     *
-     * @return the league's name id
-     */
-    public int getLeagueTextId() {
-        if (currentLeague.equals(LEAGUES[0].getName())) {
-            return R.string.league_1;
-        }
-        if (currentLeague.equals(LEAGUES[1].getName())) {
-            return R.string.league_2;
-        }
-        return R.string.league_3;
-    }
-
-    /**
-     * Get the league's image id.
-     *
-     * @return the league's image id
-     */
-    public int getLeagueImageId() {
-        if (currentLeague.equals(LEAGUES[0].getName())) {
-            return R.drawable.league_1;
-        }
-        if (currentLeague.equals(LEAGUES[1].getName())) {
-            return R.drawable.league_2;
-        }
-        return R.drawable.league_3;
-    }
-
-    /**
-     * Get the league's color id.
-     *
-     * @return the league's color id
-     */
-    public int getLeagueColorId() {
-        if (currentLeague.equals(LEAGUES[0].getName())) {
-            return R.color.colorLeague1;
-        }
-        if (currentLeague.equals(LEAGUES[1].getName())) {
-            return R.color.colorLeague2;
-        }
-        return R.color.colorLeague3;
     }
 }

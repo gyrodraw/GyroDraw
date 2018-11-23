@@ -30,12 +30,15 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.utils.AnimUtils.AnimMode;
+import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode.getLeagueColorId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode.getLeagueImageId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode.getLeagueTextId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 
 public class HomeActivity extends BaseActivity {
 
@@ -286,11 +289,11 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setLeague() {
-        Account account = Account.getInstance(this);
+        String league = Account.getInstance(this).getCurrentLeague();
         TextView leagueText = findViewById(R.id.leagueText);
-        leagueText.setText(account.getLeagueTextId());
-        leagueText.setTextColor(getResources().getColor(account.getLeagueColorId()));
-        ((ImageView) findViewById(R.id.leagueImage))
-                .setImageResource(Account.getInstance(this).getLeagueImageId());
+
+        leagueText.setText(getLeagueTextId(league));
+        leagueText.setTextColor(getResources().getColor(getLeagueColorId(league)));
+        ((ImageView) findViewById(R.id.leagueImage)).setImageResource(getLeagueImageId(league));
     }
 }

@@ -80,6 +80,9 @@ public class VotingPageActivity extends BaseActivity {
             if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
+                    case START_VOTING_ACTIVITY:
+                        retrieveDrawingsFromDatabaseStorage();
+                        break;
                     case END_VOTING_ACTIVITY:
                         // Start ranking activity
                         startRankingFragment();
@@ -163,8 +166,6 @@ public class VotingPageActivity extends BaseActivity {
                     drawingsIds[idsAndUsernamesCounter] = snapshot.getKey();
                     playersNames[idsAndUsernamesCounter++] = (String) snapshot.getValue();
                 }
-
-                retrieveDrawingsFromDatabaseStorage();
 
                 ratings = new int[NUMBER_OF_DRAWINGS];
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
@@ -360,6 +361,7 @@ public class VotingPageActivity extends BaseActivity {
                                                                 drawingView.getMaxWidth(),
                                                                 drawingView.getMaxHeight());
                                             } else {
+
                                                 // Use a default image if unsuccessful
                                                 bitmap = BitmapManipulator
                                                         .decodeSampledBitmapFromResource(

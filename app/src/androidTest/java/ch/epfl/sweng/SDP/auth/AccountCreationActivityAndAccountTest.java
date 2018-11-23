@@ -194,29 +194,29 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testAddNewFriend() {
-        setListenerToFirebaseForFriendsTest(true);
+        setListenerToFirebaseForFriendsTest();
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
     @Test
     public void testRemoveFriend() {
-        setListenerToFirebaseForFriendsTest(false);
+        setListenerToFirebaseForFriendsTest();
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
-    private void setListenerToFirebaseForFriendsTest(final boolean friends) {
+    private void setListenerToFirebaseForFriendsTest() {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
         final ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                assertThat(dataSnapshot.exists(), is(friends));
-                countingResource.decrement();
+                assertThat(dataSnapshot.exists(), is(true));
                 Database.getReference("users."
-                        + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
+                        + mockAccount.getUserId()
                         + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                         .removeEventListener(this);
+                countingResource.decrement();
             }
 
             @Override

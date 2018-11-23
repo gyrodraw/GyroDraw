@@ -1,6 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -24,6 +26,8 @@ import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap
 import static ch.epfl.sweng.SDP.home.LeaderboardActivityTest.testExitButtonBody;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class BattleLogActivityTest {
@@ -33,7 +37,7 @@ public class BattleLogActivityTest {
     private static final int RANK = 2;
     private static final int STARS = 15;
     private static final int TROPHIES = -5;
-    private static final Bitmap DRAWING = initializedBitmap();
+    private final Bitmap DRAWING = initializedBitmap();
 
     private GameResult gameResult;
     private LocalDbHandlerForGameResults localDbHandler;
@@ -87,6 +91,19 @@ public class BattleLogActivityTest {
         onView(withId(R.id.exitButton)).perform(click());
         onView(withId(R.id.battleLogButton)).perform(click());
         assertTrue(activityRule.getActivity().getGameResultsCount() >= 1);
+    }
+
+    @Test
+    public void testNullBitmapToDatabase() {
+        localDbHandler.addGameResultToDb(new GameResult(
+                rankedUsernames, RANK, STARS, TROPHIES, null, activityRule.getActivity()));
+        Activity activity = activityRule.getActivity();
+        Bitmap drawing = localDbHandler.getGameResultsFromDb(activity).get(0).getDrawing();
+        for (int i = 5; i < 10; i++) {
+            for (int j = 5; j < 10; j++) {
+                assertThat(drawing.getPixel(i, j), is(0xFFFFFFFF));
+            }
+        }
     }
 
     private static List<String> getUsernameList() {

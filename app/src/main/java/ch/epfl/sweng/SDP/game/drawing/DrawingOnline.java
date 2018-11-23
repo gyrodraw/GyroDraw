@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static java.lang.String.format;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,13 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +16,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+
+import static java.lang.String.format;
 
 public class DrawingOnline extends GyroDrawingActivity {
 
@@ -65,12 +67,11 @@ public class DrawingOnline extends GyroDrawingActivity {
                                 new OnCompleteListener<TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<TaskSnapshot> task) {
-                                        Database.constructBuilder().addChildren(
+                                        Database.getReference(
                                                 format("%s.%s.uploadDrawing.%s", TOP_ROOM_NODE_ID,
                                                         roomId,
                                                         Account.getInstance(getApplicationContext())
-                                                                .getUsername())).build()
-                                                .setValue(1);
+                                                                .getUsername())).setValue(1);
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
@@ -103,13 +104,17 @@ public class DrawingOnline extends GyroDrawingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         Intent intent = getIntent();
 
         roomId = intent.getStringExtra("RoomID");
         winningWord = intent.getStringExtra("WinningWord");
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        TextView wordView = findViewById(R.id.winningWord);
+        wordView.setText(winningWord);
+        wordView.setTypeface(typeMuro);
+
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
         timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");

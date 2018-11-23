@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"></ListView>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/homeButton"
             android:layout_width="wrap_content"
             android:layout_height="46dp"
             android:background="@color/colorExitRed"

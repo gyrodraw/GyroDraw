@@ -85,7 +85,7 @@ public class RankingFragment extends ListFragment {
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
         finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
-        Button button = getActivity().findViewById(R.id.button);
+        Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(typeMuro);
 
         retrieveFinalRanking();
@@ -95,7 +95,7 @@ public class RankingFragment extends ListFragment {
         return rankedUsernames;
     }
 
-    private int getIndexForUserName(String username) throws IllegalArgumentException {
+    private int getIndexForUserName(String username) {
         for (int i = 0; i < this.playerNames.length; i++) {
             if(username.equals(playerNames[i])) {
                 return i;
@@ -142,9 +142,10 @@ public class RankingFragment extends ListFragment {
                     lastRank = rankings[i];
                 }
 
-                updateUserStats(rankingForUser, trophiesForUser);
-
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
+
+                updateUserStats(rankingForUser, trophiesForUser,usernames.get(0).equals(userNameId));
+
                 String[] tmpUserNames = (String[]) usernames.toArray();
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames, rankings, trophies,drawings);
                 setListAdapter(adapter);
@@ -158,13 +159,16 @@ public class RankingFragment extends ListFragment {
         });
     }
 
-    private void updateUserStats(int starIncrease, int trophiesIncrease) {
+    private void updateUserStats(int starIncrease, int trophiesIncrease, boolean won) {
         Account account = Account.getInstance(getActivity()
                 .getApplicationContext());
         account.changeStars(starIncrease);
         account.changeTrophies(trophiesIncrease);
         account.changeAverageRating(starIncrease);
         account.increaseTotalMatches();
+        if (won) {
+            account.increaseMatchesWon();
+        }
     }
 
     private void setFinishedCollectingRanking() {
@@ -224,7 +228,7 @@ public class RankingFragment extends ListFragment {
             }
 
             // set the texts
-            name.setText(players[position]);
+            name.setText(position + ". " + players[position]);
             trophiesText.setText(String.valueOf(this.trophies[position]));
             ranking.setText(String.valueOf(this.rankings[position]));
 

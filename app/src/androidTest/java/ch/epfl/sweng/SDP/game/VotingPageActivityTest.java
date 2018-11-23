@@ -35,6 +35,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import ch.epfl.sweng.SDP.auth.Account;
+
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -42,6 +44,7 @@ public class VotingPageActivityTest {
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
+    private Account mockAccount;
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
@@ -66,6 +69,7 @@ public class VotingPageActivityTest {
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("FREDRIKB");
     }
 
     @Test
@@ -139,7 +143,6 @@ public class VotingPageActivityTest {
         SystemClock.sleep(1000);
         mActivityRule.getActivity().callChangeImage();
         SystemClock.sleep(2000);
-
         assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(), is(counter + 1));
     }
 

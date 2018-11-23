@@ -48,10 +48,10 @@ public class Account {
 
     private LocalDbHandlerForAccount localDbHandler;
 
-    private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-            String email, String currentLeague,
-            int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
-            int maxTrophies) {
+    public Account(Context context, ConstantsWrapper constantsWrapper, String username,
+                   String email, String currentLeague,
+                   int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
+                   int maxTrophies) {
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
         }

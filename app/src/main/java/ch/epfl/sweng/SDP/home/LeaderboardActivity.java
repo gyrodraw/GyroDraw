@@ -56,15 +56,22 @@ public class LeaderboardActivity extends Activity {
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
+        TextView friendsFilter = findViewById(R.id.friendsFilter);
+        friendsFilter.setTypeface(typeMuro);
         EditText searchField = findViewById(R.id.searchField);
-
         TextView exitButton = findViewById(R.id.exitButton);
         AnimUtils.setExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
+        friendsFilter.setTypeface(typeMuro);
 
         leaderboard = new Leaderboard();
-
+        friendsFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaderboard.filterByFriends();
+            }
+        });
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence query, int start, int count, int after) {
@@ -216,6 +223,36 @@ public class LeaderboardActivity extends Activity {
          */
         private void fetchPlayersFromFirebase(final String query) {
             Database.getReference("users")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot s : dataSnapshot.getChildren()) {
+                                if (s.child("userId") == null || s.child("username") == null
+                                        || s.child("trophies") == null
+                                        || s.getKey().equals("123456789")) {
+                                    continue;
+                                }
+                                Player temp = new Player((String) s.child("userId").getValue(),
+                                        (String) s.child("username").getValue(),
+                                        (Long) s.child("trophies").getValue());
+
+                                allPlayers.add(temp);
+                            }
+                            filterWantedPlayers(query);
+                            Collections.sort(wantedPlayers);
+                            leaderboardView.removeAllViews();
+                            addWantedPlayersToLayout();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, FIREBASE_ERROR);
+                        }
+                    });
+        }
+
+        private void filterByFriends() {
+            Database.getReference("users." + Account.getInstance(getApplicationContext()).getUserId() + ".friends")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

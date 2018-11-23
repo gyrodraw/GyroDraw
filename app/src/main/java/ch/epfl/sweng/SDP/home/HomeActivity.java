@@ -83,9 +83,9 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Integer state = child.getValue(Integer.class);
+                    FriendsRequestState state = child.getValue(FriendsRequestState.class);
                     // 1 has to be replaced with the right value and possibly extracted as a constant
-                    if (state != null && state == 1) {
+                    if (state != null && state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
                         Database.getReference(format("users.%s.username", id)).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -208,7 +208,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     // Set the listener for the friend request popup buttons using the given userId as the id of the sender of the request
-    private void setListener(final View view, final double amplitude, final int frequency, final String userId) {
+    private void setFriendsRequestListener(final View view, final double amplitude, final int frequency, final String userId) {
         final Context context = this;
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -219,7 +219,7 @@ public class HomeActivity extends BaseActivity {
                         pressButton(view, context);
                         break;
                     case MotionEvent.ACTION_UP:
-                        listenerEventSelector(id, userId);
+                        listenerFriendsRequestEventSelector(id, userId);
                         bounceButton(view, amplitude, frequency, context);
                         break;
                     default:
@@ -229,8 +229,8 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-    private void listenerEventSelector(final View view, int id) {
-        switch (id) {
+    private void listenerEventSelector(final View view, int resourceId) {
+        switch (resourceId) {
             case R.id.drawButton:
                 if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
@@ -268,22 +268,15 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-    // Listener for the friend request popup buttons
-    private void listenerEventSelector(int id, String userId) {
-        switch (id) {
+    // Listener for the friends request popup buttons
+    private void listenerFriendsRequestEventSelector(int resourceId, String userId) {
+        switch (resourceId) {
             case R.id.acceptButton:
-                // Update the user's friends' list
-                Database.getReference(format("users.%s.friends.%s",
-                        Account.getInstance(this).getUserId(), userId)).setValue(2);
-
-                // Update the sender's friends' list
-                Database.getReference(format("users.%s.friends.%s",
-                        userId, Account.getInstance(this).getUserId())).setValue(2);
+                Account.getInstance(this).addFriend(userId);
                 friendRequestWindow.dismiss();
                 break;
             case R.id.rejectButton:
-                Database.getReference(format("users.%s.friends.%s",
-                        Account.getInstance(this).getUserId(), userId)).removeValue();
+                Account.getInstance(this).removeFriend(userId);
                 friendRequestWindow.dismiss();
                 break;
             default:
@@ -343,6 +336,7 @@ public class HomeActivity extends BaseActivity {
 
     private void showFriendRequestPopup(String name, String id) {
         assert name != null : "name is null";
+
         friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -356,11 +350,11 @@ public class HomeActivity extends BaseActivity {
 
         Button acceptButton = friendRequestWindow.findViewById(R.id.acceptButton);
         acceptButton.setTypeface(typeMuro);
-        setListener(acceptButton, getMainAmplitude(), getMainFrequency(), id);
+        setFriendsRequestListener(acceptButton, getMainAmplitude(), getMainFrequency(), id);
 
         Button rejectButton = friendRequestWindow.findViewById(R.id.rejectButton);
-        setListener(rejectButton, getMainAmplitude(), getMainFrequency(), id);
         rejectButton.setTypeface(typeMuro);
+        setFriendsRequestListener(rejectButton, getMainAmplitude(), getMainFrequency(), id);
 
         friendRequestWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         friendRequestWindow.show();

@@ -1,22 +1,26 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static ch.epfl.sweng.SDP.home.League.createLeague1;
-import static ch.epfl.sweng.SDP.home.League.createLeague2;
-import static ch.epfl.sweng.SDP.home.League.createLeague3;
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
-import ch.epfl.sweng.SDP.home.League;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.League.createLeague1;
+import static ch.epfl.sweng.SDP.home.League.createLeague2;
+import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import static java.lang.String.format;
 
 /**
  * Singleton class that represents an account.
@@ -30,8 +34,6 @@ public class Account {
             createLeague2(),
             createLeague3()
     };
-
-    private static final String FRIENDS_TAG = ".friends.";
 
     private String userId;
     private String username;
@@ -376,11 +378,13 @@ public class Account {
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
-                .setValue(usernameId, createCompletionListener());
+        // Update the user's friends' list
+        Database.getReference(format("users.%s.friends.%s",
+                userId, usernameId)).setValue(FRIENDS, createCompletionListener());
 
-        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
-                .setValue(userId, createCompletionListener());
+        // Update the sender's friends' list
+        Database.getReference(format("users.%s.friends.%s",
+                usernameId, userId)).setValue(FRIENDS, createCompletionListener());
     }
 
     /**
@@ -393,11 +397,11 @@ public class Account {
     public void removeFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
-                .removeValue(createCompletionListener());
+        Database.getReference(format("users.%s.friends.%s",
+                userId, usernameId)).removeValue(createCompletionListener());
 
-        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
-                .removeValue(createCompletionListener());
+        Database.getReference(format("users.%s.friends.%s",
+                usernameId, userId)).removeValue(createCompletionListener());
     }
 
     /**

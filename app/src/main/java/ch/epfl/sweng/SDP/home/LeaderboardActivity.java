@@ -43,12 +43,14 @@ public class LeaderboardActivity extends Activity {
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
+    private Boolean filterByFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_leaderboard);
+        filterByFriends = false;
         leaderboardView = findViewById(R.id.leaderboard);
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -56,20 +58,27 @@ public class LeaderboardActivity extends Activity {
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
-        TextView friendsFilter = findViewById(R.id.friendsFilter);
-        friendsFilter.setTypeface(typeMuro);
-        EditText searchField = findViewById(R.id.searchField);
+
+        final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);
         AnimUtils.setExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
-        friendsFilter.setTypeface(typeMuro);
 
         leaderboard = new Leaderboard();
+        final TextView friendsFilter = findViewById(R.id.friendsFilter);
+        friendsFilter.setTypeface(typeMuro);
         friendsFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                leaderboard.filterByFriends();
+                filterByFriends ^= true;
+                if (filterByFriends) {
+                    leaderboard.update(searchField.getText().toString());
+                    friendsFilter.setText(R.string.removeFriendsFilter);
+                } else {
+                    leaderboard.fetchPlayersFromFirebase(searchField.getText().toString());
+                    friendsFilter.setText(R.string.friendsFilter);
+                }
             }
         });
         searchField.addTextChangedListener(new TextWatcher() {
@@ -191,11 +200,17 @@ public class LeaderboardActivity extends Activity {
          * @param query new string to search
          */
         private void update(String query) {
-            if (!allPlayers.isEmpty()) {
-                filterWantedPlayers(query);
-                Collections.sort(wantedPlayers);
-                leaderboardView.removeAllViews();
-                addWantedPlayersToLayout();
+            query = query.toUpperCase();
+            if (!allPlayers.isEmpty() || filterByFriends) {
+                if (filterByFriends) {
+                    leaderboardView.removeAllViews();
+                    filterByFriends(query);
+                } else {
+                    filterWantedPlayers(query);
+                    Collections.sort(wantedPlayers);
+                    leaderboardView.removeAllViews();
+                    addWantedPlayersToLayout();
+                }
             } else {
                 fetchPlayersFromFirebase(query);
             }
@@ -222,6 +237,7 @@ public class LeaderboardActivity extends Activity {
          * @param query string to search
          */
         private void fetchPlayersFromFirebase(final String query) {
+            allPlayers.clear();
             Database.getReference("users")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -246,37 +262,58 @@ public class LeaderboardActivity extends Activity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d(TAG, FIREBASE_ERROR);
+                            Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
                         }
                     });
         }
 
-        private void filterByFriends() {
+        private void filterByFriends(final String query) {
+            allPlayers.clear();
             Database.getReference("users." + Account.getInstance(getApplicationContext()).getUserId() + ".friends")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s.child("userId") == null || s.child("username") == null
-                                        || s.child("trophies") == null
-                                        || s.getKey().equals("123456789")) {
+                                if (s == null || s.getValue() == null
+                                        || s.equals("123456789")) {
                                     continue;
+                                } else if ((int)(long)s.getValue() == FriendsStates.FRIENDS) {
+                                    findAndAddPlayer(s.getKey(), query);
                                 }
-                                Player temp = new Player((String) s.child("userId").getValue(),
-                                        (String) s.child("username").getValue(),
-                                        (Long) s.child("trophies").getValue());
-
-                                allPlayers.add(temp);
                             }
-                            filterWantedPlayers(query);
-                            Collections.sort(wantedPlayers);
-                            leaderboardView.removeAllViews();
-                            addWantedPlayersToLayout();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d(TAG, FIREBASE_ERROR);
+                            Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
+                        }
+                    });
+        }
+
+        private void findAndAddPlayer(final String playerId, final String query) {
+            Database.getReference("users." + playerId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                if (((String)dataSnapshot.child("username").getValue())
+                                        .contains(query)) {
+                                    Player temp = new Player(playerId,
+                                            (String) dataSnapshot.child("username").getValue(),
+                                            (Long) dataSnapshot.child("trophies").getValue());
+
+                                    allPlayers.add(temp);
+                                    filterWantedPlayers(query);
+                                    Collections.sort(wantedPlayers);
+                                    leaderboardView.removeAllViews();
+                                    addWantedPlayersToLayout();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
                         }
                     });
         }

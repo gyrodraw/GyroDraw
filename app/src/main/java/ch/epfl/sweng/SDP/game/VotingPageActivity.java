@@ -229,32 +229,11 @@ public class VotingPageActivity extends BaseActivity {
         }
 
         if (rankingFragment != null) {
-            createAndStoreGameResult();
+            rankingFragment.createAndStoreGameResult();
         }
 
         launchActivity(HomeActivity.class);
         finish();
-    }
-
-    private void createAndStoreGameResult() {
-        List<String> rankedUsernames = rankingFragment.getRankedUsernames();
-        int rank = rankedUsernames.indexOf(username);
-        Bitmap drawing = null;
-
-        for (int i = 0; i < playersNames.length; i++) {
-            if (playersNames[i] != null && playersNames[i].equals(username)) {
-                drawing = drawings[i];
-            }
-        }
-
-        // TODO: replace constants and drawing by the good values
-        if (drawing != null) {
-            GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
-                    drawing, this);
-            LocalDbHandlerForGameResults localDb =
-                    new LocalDbHandlerForGameResults(this, null, 1);
-            localDb.addGameResultToDb(gameResult);
-        }
     }
 
     /**

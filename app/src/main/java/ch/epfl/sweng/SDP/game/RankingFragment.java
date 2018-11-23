@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
 import java.util.ArrayList;
@@ -145,9 +147,10 @@ public class RankingFragment extends ListFragment {
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
                 updateUserStats(rankingForUser, trophiesForUser,usernames.get(0).equals(userNameId));
+                createAndStoreGameResult(usernames, rankingForUser, rankingForUser, trophiesForUser);
 
                 String[] tmpUserNames = (String[]) usernames.toArray();
-                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames, rankings, trophies,drawings);
+                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames, rankings, trophies, drawings);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }
@@ -168,6 +171,25 @@ public class RankingFragment extends ListFragment {
         account.increaseTotalMatches();
         if (won) {
             account.increaseMatchesWon();
+        }
+    }
+
+    /**
+     * Create a game result and save the result into the local database.
+     */
+    public void createAndStoreGameResult(List<String> names, int rank, int stars, int trophies) {
+
+        Account account = Account.getInstance(getActivity().getApplicationContext());
+        String userNameId = account.getUsername();
+
+        Bitmap drawing = drawings[getIndexForUserName(userNameId)];
+
+        if (drawing != null) {
+            GameResult gameResult = new GameResult(names, rank, stars, trophies,
+                    drawing, this.getActivity());
+            LocalDbHandlerForGameResults localDb =
+                    new LocalDbHandlerForGameResults(this.getActivity(), null, 1);
+            localDb.addGameResultToDb(gameResult);
         }
     }
 

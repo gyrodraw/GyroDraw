@@ -37,5 +37,9 @@ public class LeaguesActivity extends Activity {
         ((TextView) findViewById(R.id.league1Name)).setTypeface(typeface);
         ((TextView) findViewById(R.id.league2Name)).setTypeface(typeface);
         ((TextView) findViewById(R.id.league3Name)).setTypeface(typeface);
+
+        ((TextView) findViewById(R.id.league1Text)).setTypeface(typeface);
+        ((TextView) findViewById(R.id.league2Text)).setTypeface(typeface);
+        ((TextView) findViewById(R.id.league3Text)).setTypeface(typeface);
     }
 }

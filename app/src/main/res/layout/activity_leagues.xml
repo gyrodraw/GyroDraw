@@ -37,7 +37,7 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/league3Image"
@@ -51,11 +51,24 @@
                 android:id="@+id/league3Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="@string/league_3"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLeague3" />
+
+            <TextView
+                android:id="@+id/league3Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:drawableEnd="@drawable/trophy"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/trophy"
+                android:gravity="center"
+                android:text="@string/league_3_description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorLightGrey" />
 
             <ImageView
                 android:id="@+id/league2Image"
@@ -69,11 +82,24 @@
                 android:id="@+id/league2Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="@string/league_2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLeague2" />
+
+            <TextView
+                android:id="@+id/league2Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:drawableEnd="@drawable/trophy"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/trophy"
+                android:gravity="center"
+                android:text="@string/league_2_description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorLightGrey" />
 
             <ImageView
                 android:id="@+id/league1Image"
@@ -87,11 +113,24 @@
                 android:id="@+id/league1Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="@string/league_1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLeague1" />
+
+            <TextView
+                android:id="@+id/league1Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:drawableEnd="@drawable/trophy"
+                android:drawablePadding="8dp"
+                android:drawableRight="@drawable/trophy"
+                android:gravity="center"
+                android:text="@string/league_1_description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorLightGrey" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

@@ -380,11 +380,11 @@ public class Account {
 
         // Update the user's friends' list
         Database.getReference(format("users.%s.friends.%s",
-                userId, usernameId)).setValue(FRIENDS, createCompletionListener());
+                userId, usernameId)).setValue(FRIENDS.ordinal(), createCompletionListener());
 
         // Update the sender's friends' list
         Database.getReference(format("users.%s.friends.%s",
-                usernameId, userId)).setValue(FRIENDS, createCompletionListener());
+                usernameId, userId)).setValue(FRIENDS.ordinal(), createCompletionListener());
     }
 
     /**

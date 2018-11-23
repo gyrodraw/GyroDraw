@@ -83,8 +83,8 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    FriendsRequestState state = child.getValue(FriendsRequestState.class);
-                    // 1 has to be replaced with the right value and possibly extracted as a constant
+                    FriendsRequestState state = FriendsRequestState.fromInteger(child.getValue(Integer.class));
+
                     if (state != null && state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
                         Database.getReference(format("users.%s.username", id)).addListenerForSingleValueEvent(new ValueEventListener() {

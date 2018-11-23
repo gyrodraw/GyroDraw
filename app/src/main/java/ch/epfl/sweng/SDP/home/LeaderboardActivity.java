@@ -109,7 +109,7 @@ public class LeaderboardActivity extends Activity {
             return -this.trophies.compareTo(((Player) object).trophies);
         }
 
-        public boolean playerNameContainsString(String query) {
+        private boolean playerNameContainsString(String query) {
             return username.toUpperCase().contains(query.toUpperCase());
         }
 
@@ -219,9 +219,7 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s.child("userId") == null || s.child("username") == null
-                                        || s.child("trophies") == null
-                                        || s.getKey().equals("123456789")) {
+                                if (s.getKey().equals("123456789")) {
                                     continue;
                                 }
                                 Player temp = new Player((String) s.child("userId").getValue(),
@@ -246,7 +244,7 @@ public class LeaderboardActivity extends Activity {
         /**
          * Adds wantedPlayers to the leaderboardView.
          */
-        public void addWantedPlayersToLayout() {
+        private void addWantedPlayersToLayout() {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 20, 0, 0);

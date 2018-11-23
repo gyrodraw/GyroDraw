@@ -2,7 +2,9 @@ package ch.epfl.sweng.SDP.home;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
@@ -14,6 +16,15 @@ public class LeaguesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leagues);
+
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
 
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
         setGlobalTypeface(typeOptimus);

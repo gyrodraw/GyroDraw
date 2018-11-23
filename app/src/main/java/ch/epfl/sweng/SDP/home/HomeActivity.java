@@ -286,7 +286,11 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setLeague() {
+        Account account = Account.getInstance(this);
         TextView leagueText = findViewById(R.id.leagueText);
-        leagueText.setText(Account.getInstance(this).getLayoutLeagueText());
+        leagueText.setText(account.getLeagueTextId());
+        leagueText.setTextColor(getResources().getColor(account.getLeagueColorId()));
+        ((ImageView) findViewById(R.id.leagueImage))
+                .setImageResource(Account.getInstance(this).getLeagueImageId());
     }
 }

@@ -108,6 +108,7 @@
         android:id="@+id/leagueText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:includeFontPadding="false"
         android:shadowColor="@android:color/black"
         android:shadowDy="5"
         android:shadowRadius="10"

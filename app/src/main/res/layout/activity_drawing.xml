@@ -6,6 +6,15 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/winningWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Word"
+        android:textColor="@color/colorWhite"
+        android:textSize="35sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -17,8 +26,8 @@
             android:id="@+id/pencilButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             android:rotation="180"
@@ -28,8 +37,8 @@
             android:id="@+id/eraserButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/eraser" />
@@ -38,8 +47,8 @@
             android:id="@+id/bucketButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/bucket" />
@@ -57,12 +66,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/winningWord"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+    
 
     <ch.epfl.sweng.SDP.game.drawing.PaintView
         android:id="@+id/paintView"
@@ -85,8 +89,8 @@
             android:id="@+id/blackButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle_selected" />
@@ -95,8 +99,8 @@
             android:id="@+id/blueButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle" />
@@ -105,8 +109,8 @@
             android:id="@+id/greenButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle" />
@@ -115,8 +119,8 @@
             android:id="@+id/yellowButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle" />
@@ -125,8 +129,8 @@
             android:id="@+id/redButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle" />

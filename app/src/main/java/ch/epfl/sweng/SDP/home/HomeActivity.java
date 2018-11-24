@@ -32,9 +32,9 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode.getLeagueColorId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode.getLeagueImageId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode.getLeagueTextId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
@@ -43,10 +43,8 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
-    public static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-    public static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
 

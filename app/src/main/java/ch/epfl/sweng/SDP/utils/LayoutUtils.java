@@ -104,6 +104,47 @@ public class LayoutUtils {
         });
     }
 
+    /**
+     * Get the league's image id.
+     *
+     * @param league the requested league
+     * @return the league's image id
+     */
+    public static int getLeagueImageId(String league) {
+        return getLeagueId(league, R.drawable.league_1, R.drawable.league_2, R.drawable.league_3);
+    }
+
+    /**
+     * Get the league's color id.
+     *
+     * @param league the requested league
+     * @return the league's color id
+     */
+    public static int getLeagueColorId(String league) {
+        return getLeagueId
+                (league, R.color.colorLeague1, R.color.colorLeague2, R.color.colorLeague3);
+    }
+
+    /**
+     * Get the league's name id.
+     *
+     * @param league the requested league
+     * @return the league's name id
+     */
+    public static int getLeagueTextId(String league) {
+        return getLeagueId(league, R.string.league_1, R.string.league_2, R.string.league_3);
+    }
+
+    private static int getLeagueId(String league, int league1Id, int league2Id, int league3Id) {
+        if (league.equals(LEAGUES[0].getName())) {
+            return league1Id;
+        }
+        if (league.equals(LEAGUES[1].getName())) {
+            return league2Id;
+        }
+        return league3Id;
+    }
+
     public enum AnimMode {
         CENTER, LEFT, RIGHT;
 
@@ -142,53 +183,6 @@ public class LayoutUtils {
             }
             return R.anim.bounce;
         }
-
-        /**
-         * Get the league's image id.
-         *
-         * @param league the requested league
-         * @return the league's image id
-         */
-        public static int getLeagueImageId(String league) {
-            if (league.equals(LEAGUES[0].getName())) {
-                return R.drawable.league_1;
-            }
-            if (league.equals(LEAGUES[1].getName())) {
-                return R.drawable.league_2;
-            }
-            return R.drawable.league_3;
-        }
-
-        /**
-         * Get the league's color id.
-         *
-         * @param league the requested league
-         * @return the league's color id
-         */
-        public static int getLeagueColorId(String league) {
-            if (league.equals(LEAGUES[0].getName())) {
-                return R.color.colorLeague1;
-            }
-            if (league.equals(LEAGUES[1].getName())) {
-                return R.color.colorLeague2;
-            }
-            return R.color.colorLeague3;
-        }
-
-        /**
-         * Get the league's name id.
-         *
-         * @param league the requested league
-         * @return the league's name id
-         */
-        public static int getLeagueTextId(String league) {
-            if (league.equals(LEAGUES[0].getName())) {
-                return R.string.league_1;
-            }
-            if (league.equals(LEAGUES[1].getName())) {
-                return R.string.league_2;
-            }
-            return R.string.league_3;
-        }
     }
 }
+

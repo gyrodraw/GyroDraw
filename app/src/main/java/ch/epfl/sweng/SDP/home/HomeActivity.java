@@ -79,26 +79,31 @@ public class HomeActivity extends BaseActivity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
-        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId())).addValueEventListener(new ValueEventListener() {
+        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    FriendsRequestState state = FriendsRequestState.fromInteger(child.getValue(Integer.class));
+                    Integer stateValue = child.getValue(Integer.class);
+                    if (stateValue != null) {
+                        FriendsRequestState state = FriendsRequestState.fromInteger(stateValue);
 
-                    if (state != null && state == FriendsRequestState.RECEIVED) {
-                        final String id = child.getKey();
-                        Database.getReference(format("users.%s.username", id)).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String name = dataSnapshot.getValue(String.class);
-                                showFriendRequestPopup(name, id);
-                            }
+                        if (state != null && state == FriendsRequestState.RECEIVED) {
+                            final String id = child.getKey();
+                            Database.getReference(format("users.%s.username", id)).
+                                    addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            String name = dataSnapshot.getValue(String.class);
+                                            showFriendRequestPopup(name, id);
+                                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                throw databaseError.toException();
-                            }
-                        });
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            throw databaseError.toException();
+                                        }
+                                    });
+                        }
                     }
                 }
             }

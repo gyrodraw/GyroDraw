@@ -48,16 +48,19 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testItemsGetAdded() {
-        activity.addRandomItem();
+        addRandomItem();
         assertThat(paintViewHolder.getChildCount(), greaterThan(1));
     }
 
     @Test
     public void testTextFeedbackGetsDisplayed() {
+        addRandomItem();
         int viewsBefore = paintViewHolder.getChildCount();
-        HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
-        Item item = (Item) displayedItems.keySet().toArray()[0];
-        paintView.setCircle(item.getX(), item.getY());
+        if (0 < viewsBefore) {
+            HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
+            Item item = (Item) displayedItems.keySet().toArray()[0];
+            paintView.setCircle(item.getX(), item.getY());
+        }
         assertThat(paintViewHolder.getChildCount(), is(viewsBefore));
     }
 
@@ -141,6 +144,19 @@ public class DrawingOfflineItemsTest {
                 @Override
                 public void run() {
                     item.collision(paintView);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void addRandomItem() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.addRandomItem();
                 }
             });
         } catch (Throwable throwable) {

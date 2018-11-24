@@ -10,15 +10,11 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
-import static ch.epfl.sweng.SDP.home.League.createLeague1;
-import static ch.epfl.sweng.SDP.home.League.createLeague2;
-import static ch.epfl.sweng.SDP.home.League.createLeague3;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
@@ -103,8 +99,9 @@ public class Account {
      * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-                                     String username, String email, String currentLeague, int trophies, int stars,
-                                     int matchesWon, int totalMatches, double averageRating, int maxTrophies) {
+                                     String username, String email, String currentLeague,
+                                     int trophies, int stars, int matchesWon, int totalMatches,
+                                     double averageRating, int maxTrophies) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
         checkPrecondition(username != null, "username is null");
@@ -346,7 +343,6 @@ public class Account {
 
     /**
      * Method that allows one to change the average rating per game given a new rating.
-     * <p>
      * The rating passed as parameter should be the average rating obtained after a match.
      *
      * @throws IllegalArgumentException in case a rating <= 0 or > 5 is given

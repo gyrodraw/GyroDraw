@@ -155,15 +155,7 @@ public class LayoutUtils {
          * @return the matching id
          */
         public static int getPressAnimId(AnimMode animMode) {
-            switch (animMode) {
-                case CENTER:
-                    return R.anim.press;
-                case RIGHT:
-                    return R.anim.press_right;
-                case LEFT:
-                    return R.anim.press_left;
-            }
-            return R.anim.press;
+            return getAnimId(animMode, R.anim.press, R.anim.press_right, R.anim.press_left);
         }
 
         /**
@@ -173,15 +165,21 @@ public class LayoutUtils {
          * @return the matching id
          */
         public static int getBounceAnimId(AnimMode animMode) {
+            return getAnimId(animMode, R.anim.bounce, R.anim.bounce_right, R.anim.bounce_left);
+        }
+
+        private static int getAnimId(AnimMode animMode,
+                                     int centerAnimId, int rightAnimId, int leftAnimId) {
             switch (animMode) {
                 case CENTER:
-                    return R.anim.bounce;
+                    return centerAnimId;
                 case RIGHT:
-                    return R.anim.bounce_right;
+                    return rightAnimId;
                 case LEFT:
-                    return R.anim.bounce_left;
+                    return leftAnimId;
+                default:
+                    return centerAnimId;
             }
-            return R.anim.bounce;
         }
     }
 }

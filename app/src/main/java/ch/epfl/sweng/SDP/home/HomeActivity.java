@@ -214,7 +214,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     // Set the listener for the friend request popup buttons using the given userId as the id of the sender of the request
-    private void setFriendsRequestListener(final View view, final double amplitude, final int frequency, final String userId) {
+    private void setFriendsRequestListener(final View view, final String userId) {
         final Context context = this;
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -226,7 +226,7 @@ public class HomeActivity extends BaseActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         listenerFriendsRequestEventSelector(id, userId);
-                        bounceButton(view, amplitude, frequency, context);
+                        bounceButton(view, context);
                         break;
                     default:
                 }
@@ -356,11 +356,11 @@ public class HomeActivity extends BaseActivity {
 
         Button acceptButton = friendRequestWindow.findViewById(R.id.acceptButton);
         acceptButton.setTypeface(typeMuro);
-        setFriendsRequestListener(acceptButton, getMainAmplitude(), getMainFrequency(), id);
+        setFriendsRequestListener(acceptButton, id);
 
         Button rejectButton = friendRequestWindow.findViewById(R.id.rejectButton);
         rejectButton.setTypeface(typeMuro);
-        setFriendsRequestListener(rejectButton, getMainAmplitude(), getMainFrequency(), id);
+        setFriendsRequestListener(rejectButton, id);
 
         friendRequestWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         friendRequestWindow.show();

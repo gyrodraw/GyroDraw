@@ -19,6 +19,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class PaintView extends View {
 
     private static final int DRAW_WIDTH = 30;
@@ -29,7 +32,7 @@ public class PaintView extends View {
     private boolean isDrawing = false;
     private boolean bucketMode = false;
 
-    private Paint[] colors = new Paint[6];
+    private List<Paint> colors = new LinkedList<>();
     private Path path = new Path();
     private Paint paintC;
 
@@ -58,13 +61,7 @@ public class PaintView extends View {
         super(context, attrs);
         this.context = context;
 
-        Resources res = getResources();
-        colors[0] = getPaintWithColor(Color.BLACK);
-        colors[1] = getPaintWithColor(res.getColor(R.color.colorBlue));
-        colors[2] = getPaintWithColor(res.getColor(R.color.colorGreen));
-        colors[3] = getPaintWithColor(res.getColor(R.color.colorYellow));
-        colors[4] = getPaintWithColor(res.getColor(R.color.colorRed));
-        colors[5] = getPaintWithColor(Color.WHITE);
+        colors.add(getPaintWithColor(Color.BLACK));
 
         paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
@@ -82,6 +79,14 @@ public class PaintView extends View {
         newPaint.setStrokeWidth(DRAW_WIDTH);
         newPaint.setStrokeCap(Paint.Cap.ROUND);
         return newPaint;
+    }
+
+    // This method only adds the colors that a player bought
+    public void setColors(List<Integer> colors) {
+        for(int color : colors) {
+            this.colors.add(getPaintWithColor(getResources().getColor(color)));
+        }
+        this.colors.add(getPaintWithColor(Color.WHITE));
     }
 
     public Bitmap getBitmap() {
@@ -148,7 +153,7 @@ public class PaintView extends View {
      * @return the value of the current color
      */
     public int getColor() {
-        return colors[color].getColor();
+        return colors.get(color).getColor();
     }
 
     /**
@@ -157,7 +162,7 @@ public class PaintView extends View {
      * @param color the index of the color
      */
     public void setColor(int color) {
-        if (this.color != colors.length - 1) {
+        if (this.color != colors.size() - 1) {
             this.color = color;
         }
         previousColor = color;
@@ -182,7 +187,7 @@ public class PaintView extends View {
         if (isDrawing) {
             drawEnd();
         }
-        color = colors.length - 1;
+        color = colors.size() - 1;
     }
 
     /**
@@ -231,7 +236,7 @@ public class PaintView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(bitmap, 0, 0, null);
         if (isDrawing) {
-            canvas.drawPath(path, colors[color]);
+            canvas.drawPath(path, colors.get(color));
         }
         paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX, circleY) + Color.BLACK));
         canvas.drawCircle(circleX, circleY, circleRadius, paintC);
@@ -249,7 +254,7 @@ public class PaintView extends View {
                         path.moveTo(circleX, circleY);
                         // Apply the flood fill algorithm
                         new BucketTool(bitmap, bitmap.getPixel(circleX, circleY),
-                                colors[color].getColor()).floodFill(circleX, circleY);
+                                colors.get(color).getColor()).floodFill(circleX, circleY);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -281,7 +286,7 @@ public class PaintView extends View {
         isDrawing = false;
         circleRadius = DRAW_WIDTH;
         path.lineTo(circleX, circleY);
-        canvas.drawPath(path, colors[color]);
+        canvas.drawPath(path, colors.get(color));
         path.reset();
     }
 

@@ -2,14 +2,11 @@ package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,12 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.Locale;
+
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -45,11 +41,7 @@ public class ShopActivity extends Activity {
     private Dialog buyDialog;
     private Dialog confirmationDialog;
 
-    private final int delayToClear = 5000;
-
     private TextView shopTextView;
-    private Button retFromShop;
-    private Button refresh;
     private LinearLayout shopItems;
 
     private Typeface typeMuro;
@@ -288,7 +280,6 @@ public class ShopActivity extends Activity {
     public void onCancelPopUp(View view) {
         buyDialog.dismiss();
     }
-
 
     // TODO move this to activity class methods
     private LinearLayout addViews(LinearLayout layout, View... views) {

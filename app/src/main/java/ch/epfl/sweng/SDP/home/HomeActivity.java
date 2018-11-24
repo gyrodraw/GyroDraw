@@ -48,6 +48,7 @@ public class HomeActivity extends BaseActivity {
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
     public static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
+    public static final String MURO_PATH = "fonts/Muro.otf";
     private static boolean enableBackgroundAnimation = true;
 
     private Dialog profileWindow;
@@ -81,38 +82,38 @@ public class HomeActivity extends BaseActivity {
 
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Integer stateValue = child.getValue(Integer.class);
-                    if (stateValue != null) {
-                        FriendsRequestState state = FriendsRequestState.fromInteger(stateValue);
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Integer stateValue = child.getValue(Integer.class);
+                            if (stateValue != null) {
+                                FriendsRequestState state = FriendsRequestState.fromInteger(stateValue);
 
-                        if (state != null && state == FriendsRequestState.RECEIVED) {
-                            final String id = child.getKey();
-                            Database.getReference(format("users.%s.username", id)).
-                                    addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            String name = dataSnapshot.getValue(String.class);
-                                            showFriendRequestPopup(name, id);
-                                        }
+                                if (state != null && state == FriendsRequestState.RECEIVED) {
+                                    final String id = child.getKey();
+                                    Database.getReference(format("users.%s.username", id))
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    String name = dataSnapshot.getValue(String.class);
+                                                    showFriendRequestPopup(name, id);
+                                                }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            throw databaseError.toException();
-                                        }
-                                    });
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    throw databaseError.toException();
+                                                }
+                                            });
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final Button practiceButton = findViewById(R.id.practiceButton);
@@ -131,7 +132,7 @@ public class HomeActivity extends BaseActivity {
         starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));
 
         TextView leagueText = findViewById(R.id.leagueText);
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         leagueText.setTypeface(typeOptimus);
@@ -241,7 +242,7 @@ public class HomeActivity extends BaseActivity {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(LoadingScreenActivity.class);
                 } else {
-                    Toast.makeText(this, "No internet connection.",
+                    Toast.makeText(this, R.string.no_internet,
                             Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -289,7 +290,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setMuroFont() {
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
 
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
         profileTextView.setTypeface(typeMuro);
@@ -344,7 +345,7 @@ public class HomeActivity extends BaseActivity {
 
         friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
 
         TextView requestSender = friendRequestWindow.findViewById(R.id.requestSender);
         requestSender.setTypeface(typeMuro);

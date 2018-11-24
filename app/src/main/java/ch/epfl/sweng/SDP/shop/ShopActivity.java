@@ -74,11 +74,6 @@ public class ShopActivity extends Activity {
 
         getColorsFromDatabase(shopColorsRef, shopTextView);
 
-        retFromShop = findViewById(R.id.returnFromShop);
-        setReturn(retFromShop);
-        refresh = findViewById(R.id.refreshShop);
-        setRefresh(refresh);
-
         shopItems = findViewById(R.id.ShopItems);
 
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
@@ -125,19 +120,15 @@ public class ShopActivity extends Activity {
             List<ShopItem> myItems = Account.getInstance(getApplicationContext())
                     .getItemsBought();
 
-            for(DataSnapshot ds : dataSnapshot.getChildren()) {
+            for (DataSnapshot ds : dataSnapshot.getChildren()) {
                 boolean owned = false;
 
-                if(myItems.contains(new ShopItem(ds.getKey(), ds.getValue(int.class)))) {
+                if (myItems.contains(new ShopItem(ds.getKey(), ds.getValue(int.class)))) {
                     owned = true;
                 }
 
                 shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class), owned));
             }
-
-        } else {
-            setTextViewMessage(textView,"Currently no purchasable items in shop.");
-            resetTextViewMessage(textView, delayToClear);
         }
     }
 
@@ -308,85 +299,4 @@ public class ShopActivity extends Activity {
         return layout;
     }
 
-    /**
-     * Sets the return button that makes the user return to the HomeActivity.
-     * @param ret Button which on clicked should return to the HomeActivity.
-     */
-    protected void setReturn(Button ret) {
-        ret.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                gotoHome();
-            }
-        });
-    }
-
-    /**
-     * Sets the button that allows the user to refresh the ShopActivity.
-     * @param refresh Button which on clicked should refresh the current activity.
-     */
-    protected void setRefresh(Button refresh) {
-        refresh.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                refreshShop();
-            }
-        });
-    }
-
-    /**
-     * Sets the message of a TextView.
-     * @param textView TextView that should show a certain message.
-     * @param message String to be displayed.
-     */
-    protected void setTextViewMessage(TextView textView, String message) {
-        if(textView == null) {
-            throw new NullPointerException();
-        }
-        if(message == null) {
-            setTextViewMessage(textView, "");
-        }
-        textView.setText(message);
-    }
-
-    /**
-     * Clears the TextView after a certain delay.
-     * @param textView TextView to be cleared.
-     * @param delay Delay until message is cleared in milliseconds.
-     */
-    protected void resetTextViewMessage(final TextView textView, int delay) {
-        if(textView == null) {
-            throw new NullPointerException();
-        }
-        new CountDownTimer(delay, delay) {
-            public void onTick(long millisUntilFinished) {
-                /**
-                 * Does nothing on tick, only once the countdown reaches zero action is needed.
-                 */
-            }
-
-            public void onFinish() {
-                setTextViewMessage(textView, "");
-            }
-        }.start();
-    }
-
-    /**
-     * Closes ShopActivity and returns to the HomeActivity.
-     */
-    protected void gotoHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Restarts the ShopActivity.
-     */
-    protected void refreshShop() {
-        startActivity(getIntent());
-        finish();
-    }
 }

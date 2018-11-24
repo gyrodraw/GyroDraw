@@ -35,17 +35,6 @@
         android:layout_height="match_parent"
         android:background="@color/darkAlpha"/>
 
-    <Button
-        android:id="@+id/returnFromShop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginBottom="17dp"
-        android:text="Return"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/shopMessages"
         android:layout_width="0dp"
@@ -68,9 +57,7 @@
         android:id="@+id/yourStars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginTop="98dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:shadowColor="@android:color/black"
@@ -78,31 +65,22 @@
         android:textColor="@color/colorDrawYellow"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="@+id/darkAlpha"
-        app:layout_constraintEnd_toStartOf="@+id/starIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028" />
-
-    <Button
-        android:id="@+id/refreshShop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginBottom="17dp"
-        android:text="Refresh"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintVertical_bias="0.014" />
 
     <ScrollView
         android:id="@+id/scrollShop"
         android:layout_width="match_parent"
-        android:layout_height="322dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="76dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -127,12 +105,14 @@
 
     <ImageView
         android:id="@+id/starIcon"
-        android:layout_width="51dp"
+        android:layout_width="wrap_content"
         android:layout_height="49dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="164dp"
-        android:layout_marginRight="164dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="103dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/yourStars"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/star" />
 

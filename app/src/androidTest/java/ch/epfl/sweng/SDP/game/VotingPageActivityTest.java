@@ -71,11 +71,10 @@ public class VotingPageActivityTest {
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
-        SystemClock.sleep(2000);
+        short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
-
-        SystemClock.sleep(2000);
-        assertThat(mActivityRule.getActivity().getRatings()[0], is(3));
+        SystemClock.sleep(5000);
+        assertThat(mActivityRule.getActivity().getRatings()[counter], is(3));
     }
 
     @Test

@@ -31,6 +31,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -136,11 +137,11 @@ public class VotingPageActivityTest {
     @Test
     public void testChangeImage() {
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
-        SystemClock.sleep(1000);
         mActivityRule.getActivity().callChangeImage();
-        SystemClock.sleep(2000);
+        SystemClock.sleep(6000);
 
-        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(), is(counter + 1));
+        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(),
+                greaterThanOrEqualTo(counter + 1));
     }
 
     @Test(expected = DatabaseException.class)

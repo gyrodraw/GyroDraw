@@ -366,7 +366,7 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
 exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID + "/uploadDrawing").once('value', (snapshot) => {
-    if(checkNodeTrueTesting(snapshot, 2) === true) {
+    if(checkNodeTrueTesting(snapshot, 5) === true) {
       admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }
   })

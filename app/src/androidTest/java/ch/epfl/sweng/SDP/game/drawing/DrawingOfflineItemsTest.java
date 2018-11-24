@@ -24,6 +24,7 @@ import static android.support.test.internal.runner.junit4.statement.UiThreadStat
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 public class DrawingOfflineItemsTest {
@@ -56,16 +57,13 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testTextFeedbackGetsDisplayed() {
+        int viewsBefore = paintViewHolder.getChildCount();
         addRandomItem();
         SystemClock.sleep(5000);
-        int viewsBefore = paintViewHolder.getChildCount();
-        if (0 < viewsBefore) {
-            HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
-            Item item = (Item) displayedItems.keySet().toArray()[0];
-            paintView.setCircle(item.getX(), item.getY());
-        }
-        SystemClock.sleep(5000);
-        assertThat(paintViewHolder.getChildCount(), is(viewsBefore));
+        HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
+        Item item = (Item) displayedItems.keySet().toArray()[0];
+        paintView.setCircle(item.getX(), item.getY());
+        assertThat(paintViewHolder.getChildCount(), greaterThanOrEqualTo(viewsBefore));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -49,18 +50,21 @@ public class DrawingOfflineItemsTest {
     @Test
     public void testItemsGetAdded() {
         addRandomItem();
+        SystemClock.sleep(5000);
         assertThat(paintViewHolder.getChildCount(), greaterThan(1));
     }
 
     @Test
     public void testTextFeedbackGetsDisplayed() {
         addRandomItem();
+        SystemClock.sleep(5000);
         int viewsBefore = paintViewHolder.getChildCount();
         if (0 < viewsBefore) {
             HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
             Item item = (Item) displayedItems.keySet().toArray()[0];
             paintView.setCircle(item.getX(), item.getY());
         }
+        SystemClock.sleep(5000);
         assertThat(paintViewHolder.getChildCount(), is(viewsBefore));
     }
 

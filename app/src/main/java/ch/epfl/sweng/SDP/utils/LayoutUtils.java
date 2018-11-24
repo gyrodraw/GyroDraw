@@ -65,10 +65,7 @@ public class LayoutUtils {
      * @param context the context of the view
      */
     public static void bounceButton(final View view, Context context) {
-        final Animation bounce = AnimationUtils.loadAnimation(context, R.anim.bounce);
-        BounceInterpolator interpolator = new BounceInterpolator(MAIN_AMPLITUDE, MAIN_FREQUENCY);
-        bounce.setInterpolator(interpolator);
-        view.startAnimation(bounce);
+        bounceButton(view, MAIN_AMPLITUDE, MAIN_FREQUENCY, AnimMode.CENTER, context);
     }
 
     /**
@@ -97,8 +94,7 @@ public class LayoutUtils {
                         pressButton(exitButton, AnimMode.CENTER, activity);
                         break;
                     case MotionEvent.ACTION_UP:
-                        bounceButton(view, HomeActivity.MAIN_AMPLITUDE, HomeActivity.MAIN_FREQUENCY,
-                                AnimMode.CENTER, activity);
+                        bounceButton(view, activity);
                         activity.launchActivity(HomeActivity.class);
                         break;
                     default:

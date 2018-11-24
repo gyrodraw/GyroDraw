@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,33 +15,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.SortUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
 
@@ -75,7 +63,7 @@ public class RankingFragment extends ListFragment {
 
         // Retrieve the ranking array, passed as argument on instantiation of the class
         roomID = getArguments().getString("roomID");
-        this.drawings =(Bitmap[]) getArguments().getParcelableArray("drawings");
+        this.drawings = (Bitmap[]) getArguments().getParcelableArray("drawings");
         this.playerNames = getArguments().getStringArray("playerNames");
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
@@ -99,7 +87,7 @@ public class RankingFragment extends ListFragment {
 
     private int getIndexForUserName(String username) {
         for (int i = 0; i < this.playerNames.length; i++) {
-            if(username.equals(playerNames[i])) {
+            if (username.equals(playerNames[i])) {
                 return i;
             }
         }
@@ -132,7 +120,7 @@ public class RankingFragment extends ListFragment {
                 Integer[] trophies = new Integer[rankings.length];
                 int lastRank = 0;
                 int trophiesForUser = 0;
-                int rank = RANK*2;
+                int rank = RANK * 2;
                 for (int i = 0; i < rankings.length; i++) {
                     if (rankingForUser == rankings[i]) {
                         trophiesForUser = rank;
@@ -140,17 +128,17 @@ public class RankingFragment extends ListFragment {
                     if (rankings[i] != lastRank) {
                         rank -= RANK;
                     }
-                    trophies[i] = rank+RANK;
+                    trophies[i] = rank + RANK;
                     lastRank = rankings[i];
                 }
 
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
-                updateUserStats(rankingForUser, trophiesForUser,usernames.get(0).equals(userNameId));
+                updateUserStats(rankingForUser, trophiesForUser, usernames.get(0).equals(userNameId));
                 createAndStoreGameResult(usernames, rankingForUser, rankingForUser, trophiesForUser);
 
                 String[] tmpUserNames = (String[]) usernames.toArray();
-                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),tmpUserNames, rankings, trophies, drawings);
+                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(), tmpUserNames, rankings, trophies, drawings);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }
@@ -221,7 +209,7 @@ public class RankingFragment extends ListFragment {
 
             // Check if an existing view is being reused, otherwise inflate the view
             convertView = LayoutInflater.from(getContext())
-                        .inflate(R.layout.ranking_item, parent, false);
+                    .inflate(R.layout.ranking_item, parent, false);
 
             AssetManager assets = getActivity().getAssets();
             Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");

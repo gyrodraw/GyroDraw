@@ -8,18 +8,10 @@ import java.util.Map;
 
 public class Shop {
 
-    private static Shop instance = null;
     private List<ShopItem> itemList;
 
     public Shop() {
         itemList = new ArrayList<>();
-    }
-
-    public void buyItem(ShopItem shopItem) {
-        // 1. Remove from the list
-        // 2. Withdraw the money (trophies)
-        // 3. Update the database
-        removeItem(shopItem);
     }
 
     public void removeItem(ShopItem shopItem) {

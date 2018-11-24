@@ -31,7 +31,7 @@ public class ShopItem {
         this.price = price;
     }
 
-    public void setColorItem(String item) {
+    public void setColorItem(String color) {
         this.color = color;
     }
 

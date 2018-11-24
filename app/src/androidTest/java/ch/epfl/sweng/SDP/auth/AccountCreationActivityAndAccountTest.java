@@ -20,6 +20,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -29,6 +31,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -240,49 +245,50 @@ public class AccountCreationActivityAndAccountTest {
     public void testCreateAccountWithNullCurrentLeague() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, null, 0, 0,
-                0, 0, 0.0, 0);
+                0, 0, 0.0, 0
+                , new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTrophies() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, LEAGUE, -1, 0,
-                0, 0, 0.0, 0);
+                0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeStars() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                -1, 0, 0, 0.0, 0);
+                -1, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMatchesWon() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, -1, 0, 0.0, 0);
+                0, -1, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTotalMatches() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, 0, -1, 0.0, 0);
+                0, 0, -1, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeAverageRating() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, 0, 0, -1.0, 0);
+                0, 0, 0, -1.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMaxTrophies() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, 0, 0, 0.0, -1);
+                0, 0, 0, 0.0, -1, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)

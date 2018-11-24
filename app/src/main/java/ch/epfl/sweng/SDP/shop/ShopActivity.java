@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -37,7 +38,7 @@ import java.util.Locale;
  * Activity allowing the purchase of items such as colors.
  */
 public class ShopActivity extends Activity {
-    //to be replaced with whatever we use to store all these refs
+
     protected FirebaseDatabase database;
     protected DatabaseReference shopColorsRef;
 
@@ -121,9 +122,17 @@ public class ShopActivity extends Activity {
 
         if(dataSnapshot.exists()) {
             shop = new Shop();
+            List<ShopItem> myItems = Account.getInstance(getApplicationContext())
+                    .getItemsBought();
 
             for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class)));
+                boolean owned = false;
+
+                if(myItems.contains(new ShopItem(ds.getKey(), ds.getValue(int.class)))) {
+                    owned = true;
+                }
+
+                shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class), owned));
             }
 
         } else {
@@ -146,43 +155,63 @@ public class ShopActivity extends Activity {
 
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     private LinearLayout toLayout(ShopItem item, final int index) {
+        LinearLayout layout;
+
         String color = item.getColorItem();
         String price = Integer.toString(item.getPriceItem());
 
-        TextView colorView = new TextView(this);
         Resources res = getResources();
-        styleView(colorView, color, res.getColor(R.color.colorDrawYellow),
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
-        TextView priceView = new TextView(this);
-        styleView(priceView, price,
-                res.getColor(R.color.colorPrimaryDark),
-                new LinearLayout.LayoutParams(0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 2));
-        priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-        priceView.setPadding(0, 0, 20, 0);
+        TextView colorView = createTextView(color, res.getColor(R.color.colorDrawYellow), 30,
+                typeMuro, new LinearLayout
+                    .LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
-        ImageView image = new ImageView(this);
-        image.setBackgroundResource(R.drawable.star);
-        image.setPadding(0, 0, 30, 0);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-        image.setLayoutParams(layoutParams);
 
-        LinearLayout layout = addViews(new LinearLayout(this),
-                colorView, priceView, image);
+        if(!item.getOwned()) {
+            TextView priceView = createTextView(price, res.getColor(R.color.colorPrimaryDark),
+                    30, typeMuro, new LinearLayout.LayoutParams(0,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
+            priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
+            priceView.setPadding(0, 0, 20, 0);
+
+            ImageView image = new ImageView(this);
+            image.setBackgroundResource(R.drawable.star);
+            image.setPadding(0, 0, 30, 0);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+            image.setLayoutParams(layoutParams);
+
+            layout = addViews(new LinearLayout(this),
+                    colorView, priceView, image);
+        } else {
+            TextView ownedView = createTextView("OWNED", res.getColor(R.color.colorGreen),
+                    30, typeMuro, new LinearLayout
+                            .LayoutParams(0,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+            ownedView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
+            ownedView.setPadding(0, 0, 30, 0);
+
+            layout = addViews(new LinearLayout(this),
+                    colorView, ownedView);
+        }
+
 
         layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         layout.setPadding(30, 10, 30, 10);
 
-        layout.setClickable(true);
+        if(!item.getOwned()) {
+            layout.setClickable(true);
 
-        layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                touchItem(index);
-                return true;
-            }
-        });
+            layout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    touchItem(index);
+                    return true;
+                }
+            });
+        }
+
+        layout.setTag(item.getColorItem());
 
         return layout;
     }
@@ -216,6 +245,8 @@ public class ShopActivity extends Activity {
 
                     Account.getInstance(getApplicationContext())
                             .updateItemsBought((shop.getItemList()).get(index));
+
+                    ((shop.getItemList()).get(index)).setOwned(true);
                     isSuccessful = true;
                 }
 
@@ -237,6 +268,11 @@ public class ShopActivity extends Activity {
             ((TextView) confirmationDialog.findViewById(R.id.infoMessageView)).setText(getString(R.string.buySuccess));
             ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
                                         "%d", Account.getInstance(this).getStars()));
+
+            // This clears layout and updates the item bought with owned
+            ((LinearLayout) findViewById(R.id.ShopItems)).removeAllViews();
+            addColorsToShop();
+
         } else {
             ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
                     .setText(getString(R.string.error));
@@ -263,21 +299,13 @@ public class ShopActivity extends Activity {
     }
 
 
+    // TODO move this to activity class methods
     private LinearLayout addViews(LinearLayout layout, View... views) {
         for(View view: views) {
             layout.addView(view);
         }
 
         return layout;
-    }
-
-    private void styleView(TextView view, String text, int color,
-                           LinearLayout.LayoutParams layoutParams) {
-        view.setText(text);
-        view.setTextSize(30);
-        view.setTextColor(color);
-        view.setTypeface(typeMuro);
-        view.setLayoutParams(layoutParams);
     }
 
     /**

@@ -15,14 +15,6 @@ public class Shop {
         itemList = new ArrayList<>();
     }
 
-    public static Shop getInstance() {
-        if(instance == null) {
-            instance = new Shop();
-        }
-
-        return instance;
-    }
-
     public void buyItem(ShopItem shopItem) {
         // 1. Remove from the list
         // 2. Withdraw the money (trophies)

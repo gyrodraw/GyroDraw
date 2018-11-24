@@ -10,6 +10,13 @@ public class ShopItem {
     public ShopItem(String color, int price) {
         this.price = price;
         this.color = color;
+        this.owned = false;
+    }
+
+    public ShopItem(String color, int price, boolean owned) {
+        this.price = price;
+        this.color = color;
+        this.owned = owned;
     }
 
     public String getColorItem() {
@@ -26,6 +33,22 @@ public class ShopItem {
 
     public void setColorItem(String item) {
         this.color = color;
+    }
+
+    public void setOwned(boolean owned) {
+        this.owned = owned;
+    }
+
+    public boolean getOwned() {
+        return this.owned;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        ShopItem item = (ShopItem) obj;
+
+        return item.getPriceItem() == this.getPriceItem() &&
+                (item.getColorItem()).equals(this.getColorItem());
     }
 }
 

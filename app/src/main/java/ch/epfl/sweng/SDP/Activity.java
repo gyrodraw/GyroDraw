@@ -1,10 +1,13 @@
 package ch.epfl.sweng.SDP;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.auth.Account;
@@ -74,6 +77,26 @@ public abstract class Activity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
+    public TextView createTextView(String text, int color, int size, Typeface typeface,
+                                   LinearLayout.LayoutParams layoutParams) {
+        TextView textView = new TextView(this);
+        styleView(textView, text, color,
+                size, typeface, layoutParams);
+
+        return textView;
+
+    }
+
+    private void styleView(TextView view, String text, int color, int size, Typeface typeface,
+                           LinearLayout.LayoutParams layoutParams) {
+        view.setText(text);
+        view.setTextSize(size);
+        view.setTextColor(color);
+        view.setTypeface(typeface);
+        view.setLayoutParams(layoutParams);
+    }
+
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
@@ -93,7 +116,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("averageRating")).doubleValue(),
                         ((Long) user.get("maxTrophies")).intValue(),
                         Shop.firebaseToListShopItem((HashMap<String, String>)
-                                                    user.get("itemBought")));
+                                                    user.get("boughtItems")));
 
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);

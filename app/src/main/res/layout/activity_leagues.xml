@@ -52,6 +52,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:includeFontPadding="false"
+                android:shadowColor="@android:color/black"
+                android:shadowDy="5"
+                android:shadowRadius="10"
                 android:text="@string/league_3"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLeague3" />
@@ -66,6 +70,7 @@
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/trophy"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="@string/league_3_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLightGrey" />
@@ -83,6 +88,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:includeFontPadding="false"
+                android:shadowColor="@android:color/black"
+                android:shadowDy="5"
+                android:shadowRadius="10"
                 android:text="@string/league_2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLeague2" />
@@ -97,6 +106,7 @@
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/trophy"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="@string/league_2_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLightGrey" />
@@ -114,6 +124,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:includeFontPadding="false"
+                android:shadowColor="@android:color/black"
+                android:shadowDy="5"
+                android:shadowRadius="10"
                 android:text="@string/league_1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLeague1" />
@@ -128,6 +142,7 @@
                 android:drawablePadding="8dp"
                 android:drawableRight="@drawable/trophy"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="@string/league_1_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorLightGrey" />

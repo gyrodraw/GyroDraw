@@ -78,7 +78,7 @@
         android:textColor="@color/colorDrawYellow"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="@+id/darkAlpha"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/starIcon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.028" />
 
@@ -126,7 +126,7 @@
     </ScrollView>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/starIcon"
         android:layout_width="51dp"
         android:layout_height="49dp"
         android:layout_marginTop="100dp"
@@ -134,6 +134,6 @@
         android:layout_marginRight="164dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/star_shop" />
+        app:srcCompat="@drawable/star" />
 
 </android.support.constraint.ConstraintLayout>

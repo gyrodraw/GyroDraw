@@ -2,8 +2,6 @@ package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -12,14 +10,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,23 +23,15 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.home.LeaderboardActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -55,6 +42,7 @@ public class ShopActivity extends Activity {
     protected DatabaseReference shopColorsRef;
 
     private Dialog buyDialog;
+    private Dialog confirmationDialog;
 
     private final int delayToClear = 5000;
 
@@ -73,13 +61,14 @@ public class ShopActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         buyDialog = new Dialog(this);
+        confirmationDialog = new Dialog(this);
 
         shopColorsRef = Database.getReference("shop.colors");
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
-        setContentView(R.layout.shop_activity);
+        setContentView(R.layout.activity_shop);
         shopTextView = findViewById(R.id.shopMessages);
 
         getColorsFromDatabase(shopColorsRef, shopTextView);
@@ -93,7 +82,8 @@ public class ShopActivity extends Activity {
 
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
         ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.yourStars)).setText(""+Account.getInstance(this).getStars());
+        ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
+                "%d", Account.getInstance(this).getStars()));
 
     }
 
@@ -133,7 +123,7 @@ public class ShopActivity extends Activity {
             shop = new Shop();
 
             for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                shop.addItem(new ShopItem(ds.getKey(), ds.getValue(Integer.class)));
+                shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class)));
             }
 
         } else {
@@ -154,7 +144,7 @@ public class ShopActivity extends Activity {
         }
     }
 
-    @SuppressLint("NewApi")
+    @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     private LinearLayout toLayout(ShopItem item, final int index) {
         String color = item.getColorItem();
         String price = Integer.toString(item.getPriceItem());
@@ -173,7 +163,7 @@ public class ShopActivity extends Activity {
         priceView.setPadding(0, 0, 20, 0);
 
         ImageView image = new ImageView(this);
-        image.setBackgroundResource(R.drawable.star_shop);
+        image.setBackgroundResource(R.drawable.star);
         image.setPadding(0, 0, 30, 0);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
         image.setLayoutParams(layoutParams);
@@ -199,7 +189,7 @@ public class ShopActivity extends Activity {
 
     @SuppressLint("DefaultLocale")
     private void touchItem(int index) {
-        buyDialog.setContentView(R.layout.shop_pop_up);
+        buyDialog.setContentView(R.layout.shop_pop_up_buy);
 
         List<ShopItem> list = shop.getItemList();
 
@@ -217,16 +207,55 @@ public class ShopActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isSuccessful = false;
                 // Check if the user has enough stars
                 if(Account.getInstance(getApplicationContext()).getStars() -
                         (shop.getItemList()).get(index).getPriceItem() >= 0) {
                     Account.getInstance(getApplicationContext()).changeStars(
                             -(shop.getItemList()).get(index).getPriceItem());
+
+                    Account.getInstance(getApplicationContext())
+                            .updateItemsBought((shop.getItemList()).get(index));
+                    isSuccessful = true;
                 }
 
-                // shop.buy()
+                buyDialog.dismiss();
+                showConfirmationPopUp(isSuccessful);
+
             }
         });
+    }
+
+    public void showConfirmationPopUp(boolean isSuccessful) {
+        confirmationDialog.setContentView(R.layout.shop_pop_up_confirmation);
+
+        if(isSuccessful) {
+            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
+                    .setText(getString(R.string.success));
+            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
+                    .setTextColor(getResources().getColor(R.color.colorGreen));
+            ((TextView) confirmationDialog.findViewById(R.id.infoMessageView)).setText(getString(R.string.buySuccess));
+            ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
+                                        "%d", Account.getInstance(this).getStars()));
+        } else {
+            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
+                    .setText(getString(R.string.error));
+            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
+                    .setTextColor(getResources().getColor(R.color.colorRed));
+            ((TextView) confirmationDialog.findViewById(R.id.infoMessageView))
+                    .setText(getString(R.string.buyError));
+        }
+
+        (confirmationDialog.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmationDialog.dismiss();
+            }
+        });
+
+        confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        confirmationDialog.show();
+
     }
 
     public void onCancelPopUp(View view) {

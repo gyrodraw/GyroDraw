@@ -7,7 +7,9 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +51,17 @@ public class HomeActivityTest {
                 }
             };
 
+
+    @Before
+    public void init() {
+        Intents.init();
+    }
+
+    @After
+    public void release() {
+        Intents.release();
+    }
+
     @Test
     public void testLocalDb() {
         LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
@@ -59,42 +72,32 @@ public class HomeActivityTest {
 
     @Test
     public void testDrawButtonOpensWaitingPageActivity() {
-        Intents.init();
         onView(ViewMatchers.withId(R.id.drawButton)).perform(click());
         intended(hasComponent(LoadingScreenActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
     public void testClickOnLeagueImageOpensLeaguesActivity() {
-        Intents.init();
         onView(ViewMatchers.withId(R.id.leagueImage)).perform(click());
         intended(hasComponent(LeaguesActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
     public void testClickOnLeaderboardButtonOpensLeaderboardActivity() {
-        Intents.init();
         onView(ViewMatchers.withId(R.id.leaderboardButton)).perform(click());
         intended(hasComponent(LeaderboardActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
     public void testClickOnPracticeButtonOpensDrawingOffline() {
-        Intents.init();
         onView(ViewMatchers.withId(R.id.practiceButton)).perform(click());
         intended(hasComponent(DrawingOffline.class.getName()));
-        Intents.release();
     }
 
     @Test
     public void testClickOnItemsButtonOpensDrawingOfflineItems() {
-        Intents.init();
         onView(ViewMatchers.withId(R.id.mysteryButton)).perform(click());
         intended(hasComponent(DrawingOfflineItems.class.getName()));
-        Intents.release();
     }
 
     @Test

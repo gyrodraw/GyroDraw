@@ -145,7 +145,6 @@ public class LeaderboardActivity extends Activity {
             leagueView.setLayoutParams(new LinearLayout.LayoutParams(0,
                     LinearLayout.LayoutParams.MATCH_PARENT, 1));
             leagueView.setImageResource(getLeagueImageId(league));
-            leagueView.setForegroundGravity(Gravity.CENTER);
 
             final FriendsButton friendsButton =
                     new FriendsButton(context, this, index, isCurrentUser);

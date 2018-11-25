@@ -167,9 +167,6 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testNewFriend() {
-        Database.getReference("users."
-                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .setValue(FriendsState.SENT.ordinal());
         setListenerAndAsserToFirebaseForFriendsTest(true);
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }

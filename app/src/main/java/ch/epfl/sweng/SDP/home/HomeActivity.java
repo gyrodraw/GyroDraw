@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -369,7 +370,8 @@ public class HomeActivity extends BaseActivity {
         profileWindow.show();
     }
 
-    private void showFriendRequestPopup(String name, String id) {
+    @VisibleForTesting
+    public void showFriendRequestPopup(String name, String id) {
         assert name != null : "name is null";
 
         friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);

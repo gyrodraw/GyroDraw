@@ -122,6 +122,41 @@ public class HomeActivityTest {
     }
 
     @Test
+    public void testFriendsRequestPopUpAppears() {
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mActivityRule.getActivity().showFriendRequestPopup("TestAccount", "123");
+            }
+        });
+        onView(withId(R.id.friendRequestPopUp)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFriendsRequestAccept() {
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mActivityRule.getActivity().showFriendRequestPopup("TestAccount", "123");
+            }
+        });
+        onView(withId(R.id.acceptButton)).perform(click());
+        onView(withId(R.id.friendRequestPopUp)).check(doesNotExist());
+    }
+
+    @Test
+    public void testFriendsRequestReject() {
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mActivityRule.getActivity().showFriendRequestPopup("TestAccount", "123");
+            }
+        });
+        onView(withId(R.id.rejectButton)).perform(click());
+        onView(withId(R.id.friendRequestPopUp)).check(doesNotExist());
+    }
+
+    @Test
     public void testCrossClosesPopUp() {
         openAndClosePopUp(R.id.crossText);
     }

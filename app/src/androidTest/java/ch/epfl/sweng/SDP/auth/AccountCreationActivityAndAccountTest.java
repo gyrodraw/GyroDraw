@@ -25,6 +25,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsState;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -52,38 +53,10 @@ public class AccountCreationActivityAndAccountTest {
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
 
-    private ConstantsWrapper mockConstantsWrapper;
-    private Account mockAccount;
     private Account account;
 
     @Before
     public void init() {
-        mockConstantsWrapper = mock(ConstantsWrapper.class);
-        mockAccount = mock(Account.class);
-        DatabaseReference mockReference = mock(DatabaseReference.class);
-        Query mockQuery = mock(Query.class);
-
-        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
-
-        when(mockReference.child(isA(String.class))).thenReturn(mockReference);
-        when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
-
-        when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
-
-        doNothing().when(mockReference)
-                .setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .removeValue(isA(DatabaseReference.CompletionListener.class));
-
-        doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
-
-        doNothing().when(mockAccount).updateUsername(isA(String.class));
-
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, USERNAME,
-                TEST_EMAIL);
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
     }
@@ -194,20 +167,22 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testAddNewFriend() {
-        setListenerAndAsserToFirebaseForFriendsTest();
+        Database.getReference("users."
+                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+                .setValue(FriendsState.RECEIVED.ordinal());
+        setListenerAndAsserToFirebaseForFriendsTest(true);
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
     @Test
     public void testRemoveFriend() {
-        setListenerAndAsserToFirebaseForFriendsTest();
+        setListenerAndAsserToFirebaseForFriendsTest(false);
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
     @Test
     public void testUpdateUsername() {
         final String newUsername = "987654321";
-        mockAccount.updateUsername(newUsername);
         account.setUsername(newUsername);
         assertThat(account.getUsername(), is(newUsername));
     }
@@ -219,14 +194,14 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test(expected = IllegalStateException.class)
     public void testCreateAccountWhenAlreadyCreated() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME,
                 TEST_EMAIL);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullContext() {
-        Account.createAccount(null, mockConstantsWrapper, USERNAME, null);
+        Account.createAccount(null, new ConstantsWrapper(), USERNAME, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -237,61 +212,61 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullUsername() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 null, TEST_EMAIL);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullEmail() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullCurrentLeague() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, null, 0, 0,
                 0, 0, 0.0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTrophies() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, -1, 0,
                 0, 0, 0.0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeStars() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 -1, 0, 0, 0.0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMatchesWon() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, -1, 0, 0.0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTotalMatches() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, -1, 0.0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeAverageRating() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, 0, -1.0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMaxTrophies() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, 0, 0.0, -1);
     }
@@ -355,19 +330,19 @@ public class AccountCreationActivityAndAccountTest {
         assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
     }
 
-    private void setListenerAndAsserToFirebaseForFriendsTest() {
+    private void setListenerAndAsserToFirebaseForFriendsTest(final boolean state) {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
         final ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                assertThat(dataSnapshot.exists(), is(true));
+                countingResource.decrement();
+                assertThat(dataSnapshot.exists(), is(state));
                 Database.getReference("users."
-                        + mockAccount.getUserId()
+                        + USER_ID
                         + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                         .removeEventListener(this);
-                countingResource.decrement();
             }
 
             @Override
@@ -377,8 +352,7 @@ public class AccountCreationActivityAndAccountTest {
         };
 
         Database.getReference("users."
-                + Account.getInstance(activityRule.getActivity().getApplicationContext()).getUserId()
-                + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .addValueEventListener(valueEventListener);
     }
 

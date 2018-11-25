@@ -384,7 +384,7 @@ public class Account {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            if ((int)(long)dataSnapshot.getValue()
+                            if (dataSnapshot.getValue(int.class)
                                     == RECEIVED.ordinal()) {
                                 confirmedFriendship(usernameId);
                             } else {
@@ -412,10 +412,10 @@ public class Account {
 
     private void confirmedFriendship(String friendId) {
         Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + friendId).build()
-                .setValue(FRIENDS, createCompletionListener());
+                .setValue(FRIENDS.ordinal(), createCompletionListener());
 
         Database.constructBuilder(usersRef).addChildren(friendId + FRIENDS_TAG + userId).build()
-                .setValue(FRIENDS, createCompletionListener());
+                .setValue(FRIENDS.ordinal(), createCompletionListener());
     }
 
     /**

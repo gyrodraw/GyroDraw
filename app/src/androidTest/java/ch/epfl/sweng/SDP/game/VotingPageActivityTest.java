@@ -49,7 +49,7 @@ public class VotingPageActivityTest {
             new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    disableAnimations();
+                    VotingPageActivity.disableAnimations();
                 }
 
                 @Override

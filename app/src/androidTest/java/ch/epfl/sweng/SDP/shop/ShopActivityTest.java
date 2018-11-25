@@ -27,7 +27,7 @@ public class ShopActivityTest {
             new ActivityTestRule<ShopActivity>(ShopActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    disableAnimations();
+                    ShopActivity.disableAnimations();
                 }
             };
 

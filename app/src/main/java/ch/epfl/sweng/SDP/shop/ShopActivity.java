@@ -302,7 +302,7 @@ public class ShopActivity extends Activity {
         return layout;
     }
 
-    public void disableAnimations() {
+    public static void disableAnimations() {
         enableAnimations = false;
     }
 

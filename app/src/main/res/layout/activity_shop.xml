@@ -29,12 +29,6 @@
         app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
 
-    <ImageView
-        android:id="@+id/darkAlpha"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/darkAlpha"/>
-
     <TextView
         android:id="@+id/shopMessages"
         android:layout_width="0dp"
@@ -64,7 +58,7 @@
         android:text="Stars"
         android:textColor="@color/colorDrawYellow"
         android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="@+id/darkAlpha"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.44"
         app:layout_constraintStart_toStartOf="parent"

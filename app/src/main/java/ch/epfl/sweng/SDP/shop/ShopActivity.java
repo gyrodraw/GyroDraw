@@ -58,6 +58,8 @@ public class ShopActivity extends Activity {
 
         overridePendingTransition(0, 0);
 
+        setContentView(R.layout.activity_shop);
+
         if (enableAnimations) {
             Glide.with(this).load(R.drawable.background_animation)
                     .into((ImageView) findViewById(R.id.shopBackgroundAnimation));
@@ -71,7 +73,6 @@ public class ShopActivity extends Activity {
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
-        setContentView(R.layout.activity_shop);
         shopTextView = findViewById(R.id.shopMessages);
 
         getColorsFromDatabase(shopColorsRef, shopTextView);

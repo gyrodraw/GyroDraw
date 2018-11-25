@@ -36,34 +36,31 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
-
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 import static java.lang.String.format;
 
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
+    private static final String MURO_PATH = "fonts/Muro.otf";
+
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
-    public static final String MURO_PATH = "fonts/Muro.otf";
+
     private static boolean enableBackgroundAnimation = true;
 
     private Dialog profileWindow;
     private Dialog friendRequestWindow;
 
     /**
-     * Disables the background animation. Call this method in every HomeActivity test
+     * Disables the background animation. Call this method in every HomeActivity test.
      */
     public static void disableBackgroundAnimation() {
         enableBackgroundAnimation = false;
@@ -97,7 +94,7 @@ public class HomeActivity extends BaseActivity {
                             if (stateValue != null) {
                                 FriendsRequestState state = FriendsRequestState.fromInteger(stateValue);
 
-                                if (state != null && state == FriendsRequestState.RECEIVED) {
+                                if (state == FriendsRequestState.RECEIVED) {
                                     final String id = child.getKey();
                                     Database.getReference(format("users.%s.username", id))
                                             .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -254,7 +251,7 @@ public class HomeActivity extends BaseActivity {
                 int id = view.getId();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        pressButton(view, context);
+                        pressButton(view, AnimMode.CENTER, context);
                         break;
                     case MotionEvent.ACTION_UP:
                         listenerFriendsRequestEventSelector(id, userId);
@@ -397,6 +394,7 @@ public class HomeActivity extends BaseActivity {
         friendRequestWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         friendRequestWindow.show();
     }
+
     private void setLeague() {
         String league = Account.getInstance(this).getCurrentLeague();
         TextView leagueText = findViewById(R.id.leagueText);

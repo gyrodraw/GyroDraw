@@ -152,9 +152,9 @@ public class DrawingOnlineTest {
         Paint paint = initializedPaint();
 
         Path path = new Path();
-        path.lineTo(2, 2);
+        path.lineTo(1, 1);
 
-        Bitmap bitmap = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         Canvas canvas = initializedCanvas(bitmap, paint, path);
         canvas.drawColor(Color.WHITE);
         canvas.drawPath(path, paint);
@@ -170,8 +170,8 @@ public class DrawingOnlineTest {
      * @param newBitmap the second bitmap
      */
     public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
-        for (int i = 0; i < 4; ++i) {
-            for (int j = 0; j < 4; ++j) {
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 2; ++j) {
                 assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
             }
         }

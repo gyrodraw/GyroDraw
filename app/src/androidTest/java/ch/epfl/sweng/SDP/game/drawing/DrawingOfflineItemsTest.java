@@ -23,14 +23,15 @@ import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class DrawingOfflineItemsTest {
 
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
+    private DrawingOfflineItems activity;
 
     @Rule
     public final ActivityTestRule<DrawingOfflineItems> activityRule =
@@ -41,25 +42,32 @@ public class DrawingOfflineItemsTest {
      */
     @Before
     public void init() {
-        paintViewHolder = activityRule.getActivity().paintViewHolder;
-        paintView = activityRule.getActivity().paintView;
+        activity = activityRule.getActivity();
+        paintViewHolder = activity.paintViewHolder;
+        paintView = activity.paintView;
         paintView.setCircle(0, 0);
     }
 
     @Test
     public void testItemsGetAdded() {
-        SystemClock.sleep(10000);
-        assertTrue(1 < paintViewHolder.getChildCount());
+        addRandomItem();
+        SystemClock.sleep(5000);
+        assertThat(paintViewHolder.getChildCount(), greaterThan(1));
     }
 
     @Test
     public void testTextFeedbackGetsDisplayed() {
-        SystemClock.sleep(10000);
         int viewsBefore = paintViewHolder.getChildCount();
-        HashMap<Item, ImageView> displayedItems = activityRule.getActivity().getDisplayedItems();
-        Item item = (Item)displayedItems.keySet().toArray()[0];
+        Item item;
+        do {
+            addRandomItem();
+            SystemClock.sleep(5000);
+            HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
+            item = (Item) displayedItems.keySet().toArray()[0];
+        }
+        while (item instanceof BumpingItem);
         paintView.setCircle(item.getX(), item.getY());
-        assertThat(paintViewHolder.getChildCount(), is(viewsBefore));
+        assertThat(paintViewHolder.getChildCount(), greaterThanOrEqualTo(viewsBefore));
     }
 
     @Test
@@ -82,11 +90,11 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testAddStarsItemAddsStarsToAccount() {
-        int initStars = Account.getInstance(activityRule.getActivity()
+        int initStars = Account.getInstance(activity
                 .getApplicationContext()).getStars();
         activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
-        assertThat(Account.getInstance(activityRule.getActivity()
-                .getApplicationContext()).getStars(), is(initStars+3));
+        assertThat(Account.getInstance(activity
+                .getApplicationContext()).getStars(), is(initStars + 3));
     }
 
     @Test
@@ -104,7 +112,7 @@ public class DrawingOfflineItemsTest {
     public void testBumpingItemChangesItsDrawable() {
         paintView.setCircle(200, 200);
         BumpingItem item = BumpingItem.createBumpingItem(200, 200, 10);
-        ImageView view = new ImageView(activityRule.getActivity());
+        ImageView view = new ImageView(activity);
         view.setX(item.getX() - item.getRadius());
         view.setY(item.getY() - item.getRadius());
         view.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -114,13 +122,13 @@ public class DrawingOfflineItemsTest {
         item.setImageView(view);
         collisionItem(item);
         assertThat(item.getImageView().getDrawable(),
-                is(not(activityRule.getActivity().getDrawable(R.drawable.mystery_box))));
+                is(not(activity.getDrawable(R.drawable.mystery_box))));
     }
 
     private void checkItemHasCorrectBehaviourOnPaintView(Item item, double factor) {
         double init = paintView.getSpeed();
         activateItem(item);
-        assertThat(paintView.getSpeed(), is(init*factor));
+        assertThat(paintView.getSpeed(), is(init * factor));
     }
 
     private void activateItem(final Item item) {
@@ -142,6 +150,19 @@ public class DrawingOfflineItemsTest {
                 @Override
                 public void run() {
                     item.collision(paintView);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void addRandomItem() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.addRandomItem();
                 }
             });
         } catch (Throwable throwable) {

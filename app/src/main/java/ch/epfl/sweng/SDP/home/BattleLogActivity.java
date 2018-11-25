@@ -8,14 +8,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.AnimUtils;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 public class BattleLogActivity extends Activity {
 
@@ -34,7 +33,7 @@ public class BattleLogActivity extends Activity {
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
         TextView exitButton = findViewById(R.id.exitButton);
-        AnimUtils.setExitListener(exitButton, this);
+        LayoutUtils.setExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         ((TextView) findViewById(R.id.battleLogText)).setTypeface(typeMuro);
 

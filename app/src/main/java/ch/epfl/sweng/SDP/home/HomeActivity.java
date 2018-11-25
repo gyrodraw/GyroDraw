@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,11 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -34,14 +30,21 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
+
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
-    public static final int MAIN_FREQUENCY = 10;
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
-    public static final double MAIN_AMPLITUDE = 0.1;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
     private static boolean enableBackgroundAnimation = true;
 
@@ -72,8 +75,8 @@ public class HomeActivity extends BaseActivity {
         localDb.retrieveAccount(Account.getInstance(this));
 
         final ImageView drawButton = findViewById(R.id.drawButton);
-        final Button practiceButton = findViewById(R.id.practiceButton);
-        final Button itemsButton = findViewById(R.id.itemsButton);
+        final ImageView practiceButton = findViewById(R.id.practiceButton);
+        final ImageView mysteryButton = findViewById(R.id.mysteryButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
@@ -82,6 +85,11 @@ public class HomeActivity extends BaseActivity {
         final ImageView starsButton = findViewById(R.id.starsButton);
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+
+        practiceButton.setColorFilter(new LightingColorFilter(Color.WHITE,
+                getResources().getColor(R.color.colorButtonBlue)));
+        mysteryButton.setColorFilter(new LightingColorFilter(Color.WHITE,
+                getResources().getColor(R.color.colorButtonBlue)));
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
@@ -94,8 +102,6 @@ public class HomeActivity extends BaseActivity {
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
         trophiesCount.setTypeface(typeMuro);
-        practiceButton.setTypeface(typeMuro);
-        itemsButton.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
@@ -106,7 +112,9 @@ public class HomeActivity extends BaseActivity {
         setListener(leagueImage, getMainAmplitude(), LEAGUE_IMAGE_FREQUENCY);
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
-        setListener(itemsButton, getMainAmplitude(), getMainFrequency());
+        setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
+
+        setLeague();
     }
 
     // Launch the LeaguesActivity.
@@ -150,17 +158,36 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 int id = view.getId();
+                AnimMode animMode;
+
+                switch (id) {
+                    case R.id.starsButton:
+                        animMode = AnimMode.LEFT;
+                        break;
+                    case R.id.trophiesButton:
+                        animMode = AnimMode.LEFT;
+                        break;
+                    case R.id.practiceButton:
+                        animMode = AnimMode.LEFT;
+                        break;
+                    case R.id.mysteryButton:
+                        animMode = AnimMode.RIGHT;
+                        break;
+                    default:
+                        animMode = AnimMode.CENTER;
+                }
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (id == R.id.drawButton) {
                             ((ImageView) view)
                                     .setImageResource(R.drawable.draw_button_pressed);
                         }
-                        pressButton(view, context);
+                        pressButton(view, animMode, context);
                         break;
                     case MotionEvent.ACTION_UP:
                         listenerEventSelector(view, id);
-                        bounceButton(view, amplitude, frequency, context);
+                        bounceButton(view, amplitude, frequency, animMode, context);
                         break;
                     default:
                 }
@@ -201,7 +228,7 @@ public class HomeActivity extends BaseActivity {
             case R.id.practiceButton:
                 launchActivity(DrawingOffline.class);
                 break;
-            case R.id.itemsButton:
+            case R.id.mysteryButton:
                 launchActivity(DrawingOfflineItems.class);
                 break;
             default:
@@ -257,5 +284,14 @@ public class HomeActivity extends BaseActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
+    }
+
+    private void setLeague() {
+        String league = Account.getInstance(this).getCurrentLeague();
+        TextView leagueText = findViewById(R.id.leagueText);
+
+        leagueText.setText(getLeagueTextId(league));
+        leagueText.setTextColor(getResources().getColor(getLeagueColorId(league)));
+        ((ImageView) findViewById(R.id.leagueImage)).setImageResource(getLeagueImageId(league));
     }
 }

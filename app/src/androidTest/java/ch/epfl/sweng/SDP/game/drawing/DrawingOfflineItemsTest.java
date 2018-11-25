@@ -58,10 +58,14 @@ public class DrawingOfflineItemsTest {
     @Test
     public void testTextFeedbackGetsDisplayed() {
         int viewsBefore = paintViewHolder.getChildCount();
-        addRandomItem();
-        SystemClock.sleep(5000);
-        HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
-        Item item = (Item) displayedItems.keySet().toArray()[0];
+        Item item;
+        do {
+            addRandomItem();
+            SystemClock.sleep(5000);
+            HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
+            item = (Item) displayedItems.keySet().toArray()[0];
+        }
+        while (item instanceof BumpingItem);
         paintView.setCircle(item.getX(), item.getY());
         assertThat(paintViewHolder.getChildCount(), greaterThanOrEqualTo(viewsBefore));
     }

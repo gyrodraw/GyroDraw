@@ -86,40 +86,8 @@ public class HomeActivity extends BaseActivity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
-        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            Integer stateValue = child.getValue(Integer.class);
-                            if (stateValue != null) {
-                                FriendsRequestState state = FriendsRequestState.fromInteger(stateValue);
-
-                                if (state == FriendsRequestState.RECEIVED) {
-                                    final String id = child.getKey();
-                                    Database.getReference(format("users.%s.username", id))
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    String name = dataSnapshot.getValue(String.class);
-                                                    showFriendRequestPopup(name, id);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                    throw databaseError.toException();
-                                                }
-                                            });
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+        // Add listener to check for new friends requests
+        addListenerForFriendsRequests();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final ImageView practiceButton = findViewById(R.id.practiceButton);
@@ -162,6 +130,48 @@ public class HomeActivity extends BaseActivity {
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
 
         setLeague();
+    }
+
+    private void addListenerForFriendsRequests() {
+        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Integer stateValue = child.getValue(Integer.class);
+                            if (stateValue != null) {
+                                FriendsRequestState state =
+                                        FriendsRequestState.fromInteger(stateValue);
+
+                                if (state == FriendsRequestState.RECEIVED) {
+                                    final String id = child.getKey();
+                                    Database.getReference(format("users.%s.username", id))
+                                            .addListenerForSingleValueEvent(
+                                                    new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(
+                                                                @NonNull DataSnapshot dataSnapshot) {
+                                                            String name = dataSnapshot
+                                                                    .getValue(String.class);
+                                                            showFriendRequestPopup(name, id);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(
+                                                                @NonNull DatabaseError databaseError) {
+                                                            throw databaseError.toException();
+                                                        }
+                                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
     }
 
     // Launch the LeaguesActivity.
@@ -243,7 +253,8 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-    // Set the listener for the friend request popup buttons using the given userId as the id of the sender of the request
+    // Set the listener for the friend request popup buttons using the given userId
+    // as the id of the sender of the request
     private void setFriendsRequestListener(final View view, final String userId) {
         final Context context = this;
         view.setOnTouchListener(new View.OnTouchListener() {

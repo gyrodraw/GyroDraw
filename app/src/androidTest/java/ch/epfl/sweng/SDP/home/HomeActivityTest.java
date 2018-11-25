@@ -40,6 +40,9 @@ import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
 
+    private static final String TEST_ACCOUNT = "TestAccount";
+    private static final String ID = "123";
+    
     @Rule
     public final ActivityTestRule<HomeActivity> mActivityRule =
             new ActivityTestRule<HomeActivity>(HomeActivity.class) {
@@ -126,7 +129,7 @@ public class HomeActivityTest {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mActivityRule.getActivity().showFriendRequestPopup("TestAccount", "123");
+                mActivityRule.getActivity().showFriendRequestPopup(TEST_ACCOUNT, ID);
             }
         });
         onView(withId(R.id.friendRequestPopUp)).check(matches(isDisplayed()));
@@ -137,7 +140,7 @@ public class HomeActivityTest {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mActivityRule.getActivity().showFriendRequestPopup("TestAccount", "123");
+                mActivityRule.getActivity().showFriendRequestPopup(TEST_ACCOUNT, ID);
             }
         });
         onView(withId(R.id.acceptButton)).perform(click());
@@ -149,7 +152,7 @@ public class HomeActivityTest {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mActivityRule.getActivity().showFriendRequestPopup("TestAccount", "123");
+                mActivityRule.getActivity().showFriendRequestPopup(TEST_ACCOUNT, ID);
             }
         });
         onView(withId(R.id.rejectButton)).perform(click());

@@ -42,7 +42,7 @@ public class HomeActivityTest {
 
     private static final String TEST_ACCOUNT = "TestAccount";
     private static final String ID = "123";
-    
+
     @Rule
     public final ActivityTestRule<HomeActivity> mActivityRule =
             new ActivityTestRule<HomeActivity>(HomeActivity.class) {
@@ -122,17 +122,6 @@ public class HomeActivityTest {
     public void testUsernameOpensPopUp() {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testFriendsRequestPopUpAppears() {
-        mActivityRule.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mActivityRule.getActivity().showFriendRequestPopup(TEST_ACCOUNT, ID);
-            }
-        });
-        onView(withId(R.id.friendRequestPopUp)).check(matches(isDisplayed()));
     }
 
     @Test

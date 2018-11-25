@@ -386,12 +386,12 @@ public class Account {
                         if (dataSnapshot.exists()) {
                             if (dataSnapshot.getValue(int.class)
                                     == RECEIVED.ordinal()) {
-                                confirmedFriendship(usernameId);
+                                updateFriendship(usernameId, FRIENDS.ordinal(), FRIENDS.ordinal());
                             } else {
-                                initializeFriendship(usernameId);
+                                updateFriendship(usernameId, SENT.ordinal(), RECEIVED.ordinal());
                             }
                         } else {
-                            initializeFriendship(usernameId);
+                            updateFriendship(usernameId, SENT.ordinal(), RECEIVED.ordinal());
                         }
                     }
 
@@ -402,20 +402,18 @@ public class Account {
                 });
     }
 
-    private void initializeFriendship(String friendId) {
+    /**
+     * Updates current users and friends friendship-state.
+     * @param friendId      id of friend
+     * @param stateUser     state that current user will save
+     * @param stateFriend   state that friend will save
+     */
+    private void updateFriendship(String friendId, int stateUser, int stateFriend) {
         Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + friendId).build()
-                .setValue(SENT.ordinal(), createCompletionListener());
+                .setValue(stateUser, createCompletionListener());
 
         Database.constructBuilder(usersRef).addChildren(friendId + FRIENDS_TAG + userId).build()
-                .setValue(RECEIVED.ordinal(), createCompletionListener());
-    }
-
-    private void confirmedFriendship(String friendId) {
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + friendId).build()
-                .setValue(FRIENDS.ordinal(), createCompletionListener());
-
-        Database.constructBuilder(usersRef).addChildren(friendId + FRIENDS_TAG + userId).build()
-                .setValue(FRIENDS.ordinal(), createCompletionListener());
+                .setValue(stateFriend, createCompletionListener());
     }
 
     /**

@@ -317,7 +317,7 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        int status = (int)(long)dataSnapshot.getValue();
+                        int status = dataSnapshot.getValue(int.class);
                         if (status == SENT.ordinal()) {
                             setBackgroundResource(R.drawable.pending_friend);
                         } else if (status == FRIENDS.ordinal()) {

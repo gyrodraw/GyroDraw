@@ -269,7 +269,7 @@ public class WaitingPageActivityTest {
     }
 
     @Ignore
-    public void waitForVisibility(final View view, final int visibility) {
+    public static void waitForVisibility(final View view, final int visibility) {
         IdlingRegistry.getInstance().register(new ViewVisibilityIdlingResource(view, visibility));
     }
 

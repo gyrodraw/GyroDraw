@@ -34,7 +34,7 @@ public class LeaguesActivityTest {
 
     @Test
     public void testLeaguesListIsScrollableUp() {
-        onView(withId(R.id.scrollView)).perform(ViewActions.swipeUp());
+        onView(withId(R.id.scrollView)).perform(ViewActions.swipeDown());
         onView(withId(R.id.scrollView)).perform(ViewActions.swipeDown());
         onView(withId(R.id.league3Image)).check(matches(isDisplayed()));
     }

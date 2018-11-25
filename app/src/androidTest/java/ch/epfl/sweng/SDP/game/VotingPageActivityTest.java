@@ -31,6 +31,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -70,11 +71,10 @@ public class VotingPageActivityTest {
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
-        SystemClock.sleep(2000);
+        short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
-
-        SystemClock.sleep(2000);
-        assertThat(mActivityRule.getActivity().getRatings()[0], is(3));
+        SystemClock.sleep(5000);
+        assertThat(mActivityRule.getActivity().getRatings()[counter], is(3));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class VotingPageActivityTest {
     @Test
     public void testShowDrawingImage() {
         Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
-        Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
+        Bitmap image = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
     }
@@ -136,11 +136,11 @@ public class VotingPageActivityTest {
     @Test
     public void testChangeImage() {
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
-        SystemClock.sleep(1000);
         mActivityRule.getActivity().callChangeImage();
-        SystemClock.sleep(2000);
+        SystemClock.sleep(6000);
 
-        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(), is(counter + 1));
+        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(),
+                greaterThanOrEqualTo(counter + 1));
     }
 
     @Test(expected = DatabaseException.class)
@@ -158,8 +158,7 @@ public class VotingPageActivityTest {
     @Test
     public void testDecodeSampledBitmapFromResource() {
         Bitmap bitmap = BitmapManipulator.decodeSampledBitmapFromResource(
-                mActivityRule.getActivity().getResources(), R.drawable.default_image,
-                20, 20);
+                mActivityRule.getActivity().getResources(), R.drawable.default_image, 2, 2);
         assertNotNull(bitmap);
     }
 

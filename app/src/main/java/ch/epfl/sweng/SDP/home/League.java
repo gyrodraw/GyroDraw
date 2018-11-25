@@ -46,7 +46,7 @@ public class League {
      * @return the desired league.
      */
     public static League createLeague3() {
-        return new League("league3", 200, 299);
+        return new League("league3", 200, Integer.MAX_VALUE);
     }
 
     /**

@@ -42,7 +42,7 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemNoStars() {
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
-        onView(withTagValue(is((Object) "red"))).perform(click());
+        onView(withTagValue(is((Object) "yellow"))).perform(click());
         onView(withId(R.id.buyButton)).perform(click());
         onView(withId(R.id.okButton)).check(matches(isDisplayed()));
         onView(withId(R.id.okButton)).perform(click());
@@ -51,7 +51,7 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setStars(500);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setStars(100);
         waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         onView(withTagValue(is((Object) "red"))).perform(click());
         onView(withId(R.id.buyButton)).perform(click());

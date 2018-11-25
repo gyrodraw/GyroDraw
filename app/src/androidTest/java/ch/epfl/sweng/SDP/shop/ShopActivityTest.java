@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.shop;
 
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
@@ -33,7 +34,8 @@ public class ShopActivityTest {
 
     @Test
     public void testPressItemAndCancel() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
+        SystemClock.sleep(3000);
+        //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         onView(withTagValue(is((Object) "blue"))).perform(click());
         onView(withId(R.id.cancelButton)).perform(click());
         onView(withId(R.id.buyButton)).check(doesNotExist());
@@ -41,7 +43,8 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemNoStars() {
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
+        SystemClock.sleep(3000);
+        //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         onView(withTagValue(is((Object) "yellow"))).perform(click());
         onView(withId(R.id.buyButton)).perform(click());
         onView(withId(R.id.okButton)).check(matches(isDisplayed()));
@@ -52,7 +55,8 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemSuccess() {
         Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setStars(100);
-        waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
+        SystemClock.sleep(3000);
+        //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         onView(withTagValue(is((Object) "red"))).perform(click());
         onView(withId(R.id.buyButton)).perform(click());
         onView(withId(R.id.okButton)).check(matches(isDisplayed()));

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +36,8 @@ import ch.epfl.sweng.SDP.firebase.Database;
  */
 public class ShopActivity extends Activity {
 
+    private static boolean enableAnimations = true;
+
     protected FirebaseDatabase database;
     protected DatabaseReference shopColorsRef;
 
@@ -53,6 +56,13 @@ public class ShopActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        overridePendingTransition(0, 0);
+
+        if (enableAnimations) {
+            Glide.with(this).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.shopBackgroundAnimation));
+        }
+
         buyDialog = new Dialog(this);
         confirmationDialog = new Dialog(this);
 
@@ -66,7 +76,7 @@ public class ShopActivity extends Activity {
 
         getColorsFromDatabase(shopColorsRef, shopTextView);
 
-        shopItems = findViewById(R.id.ShopItems);
+        shopItems = findViewById(R.id.shopItems);
 
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
         ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
@@ -88,7 +98,7 @@ public class ShopActivity extends Activity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 extractColorsFromDataSnapshot(dataSnapshot, textView);
                 addColorsToShop();
-                findViewById(R.id.ShopItems).setVisibility(View.VISIBLE);
+                findViewById(R.id.shopItems).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -254,7 +264,7 @@ public class ShopActivity extends Activity {
                                         "%d", Account.getInstance(this).getStars()));
 
             // This clears layout and updates the item bought with owned
-            ((LinearLayout) findViewById(R.id.ShopItems)).removeAllViews();
+            ((LinearLayout) findViewById(R.id.shopItems)).removeAllViews();
             addColorsToShop();
 
         } else {
@@ -289,6 +299,10 @@ public class ShopActivity extends Activity {
         }
 
         return layout;
+    }
+
+    public void disableAnimations() {
+        enableAnimations = false;
     }
 
 }

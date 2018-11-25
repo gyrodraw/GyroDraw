@@ -20,6 +20,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -180,6 +182,15 @@ public class AccountCreationActivityAndAccountTest {
     public void testChangeTrophies() {
         account.changeTrophies(20);
         assertThat(account.getTrophies(), is(20));
+    }
+
+    @Test
+    public void testUpdateItemsBought() {
+        List<ShopItem> itemList = new LinkedList<>();
+        ShopItem shopItem = new ShopItem("blue", 20);
+        itemList.add(shopItem);
+        account.updateItemsBought(shopItem);
+        assertThat(account.getItemsBought(), is(itemList));
     }
 
     @Test

@@ -41,7 +41,7 @@ public class ShopActivityTest {
         onView(withId(R.id.buyButton)).check(doesNotExist());
     }
 
-    @Test
+    /*@Test
     public void testPressBuyItemNoStars() {
         SystemClock.sleep(3000);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
@@ -62,5 +62,5 @@ public class ShopActivityTest {
         onView(withId(R.id.okButton)).check(matches(isDisplayed()));
         onView(withId(R.id.okButton)).perform(click());
         onView(withId(R.id.okButton)).check(doesNotExist());
-    }
+    }*/
 }

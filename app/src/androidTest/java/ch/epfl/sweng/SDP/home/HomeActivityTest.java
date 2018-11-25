@@ -42,7 +42,7 @@ public class HomeActivityTest {
 
     private static final String TEST_ACCOUNT = "TestAccount";
     private static final String ID = "123";
-    
+
     @Rule
     public final ActivityTestRule<HomeActivity> mActivityRule =
             new ActivityTestRule<HomeActivity>(HomeActivity.class) {

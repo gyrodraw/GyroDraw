@@ -99,7 +99,7 @@ public class ShopActivity extends Activity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 extractColorsFromDataSnapshot(dataSnapshot, textView);
                 addColorsToShop();
-                findViewById(R.id.shopItems).setVisibility(View.VISIBLE);
+                //findViewById(R.id.shopItems).setVisibility(View.VISIBLE);
             }
 
             @Override

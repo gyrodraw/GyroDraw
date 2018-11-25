@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
@@ -59,8 +58,6 @@ public class HomeActivityTest {
     @Before
     public void init() {
         Intents.init();
-        Account.deleteAccount();
-        Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), "TestAccount", "testEmail");
     }
 
     @After

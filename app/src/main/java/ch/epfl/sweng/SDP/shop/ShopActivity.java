@@ -60,8 +60,6 @@ public class ShopActivity extends Activity {
 
         setContentView(R.layout.activity_shop);
 
-        overridePendingTransition(0, 0);
-
         if (enableAnimations) {
             Glide.with(this).load(R.drawable.background_animation)
                     .into((ImageView) findViewById(R.id.shopBackgroundAnimation));

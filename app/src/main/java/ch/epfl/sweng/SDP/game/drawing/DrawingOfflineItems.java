@@ -6,6 +6,7 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.VisibleForTesting;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -173,4 +174,8 @@ public class DrawingOfflineItems extends DrawingOffline {
         }
     }
 
+    @VisibleForTesting
+    public void addRandomItem() {
+        convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
+    }
 }

@@ -30,9 +30,10 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-import static ch.epfl.sweng.SDP.utils.AnimUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.AnimUtils.pressButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
 public class WaitingPageActivity extends BaseActivity {
@@ -305,7 +306,7 @@ public class WaitingPageActivity extends BaseActivity {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        pressButton(view, context);
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, context);
                         break;
                     case MotionEvent.ACTION_UP:
                         bounceButton(view, context);

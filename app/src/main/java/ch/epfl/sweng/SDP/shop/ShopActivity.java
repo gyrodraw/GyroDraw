@@ -46,7 +46,6 @@ public class ShopActivity extends Activity {
     private Dialog buyDialog;
     private Dialog confirmationDialog;
 
-    private TextView shopTextView;
     private LinearLayout shopItems;
 
     private Typeface typeMuro;
@@ -75,9 +74,7 @@ public class ShopActivity extends Activity {
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
-        shopTextView = findViewById(R.id.shopMessages);
-
-        getColorsFromDatabase(shopColorsRef, shopTextView);
+        getColorsFromDatabase(shopColorsRef);
 
         shopItems = findViewById(R.id.shopItems);
 
@@ -92,15 +89,14 @@ public class ShopActivity extends Activity {
      * Accesses the database, gets all the available colors and creates a button in the ScrollView
      * for each item found.
      * @param shopColorsReference  Reference to where colors are stored in shop.
-     * @param textView TextView to display user relevant messages.
      */
-    protected void getColorsFromDatabase(DatabaseReference shopColorsReference,
-                                         final TextView textView) {
+    protected void getColorsFromDatabase(DatabaseReference shopColorsReference) {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!isTesting) {
-                    extractColorsFromDataSnapshot(dataSnapshot, textView);
+                    extractColorsFromDataSnapshot(dataSnapshot, Account
+                                                            .getInstance(getApplicationContext()));
                 } else {
                     fillRandomShop();
                 }
@@ -118,31 +114,29 @@ public class ShopActivity extends Activity {
     /**
      * Tries to extract colors from a snapshot and creates a Button for each.
      * @param dataSnapshot DataSnapshot from which colors should be extracted.
-     * @param textView TextView for user relevant messages.
      */
-    protected void extractColorsFromDataSnapshot(DataSnapshot dataSnapshot, TextView textView) {
-        if (dataSnapshot == null || textView == null) {
+    protected void extractColorsFromDataSnapshot(DataSnapshot dataSnapshot, Account account) {
+        if (dataSnapshot == null) {
             throw new NullPointerException();
         }
 
-        if(dataSnapshot.exists()) {
-            shop = new Shop();
-            List<ShopItem> myItems = new LinkedList<>();
+        shop = new Shop();
+        List<ShopItem> myItems = new LinkedList<>();
 
-            if(Account.getInstance(this).getItemsBought() != null) {
-                myItems = Account.getInstance(this).getItemsBought();
-            }
-
-            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                boolean owned = false;
-
-                if (myItems.contains(new ShopItem(ds.getKey(), ds.getValue(int.class)))) {
-                    owned = true;
-                }
-
-                shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class), owned));
-            }
+        if(Account.getInstance(this).getItemsBought() != null) {
+            myItems = account.getItemsBought();
         }
+
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+            boolean owned = false;
+
+            if (myItems.contains(new ShopItem(ds.getKey(), ds.getValue(int.class)))) {
+                owned = true;
+            }
+
+            shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class), owned));
+        }
+
     }
 
     public void addColorsToShop() {
@@ -309,6 +303,10 @@ public class ShopActivity extends Activity {
         }
 
         return layout;
+    }
+
+    public Shop getShop() {
+        return shop;
     }
 
     public static void disableAnimations() {

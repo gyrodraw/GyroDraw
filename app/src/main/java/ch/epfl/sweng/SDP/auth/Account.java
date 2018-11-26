@@ -230,11 +230,6 @@ public class Account {
         this.maxTrophies = maxTrophies;
     }
 
-    public void setShopItemList(List<ShopItem> items) {
-        this.itemsBought = items;
-    }
-
-
     /**
      * Registers this account in Firebase and in the local database.
      */

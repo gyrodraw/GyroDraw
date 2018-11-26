@@ -330,7 +330,7 @@ public class AccountCreationActivityAndAccountTest {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("PICASSO"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
-        assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
+        assertNotEquals(null, account);
     }
 
     private void setListenerAndAsserToFirebaseForFriendsTest(final boolean state) {

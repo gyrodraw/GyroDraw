@@ -109,7 +109,7 @@ public class ShopActivityTest {
         SystemClock.sleep(5000);
 
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(3);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(1);
         int id = View.generateViewId();
         layoutChild.setId(id);
 

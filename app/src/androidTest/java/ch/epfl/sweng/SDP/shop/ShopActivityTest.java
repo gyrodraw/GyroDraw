@@ -95,7 +95,7 @@ public class ShopActivityTest {
         SystemClock.sleep(5000);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(4);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(1);
         int id = View.generateViewId();
         layoutChild.setId(id);
 

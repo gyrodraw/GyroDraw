@@ -46,7 +46,7 @@ public class ShopActivityTest {
     public void testPressItemAndCancel() {
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(3);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
         layoutChild.setId(id);
 
@@ -60,7 +60,7 @@ public class ShopActivityTest {
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(3);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
         layoutChild.setId(id);
 

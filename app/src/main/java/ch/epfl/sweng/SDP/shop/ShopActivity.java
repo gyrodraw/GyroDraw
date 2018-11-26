@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -97,7 +98,10 @@ public class ShopActivity extends Activity {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                extractColorsFromDataSnapshot(dataSnapshot, textView);
+                //extractColorsFromDataSnapshot(dataSnapshot, textView);
+                shop = new Shop();
+                shop.addItem(new ShopItem("blue", 200));
+                shop.addItem(new ShopItem("red", 100));
                 addColorsToShop();
                 //findViewById(R.id.shopItems).setVisibility(View.VISIBLE);
             }
@@ -121,8 +125,11 @@ public class ShopActivity extends Activity {
 
         if(dataSnapshot.exists()) {
             shop = new Shop();
-            List<ShopItem> myItems = Account.getInstance(getApplicationContext())
-                    .getItemsBought();
+            List<ShopItem> myItems = new LinkedList<>();
+
+            if(Account.getInstance(this).getItemsBought() != null) {
+                myItems = Account.getInstance(this).getItemsBought();
+            }
 
             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                 boolean owned = false;
@@ -194,7 +201,7 @@ public class ShopActivity extends Activity {
         layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         layout.setPadding(30, 10, 30, 10);
 
-        if(true) {
+        if(!item.getOwned()) {
             layout.setClickable(true);
 
             layout.setOnTouchListener(new View.OnTouchListener() {

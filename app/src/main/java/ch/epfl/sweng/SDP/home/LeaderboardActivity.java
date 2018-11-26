@@ -30,9 +30,9 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-import static ch.epfl.sweng.SDP.home.FriendsState.FRIENDS;
-import static ch.epfl.sweng.SDP.home.FriendsState.RECEIVED;
-import static ch.epfl.sweng.SDP.home.FriendsState.SENT;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;
 

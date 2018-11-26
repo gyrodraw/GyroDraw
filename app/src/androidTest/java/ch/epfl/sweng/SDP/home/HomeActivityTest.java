@@ -29,7 +29,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -39,6 +38,9 @@ import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
+
+    private static final String FRIEND_ACCOUNT = "FriendAccount";
+    private static final String FRIEND_ID = "FriendId123ForTesting";
 
     @Rule
     public final ActivityTestRule<HomeActivity> mActivityRule =
@@ -102,12 +104,14 @@ public class HomeActivityTest {
 
     @Test
     public void testTrophiesButtonIsClickable() {
-        onView(withId(R.id.trophiesButton)).check(matches(isClickable()));
+        onView(withId(R.id.trophiesButton)).perform(click());
+        onView(withId(R.id.trophiesButton)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testStarsButtonIsClickable() {
-        onView(withId(R.id.starsButton)).check(matches(isClickable()));
+        onView(withId(R.id.starsButton)).perform(click());
+        onView(withId(R.id.starsButton)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -119,6 +123,30 @@ public class HomeActivityTest {
     public void testUsernameOpensPopUp() {
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFriendsRequestAccept() {
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mActivityRule.getActivity().showFriendRequestPopup(FRIEND_ACCOUNT, FRIEND_ID);
+            }
+        });
+        onView(withId(R.id.acceptButton)).perform(click());
+        onView(withId(R.id.friendRequestPopUp)).check(doesNotExist());
+    }
+
+    @Test
+    public void testFriendsRequestReject() {
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mActivityRule.getActivity().showFriendRequestPopup(FRIEND_ACCOUNT, FRIEND_ID);
+            }
+        });
+        onView(withId(R.id.rejectButton)).perform(click());
+        onView(withId(R.id.friendRequestPopUp)).check(doesNotExist());
     }
 
     @Test

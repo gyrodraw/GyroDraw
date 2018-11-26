@@ -1,5 +1,27 @@
 package ch.epfl.sweng.SDP.auth;
 
+import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -11,34 +33,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.test.espresso.idling.CountingIdlingResource;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.FriendsState;
-
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -169,7 +163,7 @@ public class AccountCreationActivityAndAccountTest {
     public void testNewFriend() {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .setValue(FriendsState.SENT.ordinal());
+                .setValue(FriendsRequestState.SENT.ordinal());
         setListenerAndAsserToFirebaseForFriendsTest(true);
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
@@ -178,7 +172,7 @@ public class AccountCreationActivityAndAccountTest {
     public void testConfirmFriend() {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .setValue(FriendsState.RECEIVED.ordinal());
+                .setValue(FriendsRequestState.RECEIVED.ordinal());
         setListenerAndAsserToFirebaseForFriendsTest(true);
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }

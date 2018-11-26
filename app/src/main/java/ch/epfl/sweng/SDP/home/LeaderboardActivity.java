@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -241,9 +240,9 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s.child("userId") == null || s.child("username") == null
-                                        || s.child("trophies") == null
-                                        || s.child("currentLeague") == null
+                                if (!s.child("userId").exists() || !s.child("username").exists()
+                                        || !s.child("trophies").exists()
+                                        || !s.child("currentLeague").exists()
                                         || s.getKey().equals("123456789")) {
                                     continue;
                                 }

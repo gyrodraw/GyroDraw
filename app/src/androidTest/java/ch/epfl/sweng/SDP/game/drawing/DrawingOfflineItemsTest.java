@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
 
 public class DrawingOfflineItemsTest {
 
-    private static final String USERID = "123456789";
+    private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";
     private static final String EMAIL = "testUser@gyrodraw.ch";
 
@@ -52,7 +52,7 @@ public class DrawingOfflineItemsTest {
         paintView = activity.paintView;
         paintView.setCircle(0, 0);
         account = Account.getInstance(activityRule.getActivity().getApplicationContext());
-        account.setUserId(USERID);
+        account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(EMAIL);
     }

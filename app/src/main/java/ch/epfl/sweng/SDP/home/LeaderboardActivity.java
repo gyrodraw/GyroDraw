@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.util.Strings;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -243,11 +244,15 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (!s.getKey().equals("123456789")) {
-                                    String username = (String) s.child("username").getValue();
-                                    Player temp = new Player((String) s.child("userId").getValue(),
-                                            username, (Long) s.child("trophies").getValue(),
-                                            (String) s.child("currentLeague").getValue(),
+                                if (!s.getKey().equals("123456789")
+                                        && s.child("userId").getValue(String.class) != null
+                                        && s.child("username").getValue(String.class) != null
+                                        && s.child("trophies").getValue(Long.class) != null
+                                        && s.child("currentLeague").getValue(String.class) != null) {
+                                    String username = s.child("username").getValue(String.class);
+                                    Player temp = new Player(s.child("userId").getValue(String.class),
+                                            username, s.child("trophies").getValue(Long.class),
+                                            s.child("currentLeague").getValue(String.class),
                                             username.equals(
                                                     Account.getInstance(context).getUsername()));
 

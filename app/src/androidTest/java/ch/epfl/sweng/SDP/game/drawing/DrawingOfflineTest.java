@@ -10,6 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -32,6 +34,10 @@ public class DrawingOfflineTest {
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
+        Account.getInstance(activityRule.getActivity().getApplicationContext())
+                .updateItemsBought(new ShopItem("blue", 200));
+        Account.getInstance(activityRule.getActivity().getApplicationContext())
+                .updateItemsBought(new ShopItem("red", 100));
     }
 
     @Test

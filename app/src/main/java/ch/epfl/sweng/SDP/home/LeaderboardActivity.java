@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.util.Strings;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -268,7 +269,7 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (!s.getKey().equals("123456789")) {
+                                if (validAccountFromFirebase(s)) {
                                     String username = s.child("username").getValue(String.class);
                                     Player temp = new Player(s.child("userId").getValue(String.class),
                                             username,
@@ -300,7 +301,7 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (!s.equals("123456789")
+                                if (s != null && !s.getKey().equals("123456789")
                                 && s.getValue(int.class) == FRIENDS.ordinal()) {
                                     findAndAddPlayer(s.getKey(), query);
                                 }
@@ -360,6 +361,14 @@ public class LeaderboardActivity extends Activity {
                 leaderboardView.addView(currentPlayer
                         .toLayout(getApplicationContext(), i), layoutParams);
             }
+        }
+
+        private boolean validAccountFromFirebase(DataSnapshot dataSnapshot) {
+            return !dataSnapshot.equals("123456789")
+                    && dataSnapshot.child("userId").getValue(String.class) != null
+                    && dataSnapshot.child("username").getValue(String.class) != null
+                    && dataSnapshot.child("trophies").getValue(Long.class) != null
+                    && dataSnapshot.child("currentLeague").getValue(String.class) != null;
         }
     }
 
@@ -454,11 +463,12 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        int status = (int)(long)dataSnapshot.getValue();
+                        int status = dataSnapshot.getValue(int.class);
                         if (status == RECEIVED.ordinal()) {
                             Account.getInstance(context).addFriend(player.userId);
                             setImageResource(R.drawable.remove_friend);
-                        } else if (status == FRIENDS.ordinal()) {
+                        } else if (status == FRIENDS.ordinal()
+                                || status == SENT.ordinal()) {
                             Account.getInstance(context).removeFriend(player.userId);
                             setImageResource(R.drawable.add_friend);
                         }

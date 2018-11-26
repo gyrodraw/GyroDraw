@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
 import android.os.SystemClock;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
@@ -39,6 +40,7 @@ public class ShopActivityTest {
         onView(withTagValue(is((Object) "blue"))).perform(click());
         onView(withId(R.id.cancelButton)).perform(click());
         onView(withId(R.id.buyButton)).check(doesNotExist());
+        Espresso.pressBack();
     }
 
     @Test
@@ -50,6 +52,7 @@ public class ShopActivityTest {
         onView(withId(R.id.okButton)).check(matches(isDisplayed()));
         onView(withId(R.id.okButton)).perform(click());
         onView(withId(R.id.okButton)).check(doesNotExist());
+        Espresso.pressBack();
     }
 
     /*@Test

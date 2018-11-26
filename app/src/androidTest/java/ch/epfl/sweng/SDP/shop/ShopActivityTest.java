@@ -40,7 +40,6 @@ public class ShopActivityTest {
         onView(withTagValue(is((Object) "blue"))).perform(click());
         onView(withId(R.id.cancelButton)).perform(click());
         onView(withId(R.id.buyButton)).check(doesNotExist());
-        Espresso.pressBack();
     }
 
     @Test
@@ -49,10 +48,10 @@ public class ShopActivityTest {
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         onView(withTagValue(is((Object) "yellow"))).perform(click());
         onView(withId(R.id.buyButton)).perform(click());
-        onView(withId(R.id.okButton)).check(matches(isDisplayed()));
+        //onView(withId(R.id.okButton)).check(matches(isDisplayed()));
+        SystemClock.sleep(1000);
         onView(withId(R.id.okButton)).perform(click());
         onView(withId(R.id.okButton)).check(doesNotExist());
-        Espresso.pressBack();
     }
 
     /*@Test

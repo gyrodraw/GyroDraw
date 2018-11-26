@@ -26,6 +26,11 @@ public class Shop {
         return itemList;
     }
 
+    /**
+     * Convert an hashmap into a list of shop items.
+     * @param map Map of the colors and prices
+     * @return List of ShopItems
+     */
     public static List<ShopItem> firebaseToListShopItem(HashMap<String, String> map) {
         List<ShopItem> listItem = new ArrayList<>();
 

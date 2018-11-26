@@ -7,12 +7,25 @@ public class ShopItem {
     private boolean owned;
 
 
+    /**
+     * Constructor of a ShopItem.
+     *
+     * @param color Color of the item
+     * @param price Price of the item
+     */
     public ShopItem(String color, int price) {
         this.price = price;
         this.color = color;
         this.owned = false;
     }
 
+    /**
+     * Constructor of a ShopItem.
+     *
+     * @param color Color of the item
+     * @param price Price of the item
+     * @param owned Is this item owned by the player
+     */
     public ShopItem(String color, int price, boolean owned) {
         this.price = price;
         this.color = color;
@@ -45,10 +58,13 @@ public class ShopItem {
 
     @Override
     public boolean equals(Object obj) {
-        ShopItem item = (ShopItem) obj;
+        if(obj != null) {
+            ShopItem item = (ShopItem) obj;
 
-        return item.getPriceItem() == this.getPriceItem() &&
-                (item.getColorItem()).equals(this.getColorItem());
+            return item.getPriceItem() == this.getPriceItem()
+                    && (item.getColorItem()).equals(this.getColorItem());
+        }
+        return false;
     }
 }
 

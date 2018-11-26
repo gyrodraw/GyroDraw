@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class ShopActivityTest {
 
-    private final static String USER_ID = "123456789";
+    private static final String USER_ID = "123456789";
     private static DatabaseReference usersRef = Database.getReference("users."
                                                     + USER_ID + ".boughtItems");
 
@@ -88,7 +88,6 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemNoStars() {
-        //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);

@@ -77,6 +77,15 @@ public abstract class Activity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods creates a TextView according to the given parameters.
+     * @param text String displayed in textview
+     * @param color Color of the textview
+     * @param size Size of the textview
+     * @param typeface Typeface of the textview
+     * @param layoutParams Layout parameters of the textview
+     * @return The newly created textview
+     */
     @SuppressLint("NewApi")
     public TextView createTextView(String text, int color, int size, Typeface typeface,
                                    LinearLayout.LayoutParams layoutParams) {
@@ -86,6 +95,20 @@ public abstract class Activity extends AppCompatActivity {
 
         return textView;
 
+    }
+
+    /**
+     * Add views to a layout.
+     * @param layout Layout where the views will be added
+     * @param views Views to be added
+     * @return The layout with the views added
+     */
+    public LinearLayout addViews(LinearLayout layout, View... views) {
+        for(View view: views) {
+            layout.addView(view);
+        }
+
+        return layout;
     }
 
     private void styleView(TextView view, String text, int color, int size, Typeface typeface,

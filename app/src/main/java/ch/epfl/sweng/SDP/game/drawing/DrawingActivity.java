@@ -93,11 +93,17 @@ public class DrawingActivity extends BaseActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
+    /**
+     * Create an imageview corresponding to a given color.
+     * @param color Index of the colors to be created
+     * @return The imageview of the color
+     */
     public ImageView createColorImageView(int color) {
         ImageView image = new ImageView(this);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
-                LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams
+                                        .WRAP_CONTENT, 1f);
 
         params.setMargins(0, 10, 0, 10);
         image.setLayoutParams(params);
@@ -113,7 +119,6 @@ public class DrawingActivity extends BaseActivity {
         });
 
        return image;
-
     }
 
     /**

@@ -309,6 +309,10 @@ public class Account {
                 .setValue(currentLeague, createCompletionListener());
     }
 
+    /**
+     * Add a recently bought item to the account.
+     * @param shopItem Item that would be added to the account
+     */
     public void updateItemsBought(ShopItem shopItem) {
         checkPrecondition(shopItem != null, "Shop item is null");
 

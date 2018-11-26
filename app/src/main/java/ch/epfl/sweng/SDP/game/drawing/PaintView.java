@@ -81,10 +81,13 @@ public class PaintView extends View {
         return newPaint;
     }
 
-    // This method only adds the colors that a player bought
+    /**
+     * This method adds the colors that a player owns into the color picker
+     * @param colors List containing the colors that a player owns
+     */
     public void setColors(List<Integer> colors) {
-        for(int color : colors) {
-            this.colors.add(getPaintWithColor(getResources().getColor(color)));
+        for(int col : colors) {
+            this.colors.add(getPaintWithColor(getResources().getColor(col)));
         }
         this.colors.add(getPaintWithColor(Color.WHITE));
     }

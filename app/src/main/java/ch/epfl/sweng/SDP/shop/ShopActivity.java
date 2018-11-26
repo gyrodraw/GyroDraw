@@ -139,6 +139,9 @@ public class ShopActivity extends Activity {
 
     }
 
+    /**
+     * Create different layout for each available color in the shop.
+     */
     public void addColorsToShop() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -202,7 +205,7 @@ public class ShopActivity extends Activity {
 
             layout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
+                public boolean onTouch(View view, MotionEvent event) {
                     touchItem(index);
                     return true;
                 }
@@ -233,11 +236,11 @@ public class ShopActivity extends Activity {
     private void setOnBuyClick(final Button button, final int index) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 boolean isSuccessful = false;
                 // Check if the user has enough stars
-                if(Account.getInstance(getApplicationContext()).getStars() -
-                        (shop.getItemList()).get(index).getPriceItem() >= 0) {
+                if(Account.getInstance(getApplicationContext()).getStars()
+                        - (shop.getItemList()).get(index).getPriceItem() >= 0) {
                     Account.getInstance(getApplicationContext()).changeStars(
                             -(shop.getItemList()).get(index).getPriceItem());
 
@@ -255,6 +258,10 @@ public class ShopActivity extends Activity {
         });
     }
 
+    /**
+     * Displays a Pop up window displaying a success message or error message
+     * @param isSuccessful Boolean that tells if the purchase went successful or not
+     */
     public void showConfirmationPopUp(boolean isSuccessful) {
         confirmationDialog.setContentView(R.layout.shop_pop_up_confirmation);
 
@@ -263,7 +270,8 @@ public class ShopActivity extends Activity {
                     .setText(getString(R.string.success));
             ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
                     .setTextColor(getResources().getColor(R.color.colorGreen));
-            ((TextView) confirmationDialog.findViewById(R.id.infoMessageView)).setText(getString(R.string.buySuccess));
+            ((TextView) confirmationDialog.findViewById(R.id.infoMessageView))
+                    .setText(getString(R.string.buySuccess));
             ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
                                         "%d", Account.getInstance(this).getStars()));
 
@@ -280,9 +288,10 @@ public class ShopActivity extends Activity {
                     .setText(getString(R.string.buyError));
         }
 
-        (confirmationDialog.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
+        (confirmationDialog.findViewById(R.id.okButton))
+                .setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 confirmationDialog.dismiss();
             }
         });
@@ -295,16 +304,7 @@ public class ShopActivity extends Activity {
     public void onCancelPopUp(View view) {
         buyDialog.dismiss();
     }
-
-    // TODO move this to activity class methods
-    private LinearLayout addViews(LinearLayout layout, View... views) {
-        for(View view: views) {
-            layout.addView(view);
-        }
-
-        return layout;
-    }
-
+    
     public Shop getShop() {
         return shop;
     }
@@ -313,6 +313,10 @@ public class ShopActivity extends Activity {
         enableAnimations = false;
     }
 
+    /**
+     * For testing purposes only, the shop is filled with only two colors. It avoids having to
+     * fetch items from the database.
+     */
     public void fillRandomShop() {
         shop = new Shop();
         shop.addItem(new ShopItem("blue", 200));

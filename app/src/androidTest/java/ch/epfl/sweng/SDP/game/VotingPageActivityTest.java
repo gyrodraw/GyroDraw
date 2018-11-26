@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 import android.widget.RatingBar;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,12 +25,14 @@ import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
@@ -80,13 +83,44 @@ public class VotingPageActivityTest {
     @Test
     public void addStarsHandlesBigNumber() {
         int previousStars = starsAnimation.getNumStars();
+        setStarsAnimationToVisible();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
+        SystemClock.sleep(1000);
         starsAnimation.onDraw(canvas);
         starsAnimation.addStars(1000);
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assertThat(starsAnimation.getNumStars(), is(previousStars + 5));
+        SystemClock.sleep(4000);
+        assertThat(starsAnimation.getNumStars(), is(0));
+        setStarsAnimationToGone();
+    }
+
+    private void setStarsAnimationToVisible() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    starsAnimation.setVisibility(View.VISIBLE);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void setStarsAnimationToGone() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    starsAnimation.setVisibility(View.GONE);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Test

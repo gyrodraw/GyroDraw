@@ -50,5 +50,7 @@
     <string name="buyError">Not enough stars</string>
     <string name="error">Error</string>
     <string name="success">Success</string>
-
+    <string name="accept">Accept!</string>
+    <string name="reject">Reject</string>
+    <string name="new_friend_request">New friend request</string>
 </resources>

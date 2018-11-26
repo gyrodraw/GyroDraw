@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,12 +21,16 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
@@ -34,26 +39,70 @@ import ch.epfl.sweng.SDP.shop.ShopActivity;
 
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
+import static java.lang.String.format;
 
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
+    private static final String MURO_PATH = "fonts/Muro.otf";
+
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
+
     private static boolean enableBackgroundAnimation = true;
 
     private Dialog profileWindow;
+    private Dialog friendRequestWindow;
+
+    private ValueEventListener listenerFriendsRequest = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                Integer stateValue = child.getValue(Integer.class);
+                if (stateValue != null) {
+                    FriendsRequestState state =
+                            FriendsRequestState.fromInteger(stateValue);
+
+                    if (state == FriendsRequestState.RECEIVED) {
+                        final String id = child.getKey();
+                        Database.getReference(format("users.%s.username", id))
+                                .addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(
+                                                    @NonNull DataSnapshot dataSnapshot) {
+                                                String name = dataSnapshot
+                                                        .getValue(String.class);
+                                                showFriendRequestPopup(name, id);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(
+                                                    @NonNull DatabaseError databaseError) {
+                                                throw databaseError.toException();
+                                            }
+                                        });
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
 
     /**
-     * Disables the background animation. Call this method in every HomeActivity test
+     * Disables the background animation. Call this method in every HomeActivity test.
      */
     public static void disableBackgroundAnimation() {
         enableBackgroundAnimation = false;
@@ -65,6 +114,8 @@ public class HomeActivity extends BaseActivity {
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
+        friendRequestWindow = new Dialog(this);
+        friendRequestWindow.setCancelable(false);
 
         overridePendingTransition(0, 0);
 
@@ -75,6 +126,9 @@ public class HomeActivity extends BaseActivity {
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
+
+        // Add listener to check for new friends requests
+        addListenerForFriendsRequests();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
         final ImageView practiceButton = findViewById(R.id.practiceButton);
@@ -98,7 +152,7 @@ public class HomeActivity extends BaseActivity {
         starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));
 
         TextView leagueText = findViewById(R.id.leagueText);
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         leagueText.setTypeface(typeOptimus);
@@ -117,6 +171,11 @@ public class HomeActivity extends BaseActivity {
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
 
         setLeague();
+    }
+
+    private void addListenerForFriendsRequests() {
+        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
+                .addValueEventListener(listenerFriendsRequest);
     }
 
     // Launch the LeaguesActivity.
@@ -198,14 +257,37 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-    private void listenerEventSelector(final View view, int id) {
-        switch (id) {
+    // Set the listener for the friend request popup buttons using the given userId
+    // as the id of the sender of the request
+    private void setFriendsRequestListener(final View view, final String userId) {
+        final Context context = this;
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                int id = view.getId();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, AnimMode.CENTER, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        listenerFriendsRequestEventSelector(id, userId);
+                        bounceButton(view, context);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
+    private void listenerEventSelector(final View view, int resourceId) {
+        switch (resourceId) {
             case R.id.drawButton:
                 if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(LoadingScreenActivity.class);
                 } else {
-                    Toast.makeText(this, "No internet connection.",
+                    Toast.makeText(this, R.string.no_internet,
                             Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -219,7 +301,7 @@ public class HomeActivity extends BaseActivity {
                 showLeagues();
                 break;
             case R.id.usernameButton:
-                showPopup();
+                showProfilePopup();
                 break;
             case R.id.signOutButton:
                 signOut();
@@ -237,8 +319,23 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    // Listener for the friends request popup buttons
+    private void listenerFriendsRequestEventSelector(int resourceId, String userId) {
+        switch (resourceId) {
+            case R.id.acceptButton:
+                Account.getInstance(this).addFriend(userId);
+                friendRequestWindow.dismiss();
+                break;
+            case R.id.rejectButton:
+                Account.getInstance(this).removeFriend(userId);
+                friendRequestWindow.dismiss();
+                break;
+            default:
+        }
+    }
+
     private void setMuroFont() {
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
 
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
         profileTextView.setTypeface(typeMuro);
@@ -264,8 +361,8 @@ public class HomeActivity extends BaseActivity {
         signOutButton.setTypeface(typeMuro);
     }
 
-    private void showPopup() {
-        profileWindow.setContentView(R.layout.activity_pop_up);
+    private void showProfilePopup() {
+        profileWindow.setContentView(R.layout.activity_profile_pop_up);
 
         Account userAccount = Account.getInstance(this);
 
@@ -288,8 +385,36 @@ public class HomeActivity extends BaseActivity {
         profileWindow.show();
     }
 
+
     public void onShopButtonClicked(View view) {
         launchActivity(ShopActivity.class);
+    }
+
+    @VisibleForTesting
+    public void showFriendRequestPopup(String name, String id) {
+        assert name != null : "name is null";
+
+        friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
+
+        TextView requestSender = friendRequestWindow.findViewById(R.id.requestSender);
+        requestSender.setTypeface(typeMuro);
+        requestSender.setText(name);
+
+        TextView requestMessage = friendRequestWindow.findViewById(R.id.requestMessage);
+        requestMessage.setTypeface(typeMuro);
+
+        Button acceptButton = friendRequestWindow.findViewById(R.id.acceptButton);
+        acceptButton.setTypeface(typeMuro);
+        setFriendsRequestListener(acceptButton, id);
+
+        Button rejectButton = friendRequestWindow.findViewById(R.id.rejectButton);
+        rejectButton.setTypeface(typeMuro);
+        setFriendsRequestListener(rejectButton, id);
+
+        friendRequestWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        friendRequestWindow.show();
     }
 
     private void setLeague() {

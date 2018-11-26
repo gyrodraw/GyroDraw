@@ -60,6 +60,45 @@ public class HomeActivity extends BaseActivity {
     private Dialog profileWindow;
     private Dialog friendRequestWindow;
 
+    private ValueEventListener listenerFriendsRequest = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                Integer stateValue = child.getValue(Integer.class);
+                if (stateValue != null) {
+                    FriendsRequestState state =
+                            FriendsRequestState.fromInteger(stateValue);
+
+                    if (state == FriendsRequestState.RECEIVED) {
+                        final String id = child.getKey();
+                        Database.getReference(format("users.%s.username", id))
+                                .addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(
+                                                    @NonNull DataSnapshot dataSnapshot) {
+                                                String name = dataSnapshot
+                                                        .getValue(String.class);
+                                                showFriendRequestPopup(name, id);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(
+                                                    @NonNull DatabaseError databaseError) {
+                                                throw databaseError.toException();
+                                            }
+                                        });
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
+
     /**
      * Disables the background animation. Call this method in every HomeActivity test.
      */
@@ -134,44 +173,7 @@ public class HomeActivity extends BaseActivity {
 
     private void addListenerForFriendsRequests() {
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            Integer stateValue = child.getValue(Integer.class);
-                            if (stateValue != null) {
-                                FriendsRequestState state =
-                                        FriendsRequestState.fromInteger(stateValue);
-
-                                if (state == FriendsRequestState.RECEIVED) {
-                                    final String id = child.getKey();
-                                    Database.getReference(format("users.%s.username", id))
-                                            .addListenerForSingleValueEvent(
-                                                    new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(
-                                                                @NonNull DataSnapshot dataSnapshot) {
-                                                            String name = dataSnapshot
-                                                                    .getValue(String.class);
-                                                            showFriendRequestPopup(name, id);
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(
-                                                                @NonNull DatabaseError databaseError) {
-                                                            throw databaseError.toException();
-                                                        }
-                                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
+                .addValueEventListener(listenerFriendsRequest);
     }
 
     // Launch the LeaguesActivity.

@@ -302,7 +302,7 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     isFriendWithCurrentUser(
-                            changeFriendsButtonBackgroundOnClick());
+                            changeFriendsButtonImageOnClick());
                 }
             });
             this.isFriendWithCurrentUser(initializeFriendsButton());
@@ -337,7 +337,7 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Check if users are already friends and set background accordingly.
+         * Check if users are already friends and set image accordingly.
          *
          * @return listener
          */
@@ -348,11 +348,11 @@ public class LeaderboardActivity extends Activity {
                     if (dataSnapshot.exists()) {
                         int status = dataSnapshot.getValue(int.class);
                         if (status == SENT.ordinal()) {
-                            setBackgroundResource(R.drawable.pending_friend);
+                            setImageResource(R.drawable.pending_friend);
                         } else if (status == FRIENDS.ordinal()) {
-                            setBackgroundResource(R.drawable.remove_friend);
+                            setImageResource(R.drawable.remove_friend);
                         } else {
-                            setBackgroundResource(R.drawable.add_friend);
+                            setImageResource(R.drawable.add_friend);
                         }
                     } else {
                         setImageResource(R.drawable.add_friend);
@@ -367,11 +367,11 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Friends button got clicked, now add/remove friend and modify background.
+         * Friends button got clicked, now add/remove friend and modify image.
          *
          * @return listener
          */
-        private ValueEventListener changeFriendsButtonBackgroundOnClick() {
+        private ValueEventListener changeFriendsButtonImageOnClick() {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -379,14 +379,14 @@ public class LeaderboardActivity extends Activity {
                         int status = (int)(long)dataSnapshot.getValue();
                         if (status == RECEIVED.ordinal()) {
                             Account.getInstance(context).addFriend(player.userId);
-                            setBackgroundResource(R.drawable.remove_friend);
+                            setImageResource(R.drawable.remove_friend);
                         } else if (status == FRIENDS.ordinal()) {
                             Account.getInstance(context).removeFriend(player.userId);
-                            setBackgroundResource(R.drawable.add_friend);
+                            setImageResource(R.drawable.add_friend);
                         }
                     } else {
                         Account.getInstance(context).addFriend(player.userId);
-                        setBackgroundResource(R.drawable.pending_friend);
+                        setImageResource(R.drawable.pending_friend);
                     }
                 }
 

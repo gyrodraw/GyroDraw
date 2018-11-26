@@ -32,15 +32,13 @@ public class ShopActivityTest {
 
     @Test
     public void testPressItemAndCancel() {
-        //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
-
-        SystemClock.sleep(3000);
+        SystemClock.sleep(8000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
-        int id = View.generateViewId();
-        layoutChild.setId(id);
+        //int id = View.generateViewId();
+        layoutChild.setId(View.generateViewId());
 
-        onView(withId(id)).perform(click());
+        onView(withId(layoutChild.getId())).perform(click());
         onView(withId(R.id.cancelButton)).perform(click());
         onView(withId(R.id.buyButton)).check(doesNotExist());
     }
@@ -48,7 +46,7 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemNoStars() {
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
-        SystemClock.sleep(3000);
+        SystemClock.sleep(8000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
@@ -67,7 +65,7 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemSuccess() {
         Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setStars(200);
-        SystemClock.sleep(3000);
+        SystemClock.sleep(8000);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);

@@ -15,8 +15,10 @@ import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import static java.lang.String.format;
 
 /**
  * Singleton class that represents an account.
@@ -25,7 +27,7 @@ public class Account {
 
     private static Account instance = null;
 
-    private static final String FRIENDS_TAG = ".friends.";
+    private static final String FRIENDS_LIST_FORMAT = "users.%s.friends.%s";
 
     private String userId;
     private String username;
@@ -370,11 +372,13 @@ public class Account {
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
-                .setValue(usernameId, createCompletionListener());
+        // Update the user's friends' list
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                userId, usernameId)).setValue(FRIENDS.ordinal(), createCompletionListener());
 
-        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
-                .setValue(userId, createCompletionListener());
+        // Update the sender's friends' list
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                usernameId, userId)).setValue(FRIENDS.ordinal(), createCompletionListener());
     }
 
     /**
@@ -387,11 +391,11 @@ public class Account {
     public void removeFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
-                .removeValue(createCompletionListener());
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                userId, usernameId)).removeValue(createCompletionListener());
 
-        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
-                .removeValue(createCompletionListener());
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                usernameId, userId)).removeValue(createCompletionListener());
     }
 
     /**

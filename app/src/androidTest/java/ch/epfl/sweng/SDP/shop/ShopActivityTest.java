@@ -7,8 +7,12 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.database.DatabaseReference;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.LinkedList;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -42,7 +46,7 @@ public class ShopActivityTest {
     public void testPressItemAndCancel() {
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(3);
         int id = View.generateViewId();
         layoutChild.setId(id);
 
@@ -56,7 +60,7 @@ public class ShopActivityTest {
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(3);
         int id = View.generateViewId();
         layoutChild.setId(id);
 
@@ -76,7 +80,7 @@ public class ShopActivityTest {
         SystemClock.sleep(5000);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(4);
         int id = View.generateViewId();
         layoutChild.setId(id);
 

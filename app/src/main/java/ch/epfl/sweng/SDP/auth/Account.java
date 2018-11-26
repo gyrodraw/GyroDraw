@@ -17,6 +17,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
@@ -227,6 +228,10 @@ public class Account {
 
     public void setMaxTrophies(int maxTrophies) {
         this.maxTrophies = maxTrophies;
+    }
+
+    public void setShopItemList(List<ShopItem> items) {
+        this.itemsBought = items;
     }
 
 

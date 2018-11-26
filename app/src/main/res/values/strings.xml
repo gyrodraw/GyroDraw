@@ -48,5 +48,7 @@
     <string name="special">SPECIAL !</string>
     <string name="friendsFilter">Filter for friends</string>
     <string name="removeFriendsFilter">Remove filter</string>
-
+    <string name="accept">Accept!</string>
+    <string name="reject">Reject</string>
+    <string name="new_friend_request">New friend request</string>
 </resources>

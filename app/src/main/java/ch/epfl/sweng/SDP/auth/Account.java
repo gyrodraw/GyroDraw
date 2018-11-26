@@ -1,13 +1,13 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static ch.epfl.sweng.SDP.home.FriendsState.FRIENDS;
-import static ch.epfl.sweng.SDP.home.FriendsState.RECEIVED;
-import static ch.epfl.sweng.SDP.home.FriendsState.SENT;
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +21,7 @@ import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
+import static java.lang.String.format;
 
 /**
  * Singleton class that represents an account.
@@ -29,7 +30,7 @@ public class Account {
 
     private static Account instance = null;
 
-    private static final String FRIENDS_TAG = ".friends.";
+    private static final String FRIENDS_LIST_FORMAT = "users.%s.friends.%s";
 
     private String userId;
     private String username;
@@ -374,7 +375,7 @@ public class Account {
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
+        Database.constructBuilder(usersRef).addChildren(userId + ".friends." + usernameId).build()
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
@@ -404,11 +405,13 @@ public class Account {
      * @param stateFriend   state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + friendId).build()
-                .setValue(stateUser, createCompletionListener());
+        // Update the user's friends' list
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                userId, friendId)).setValue(stateUser, createCompletionListener());
 
-        Database.constructBuilder(usersRef).addChildren(friendId + FRIENDS_TAG + userId).build()
-                .setValue(stateFriend, createCompletionListener());
+        // Update the sender's friends' list
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                friendId, userId)).setValue(stateFriend, createCompletionListener());
     }
 
     /**
@@ -421,11 +424,11 @@ public class Account {
     public void removeFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.constructBuilder(usersRef).addChildren(userId + FRIENDS_TAG + usernameId).build()
-                .removeValue(createCompletionListener());
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                userId, usernameId)).removeValue(createCompletionListener());
 
-        Database.constructBuilder(usersRef).addChildren(usernameId + FRIENDS_TAG + userId).build()
-                .removeValue(createCompletionListener());
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
+                usernameId, userId)).removeValue(createCompletionListener());
     }
 
     /**

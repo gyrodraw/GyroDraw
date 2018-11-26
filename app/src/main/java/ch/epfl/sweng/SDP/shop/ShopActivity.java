@@ -194,7 +194,7 @@ public class ShopActivity extends Activity {
         layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         layout.setPadding(30, 10, 30, 10);
 
-        if(!item.getOwned()) {
+        if(true) {
             layout.setClickable(true);
 
             layout.setOnTouchListener(new View.OnTouchListener() {

@@ -82,7 +82,7 @@ public class PaintView extends View {
     }
 
     /**
-     * This method adds the colors that a player owns into the color picker
+     * This method adds the colors that a player owns into the color picker.
      * @param colors List containing the colors that a player owns
      */
     public void setColors(List<Integer> colors) {

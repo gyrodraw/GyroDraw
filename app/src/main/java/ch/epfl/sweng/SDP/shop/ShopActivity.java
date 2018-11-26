@@ -259,7 +259,7 @@ public class ShopActivity extends Activity {
     }
 
     /**
-     * Displays a Pop up window displaying a success message or error message
+     * Displays a Pop up window displaying a success message or error message.
      * @param isSuccessful Boolean that tells if the purchase went successful or not
      */
     public void showConfirmationPopUp(boolean isSuccessful) {

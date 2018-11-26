@@ -256,8 +256,8 @@ public class AccountCreationActivityAndAccountTest {
     public void testCreateAccountWithNullCurrentLeague() {
         Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
                 USERNAME, TEST_EMAIL, null, 0, 0,
-                0, 0, 0.0, 0
-                , new ArrayList<ShopItem>());
+                0, 0, 0.0, 0,
+                new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)

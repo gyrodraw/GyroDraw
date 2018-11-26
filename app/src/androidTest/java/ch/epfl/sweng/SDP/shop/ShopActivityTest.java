@@ -6,7 +6,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -16,6 +19,7 @@ import java.util.LinkedList;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -25,10 +29,14 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivityTest.waitForVisibility;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ShopActivityTest {
 
-    private static String USER_ID = "123456789";
+    private final static String USER_ID = "123456789";
     private static DatabaseReference usersRef = Database.getReference("users."
                                                     + USER_ID + ".boughtItems");
 
@@ -39,8 +47,14 @@ public class ShopActivityTest {
                 protected void beforeActivityLaunched() {
                     ShopActivity.disableAnimations();
                     usersRef.removeValue();
+                    ShopActivity.enableTesting();
                 }
             };
+
+    @After
+    public void afterEachTest() {
+        Account.deleteAccount();
+    }
 
     @Test
     public void testPressItemAndCancel() {
@@ -75,9 +89,9 @@ public class ShopActivityTest {
 
     }
 
-    /*@Test
+    @Test
     public void testPressBuyItemSuccess() {
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setStars(200);
+        Account.getInstance(mActivityRule.getActivity()).setStars(200);
         SystemClock.sleep(5000);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
@@ -92,5 +106,5 @@ public class ShopActivityTest {
 
         onView(withId(R.id.okButton)).perform(click());
         onView(withId(R.id.okButton)).check(doesNotExist());
-    }*/
+    }
 }

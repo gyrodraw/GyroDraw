@@ -38,6 +38,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 public class ShopActivity extends Activity {
 
     private static boolean enableAnimations = true;
+    private static boolean isTesting = false;
 
     protected FirebaseDatabase database;
     protected DatabaseReference shopColorsRef;
@@ -98,12 +99,13 @@ public class ShopActivity extends Activity {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //extractColorsFromDataSnapshot(dataSnapshot, textView);
-                shop = new Shop();
-                shop.addItem(new ShopItem("blue", 200));
-                shop.addItem(new ShopItem("red", 100));
+                if(!isTesting) {
+                    extractColorsFromDataSnapshot(dataSnapshot, textView);
+                } else {
+                    fillRandomShop();
+                }
+
                 addColorsToShop();
-                //findViewById(R.id.shopItems).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -311,6 +313,16 @@ public class ShopActivity extends Activity {
 
     public static void disableAnimations() {
         enableAnimations = false;
+    }
+
+    public void fillRandomShop() {
+        shop = new Shop();
+        shop.addItem(new ShopItem("blue", 200));
+        shop.addItem(new ShopItem("red", 100));
+    }
+
+    public static void enableTesting() {
+        isTesting = true;
     }
 
 }

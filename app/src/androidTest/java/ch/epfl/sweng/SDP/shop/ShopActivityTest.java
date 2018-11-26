@@ -4,6 +4,7 @@ import android.os.SystemClock;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,8 +37,13 @@ public class ShopActivityTest {
     @Test
     public void testPressItemAndCancel() {
         SystemClock.sleep(3000);
+        LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
+        int id = View.generateViewId();
+        layoutChild.setId(id);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
-        onView(withTagValue(is((Object) "blue"))).perform(click());
+        //onView(withTagValue(is((Object) "blue"))).perform(click());
+        onView(withId(id)).perform(click());
         onView(withId(R.id.cancelButton)).perform(click());
         onView(withId(R.id.buyButton)).check(doesNotExist());
     }
@@ -45,8 +51,12 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemNoStars() {
         SystemClock.sleep(3000);
+        LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
+        int id = View.generateViewId();
+        layoutChild.setId(id);
         //waitForVisibility(mActivityRule.getActivity().findViewById(R.id.shopItems), View.VISIBLE);
-        onView(withTagValue(is((Object) "yellow"))).perform(click());
+        onView(withId(id)).perform(click());
         onView(withId(R.id.buyButton)).perform(click());
         //onView(withId(R.id.okButton)).check(matches(isDisplayed()));
         SystemClock.sleep(1000);

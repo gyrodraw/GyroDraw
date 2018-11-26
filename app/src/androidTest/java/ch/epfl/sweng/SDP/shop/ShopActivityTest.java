@@ -55,7 +55,7 @@ public class ShopActivityTest {
                 protected void beforeActivityLaunched() {
                     ShopActivity.disableAnimations();
                     usersRef.removeValue();
-                    //ShopActivity.enableTesting();
+                    ShopActivity.enableTesting();
                 }
             };
 
@@ -122,7 +122,7 @@ public class ShopActivityTest {
         onView(withId(R.id.okButton)).check(doesNotExist());
     }
 
-    /*@Test
+    @Test
     public void extractColorsFromFirebaseTest() {
         List<DataSnapshot> dsList = new LinkedList<>();
         when(mockDataSnapshot.getValue(int.class)).thenReturn(500);
@@ -139,7 +139,8 @@ public class ShopActivityTest {
         shop.addItem(new ShopItem("red", 500));
 
         assertEquals(mActivityRule.getActivity()
-                .getShop().getItemList().get(0).getColorItem(), shop.getItemList().get(0).getColorItem());
+                .getShop().getItemList().get(0).getColorItem(), shop.getItemList()
+                                                                .get(0).getColorItem());
 
-    }*/
+    }
 }

@@ -304,7 +304,7 @@ public class ShopActivity extends Activity {
     public void onCancelPopUp(View view) {
         buyDialog.dismiss();
     }
-    
+
     public Shop getShop() {
         return shop;
     }

@@ -29,7 +29,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -105,12 +104,14 @@ public class HomeActivityTest {
 
     @Test
     public void testTrophiesButtonIsClickable() {
-        onView(withId(R.id.trophiesButton)).check(matches(isClickable()));
+        onView(withId(R.id.trophiesButton)).perform(click());
+        onView(withId(R.id.trophiesButton)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testStarsButtonIsClickable() {
-        onView(withId(R.id.starsButton)).check(matches(isClickable()));
+        onView(withId(R.id.starsButton)).perform(click());
+        onView(withId(R.id.starsButton)).check(matches(isDisplayed()));
     }
 
     @Test

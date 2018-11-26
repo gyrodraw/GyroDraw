@@ -132,7 +132,9 @@ public class Account {
      */
     public static Account getInstance(Context context) {
         if (instance == null) {
-            createAccount(context, new ConstantsWrapper(), "", "");
+            ConstantsWrapper constantsWrapper = new ConstantsWrapper();
+            createAccount(context, constantsWrapper,
+                    constantsWrapper.getFirebaseUserId(), "");
         }
 
         return instance;

@@ -27,6 +27,8 @@ public class Account {
 
     private static Account instance = null;
 
+    private static final String FRIENDS_LIST_FORMAT = "users.%s.friends.%s";
+
     private String userId;
     private String username;
     private String email;
@@ -371,11 +373,11 @@ public class Account {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
         // Update the user's friends' list
-        Database.getReference(format("users.%s.friends.%s",
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
                 userId, usernameId)).setValue(FRIENDS.ordinal(), createCompletionListener());
 
         // Update the sender's friends' list
-        Database.getReference(format("users.%s.friends.%s",
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
                 usernameId, userId)).setValue(FRIENDS.ordinal(), createCompletionListener());
     }
 
@@ -389,10 +391,10 @@ public class Account {
     public void removeFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.getReference(format("users.%s.friends.%s",
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
                 userId, usernameId)).removeValue(createCompletionListener());
 
-        Database.getReference(format("users.%s.friends.%s",
+        Database.getReference(format(FRIENDS_LIST_FORMAT,
                 usernameId, userId)).removeValue(createCompletionListener());
     }
 

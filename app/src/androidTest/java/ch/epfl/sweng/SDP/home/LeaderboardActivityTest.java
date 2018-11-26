@@ -106,7 +106,7 @@ public class LeaderboardActivityTest {
     public void testFilterButtonFiltersForFriends() {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .setValue(FriendsState.FRIENDS.ordinal());
+                .setValue(FriendsRequestState.FRIENDS.ordinal());
         LinearLayout linearLayout = activityRule.getActivity().findViewById(R.id.leaderboard);
         SystemClock.sleep(2000);
         int before = linearLayout.getChildCount();

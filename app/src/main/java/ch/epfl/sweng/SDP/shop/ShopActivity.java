@@ -39,6 +39,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 public class ShopActivity extends Activity {
 
     private static boolean enableAnimations = true;
+    private static boolean isTesting = false;
 
     protected FirebaseDatabase database;
     protected DatabaseReference shopColorsRef;
@@ -81,7 +82,7 @@ public class ShopActivity extends Activity {
         ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
                 "%d", Account.getInstance(this).getStars()));
 
-        fillShop(Account.getInstance(getApplicationContext()));
+        fillShop(Account.getInstance(this));
         addColorsToShop();
 
     }
@@ -273,7 +274,8 @@ public class ShopActivity extends Activity {
         shop = new Shop();
         List<ShopItem> myItems = new LinkedList<>();
 
-        if(Account.getInstance(this).getItemsBought() != null) {
+        if(Account.getInstance(this).getItemsBought() != null
+                && !isTesting) {
             myItems = account.getItemsBought();
         }
 
@@ -286,6 +288,11 @@ public class ShopActivity extends Activity {
 
             shop.addItem(new ShopItem(color, color.getPrice(), owned));
         }
+    }
+
+    @VisibleForTesting
+    public static void enableTesting() {
+        isTesting = true;
     }
 
 }

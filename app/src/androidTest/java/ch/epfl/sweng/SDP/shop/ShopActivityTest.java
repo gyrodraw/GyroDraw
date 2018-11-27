@@ -38,6 +38,7 @@ public class ShopActivityTest {
                 protected void beforeActivityLaunched() {
                     ShopActivity.disableAnimations();
                     usersRef.removeValue();
+                    ShopActivity.enableTesting();
                 }
             };
 

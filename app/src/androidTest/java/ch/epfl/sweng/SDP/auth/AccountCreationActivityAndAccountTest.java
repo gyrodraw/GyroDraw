@@ -164,7 +164,7 @@ public class AccountCreationActivityAndAccountTest {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .setValue(FriendsRequestState.SENT.ordinal());
-        setListenerAndAsserToFirebaseForFriendsTest(true);
+        setListenerAndAssertToFirebaseForFriendsTest(true);
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
@@ -173,13 +173,13 @@ public class AccountCreationActivityAndAccountTest {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .setValue(FriendsRequestState.RECEIVED.ordinal());
-        setListenerAndAsserToFirebaseForFriendsTest(true);
+        setListenerAndAssertToFirebaseForFriendsTest(true);
         account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
     @Test
     public void testRemoveFriend() {
-        setListenerAndAsserToFirebaseForFriendsTest(false);
+        setListenerAndAssertToFirebaseForFriendsTest(false);
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
@@ -333,7 +333,7 @@ public class AccountCreationActivityAndAccountTest {
         assertNotEquals(null, account);
     }
 
-    private void setListenerAndAsserToFirebaseForFriendsTest(final boolean state) {
+    private void setListenerAndAssertToFirebaseForFriendsTest(final boolean state) {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();

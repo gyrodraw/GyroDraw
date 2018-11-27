@@ -238,40 +238,6 @@ public class Account {
     }
 
     /**
-     * Updates username to newName.
-     *
-     * @param newName new username
-     * @throws IllegalArgumentException if username not available anymore
-     * @throws DatabaseException        if problems with Firebase
-     */
-    public void updateUsername(final String newName) throws DatabaseException {
-        checkPrecondition(newName != null, "Username must not be null");
-
-        usersRef.orderByChild("username").equalTo(newName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            throw new IllegalArgumentException("Username already taken.");
-                        } else {
-                            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            builder.addChildren(userId + ".username").build()
-                                    .setValue(newName, createCompletionListener());
-                            username = newName;
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
-    }
-
-    /**
      * Method that allows one to change trophies.
      *
      * @param change modifier of trophies

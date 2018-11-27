@@ -30,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
@@ -53,6 +54,8 @@ public class AccountCreationActivityAndAccountTest {
     public void init() {
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
+        account.setUsername(USERNAME);
+        account.setEmail(TEST_EMAIL);
     }
 
     @After
@@ -184,13 +187,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testUpdateUsername() {
-        final String newUsername = "987654321";
-        account.setUsername(newUsername);
-        assertThat(account.getUsername(), is(newUsername));
-    }
-
-    @Test
     public void testRegisterAccount() {
         account.registerAccount();
     }
@@ -275,11 +271,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testUpdateUsernameWithNull() {
-        account.updateUsername(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testAddNegativeBalanceStars() {
         account.changeStars(-1000);
     }
@@ -358,5 +349,4 @@ public class AccountCreationActivityAndAccountTest {
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .addValueEventListener(valueEventListener);
     }
-
 }

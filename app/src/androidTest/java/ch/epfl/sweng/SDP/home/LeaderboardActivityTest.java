@@ -91,9 +91,12 @@ public class LeaderboardActivityTest {
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .setValue(FriendsRequestState.FRIENDS.ordinal());
         SystemClock.sleep(2000);
+        onView(withId(R.id.friendsFilter)).perform(click());
+        SystemClock.sleep(2000);
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(1000);
-        assertTrue(1 ==
+        assertTrue(""+((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
+                .getChildCount(), 1 ==
                 ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
                         .getChildCount());
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");

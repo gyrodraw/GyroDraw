@@ -30,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
@@ -181,13 +182,6 @@ public class AccountCreationActivityAndAccountTest {
     public void testRemoveFriend() {
         setListenerAndAssertToFirebaseForFriendsTest(false);
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
-    }
-
-    @Test
-    public void testUpdateUsername() {
-        final String newUsername = "987654321";
-        account.setUsername(newUsername);
-        assertThat(account.getUsername(), is(newUsername));
     }
 
     @Test
@@ -358,5 +352,4 @@ public class AccountCreationActivityAndAccountTest {
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .addValueEventListener(valueEventListener);
     }
-
 }

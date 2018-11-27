@@ -61,7 +61,7 @@ public class LeaderboardActivityTest {
         SystemClock.sleep(3000);
         onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
         onView(withId(R.id.searchField))
-                .perform(typeText("M"), ViewActions.closeSoftKeyboard());
+                .perform(typeText("F"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.searchField))
                 .perform(typeText(""), ViewActions.closeSoftKeyboard());
         SystemClock.sleep(3000);

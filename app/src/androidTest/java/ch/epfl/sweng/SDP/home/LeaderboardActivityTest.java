@@ -78,16 +78,9 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsButtonsClickable() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        onView(withId(R.id.searchField))
-                .perform(typeText(""), ViewActions.closeSoftKeyboard());
-
-        SystemClock.sleep(3000);
+        SystemClock.sleep(1000);
         onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
-        onView(withId(R.id.searchField))
-                .perform(typeText("M"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.searchField))
-                .perform(typeText(""), ViewActions.closeSoftKeyboard());
-        SystemClock.sleep(3000);
+        SystemClock.sleep(1000);
         onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
     }
 

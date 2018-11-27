@@ -13,13 +13,13 @@ public class ColorUtils {
      */
     public static int getColorFromString(String color) {
         switch (color) {
-            case "blue":
+            case "BLUE":
                 return R.color.colorBlue;
-            case "red":
+            case "RED":
                 return R.color.colorRed;
-            case "yellow":
+            case "YELLOW":
                 return R.color.colorYellow;
-            case "green":
+            case "GREEN":
                 return R.color.colorGreen;
             default:
                 throw new IllegalStateException();

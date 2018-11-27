@@ -20,6 +20,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
@@ -187,7 +188,7 @@ public class AccountCreationActivityAndAccountTest {
     @Test
     public void testUpdateItemsBought() {
         List<ShopItem> itemList = new LinkedList<>();
-        ShopItem shopItem = new ShopItem("blue", 20);
+        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 20);
         itemList.add(shopItem);
         account.updateItemsBought(shopItem);
         assertThat(account.getItemsBought(), is(itemList));

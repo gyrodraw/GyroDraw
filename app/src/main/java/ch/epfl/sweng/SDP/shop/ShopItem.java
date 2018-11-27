@@ -3,9 +3,8 @@ package ch.epfl.sweng.SDP.shop;
 public class ShopItem {
 
     private int price;
-    private String color;
+    private ColorsShop color;
     private boolean owned;
-
 
     /**
      * Constructor of a ShopItem.
@@ -13,7 +12,7 @@ public class ShopItem {
      * @param color Color of the item
      * @param price Price of the item
      */
-    public ShopItem(String color, int price) {
+    public ShopItem(ColorsShop color, int price) {
         this.price = price;
         this.color = color;
         this.owned = false;
@@ -26,13 +25,13 @@ public class ShopItem {
      * @param price Price of the item
      * @param owned Is this item owned by the player
      */
-    public ShopItem(String color, int price, boolean owned) {
+    public ShopItem(ColorsShop color, int price, boolean owned) {
         this.price = price;
         this.color = color;
         this.owned = owned;
     }
 
-    public String getColorItem() {
+    public ColorsShop getColorItem() {
         return color;
     }
 
@@ -44,7 +43,7 @@ public class ShopItem {
         this.price = price;
     }
 
-    public void setColorItem(String color) {
+    public void setColorItem(ColorsShop color) {
         this.color = color;
     }
 

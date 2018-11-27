@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -35,9 +36,9 @@ public class DrawingOfflineTest {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
         Account.getInstance(activityRule.getActivity().getApplicationContext())
-                .updateItemsBought(new ShopItem("blue", 200));
+                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())
-                .updateItemsBought(new ShopItem("red", 100));
+                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 
     @Test

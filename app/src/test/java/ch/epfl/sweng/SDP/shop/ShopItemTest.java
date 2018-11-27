@@ -10,36 +10,36 @@ public class ShopItemTest {
 
     @Test
     public void setColorItemTest() {
-        ShopItem shopItem = new ShopItem("blue", 10);
-        shopItem.setColorItem("yellow");
-        assertEquals(shopItem.getColorItem(), "yellow");
+        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10);
+        shopItem.setColorItem(ColorsShop.YELLOW);
+        assertEquals(shopItem.getColorItem(), ColorsShop.YELLOW);
     }
 
     @Test
     public void setPriceItemTest() {
-        ShopItem shopItem = new ShopItem("blue", 10, true);
+        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10, true);
         shopItem.setPriceItem(20);
         assertEquals(shopItem.getPriceItem(), 20);
     }
 
     @Test
     public void setOwnedItemTest() {
-        ShopItem shopItem = new ShopItem("red", 10, false);
+        ShopItem shopItem = new ShopItem(ColorsShop.RED, 10, false);
         shopItem.setOwned(true);
         assertTrue(shopItem.getOwned());
     }
 
     @Test
     public void equalsTest() {
-        ShopItem shopItem1 = new ShopItem("blue", 10, false);
-        ShopItem shopItem2 = new ShopItem("blue", 10, true);
+        ShopItem shopItem1 = new ShopItem(ColorsShop.BLUE, 10, false);
+        ShopItem shopItem2 = new ShopItem(ColorsShop.BLUE, 10, true);
         assertEquals(shopItem1, shopItem2);
     }
 
     @Test
     public void notEqualsTest() {
-        ShopItem shopItem1 = new ShopItem("blue", 20, false);
-        ShopItem shopItem2 = new ShopItem("blue", 10, true);
+        ShopItem shopItem1 = new ShopItem(ColorsShop.BLUE, 20, false);
+        ShopItem shopItem2 = new ShopItem(ColorsShop.BLUE, 10, true);
         assertNotEquals(shopItem1, shopItem2);
     }
 }

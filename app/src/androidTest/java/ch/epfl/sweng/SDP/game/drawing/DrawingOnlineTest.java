@@ -28,6 +28,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -70,9 +71,9 @@ public class DrawingOnlineTest {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         Account.getInstance(activityRule.getActivity().getApplicationContext())
-                .updateItemsBought(new ShopItem("blue", 200));
+                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())
-                .updateItemsBought(new ShopItem("red", 100));
+                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 
     @Test

@@ -317,7 +317,7 @@ public class Account {
         checkPrecondition(shopItem != null, "Shop item is null");
 
         Database.constructBuilder(usersRef).addChildren(userId + ".boughtItems."
-                                                        + shopItem.getColorItem())
+                                                        + shopItem.getColorItem().toString())
                 .build().setValue(shopItem.getPriceItem(), createCompletionListener());
 
         itemsBought.add(shopItem);

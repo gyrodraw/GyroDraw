@@ -18,9 +18,9 @@ public class ShopTest {
 
     @Test
     public void addItemShopTest() {
-        ShopItem item1 = new ShopItem("yellow", 10);
-        ShopItem item2 = new ShopItem("blue", 20);
-        ShopItem item3 = new ShopItem("green", 30);
+        ShopItem item1 = new ShopItem(ColorsShop.YELLOW, 10);
+        ShopItem item2 = new ShopItem(ColorsShop.BLUE, 20);
+        ShopItem item3 = new ShopItem(ColorsShop.GREEN, 30);
         List<ShopItem> shopItem = Arrays.asList(item1, item2, item3);
 
         Shop shop = new Shop();
@@ -34,9 +34,9 @@ public class ShopTest {
 
     @Test
     public void removeItemShopTest() {
-        ShopItem item1 = new ShopItem("yellow", 10);
-        ShopItem item2 = new ShopItem("blue", 20);
-        ShopItem item3 = new ShopItem("green", 30);
+        ShopItem item1 = new ShopItem(ColorsShop.YELLOW, 10);
+        ShopItem item2 = new ShopItem(ColorsShop.BLUE, 20);
+        ShopItem item3 = new ShopItem(ColorsShop.GREEN, 30);
         List<ShopItem> shopItem = Arrays.asList(item2, item3);
 
         Shop shop = new Shop();
@@ -53,12 +53,12 @@ public class ShopTest {
     @Test
     public void firebaseToListTest() {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("blue", "100");
-        map.put("red", "200");
+        map.put("BLUE", "100");
+        map.put("RED", "200");
 
         List<ShopItem> listItems = new LinkedList<>();
-        listItems.add(new ShopItem("blue", 100));
-        listItems.add(new ShopItem("red", 200));
+        listItems.add(new ShopItem(ColorsShop.BLUE, 100));
+        listItems.add(new ShopItem(ColorsShop.RED, 200));
 
         assertEquals(Shop.firebaseToListShopItem(map), listItems);
 
@@ -66,26 +66,26 @@ public class ShopTest {
 
     @Test
     public void getColorBlueFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("blue"), R.color.colorBlue);
+        assertEquals(ColorUtils.getColorFromString("BLUE"), R.color.colorBlue);
     }
 
     @Test
     public void getColorGreenFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("green"), R.color.colorGreen);
+        assertEquals(ColorUtils.getColorFromString("GREEN"), R.color.colorGreen);
     }
 
     @Test
     public void getColorYellowFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("yellow"), R.color.colorYellow);
+        assertEquals(ColorUtils.getColorFromString("YELLOW"), R.color.colorYellow);
     }
 
     @Test
     public void getColorRedFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("red"), R.color.colorRed);
+        assertEquals(ColorUtils.getColorFromString("RED"), R.color.colorRed);
     }
 
     @Test (expected = IllegalStateException.class)
     public void getWrongColorFromStringTest() {
-        ColorUtils.getColorFromString("rainbow");
+        ColorUtils.getColorFromString("RAINBOW");
     }
 }

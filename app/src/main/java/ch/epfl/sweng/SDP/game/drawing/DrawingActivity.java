@@ -58,7 +58,7 @@ public class DrawingActivity extends BaseActivity {
 
         for(int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
-            int color = ColorUtils.getColorFromString(item.getColorItem());
+            int color = ColorUtils.getColorFromString(item.getColorItem().toString());
             colors.add(color);
             ImageView colorView = createColorImageView(color);
             // Adds the view to the layout

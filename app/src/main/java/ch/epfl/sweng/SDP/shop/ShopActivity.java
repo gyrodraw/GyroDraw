@@ -38,7 +38,6 @@ import ch.epfl.sweng.SDP.firebase.Database;
 public class ShopActivity extends Activity {
 
     private static boolean enableAnimations = true;
-    private static boolean isTesting = false;
 
     protected FirebaseDatabase database;
     protected DatabaseReference shopColorsRef;
@@ -94,11 +93,8 @@ public class ShopActivity extends Activity {
         shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!isTesting) {
-                    extractColorsFromDataSnapshot(dataSnapshot, Account
-                                                            .getInstance(getApplicationContext()));
-                } else {
-                    fillRandomShop();
+                if(true) {
+                    fillShop(Account.getInstance(getApplicationContext()));
                 }
 
                 addColorsToShop();
@@ -109,34 +105,6 @@ public class ShopActivity extends Activity {
                 throw databaseError.toException();
             }
         });
-    }
-
-    /**
-     * Tries to extract colors from a snapshot and creates a Button for each.
-     * @param dataSnapshot DataSnapshot from which colors should be extracted.
-     */
-    protected void extractColorsFromDataSnapshot(DataSnapshot dataSnapshot, Account account) {
-        if (dataSnapshot == null) {
-            throw new NullPointerException();
-        }
-
-        shop = new Shop();
-        List<ShopItem> myItems = new LinkedList<>();
-
-        if(Account.getInstance(this).getItemsBought() != null) {
-            myItems = account.getItemsBought();
-        }
-
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            boolean owned = false;
-
-            if (myItems.contains(new ShopItem(ds.getKey(), ds.getValue(int.class)))) {
-                owned = true;
-            }
-
-            shop.addItem(new ShopItem(ds.getKey(), ds.getValue(int.class), owned));
-        }
-
     }
 
     /**
@@ -158,12 +126,12 @@ public class ShopActivity extends Activity {
     private LinearLayout toLayout(ShopItem item, final int index) {
         LinearLayout layout;
 
-        String color = item.getColorItem();
+        ColorsShop color = item.getColorItem();
         String price = Integer.toString(item.getPriceItem());
 
         Resources res = getResources();
 
-        TextView colorView = createTextView(color, res.getColor(R.color.colorDrawYellow), 30,
+        TextView colorView = createTextView(color.toString(), res.getColor(R.color.colorDrawYellow), 30,
                 typeMuro, new LinearLayout
                     .LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
@@ -314,17 +282,29 @@ public class ShopActivity extends Activity {
     }
 
     /**
-     * For testing purposes only, the shop is filled with only two colors. It avoids having to
-     * fetch items from the database.
+     * Fill the shop with the items available taking into account the colors the player
+     * has already bought.
+     *
+     * @param account Account of the user
      */
-    public void fillRandomShop() {
-        shop = new Shop();
-        shop.addItem(new ShopItem("blue", 200));
-        shop.addItem(new ShopItem("red", 100));
-    }
+    public void fillShop(Account account) {
 
-    public static void enableTesting() {
-        isTesting = true;
+        shop = new Shop();
+        List<ShopItem> myItems = new LinkedList<>();
+
+        if(Account.getInstance(this).getItemsBought() != null) {
+            myItems = account.getItemsBought();
+        }
+
+        for (ColorsShop color : ColorsShop.values()) {
+            boolean owned = false;
+
+            if (myItems.contains(new ShopItem(color, color.getPrice()))) {
+                owned = true;
+            }
+
+            shop.addItem(new ShopItem(color, color.getPrice(), owned));
+        }
     }
 
 }

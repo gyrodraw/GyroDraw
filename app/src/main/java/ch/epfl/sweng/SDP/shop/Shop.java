@@ -39,7 +39,8 @@ public class Shop {
             while (it.hasNext()) {
                 Map.Entry entry = (Map.Entry) it.next();
                 int value = Integer.parseInt(entry.getValue().toString());
-                listItem.add(new ShopItem(entry.getKey().toString(), value));
+                listItem.add(new ShopItem(ColorsShop.getColorFromString(entry.getKey().toString()),
+                        value));
             }
         }
 

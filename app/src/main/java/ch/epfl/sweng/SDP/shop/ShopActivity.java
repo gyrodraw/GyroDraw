@@ -74,8 +74,6 @@ public class ShopActivity extends Activity {
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
-        getColorsFromDatabase(shopColorsRef);
-
         shopItems = findViewById(R.id.shopItems);
 
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
@@ -83,29 +81,9 @@ public class ShopActivity extends Activity {
         ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
                 "%d", Account.getInstance(this).getStars()));
 
-    }
+        fillShop(Account.getInstance(getApplicationContext()));
+        addColorsToShop();
 
-    /**
-     * Accesses the database, gets all the available colors and creates a button in the ScrollView
-     * for each item found.
-     * @param shopColorsReference  Reference to where colors are stored in shop.
-     */
-    protected void getColorsFromDatabase(DatabaseReference shopColorsReference) {
-        shopColorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(true) {
-                    fillShop(Account.getInstance(getApplicationContext()));
-                }
-
-                addColorsToShop();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
     }
 
     /**

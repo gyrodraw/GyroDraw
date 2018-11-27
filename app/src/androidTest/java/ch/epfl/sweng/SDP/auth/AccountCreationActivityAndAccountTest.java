@@ -21,7 +21,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
-import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import com.google.firebase.database.DatabaseReference;

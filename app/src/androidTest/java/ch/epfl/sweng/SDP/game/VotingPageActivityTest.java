@@ -45,6 +45,7 @@ public class VotingPageActivityTest {
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
+    private Account accountMock;
     private StarAnimationView starsAnimation;
 
     @Rule
@@ -68,6 +69,10 @@ public class VotingPageActivityTest {
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
+        accountMock = Mockito.mock(Account.class);
+        when(accountMock.getUserId()).thenReturn("test_user");
+        when(accountMock.getUsername()).thenReturn("test_user");
+        mActivityRule.getActivity().setMockedAccount(accountMock);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("FREDRIKB");

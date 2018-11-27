@@ -63,6 +63,8 @@ public class VotingPageActivity extends BaseActivity {
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
+    private Account mockedAccount;
+
     private String roomID = "undefined";
 
     private static boolean enableAnimations = true;
@@ -426,6 +428,7 @@ public class VotingPageActivity extends BaseActivity {
                 // Create and show the final ranking in the new fragment
                 RankingFragment fragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
                 RankingFragment.class.getName(), bundle);
+                fragment.setAccount(mockedAccount);
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.votingPageLayout,fragment
                                 )
@@ -489,5 +492,9 @@ public class VotingPageActivity extends BaseActivity {
                 listenerState.onDataChange(dataSnapshot);
             }
         });
+    }
+
+    public void setMockedAccount(Account mockedAccount) {
+        this.mockedAccount = mockedAccount;
     }
 }

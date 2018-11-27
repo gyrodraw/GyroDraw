@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -51,6 +52,8 @@ public class RankingFragment extends ListFragment {
 
     private Bitmap[] drawings;
     private String[] playerNames;
+
+    private Account account;
 
     public RankingFragment() {
         // Empty constructor
@@ -105,7 +108,6 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
-                Account account = Account.getInstance(getActivity().getApplicationContext());
                 String userNameId = account.getUsername();
 
                 // Sort the rankings
@@ -151,8 +153,6 @@ public class RankingFragment extends ListFragment {
     }
 
     private void updateUserStats(int starIncrease, int trophiesIncrease, boolean won) {
-        Account account = Account.getInstance(getActivity()
-                .getApplicationContext());
         account.changeStars(starIncrease);
         account.changeTrophies(trophiesIncrease);
         account.changeAverageRating(starIncrease);
@@ -167,7 +167,6 @@ public class RankingFragment extends ListFragment {
      */
     public void createAndStoreGameResult(List<String> names, int rank, int stars, int trophies) {
 
-        Account account = Account.getInstance(getActivity().getApplicationContext());
         String userNameId = account.getUsername();
 
         Bitmap drawing = drawings[getIndexForUserName(userNameId)];
@@ -182,8 +181,15 @@ public class RankingFragment extends ListFragment {
     }
 
     private void setFinishedCollectingRanking() {
-        finishedRef.child(Account.getInstance(getActivity()
-                .getApplicationContext()).getUsername()).setValue(1);
+        finishedRef.child(account.getUsername()).setValue(1);
+    }
+
+    public void setAccount(Account account) {
+        if (account != null) {
+            this.account = account;
+        } else {
+            this.account = Account.getInstance(getActivity().getApplicationContext());
+        }
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {
@@ -230,7 +236,6 @@ public class RankingFragment extends ListFragment {
             int darkColor = getResources().getColor(R.color.colorPrimaryDark);
 
             // Set the color
-            Account account = Account.getInstance(getActivity().getApplicationContext());
             if (!players[position].equals(account.getUsername())) {
                 name.setTextColor(yellowColor);
                 ranking.setTextColor(yellowColor);

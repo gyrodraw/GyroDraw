@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,11 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +25,6 @@ import java.util.Locale;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -40,9 +33,6 @@ public class ShopActivity extends Activity {
 
     private static boolean enableAnimations = true;
     private static boolean isTesting = false;
-
-    protected FirebaseDatabase database;
-    protected DatabaseReference shopColorsRef;
 
     private Dialog buyDialog;
     private Dialog confirmationDialog;
@@ -69,8 +59,6 @@ public class ShopActivity extends Activity {
 
         buyDialog = new Dialog(this);
         confirmationDialog = new Dialog(this);
-
-        shopColorsRef = Database.getReference("shop.colors");
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
@@ -263,8 +251,8 @@ public class ShopActivity extends Activity {
         shop = new Shop();
         List<ShopItem> myItems = new LinkedList<>();
 
-        if(Account.getInstance(this).getItemsBought() != null
-                && !isTesting) {
+        if(!isTesting && Account
+                .getInstance(this).getItemsBought() != null) {
             myItems = Account.getInstance(this).getItemsBought();
         }
 

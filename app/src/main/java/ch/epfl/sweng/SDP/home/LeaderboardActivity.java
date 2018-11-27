@@ -459,12 +459,18 @@ public class LeaderboardActivity extends Activity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         int status = dataSnapshot.getValue(int.class);
-                        if (status == RECEIVED) {
-                            Account.getInstance(context).addFriend(player.userId);
-                            setImageResource(R.drawable.remove_friend);
-                        } else if (status == FRIENDS || status == SENT) {
-                            Account.getInstance(context).removeFriend(player.userId);
-                            setImageResource(R.drawable.add_friend);
+                        switch (FriendsRequestState.fromInteger(status)) {
+                            case RECEIVED:
+                                Account.getInstance(context).addFriend(player.userId);
+                                setImageResource(R.drawable.remove_friend);
+                                break;
+                            case FRIENDS:
+                            case SENT:
+                                Account.getInstance(context).removeFriend(player.userId);
+                                setImageResource(R.drawable.add_friend);
+                                break;
+                            default:
+                                break;
                         }
                     } else {
                         Account.getInstance(context).addFriend(player.userId);

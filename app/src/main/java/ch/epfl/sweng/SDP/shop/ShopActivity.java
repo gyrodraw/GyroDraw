@@ -82,7 +82,7 @@ public class ShopActivity extends Activity {
         ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
                 "%d", Account.getInstance(this).getStars()));
 
-        fillShop(Account.getInstance(this));
+        fillShop();
         addColorsToShop();
 
     }
@@ -253,30 +253,19 @@ public class ShopActivity extends Activity {
         buyDialog.dismiss();
     }
 
-    @VisibleForTesting
-    public Shop getShop() {
-        return shop;
-    }
-
-    @VisibleForTesting
-    public static void disableAnimations() {
-        enableAnimations = false;
-    }
-
     /**
      * Fill the shop with the items available taking into account the colors the player
      * has already bought.
      *
-     * @param account Account of the user
      */
-    public void fillShop(Account account) {
+    public void fillShop() {
 
         shop = new Shop();
         List<ShopItem> myItems = new LinkedList<>();
 
         if(Account.getInstance(this).getItemsBought() != null
                 && !isTesting) {
-            myItems = account.getItemsBought();
+            myItems = Account.getInstance(this).getItemsBought();
         }
 
         for (ColorsShop color : ColorsShop.values()) {
@@ -295,4 +284,13 @@ public class ShopActivity extends Activity {
         isTesting = true;
     }
 
+    @VisibleForTesting
+    public Shop getShop() {
+        return shop;
+    }
+
+    @VisibleForTesting
+    public static void disableAnimations() {
+        enableAnimations = false;
+    }
 }

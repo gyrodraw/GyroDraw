@@ -17,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.util.Strings;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -31,9 +30,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;
 
@@ -41,6 +37,9 @@ public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
+    private static final int SENT = FriendsRequestState.SENT.ordinal();
+    private static final int RECEIVED = FriendsRequestState.RECEIVED.ordinal();
+    private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
@@ -244,15 +243,16 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
+                                String userId = s.child("userId").getValue(String.class);
+                                String username = s.child("username").getValue(String.class);
+                                Long trophies = s.child("trophies").getValue(Long.class);
+                                String league = s.child("currentLeague").getValue(String.class);
                                 if (!s.getKey().equals("123456789")
-                                        && s.child("userId").getValue(String.class) != null
-                                        && s.child("username").getValue(String.class) != null
-                                        && s.child("trophies").getValue(Long.class) != null
-                                        && s.child("currentLeague").getValue(String.class) != null) {
-                                    String username = s.child("username").getValue(String.class);
-                                    Player temp = new Player(s.child("userId").getValue(String.class),
-                                            username, s.child("trophies").getValue(Long.class),
-                                            s.child("currentLeague").getValue(String.class),
+                                        && userId != null
+                                        && username != null
+                                        && trophies != null
+                                        && league != null) {
+                                    Player temp = new Player(userId, username, trophies, league,
                                             username.equals(
                                                     Account.getInstance(context).getUsername()));
 
@@ -352,9 +352,9 @@ public class LeaderboardActivity extends Activity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         int status = dataSnapshot.getValue(int.class);
-                        if (status == SENT.ordinal()) {
+                        if (status == SENT) {
                             setImageResource(R.drawable.pending_friend);
-                        } else if (status == FRIENDS.ordinal()) {
+                        } else if (status == FRIENDS) {
                             setImageResource(R.drawable.remove_friend);
                         } else {
                             setImageResource(R.drawable.add_friend);
@@ -381,11 +381,11 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        int status = (int)(long)dataSnapshot.getValue();
-                        if (status == RECEIVED.ordinal()) {
+                        int status = dataSnapshot.getValue(int.class);
+                        if (status == RECEIVED) {
                             Account.getInstance(context).addFriend(player.userId);
                             setImageResource(R.drawable.remove_friend);
-                        } else if (status == FRIENDS.ordinal()) {
+                        } else if (status == FRIENDS) {
                             Account.getInstance(context).removeFriend(player.userId);
                             setImageResource(R.drawable.add_friend);
                         }

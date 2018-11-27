@@ -428,7 +428,7 @@ public class VotingPageActivity extends BaseActivity {
                 // Create and show the final ranking in the new fragment
                 RankingFragment fragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
                 RankingFragment.class.getName(), bundle);
-                fragment.setAccount(mockedAccount);
+                fragment.setAccount(mockedAccount, getApplicationContext());
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.votingPageLayout,fragment
                                 )

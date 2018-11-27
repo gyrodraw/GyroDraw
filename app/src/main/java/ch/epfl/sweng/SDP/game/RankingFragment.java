@@ -184,11 +184,11 @@ public class RankingFragment extends ListFragment {
         finishedRef.child(account.getUsername()).setValue(1);
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(Account account, Context context) {
         if (account != null) {
             this.account = account;
         } else {
-            this.account = Account.getInstance(getActivity().getApplicationContext());
+            this.account = Account.getInstance(context);
         }
     }
 

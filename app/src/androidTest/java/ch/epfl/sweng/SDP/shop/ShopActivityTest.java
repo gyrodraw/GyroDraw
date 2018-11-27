@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.shop;
 
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -47,6 +48,7 @@ public class ShopActivityTest {
 
     @Test
     public void testPressItemAndCancel() {
+        SystemClock.sleep(3000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
@@ -59,6 +61,7 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemNoStars() {
+        SystemClock.sleep(3000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
@@ -78,6 +81,7 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemSuccess() {
         Account.getInstance(mActivityRule.getActivity()).setStars(100);
+        SystemClock.sleep(3000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(2);
         int id = View.generateViewId();

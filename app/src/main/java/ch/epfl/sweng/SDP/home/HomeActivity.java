@@ -197,7 +197,7 @@ public class HomeActivity extends BaseActivity {
                             Account.deleteAccount();
                             toastSignOut.cancel();
                             launchActivity(MainActivity.class);
-                            finish();
+                            //finish();
                         } else {
                             Log.e(TAG, "Sign out failed!");
                         }

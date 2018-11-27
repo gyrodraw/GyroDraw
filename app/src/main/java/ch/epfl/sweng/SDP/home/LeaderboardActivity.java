@@ -16,14 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Collections;
-import java.util.LinkedList;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -31,8 +23,16 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
-import static java.lang.String.copyValueOf;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import static java.lang.String.format;
+
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class LeaderboardActivity extends Activity {
 
@@ -77,7 +77,7 @@ public class LeaderboardActivity extends Activity {
         friendsFilter.setTypeface(typeMuro);
         friendsFilter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 filterByFriends ^= true;
                 if (filterByFriends) {
                     leaderboard.update(searchField.getText().toString());

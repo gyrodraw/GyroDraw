@@ -48,7 +48,7 @@ public class ShopActivityTest {
 
     @Test
     public void testPressItemAndCancel() {
-        SystemClock.sleep(3000);
+        SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
@@ -61,7 +61,7 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemNoStars() {
-        SystemClock.sleep(3000);
+        SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
@@ -81,7 +81,7 @@ public class ShopActivityTest {
     @Test
     public void testPressBuyItemSuccess() {
         Account.getInstance(mActivityRule.getActivity()).setStars(100);
-        SystemClock.sleep(3000);
+        SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(2);
         int id = View.generateViewId();

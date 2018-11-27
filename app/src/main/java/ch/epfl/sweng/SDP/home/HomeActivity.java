@@ -284,7 +284,6 @@ public class HomeActivity extends BaseActivity {
                 if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
                     launchActivity(LoadingScreenActivity.class);
-                    finish();
                 } else {
                     Toast.makeText(this, R.string.no_internet,
                             Toast.LENGTH_LONG).show();
@@ -310,11 +309,9 @@ public class HomeActivity extends BaseActivity {
                 break;
             case R.id.practiceButton:
                 launchActivity(DrawingOffline.class);
-                finish();
                 break;
             case R.id.mysteryButton:
                 launchActivity(DrawingOfflineItems.class);
-                finish();
                 break;
             default:
         }

@@ -15,6 +15,11 @@
     <string name="trophies_button_text">Trophies:</string>
     <string name="stars_button_text">Stars:</string>
     <string name="league_1">League 1</string>
+    <string name="league_2">League 2</string>
+    <string name="league_3">League 3</string>
+    <string name="league_1_description">0 &#8211; 99</string>
+    <string name="league_2_description">100 &#8211; 199</string>
+    <string name="league_3_description">200+</string>
     <string name="draw">Draw!</string>
     <string name="fly">Fly!</string>
     <string name="clear">Clear</string>
@@ -41,4 +46,7 @@
     <string name="leave">Leave</string>
     <string name="practice">PRACTICE !</string>
     <string name="special">SPECIAL !</string>
+    <string name="accept">Accept!</string>
+    <string name="reject">Reject</string>
+    <string name="new_friend_request">New friend request</string>
 </resources>

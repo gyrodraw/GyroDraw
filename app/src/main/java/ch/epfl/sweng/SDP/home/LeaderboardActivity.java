@@ -28,8 +28,9 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.utils.AnimUtils;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;
 
 public class LeaderboardActivity extends Activity {
@@ -55,11 +56,11 @@ public class LeaderboardActivity extends Activity {
         EditText searchField = findViewById(R.id.searchField);
 
         TextView exitButton = findViewById(R.id.exitButton);
-        AnimUtils.setExitListener(exitButton, this);
+        LayoutUtils.setExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 
-        leaderboard = new Leaderboard();
+        leaderboard = new Leaderboard(this);
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -87,11 +88,17 @@ public class LeaderboardActivity extends Activity {
         private final String userId;
         private final String username;
         private final Long trophies;
+        private final String league;
+        private int rank;
+        private final boolean isCurrentUser;
 
-        private Player(String userId, String username, Long trophies) {
+        private Player(String userId, String username, Long trophies, String league,
+                       boolean isCurrentUser) {
             this.userId = userId;
             this.username = username;
             this.trophies = trophies;
+            this.league = league;
+            this.isCurrentUser = isCurrentUser;
         }
 
         /**
@@ -119,11 +126,10 @@ public class LeaderboardActivity extends Activity {
          */
         @SuppressLint("NewApi")
         private LinearLayout toLayout(final Context context, int index) {
-            final FriendsButton friendsButton = new FriendsButton(context, this, index);
-
             TextView usernameView = new TextView(context);
             Resources res = getResources();
-            styleView(usernameView, username, res.getColor(R.color.colorDrawYellow),
+            styleView(usernameView, rank + ". " + username, res.getColor(
+                    isCurrentUser ? R.color.colorPrimaryDark : R.color.colorDrawYellow),
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
             TextView trophiesView = new TextView(context);
@@ -131,22 +137,33 @@ public class LeaderboardActivity extends Activity {
                     res.getColor(R.color.colorPrimaryDark),
                     new LinearLayout.LayoutParams(0,
                             LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+
             trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-            trophiesView.setPadding(0, 0, 30, 0);
+
+            ImageView leagueView = new ImageView(context);
+            leagueView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                    LinearLayout.LayoutParams.MATCH_PARENT, 1));
+            leagueView.setImageResource(getLeagueImageId(league));
+
+            final FriendsButton friendsButton =
+                    new FriendsButton(context, this, index, isCurrentUser);
 
             LinearLayout entry = addViews(new LinearLayout(context),
-                    usernameView, trophiesView, friendsButton);
+                    usernameView, trophiesView, leagueView, friendsButton);
 
-            entry.setBackgroundColor(res.getColor(R.color.colorLightGrey));
+            entry.setBackgroundColor(res.getColor(
+                    isCurrentUser ? R.color.colorDrawYellow : R.color.colorLightGrey));
             entry.setPadding(30, 10, 30, 10);
 
             return entry;
         }
 
         private LinearLayout addViews(LinearLayout layout, TextView usernameView,
-                                      TextView trophiesView, ImageView addFriends) {
+                                      TextView trophiesView, ImageView leagueView,
+                                      ImageView addFriends) {
             layout.addView(usernameView);
             layout.addView(trophiesView);
+            layout.addView(leagueView);
             layout.addView(addFriends);
 
             return layout;
@@ -155,10 +172,15 @@ public class LeaderboardActivity extends Activity {
         private void styleView(TextView view, String text, int color,
                                LinearLayout.LayoutParams layoutParams) {
             view.setText(text);
-            view.setTextSize(25);
+            view.setTextSize(20);
+            view.setMaxLines(1);
             view.setTextColor(color);
             view.setTypeface(typeMuro);
             view.setLayoutParams(layoutParams);
+        }
+
+        public void setRank(int rank) {
+            this.rank = rank;
         }
     }
 
@@ -166,8 +188,10 @@ public class LeaderboardActivity extends Activity {
 
         private LinkedList<Player> allPlayers;
         private LinkedList<Player> wantedPlayers;
+        private Context context;
 
-        private Leaderboard() {
+        private Leaderboard(Context context) {
+            this.context = context;
             allPlayers = new LinkedList<>();
             wantedPlayers = new LinkedList<>();
             update("");
@@ -216,14 +240,18 @@ public class LeaderboardActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (s.child("userId") == null || s.child("username") == null
-                                        || s.child("trophies") == null
+                                if (!s.child("userId").exists() || !s.child("username").exists()
+                                        || !s.child("trophies").exists()
+                                        || !s.child("currentLeague").exists()
                                         || s.getKey().equals("123456789")) {
                                     continue;
                                 }
+                                String username = (String) s.child("username").getValue();
                                 Player temp = new Player((String) s.child("userId").getValue(),
-                                        (String) s.child("username").getValue(),
-                                        (Long) s.child("trophies").getValue());
+                                        username, (Long) s.child("trophies").getValue(),
+                                        (String) s.child("currentLeague").getValue(),
+                                        username.equals(
+                                                Account.getInstance(context).getUsername()));
 
                                 allPlayers.add(temp);
                             }
@@ -243,14 +271,16 @@ public class LeaderboardActivity extends Activity {
         /**
          * Adds wantedPlayers to the leaderboardView.
          */
-        public void addWantedPlayersToLayout() {
+        private void addWantedPlayersToLayout() {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 20, 0, 0);
 
-            // add all (max 10) players to the leaderboard
-            for (int i = 0; i < Math.min(10, wantedPlayers.size()); ++i) {
-                leaderboardView.addView(wantedPlayers.get(i)
+            // add all (max 20) players to the leaderboard
+            for (int i = 0; i < Math.min(20, wantedPlayers.size()); ++i) {
+                Player currentPlayer = wantedPlayers.get(i);
+                currentPlayer.setRank(i + 1);
+                leaderboardView.addView(currentPlayer
                         .toLayout(getApplicationContext(), i), layoutParams);
             }
         }
@@ -261,12 +291,14 @@ public class LeaderboardActivity extends Activity {
         private final Context context;
         private final Player player;
         private final int index;
+        private final boolean isCurrentUser;
 
-        public FriendsButton(Context context, Player player, int index) {
+        public FriendsButton(Context context, Player player, int index, boolean isCurrentUser) {
             super(context);
             this.context = context;
             this.player = player;
             this.index = index;
+            this.isCurrentUser = isCurrentUser;
             this.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -280,15 +312,14 @@ public class LeaderboardActivity extends Activity {
 
         private void initLayout() {
             LinearLayout.LayoutParams friendsParams =
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
             setLayoutParams(friendsParams);
-            setScaleType(ImageView.ScaleType.FIT_CENTER);
 
             // give Button unique Tag to test them later
             setTag("friendsButton" + index);
 
             // set friendsButton invisible to yourself
-            if (player.username.equals(Account.getInstance(context).getUsername())) {
+            if (isCurrentUser) {
                 setVisibility(View.INVISIBLE);
             }
         }
@@ -315,9 +346,9 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        setBackgroundResource(R.drawable.remove_friend);
+                        setImageResource(R.drawable.remove_friend);
                     } else {
-                        setBackgroundResource(R.drawable.add_friend);
+                        setImageResource(R.drawable.add_friend);
                     }
                 }
 
@@ -339,10 +370,10 @@ public class LeaderboardActivity extends Activity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         Account.getInstance(context).removeFriend(player.userId);
-                        setBackgroundResource(R.drawable.add_friend);
+                        setImageResource(R.drawable.add_friend);
                     } else {
                         Account.getInstance(context).addFriend(player.userId);
-                        setBackgroundResource(R.drawable.remove_friend);
+                        setImageResource(R.drawable.remove_friend);
                     }
                 }
 
@@ -353,6 +384,5 @@ public class LeaderboardActivity extends Activity {
             };
         }
     }
-
 }
 

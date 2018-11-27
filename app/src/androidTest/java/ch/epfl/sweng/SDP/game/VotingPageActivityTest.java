@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 import android.widget.RatingBar;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,13 +25,16 @@ import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -74,23 +78,53 @@ public class VotingPageActivityTest {
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
-        SystemClock.sleep(2000);
+        short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
-
-        SystemClock.sleep(2000);
-        assertThat(mActivityRule.getActivity().getRatings()[0], is(3));
+        SystemClock.sleep(5000);
+        assertThat(mActivityRule.getActivity().getRatings()[counter], is(3));
     }
 
     @Test
     public void addStarsHandlesBigNumber() {
         int previousStars = starsAnimation.getNumStars();
+        setStarsAnimationToVisible();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
+        SystemClock.sleep(1000);
         starsAnimation.onDraw(canvas);
         starsAnimation.addStars(1000);
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assertThat(starsAnimation.getNumStars(), is(previousStars + 5));
+        SystemClock.sleep(4000);
+        assertThat(starsAnimation.getNumStars(), is(0));
+        setStarsAnimationToGone();
+    }
+
+    private void setStarsAnimationToVisible() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    starsAnimation.setVisibility(View.VISIBLE);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void setStarsAnimationToGone() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    starsAnimation.setVisibility(View.GONE);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Test
@@ -132,7 +166,7 @@ public class VotingPageActivityTest {
     @Test
     public void testShowDrawingImage() {
         Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
-        Bitmap image = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
+        Bitmap image = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
     }
@@ -140,10 +174,12 @@ public class VotingPageActivityTest {
     @Test
     public void testChangeImage() {
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
-        SystemClock.sleep(1000);
         mActivityRule.getActivity().callChangeImage();
-        SystemClock.sleep(2000);
-        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(), is(counter + 1));
+
+        SystemClock.sleep(6000);
+
+        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(),
+                greaterThanOrEqualTo(counter + 1));
     }
 
     @Test(expected = DatabaseException.class)
@@ -161,8 +197,7 @@ public class VotingPageActivityTest {
     @Test
     public void testDecodeSampledBitmapFromResource() {
         Bitmap bitmap = BitmapManipulator.decodeSampledBitmapFromResource(
-                mActivityRule.getActivity().getResources(), R.drawable.default_image,
-                20, 20);
+                mActivityRule.getActivity().getResources(), R.drawable.default_image, 2, 2);
         assertNotNull(bitmap);
     }
 

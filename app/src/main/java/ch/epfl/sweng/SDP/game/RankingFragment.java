@@ -15,6 +15,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.SortUtils;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,14 +32,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.SortUtils;
-
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
@@ -114,7 +113,7 @@ public class RankingFragment extends ListFragment {
                 Integer[] rankings = (finalRanking.values().toArray(tmp));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
-                int rankingForUser = dataSnapshot.child(userNameId).getValue(Integer.class);
+                int rankForUser = dataSnapshot.child(userNameId).getValue(Integer.class);
 
                 // Calculate trophies
                 Integer[] trophies = new Integer[rankings.length];
@@ -122,7 +121,7 @@ public class RankingFragment extends ListFragment {
                 int trophiesForUser = 0;
                 int rank = RANK * 2;
                 for (int i = 0; i < rankings.length; i++) {
-                    if (rankingForUser == rankings[i]) {
+                    if (rankForUser == rankings[i]) {
                         trophiesForUser = rank;
                     }
                     if (rankings[i] != lastRank) {
@@ -134,8 +133,9 @@ public class RankingFragment extends ListFragment {
 
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
-                updateUserStats(rankingForUser, trophiesForUser, usernames.get(0).equals(userNameId));
-                createAndStoreGameResult(usernames, rankingForUser, rankingForUser, trophiesForUser);
+                Boolean won = usernames.get(0).equals(userNameId);
+                updateUserStats(rankForUser, trophiesForUser, won);
+                createAndStoreGameResult(usernames, rankForUser, rankForUser, trophiesForUser);
 
                 String[] tmpUserNames = (String[]) usernames.toArray();
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(), tmpUserNames, rankings, trophies, drawings);
@@ -215,7 +215,6 @@ public class RankingFragment extends ListFragment {
             Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");
 
             // Set the font
-            ImageView imageview = convertView.findViewById(R.id.drawing);
             TextView name = convertView.findViewById(R.id.playerName);
             name.setTypeface(typeMuro);
             TextView ranking = convertView.findViewById(R.id.starsWon);
@@ -223,6 +222,8 @@ public class RankingFragment extends ListFragment {
             TextView trophiesText = convertView.findViewById(R.id.trophiesWon);
             trophiesText.setTypeface(typeMuro);
 
+            // Update image
+            ImageView imageview = convertView.findViewById(R.id.drawing);
             imageview.setImageBitmap(drawings[getIndexForUserName(players[position])]);
 
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);

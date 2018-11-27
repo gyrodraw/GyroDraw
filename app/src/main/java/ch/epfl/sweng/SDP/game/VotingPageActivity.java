@@ -56,7 +56,6 @@ public class VotingPageActivity extends BaseActivity {
 
     private String[] playersNames = new String[NUMBER_OF_DRAWINGS];
     private String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
-    private RankingFragment rankingFragment;
 
     private ImageView drawingView;
     private TextView playerNameView;
@@ -425,10 +424,11 @@ public class VotingPageActivity extends BaseActivity {
                         R.id.playerNameView, R.id.timer);
 
                 // Create and show the final ranking in the new fragment
+                RankingFragment fragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
+                RankingFragment.class.getName(), bundle);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.votingPageLayout,
-                                RankingFragment.instantiate(getApplicationContext(),
-                                        RankingFragment.class.getName(), bundle))
+                        .add(R.id.votingPageLayout,fragment
+                                )
                         .addToBackStack(null).commit();
     }
 

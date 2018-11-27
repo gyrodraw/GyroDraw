@@ -23,9 +23,9 @@ import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
 
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
@@ -39,8 +39,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-import ch.epfl.sweng.SDP.auth.Account;
-
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -48,7 +46,6 @@ public class VotingPageActivityTest {
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
-    private Account mockAccount;
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
@@ -74,6 +71,7 @@ public class VotingPageActivityTest {
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("FREDRIKB");
+        SystemClock.sleep(5000);
     }
 
     @Test
@@ -142,9 +140,10 @@ public class VotingPageActivityTest {
     @Test
     public void startHomeActivityStartsHomeActivity() {
         Intents.init();
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext());
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
+        SystemClock.sleep(4000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
@@ -156,7 +155,7 @@ public class VotingPageActivityTest {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
+        SystemClock.sleep(7000);
 
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);

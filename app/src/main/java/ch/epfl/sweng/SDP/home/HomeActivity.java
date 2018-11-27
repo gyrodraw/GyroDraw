@@ -49,11 +49,6 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";

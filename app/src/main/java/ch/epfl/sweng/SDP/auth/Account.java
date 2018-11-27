@@ -11,13 +11,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
@@ -70,7 +70,7 @@ public class Account {
         this.totalMatches = totalMatches;
         this.averageRating = averageRating;
         this.maxTrophies = maxTrophies;
-        this.itemsBought = itemsBought;
+        this.itemsBought = new LinkedList<>(itemsBought);
     }
 
     /**
@@ -123,7 +123,7 @@ public class Account {
         checkPrecondition(totalMatches >= 0, "totalMatches is negative");
         checkPrecondition(averageRating >= 0.0, "averageRating is negative");
         checkPrecondition(maxTrophies >= 0, "maxTrophies is negative");
-        checkPrecondition(itemsBought != null, "items bought is null");
+        checkPrecondition(itemsBought != null, "itemsBought are null");
 
         instance = new Account(context, constantsWrapper, username, email, currentLeague,
                 trophies,

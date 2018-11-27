@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -273,10 +274,12 @@ public class ShopActivity extends Activity {
         buyDialog.dismiss();
     }
 
+    @VisibleForTesting
     public Shop getShop() {
         return shop;
     }
 
+    @VisibleForTesting
     public static void disableAnimations() {
         enableAnimations = false;
     }

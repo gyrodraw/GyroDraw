@@ -386,6 +386,10 @@ public class HomeActivity extends BaseActivity {
     }
 
 
+    /**
+     * Method called when shop button is clicked. Starts shop activity.
+     * @param view View referring the shop button
+     */
     public void onShopButtonClicked(View view) {
         launchActivity(ShopActivity.class);
     }

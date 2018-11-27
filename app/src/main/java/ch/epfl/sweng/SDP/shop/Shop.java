@@ -2,10 +2,14 @@ package ch.epfl.sweng.SDP.shop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the shop of the app. It contains a List of items that represent
+ * the items that can be bought in the shop.
+ */
 public class Shop {
 
     private List<ShopItem> itemList;
@@ -23,7 +27,7 @@ public class Shop {
     }
 
     public List<ShopItem> getItemList() {
-        return itemList;
+        return new LinkedList<>(itemList);
     }
 
     /**
@@ -35,12 +39,9 @@ public class Shop {
         List<ShopItem> listItem = new ArrayList<>();
 
         if(map != null) {
-            Iterator it = map.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                int value = Integer.parseInt(entry.getValue().toString());
-                listItem.add(new ShopItem(ColorsShop.getColorFromString(entry.getKey().toString()),
-                        value));
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                int value = Integer.parseInt(String.valueOf(entry.getValue()));
+                listItem.add(new ShopItem(ColorsShop.getColorFromString(entry.getKey()), value));
             }
         }
 

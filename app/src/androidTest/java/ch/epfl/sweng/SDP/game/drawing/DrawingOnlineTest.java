@@ -70,9 +70,9 @@ public class DrawingOnlineTest {
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
-        Account.getInstance(activityRule.getActivity().getApplicationContext())
+        Account.getInstance(activityRule.getActivity())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
-        Account.getInstance(activityRule.getActivity().getApplicationContext())
+        Account.getInstance(activityRule.getActivity())
                 .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 

@@ -2,7 +2,8 @@ package ch.epfl.sweng.SDP.shop;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -12,14 +13,14 @@ public class ShopItemTest {
     public void setColorItemTest() {
         ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10);
         shopItem.setColorItem(ColorsShop.YELLOW);
-        assertEquals(shopItem.getColorItem(), ColorsShop.YELLOW);
+        assertThat(shopItem.getColorItem(), is(ColorsShop.YELLOW));
     }
 
     @Test
     public void setPriceItemTest() {
         ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10, true);
         shopItem.setPriceItem(20);
-        assertEquals(shopItem.getPriceItem(), 20);
+        assertThat(shopItem.getPriceItem(),is(20));
     }
 
     @Test
@@ -33,7 +34,7 @@ public class ShopItemTest {
     public void equalsTest() {
         ShopItem shopItem1 = new ShopItem(ColorsShop.BLUE, 10, false);
         ShopItem shopItem2 = new ShopItem(ColorsShop.BLUE, 10, true);
-        assertEquals(shopItem1, shopItem2);
+        assertThat(shopItem1, is(shopItem2));
     }
 
     @Test

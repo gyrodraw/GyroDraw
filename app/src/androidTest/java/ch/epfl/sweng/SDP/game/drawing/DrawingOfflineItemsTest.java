@@ -49,9 +49,9 @@ public class DrawingOfflineItemsTest {
         paintView = activity.paintView;
         paintView.setCircle(0, 0);
 
-        Account.getInstance(activityRule.getActivity().getApplicationContext())
+        Account.getInstance(activityRule.getActivity())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
-        Account.getInstance(activityRule.getActivity().getApplicationContext())
+        Account.getInstance(activityRule.getActivity())
                 .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 

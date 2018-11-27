@@ -11,7 +11,6 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class ShopTest {
@@ -60,28 +59,28 @@ public class ShopTest {
         listItems.add(new ShopItem(ColorsShop.BLUE, 100));
         listItems.add(new ShopItem(ColorsShop.RED, 200));
 
-        assertEquals(Shop.firebaseToListShopItem(map), listItems);
+        assertThat(Shop.firebaseToListShopItem(map), is(listItems));
 
     }
 
     @Test
     public void getColorBlueFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("BLUE"), R.color.colorBlue);
+        assertThat(ColorUtils.getColorFromString("BLUE"), is(R.color.colorBlue));
     }
 
     @Test
     public void getColorGreenFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("GREEN"), R.color.colorGreen);
+        assertThat(ColorUtils.getColorFromString("GREEN"), is(R.color.colorGreen));
     }
 
     @Test
     public void getColorYellowFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("YELLOW"), R.color.colorYellow);
+        assertThat(ColorUtils.getColorFromString("YELLOW"), is(R.color.colorYellow));
     }
 
     @Test
     public void getColorRedFromStringTest() {
-        assertEquals(ColorUtils.getColorFromString("RED"), R.color.colorRed);
+        assertThat(ColorUtils.getColorFromString("RED"), is(R.color.colorRed));
     }
 
     @Test (expected = IllegalStateException.class)

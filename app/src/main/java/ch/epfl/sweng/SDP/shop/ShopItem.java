@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.shop;
 
+/**
+ * Item that can be bought in the shop for the moment only colors can be bought.
+ */
 public class ShopItem {
 
     private int price;

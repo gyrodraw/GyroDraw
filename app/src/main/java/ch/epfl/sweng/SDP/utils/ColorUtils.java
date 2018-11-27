@@ -2,7 +2,10 @@ package ch.epfl.sweng.SDP.utils;
 
 import ch.epfl.sweng.SDP.R;
 
-public class ColorUtils {
+/**
+ * Utility methods when handling with colors.
+ */
+public final class ColorUtils {
 
     private ColorUtils() {}
 

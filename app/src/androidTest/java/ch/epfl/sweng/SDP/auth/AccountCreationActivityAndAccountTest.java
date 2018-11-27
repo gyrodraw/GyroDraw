@@ -43,6 +43,9 @@ public class AccountCreationActivityAndAccountTest {
     private static final String TEST_EMAIL = "testEmail";
     private static final String USERNAME = "username";
     private static final String LEAGUE = "league1";
+    private static final String USERS_TAG = "users.";
+    private static final String TEST_FRIEND = "HFNDgmFKQPX92nmfmi2qAUfTzxJ3";
+    private static final String TEST_FRIEND_TAG = ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3";
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
@@ -164,26 +167,26 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testNewFriend() {
-        Database.getReference("users."
-                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+        Database.getReference(USERS_TAG
+                + USER_ID + TEST_FRIEND_TAG)
                 .setValue(FriendsRequestState.SENT.ordinal());
         setListenerAndAssertToFirebaseForFriendsTest(true);
-        account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
+        account.addFriend(TEST_FRIEND);
     }
 
     @Test
     public void testConfirmFriend() {
-        Database.getReference("users."
-                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+        Database.getReference(USERS_TAG
+                + USER_ID + TEST_FRIEND_TAG)
                 .setValue(FriendsRequestState.RECEIVED.ordinal());
         setListenerAndAssertToFirebaseForFriendsTest(true);
-        account.addFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
+        account.addFriend(TEST_FRIEND);
     }
 
     @Test
     public void testRemoveFriend() {
         setListenerAndAssertToFirebaseForFriendsTest(false);
-        account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
+        account.removeFriend(TEST_FRIEND);
     }
 
     @Test
@@ -333,9 +336,9 @@ public class AccountCreationActivityAndAccountTest {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 countingResource.decrement();
                 assertThat(dataSnapshot.exists(), is(state));
-                Database.getReference("users."
+                Database.getReference(USERS_TAG
                         + USER_ID
-                        + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+                        + TEST_FRIEND_TAG)
                         .removeEventListener(this);
             }
 
@@ -345,8 +348,8 @@ public class AccountCreationActivityAndAccountTest {
             }
         };
 
-        Database.getReference("users."
-                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
+        Database.getReference(USERS_TAG
+                + USER_ID + TEST_FRIEND_TAG)
                 .addValueEventListener(valueEventListener);
     }
 }

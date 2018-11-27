@@ -8,6 +8,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
 
@@ -26,9 +27,11 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 
@@ -75,6 +78,20 @@ public class LeaderboardActivityTest {
     }
 
     @Test
+    public void testFilterButtonBehavesCorrectly() {
+        TextView filterText = activityRule.getActivity().findViewById(R.id.friendsFilter);
+        onView(withId(R.id.friendsFilter)).perform(click());
+        SystemClock.sleep(1000);
+        assertThat(filterText.getText().toString(),
+                is(equalTo(activityRule.getActivity().getString(R.string.removeFriendsFilter))));
+        onView(withId(R.id.friendsFilter)).perform(click());
+        SystemClock.sleep(1000);
+        assertThat(filterText.getText().toString(),
+                is(equalTo(activityRule.getActivity().getResources()
+                        .getString(R.string.friendsFilter))));
+    }
+
+    @Test
     public void testLeaderboardIsSearchable() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
@@ -86,17 +103,25 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testFriendsAreSearchable() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
+        friendsTest(FriendsRequestState.FRIENDS.ordinal(), 1);
+    }
+
+    @Test
+    public void testReceivedAreSearchable() {
+        friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
+    }
+
+    private void friendsTest(int state, int expected) {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .setValue(FriendsRequestState.FRIENDS.ordinal());
+                .setValue(state);
         SystemClock.sleep(2000);
         onView(withId(R.id.friendsFilter)).perform(click());
         SystemClock.sleep(2000);
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
-        SystemClock.sleep(1000);
-        assertTrue(""+((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
-                .getChildCount(), 1 ==
+        SystemClock.sleep(2000);
+        assertTrue(((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
+                .getChildCount()+"",expected ==
                 ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
                         .getChildCount());
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");

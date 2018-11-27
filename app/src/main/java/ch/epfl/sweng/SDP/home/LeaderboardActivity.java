@@ -39,8 +39,14 @@ public class LeaderboardActivity extends Activity {
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private static final int SENT = FriendsRequestState.SENT.ordinal();
-    private static final int RECEIVED = FriendsRequestState.RECEIVED.ordinal();
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
+    private static final String USERS_TAG = "users";
+    private static final String USERNAME_TAG = "username";
+    private static final String USERID_TAG = "userId";
+    private static final String TROPHIES_TAG = "trophies";
+    private static final String FRIENDS_TAG = "friends";
+    private static final String LEAGUE_TAG = "currentLeague";
+
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
@@ -263,15 +269,18 @@ public class LeaderboardActivity extends Activity {
          */
         private void fetchPlayersFromFirebase(final String query) {
             allPlayers.clear();
-            Database.getReference("users")
+            wantedPlayers.clear();
+            Database.getReference(USERS_TAG)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            allPlayers.clear();
+                            wantedPlayers.clear();
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                String userId = s.child("userId").getValue(String.class);
-                                String username = s.child("username").getValue(String.class);
-                                Long trophies = s.child("trophies").getValue(Long.class);
-                                String league = s.child("currentLeague").getValue(String.class);
+                                String userId = s.child(USERID_TAG).getValue(String.class);
+                                String username = s.child(USERNAME_TAG).getValue(String.class);
+                                Long trophies = s.child(TROPHIES_TAG).getValue(Long.class);
+                                String league = s.child(LEAGUE_TAG).getValue(String.class);
                                 if (!s.getKey().equals("123456789")
                                         && userId != null
                                         && username != null
@@ -279,7 +288,8 @@ public class LeaderboardActivity extends Activity {
                                         && league != null) {
                                     Player temp = new Player(userId, username, trophies, league,
                                             username.equals(
-                                                    Account.getInstance(context).getUsername()));
+                                                    Account.getInstance(context)
+                                                            .getUsername()));
 
                                     allPlayers.add(temp);
                                 }
@@ -299,10 +309,15 @@ public class LeaderboardActivity extends Activity {
 
         private void filterByFriends(final String query) {
             allPlayers.clear();
-            Database.getReference("users." + Account.getInstance(getApplicationContext()).getUserId() + ".friends")
+            wantedPlayers.clear();
+            Database.getReference(USERS_TAG + "."
+                    + Account.getInstance(getApplicationContext()).getUserId() + "."
+                    + FRIENDS_TAG)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            allPlayers.clear();
+                            wantedPlayers.clear();
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
                                 if (s != null && !s.getKey().equals("123456789")
                                 && s.getValue(int.class) == FRIENDS) {
@@ -319,26 +334,29 @@ public class LeaderboardActivity extends Activity {
         }
 
         private void findAndAddPlayer(final String playerId, final String query) {
-            Database.getReference("users." + playerId)
+            Database.getReference(USERS_TAG + "." + playerId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                if (((String)dataSnapshot.child("username").getValue())
-                                        .contains(query)) {
-                                    String username = dataSnapshot.child("username").getValue(String.class);
-                                    Player temp = new Player(playerId,
-                                            username,
-                                            dataSnapshot.child("trophies").getValue(Long.class),
-                                            dataSnapshot.child("currentLeague").getValue(String.class),
-                                            username.equals(Account.getInstance(context).getUsername()));
+                            if (dataSnapshot.exists()
+                                    && ((String)dataSnapshot.child(USERNAME_TAG)
+                                    .getValue()).contains(query)) {
+                                String username = dataSnapshot.child(USERNAME_TAG)
+                                        .getValue(String.class);
+                                Player temp = new Player(playerId,
+                                        username,
+                                        dataSnapshot.child(TROPHIES_TAG)
+                                                .getValue(Long.class),
+                                        dataSnapshot.child(LEAGUE_TAG)
+                                                .getValue(String.class),
+                                        username.equals(Account.getInstance(context)
+                                                .getUsername()));
 
-                                    allPlayers.add(temp);
-                                    filterWantedPlayers(query);
-                                    Collections.sort(wantedPlayers);
-                                    leaderboardView.removeAllViews();
-                                    addWantedPlayersToLayout();
-                                }
+                                allPlayers.add(temp);
+                                filterWantedPlayers(query);
+                                Collections.sort(wantedPlayers);
+                                leaderboardView.removeAllViews();
+                                addWantedPlayersToLayout();
                             }
                         }
 

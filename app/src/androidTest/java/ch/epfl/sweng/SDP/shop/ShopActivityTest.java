@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -81,6 +82,8 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
+        Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
+                                                                    , "test@test.com");
         Account.getInstance(mActivityRule.getActivity()).setStars(100);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);

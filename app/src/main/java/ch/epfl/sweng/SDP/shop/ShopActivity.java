@@ -67,12 +67,9 @@ public class ShopActivity extends Activity {
 
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
         ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
-                "%d", Account.getInstance(this).getStars()));
 
         fillShop();
         addColorsToShop();
-
     }
 
     /**
@@ -244,16 +241,16 @@ public class ShopActivity extends Activity {
     /**
      * Fill the shop with the items available taking into account the colors the player
      * has already bought.
-     *
      */
     public void fillShop() {
 
         shop = new Shop();
         List<ShopItem> myItems = new LinkedList<>();
 
-        if(!isTesting && Account
-                .getInstance(this).getItemsBought() != null) {
+        if(!isTesting) {
             myItems = Account.getInstance(this).getItemsBought();
+            ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
+                    "%d", Account.getInstance(this).getStars()));
         }
 
         for (ColorsShop color : ColorsShop.values()) {

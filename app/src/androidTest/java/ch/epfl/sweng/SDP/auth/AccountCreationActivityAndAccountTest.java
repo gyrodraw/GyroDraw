@@ -54,6 +54,8 @@ public class AccountCreationActivityAndAccountTest {
     public void init() {
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
+        account.setUsername(USERNAME);
+        account.setEmail(TEST_EMAIL);
     }
 
     @After
@@ -266,11 +268,6 @@ public class AccountCreationActivityAndAccountTest {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, 0, 0.0, -1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdateUsernameWithNull() {
-        account.updateUsername(null);
     }
 
     @Test(expected = IllegalArgumentException.class)

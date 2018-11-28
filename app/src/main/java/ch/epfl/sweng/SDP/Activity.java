@@ -1,19 +1,29 @@
 package ch.epfl.sweng.SDP;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.Shop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -67,6 +77,49 @@ public abstract class Activity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods creates a TextView according to the given parameters.
+     * @param text String displayed in textview
+     * @param color Color of the textview
+     * @param size Size of the textview
+     * @param typeface Typeface of the textview
+     * @param layoutParams Layout parameters of the textview
+     * @return The newly created textview
+     */
+    @SuppressLint("NewApi")
+    public TextView createTextView(String text, int color, int size, Typeface typeface,
+                                   LinearLayout.LayoutParams layoutParams) {
+        TextView textView = new TextView(this);
+        styleView(textView, text, color,
+                size, typeface, layoutParams);
+
+        return textView;
+
+    }
+
+    /**
+     * Add views to a layout.
+     * @param layout Layout where the views will be added
+     * @param views Views to be added
+     * @return The layout with the views added
+     */
+    public LinearLayout addViews(LinearLayout layout, View... views) {
+        for(View view: views) {
+            layout.addView(view);
+        }
+
+        return layout;
+    }
+
+    private void styleView(TextView view, String text, int color, int size, Typeface typeface,
+                           LinearLayout.LayoutParams layoutParams) {
+        view.setText(text);
+        view.setTextSize(size);
+        view.setTextColor(color);
+        view.setTypeface(typeface);
+        view.setLayoutParams(layoutParams);
+    }
+
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
@@ -84,7 +137,10 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("matchesWon")).intValue(),
                         ((Long) user.get("totalMatches")).intValue(),
                         (Long) user.get("averageRating"),
-                        ((Long) user.get("maxTrophies")).intValue());
+                        ((Long) user.get("maxTrophies")).intValue(),
+                        Shop.firebaseToListShopItem((HashMap<String, String>)
+                                                    user.get("boughtItems")));
+
 
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);

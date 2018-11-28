@@ -10,15 +10,21 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
+
 
 /**
  * Singleton class that represents an account.
@@ -39,6 +45,7 @@ public class Account {
     private int totalMatches;
     private double averageRating;
     private int maxTrophies;
+    private List<ShopItem> itemsBought;
 
     private DatabaseReference usersRef;
 
@@ -46,8 +53,8 @@ public class Account {
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
                     String email, String currentLeague,
-                    int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
-                    int maxTrophies) {
+            int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
+            int maxTrophies, List<ShopItem> itemsBought) {
 
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
@@ -64,6 +71,7 @@ public class Account {
         this.totalMatches = totalMatches;
         this.averageRating = averageRating;
         this.maxTrophies = maxTrophies;
+        this.itemsBought = new LinkedList<>(itemsBought);
     }
 
     /**
@@ -80,7 +88,7 @@ public class Account {
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
                                      String username, String email) {
         createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0,
-                0, 0, 0, 0.0, 0);
+                0, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     /**
@@ -102,9 +110,9 @@ public class Account {
      * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-                                     String username, String email, String currentLeague,
-                                     int trophies, int stars, int matchesWon, int totalMatches,
-                                     double averageRating, int maxTrophies) {
+            String username, String email, String currentLeague, int trophies, int stars,
+            int matchesWon, int totalMatches, double averageRating, int maxTrophies,
+                                     List<ShopItem> itemsBought) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
         checkPrecondition(username != null, "username is null");
@@ -116,10 +124,11 @@ public class Account {
         checkPrecondition(totalMatches >= 0, "totalMatches is negative");
         checkPrecondition(averageRating >= 0.0, "averageRating is negative");
         checkPrecondition(maxTrophies >= 0, "maxTrophies is negative");
+        checkPrecondition(itemsBought != null, "itemsBought are null");
 
         instance = new Account(context, constantsWrapper, username, email, currentLeague,
                 trophies,
-                stars, matchesWon, totalMatches, averageRating, maxTrophies);
+                stars, matchesWon, totalMatches, averageRating, maxTrophies, itemsBought);
     }
 
     /**
@@ -224,7 +233,6 @@ public class Account {
         this.maxTrophies = maxTrophies;
     }
 
-
     /**
      * Registers this account in Firebase and in the local database.
      */
@@ -300,6 +308,25 @@ public class Account {
 
         Database.constructBuilder(usersRef).addChildren(userId + ".currentLeague").build()
                 .setValue(currentLeague, createCompletionListener());
+    }
+
+    /**
+     * Add a recently bought item to the account.
+     * @param shopItem Item that would be added to the account
+     */
+    public void updateItemsBought(ShopItem shopItem) {
+        checkPrecondition(shopItem != null, "Shop item is null");
+
+        Database.constructBuilder(usersRef).addChildren(userId + ".boughtItems."
+                                                        + shopItem.getColorItem().toString())
+                .build().setValue(shopItem.getPriceItem(), createCompletionListener());
+
+        itemsBought.add(shopItem);
+        localDbHandler.saveAccount(instance);
+    }
+
+    public List<ShopItem> getItemsBought() {
+        return new LinkedList<>(itemsBought);
     }
 
     /**

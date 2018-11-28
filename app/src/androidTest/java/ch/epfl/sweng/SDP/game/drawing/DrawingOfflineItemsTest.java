@@ -19,6 +19,8 @@ import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.CoreMatchers.is;
@@ -46,6 +48,11 @@ public class DrawingOfflineItemsTest {
         paintViewHolder = activity.paintViewHolder;
         paintView = activity.paintView;
         paintView.setCircle(0, 0);
+
+        Account.getInstance(activityRule.getActivity())
+                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
+        Account.getInstance(activityRule.getActivity())
+                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 
     @Test

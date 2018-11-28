@@ -62,7 +62,7 @@ public class VotingPageActivityTest {
             new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    disableAnimations();
+                    VotingPageActivity.disableAnimations();
                 }
 
                 @Override
@@ -107,7 +107,7 @@ public class VotingPageActivityTest {
         starsAnimation.onDraw(canvas);
         assertThat(starsAnimation.getNumStars(), is(previousStars + 5));
         setStarsAnimationToGone();
-        SystemClock.sleep(4000);
+        SystemClock.sleep(10000);
         assertThat(starsAnimation.getNumStars(), is(0));
     }
 
@@ -155,7 +155,6 @@ public class VotingPageActivityTest {
     public void startHomeActivityStartsHomeActivity() {
         Intents.init();
         Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-
         SystemClock.sleep(4000);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext());
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);

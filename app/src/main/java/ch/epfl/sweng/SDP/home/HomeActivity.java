@@ -434,4 +434,15 @@ public class HomeActivity extends BaseActivity {
         leagueText.setTextColor(getResources().getColor(getLeagueColorId(league)));
         ((ImageView) findViewById(R.id.leagueImage)).setImageResource(getLeagueImageId(league));
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Update values of the textviews
+        Account account = Account.getInstance(this);
+        ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
+        ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
+                                                                        account.getTrophies()));
+    }
 }

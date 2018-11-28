@@ -84,6 +84,7 @@ public class LeaderboardActivityTest {
         SystemClock.sleep(1000);
         assertThat(filterText.getText().toString(),
                 is(equalTo(activityRule.getActivity().getString(R.string.removeFriendsFilter))));
+        onView(withId(R.id.searchField)).perform(typeText("P"));
         onView(withId(R.id.friendsFilter)).perform(click());
         SystemClock.sleep(1000);
         assertThat(filterText.getText().toString(),
@@ -106,11 +107,6 @@ public class LeaderboardActivityTest {
         friendsTest(FriendsRequestState.FRIENDS.ordinal(), 1);
     }
 
-    @Test
-    public void testReceivedAreSearchable() {
-        friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
-    }
-
     private void friendsTest(int state, int expected) {
         Database.getReference("users."
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
@@ -122,7 +118,7 @@ public class LeaderboardActivityTest {
         SystemClock.sleep(2000);
         assertTrue(((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
                 .getChildCount()+"",expected
-                <= ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
+                == ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
                         .getChildCount());
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }

@@ -54,7 +54,7 @@ function checkNodeTrueTesting(snapshot, howMany) {
     }
   });
 
-  return count === howMany;
+  return count >= howMany;
 }
 
 function functionTimer (seconds, state, roomID, call) {
@@ -148,7 +148,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   // Grab the text parameter.
   const id = data.id;
   const username = data.username;
-  const league = 1 - 1;
+  const league = data.league - 1;
   let _roomID;
   console.log(username);
   var alreadyJoined = false;
@@ -366,9 +366,8 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
 exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID + "/uploadDrawing").once('value', (snapshot) => {
-    if(checkNodeTrueTesting(snapshot, 1) === true) {
+    if(checkNodeTrueTesting(snapshot, 5) === true) {
       admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }
-  });
+  })
 });
-

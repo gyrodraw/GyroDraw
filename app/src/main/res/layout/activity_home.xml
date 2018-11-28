@@ -217,4 +217,21 @@
         app:layout_constraintBottom_toBottomOf="@+id/starsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/starsButton" />
+
+    <Button
+        android:id="@+id/startShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Shop"
+        android:onClick="onShopButtonClicked"
+        app:layout_constraintEnd_toStartOf="@+id/leaderboardButton"
+        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

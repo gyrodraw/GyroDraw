@@ -20,6 +20,7 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -147,6 +148,12 @@ public class HomeActivityTest {
         });
         onView(withId(R.id.rejectButton)).perform(click());
         onView(withId(R.id.friendRequestPopUp)).check(doesNotExist());
+    }
+
+    @Test
+    public void testLaunchShop() {
+        onView(withId(R.id.startShop)).perform(click());
+        intended(hasComponent(ShopActivity.class.getName()));
     }
 
     @Test

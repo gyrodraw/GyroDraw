@@ -39,14 +39,7 @@ public class ShopActivityTest {
     private static final String USER_ID = "no_user";
     private static DatabaseReference usersRef = Database.getReference("users."
                                                     + USER_ID + ".boughtItems");
-
-    private static final String TEST_EMAIL = "testEmail";
-    private static final String USERNAME = "username";
-
-    private static ConstantsWrapper mockConstantsWrapper;
-    private static Account mockAccount;
-    private static Account account;
-
+    
     @Rule
     public final ActivityTestRule<ShopActivity> mActivityRule =
             new ActivityTestRule<ShopActivity>(ShopActivity.class) {
@@ -57,37 +50,6 @@ public class ShopActivityTest {
                     //ShopActivity.enableTesting();
                 }
             };
-
-    @BeforeClass
-    public static void init() {
-        mockConstantsWrapper = mock(ConstantsWrapper.class);
-        mockAccount = mock(Account.class);
-        DatabaseReference mockReference = mock(DatabaseReference.class);
-        Query mockQuery = mock(Query.class);
-
-        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
-
-        when(mockReference.child(isA(String.class))).thenReturn(mockReference);
-        when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
-
-        when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
-
-        doNothing().when(mockReference)
-                .setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .removeValue(isA(DatabaseReference.CompletionListener.class));
-
-        doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
-
-
-        Account.createAccount(InstrumentationRegistry.getContext(), mockConstantsWrapper, USERNAME,
-                TEST_EMAIL);
-        account = Account.getInstance(InstrumentationRegistry.getContext());
-        account.setUserId(USER_ID);
-    }
 
     @After
     public void afterEachTest() {

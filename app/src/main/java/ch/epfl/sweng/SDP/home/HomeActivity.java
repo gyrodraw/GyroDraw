@@ -35,6 +35,8 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopActivity;
+
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
@@ -381,6 +383,15 @@ public class HomeActivity extends BaseActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
+    }
+
+
+    /**
+     * Method called when shop button is clicked. Starts shop activity.
+     * @param view View referring the shop button
+     */
+    public void onShopButtonClicked(View view) {
+        launchActivity(ShopActivity.class);
     }
 
     @VisibleForTesting

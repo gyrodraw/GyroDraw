@@ -18,9 +18,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -30,11 +36,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
-
 
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityAndAccountTest {
@@ -160,6 +164,15 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
+    public void testUpdateItemsBought() {
+        List<ShopItem> itemList = new LinkedList<>();
+        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 20);
+        itemList.add(shopItem);
+        account.updateItemsBought(shopItem);
+        assertThat(account.getItemsBought(), is(itemList));
+    }
+
+    @Test
     public void testAddStars() {
         account.changeStars(20);
         assertThat(account.getStars(), is(20));
@@ -228,49 +241,50 @@ public class AccountCreationActivityAndAccountTest {
     public void testCreateAccountWithNullCurrentLeague() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, null, 0, 0,
-                0, 0, 0.0, 0);
+                0, 0, 0.0, 0,
+                new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTrophies() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, -1, 0,
-                0, 0, 0.0, 0);
+                0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeStars() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                -1, 0, 0, 0.0, 0);
+                -1, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMatchesWon() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, -1, 0, 0.0, 0);
+                0, -1, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTotalMatches() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, 0, -1, 0.0, 0);
+                0, 0, -1, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeAverageRating() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, 0, 0, -1.0, 0);
+                0, 0, 0, -1.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMaxTrophies() {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
-                0, 0, 0, 0.0, -1);
+                0, 0, 0, 0.0, -1, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)

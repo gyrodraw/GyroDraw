@@ -25,8 +25,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -67,6 +70,10 @@ public class DrawingOnlineTest {
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+        Account.getInstance(activityRule.getActivity())
+                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
+        Account.getInstance(activityRule.getActivity())
+                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 
     @Test

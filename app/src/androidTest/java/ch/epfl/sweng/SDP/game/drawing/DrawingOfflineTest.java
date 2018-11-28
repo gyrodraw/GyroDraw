@@ -10,6 +10,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -32,6 +35,10 @@ public class DrawingOfflineTest {
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         res = activityRule.getActivity().getResources();
+        Account.getInstance(activityRule.getActivity().getApplicationContext())
+                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
+        Account.getInstance(activityRule.getActivity().getApplicationContext())
+                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 
     @Test
@@ -50,30 +57,6 @@ public class DrawingOfflineTest {
     public void testBlackButton() {
         onView(ViewMatchers.withId(R.id.blackButton)).perform(click());
         assertEquals(Color.BLACK, paintView.getColor());
-    }
-
-    @Test
-    public void testBlueButton() {
-        onView(ViewMatchers.withId(R.id.blueButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorBlue), paintView.getColor());
-    }
-
-    @Test
-    public void testGreenButton() {
-        onView(ViewMatchers.withId(R.id.greenButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorGreen), paintView.getColor());
-    }
-
-    @Test
-    public void testYellowButton() {
-        onView(ViewMatchers.withId(R.id.yellowButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorYellow), paintView.getColor());
-    }
-
-    @Test
-    public void testRedButton() {
-        onView(ViewMatchers.withId(R.id.redButton)).perform(click());
-        assertEquals(res.getColor(R.color.colorRed), paintView.getColor());
     }
 
     @Test

@@ -183,6 +183,11 @@ public class HomeActivity extends BaseActivity {
         launchActivity(LeaguesActivity.class);
     }
 
+    @VisibleForTesting
+    public Dialog getFriendRequestWindow() {
+        return friendRequestWindow;
+    }
+
     /**
      * Signs the current user out and starts the {@link MainActivity}.
      */

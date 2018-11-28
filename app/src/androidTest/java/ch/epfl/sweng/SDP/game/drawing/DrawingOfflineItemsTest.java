@@ -31,9 +31,14 @@ import static org.junit.Assert.assertThat;
 
 public class DrawingOfflineItemsTest {
 
+    private static final String USER_ID = "123456789";
+    private static final String USERNAME = "testUser";
+    private static final String EMAIL = "testUser@gyrodraw.ch";
+
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
     private DrawingOfflineItems activity;
+    private Account account;
 
     @Rule
     public final ActivityTestRule<DrawingOfflineItems> activityRule =
@@ -48,11 +53,12 @@ public class DrawingOfflineItemsTest {
         paintViewHolder = activity.paintViewHolder;
         paintView = activity.paintView;
         paintView.setCircle(0, 0);
-
-        Account.getInstance(activityRule.getActivity())
-                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
-        Account.getInstance(activityRule.getActivity())
-                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
+        account = Account.getInstance(activityRule.getActivity().getApplicationContext());
+        account.setUserId(USER_ID);
+        account.setUsername(USERNAME);
+        account.setEmail(EMAIL);
+        account.updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
+        account.updateItemsBought(new ShopItem(ColorsShop.RED, 100));
     }
 
     @Test
@@ -97,11 +103,9 @@ public class DrawingOfflineItemsTest {
 
     @Test
     public void testAddStarsItemAddsStarsToAccount() {
-        int initStars = Account.getInstance(activity
-                .getApplicationContext()).getStars();
+        int initStars = account.getStars();
         activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
-        assertThat(Account.getInstance(activity
-                .getApplicationContext()).getStars(), is(initStars + 3));
+        assertThat(account.getStars(), is(initStars + 3));
     }
 
     @Test

@@ -16,14 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Collections;
-import java.util.LinkedList;
-
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -31,21 +23,43 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import static java.lang.String.format;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.TreeSet;
 
 public class LeaderboardActivity extends Activity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
+    private static final int SENT = FriendsRequestState.SENT.ordinal();
+    private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
+    private static final String USERS_TAG = "users";
+    private static final String USERNAME_TAG = "username";
+    private static final String USERID_TAG = "userId";
+    private static final String TROPHIES_TAG = "trophies";
+    private static final String FRIENDS_TAG = "friends";
+    private static final String LEAGUE_TAG = "currentLeague";
+
     private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
+    private Boolean filterByFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_leaderboard);
+        filterByFriends = false;
         leaderboardView = findViewById(R.id.leaderboard);
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -53,14 +67,29 @@ public class LeaderboardActivity extends Activity {
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
-        EditText searchField = findViewById(R.id.searchField);
 
+        final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);
         LayoutUtils.setExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 
-        leaderboard = new Leaderboard(this);
+        leaderboard = new Leaderboard(getApplicationContext());
+        final TextView friendsFilter = findViewById(R.id.friendsFilter);
+        friendsFilter.setTypeface(typeMuro);
+        friendsFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filterByFriends ^= true;
+                if (filterByFriends) {
+                    leaderboard.update(searchField.getText().toString());
+                    friendsFilter.setText(R.string.removeFriendsFilter);
+                } else {
+                    leaderboard.fetchPlayersFromFirebase(searchField.getText().toString());
+                    friendsFilter.setText(R.string.friendsFilter);
+                }
+            }
+        });
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -113,7 +142,7 @@ public class LeaderboardActivity extends Activity {
             return -this.trophies.compareTo(((Player) object).trophies);
         }
 
-        public boolean playerNameContainsString(String query) {
+        private boolean playerNameContainsString(String query) {
             return username.toUpperCase().contains(query.toUpperCase());
         }
 
@@ -179,7 +208,7 @@ public class LeaderboardActivity extends Activity {
             view.setLayoutParams(layoutParams);
         }
 
-        public void setRank(int rank) {
+        void setRank(int rank) {
             this.rank = rank;
         }
     }
@@ -187,13 +216,13 @@ public class LeaderboardActivity extends Activity {
     private class Leaderboard {
 
         private LinkedList<Player> allPlayers;
-        private LinkedList<Player> wantedPlayers;
+        private TreeSet<Player> wantedPlayers;
         private Context context;
 
         private Leaderboard(Context context) {
             this.context = context;
             allPlayers = new LinkedList<>();
-            wantedPlayers = new LinkedList<>();
+            wantedPlayers = new TreeSet<>();
             update("");
         }
 
@@ -204,11 +233,15 @@ public class LeaderboardActivity extends Activity {
          * @param query new string to search
          */
         private void update(String query) {
-            if (!allPlayers.isEmpty()) {
-                filterWantedPlayers(query);
-                Collections.sort(wantedPlayers);
-                leaderboardView.removeAllViews();
-                addWantedPlayersToLayout();
+            query = query.toUpperCase();
+            if (!allPlayers.isEmpty() || filterByFriends) {
+                if (filterByFriends) {
+                    leaderboardView.removeAllViews();
+                    filterByFriends(query);
+                } else {
+                    filterWantedPlayers(query);
+                    addWantedPlayersToLayout();
+                }
             } else {
                 fetchPlayersFromFirebase(query);
             }
@@ -235,35 +268,98 @@ public class LeaderboardActivity extends Activity {
          * @param query string to search
          */
         private void fetchPlayersFromFirebase(final String query) {
-            Database.getReference("users")
+            allPlayers.clear();
+            wantedPlayers.clear();
+            Database.getReference(USERS_TAG)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            allPlayers.clear();
+                            wantedPlayers.clear();
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                if (!s.child("userId").exists() || !s.child("username").exists()
-                                        || !s.child("trophies").exists()
-                                        || !s.child("currentLeague").exists()
-                                        || s.getKey().equals("123456789")) {
-                                    continue;
-                                }
-                                String username = (String) s.child("username").getValue();
-                                Player temp = new Player((String) s.child("userId").getValue(),
-                                        username, (Long) s.child("trophies").getValue(),
-                                        (String) s.child("currentLeague").getValue(),
-                                        username.equals(
-                                                Account.getInstance(context).getUsername()));
+                                String userId = s.child(USERID_TAG).getValue(String.class);
+                                String username = s.child(USERNAME_TAG).getValue(String.class);
+                                Long trophies = s.child(TROPHIES_TAG).getValue(Long.class);
+                                String league = s.child(LEAGUE_TAG).getValue(String.class);
+                                if (!s.getKey().equals("123456789")
+                                        && userId != null
+                                        && username != null
+                                        && trophies != null
+                                        && league != null) {
+                                    Player temp = new Player(userId, username, trophies, league,
+                                            username.equals(
+                                                    Account.getInstance(context)
+                                                            .getUsername()));
 
-                                allPlayers.add(temp);
+                                    allPlayers.add(temp);
+                                }
                             }
                             filterWantedPlayers(query);
-                            Collections.sort(wantedPlayers);
-                            leaderboardView.removeAllViews();
                             addWantedPlayersToLayout();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d(TAG, FIREBASE_ERROR);
+                            Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
+                        }
+                    });
+        }
+
+        private void filterByFriends(final String query) {
+            allPlayers.clear();
+            wantedPlayers.clear();
+            Database.getReference(USERS_TAG + "."
+                    + Account.getInstance(getApplicationContext()).getUserId() + "."
+                    + FRIENDS_TAG)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            allPlayers.clear();
+                            wantedPlayers.clear();
+                            for (DataSnapshot s : dataSnapshot.getChildren()) {
+                                if (s != null && !s.getKey().equals("123456789")
+                                && s.getValue(int.class) == FRIENDS) {
+                                    findAndAddPlayer(s.getKey(), query);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
+                        }
+                    });
+        }
+
+        private void findAndAddPlayer(final String playerId, final String query) {
+            Database.getReference(USERS_TAG + "." + playerId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()
+                                    && ((String)dataSnapshot.child(USERNAME_TAG)
+                                    .getValue()).contains(query)) {
+                                String username = dataSnapshot.child(USERNAME_TAG)
+                                        .getValue(String.class);
+                                Player temp = new Player(playerId,
+                                        username,
+                                        dataSnapshot.child(TROPHIES_TAG)
+                                                .getValue(Long.class),
+                                        dataSnapshot.child(LEAGUE_TAG)
+                                                .getValue(String.class),
+                                        username.equals(Account.getInstance(context)
+                                                .getUsername()));
+
+                                allPlayers.add(temp);
+                                filterWantedPlayers(query);
+                                leaderboardView.removeAllViews();
+                                addWantedPlayersToLayout();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
                         }
                     });
         }
@@ -272,16 +368,20 @@ public class LeaderboardActivity extends Activity {
          * Adds wantedPlayers to the leaderboardView.
          */
         private void addWantedPlayersToLayout() {
+            leaderboardView.removeAllViews();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 20, 0, 0);
 
             // add all (max 20) players to the leaderboard
-            for (int i = 0; i < Math.min(20, wantedPlayers.size()); ++i) {
-                Player currentPlayer = wantedPlayers.get(i);
+            int i = 0;
+            Iterator<Player> playerIterator = wantedPlayers.iterator();
+            while(playerIterator.hasNext() && i < 20) {
+                Player currentPlayer = playerIterator.next();
                 currentPlayer.setRank(i + 1);
                 leaderboardView.addView(currentPlayer
                         .toLayout(getApplicationContext(), i), layoutParams);
+                ++i;
             }
         }
     }
@@ -303,7 +403,7 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     isFriendWithCurrentUser(
-                            changeFriendsButtonBackgroundOnClick());
+                            changeFriendsButtonImageOnClick());
                 }
             });
             this.isFriendWithCurrentUser(initializeFriendsButton());
@@ -331,13 +431,14 @@ public class LeaderboardActivity extends Activity {
          */
         private void isFriendWithCurrentUser(ValueEventListener listener) {
             Database.constructBuilder().addChildren(
-                    format("users.%s.friends.%s", player.userId,
-                            Account.getInstance(context).getUserId())).build()
+                    format("users.%s.friends.%s",
+                            Account.getInstance(context).getUserId(),
+                            player.userId)).build()
                     .addListenerForSingleValueEvent(listener);
         }
 
         /**
-         * Check if users are already friends and set background accordingly.
+         * Check if users are already friends and set image accordingly.
          *
          * @return listener
          */
@@ -346,7 +447,14 @@ public class LeaderboardActivity extends Activity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        setImageResource(R.drawable.remove_friend);
+                        int status = dataSnapshot.getValue(int.class);
+                        if (status == SENT) {
+                            setImageResource(R.drawable.pending_friend);
+                        } else if (status == FRIENDS) {
+                            setImageResource(R.drawable.remove_friend);
+                        } else {
+                            setImageResource(R.drawable.add_friend);
+                        }
                     } else {
                         setImageResource(R.drawable.add_friend);
                     }
@@ -360,20 +468,32 @@ public class LeaderboardActivity extends Activity {
         }
 
         /**
-         * Friends button got clicked, now add/remove friend and modify background.
+         * Friends button got clicked, now add/remove friend and modify image.
          *
          * @return listener
          */
-        private ValueEventListener changeFriendsButtonBackgroundOnClick() {
+        private ValueEventListener changeFriendsButtonImageOnClick() {
             return new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Account.getInstance(context).removeFriend(player.userId);
-                        setImageResource(R.drawable.add_friend);
+                        int status = dataSnapshot.getValue(int.class);
+                        switch (FriendsRequestState.fromInteger(status)) {
+                            case RECEIVED:
+                                Account.getInstance(context).addFriend(player.userId);
+                                setImageResource(R.drawable.remove_friend);
+                                break;
+                            case FRIENDS:
+                            case SENT:
+                                Account.getInstance(context).removeFriend(player.userId);
+                                setImageResource(R.drawable.add_friend);
+                                break;
+                            default:
+                                break;
+                        }
                     } else {
                         Account.getInstance(context).addFriend(player.userId);
-                        setImageResource(R.drawable.remove_friend);
+                        setImageResource(R.drawable.pending_friend);
                     }
                 }
 

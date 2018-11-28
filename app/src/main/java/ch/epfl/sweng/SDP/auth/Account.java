@@ -325,7 +325,7 @@ public class Account {
     }
 
     public List<ShopItem> getItemsBought() {
-        return itemsBought;
+        return new LinkedList<>(itemsBought);
     }
 
     /**

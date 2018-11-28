@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
 public enum ColorsShop {
-    RED(100), BLUE(200), YELLOW(100), GREEN(150);
+    RED(150), BLUE(100), YELLOW(200), GREEN(150);
 
     private int price;
 

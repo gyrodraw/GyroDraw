@@ -84,10 +84,10 @@ public class ShopActivityTest {
     public void testPressBuyItemSuccess() {
         Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
                                                                     , "test@test.com");
-        Account.getInstance(mActivityRule.getActivity()).setStars(100);
+        Account.getInstance(mActivityRule.getActivity()).setStars(200);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(2);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(1);
         int id = View.generateViewId();
         layoutChild.setId(id);
 

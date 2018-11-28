@@ -33,6 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -116,10 +117,8 @@ public class LeaderboardActivityTest {
         SystemClock.sleep(2000);
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(2000);
-        assertTrue(((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
-                .getChildCount()+"",expected
-                == ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
-                        .getChildCount());
+        assertThat(expected, is(((LinearLayout) activityRule.getActivity()
+                .findViewById(R.id.leaderboard)).getChildCount()));
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 

@@ -67,6 +67,8 @@ public class ShopActivity extends Activity {
 
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
         ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
+                "%d", Account.getInstance(this).getStars()));
 
         fillShop();
         addColorsToShop();
@@ -249,8 +251,6 @@ public class ShopActivity extends Activity {
 
         if(!isTesting) {
             myItems = Account.getInstance(this).getItemsBought();
-            ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
-                    "%d", Account.getInstance(this).getStars()));
         }
 
         for (ColorsShop color : ColorsShop.values()) {

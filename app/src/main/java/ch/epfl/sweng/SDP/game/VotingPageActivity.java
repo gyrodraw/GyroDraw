@@ -130,22 +130,20 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     // MARK: Saving
-    private static void saveImage(Bitmap finalBitmap) {
-        // get directory
-        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-        File myDir = new File(root + "/saved_images");
-        Log.i("Directory", "==" + myDir);
-        myDir.mkdirs();
+    private void saveImage(Bitmap finalBitmap, String image_name) {
 
-        String fname = "Image-test" + ".jpg";
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root);
+        myDir.mkdirs();
+        String fname = "Image-" + image_name+ ".jpg";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
+        Log.i("LOAD", root + fname);
         try {
             FileOutputStream out = new FileOutputStream(file);
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
             out.flush();
             out.close();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -458,6 +456,7 @@ public class VotingPageActivity extends BaseActivity {
                                             String playerName = playersNames[0];
                                             changeDrawing(drawings[0], playerName);
                                             shareDrawing();
+                                            saveImage(drawings[0], "picasso");
                                             // Enable the rating bar only if the image is not the player's one
                                             enableRatingBar(playerName);
 
@@ -474,6 +473,7 @@ public class VotingPageActivity extends BaseActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 throw databaseError.toException();
             }
+
         });
     }
 

@@ -11,7 +11,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
 
-import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -22,10 +21,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayOutputStream;
 
@@ -44,7 +40,6 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -154,7 +149,6 @@ public class VotingPageActivityTest {
     @Test
     public void startHomeActivityStartsHomeActivity() {
         Intents.init();
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
         SystemClock.sleep(4000);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext());
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
@@ -167,13 +161,11 @@ public class VotingPageActivityTest {
 
     @Test
     public void testStateChange() {
-        Database.constructBuilder().addChildren("realRooms.0123457890.ranking").build().child("userC").setValue(4);
-        SystemClock.sleep(4000);
-        doNothing().when(refMock).addListenerForSingleValueEvent(any(ValueEventListener.class));
-        SystemClock.sleep(4000);
+        SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
-       // mActivityRule.getActivity().callOnStateChange(dataSnapshotMock,accountMock,refMock);
-        SystemClock.sleep(7000);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));
@@ -181,7 +173,6 @@ public class VotingPageActivityTest {
 
     @Test
     public void testShowDrawingImage() {
-        Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
         Bitmap image = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");

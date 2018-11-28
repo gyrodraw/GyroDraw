@@ -122,7 +122,6 @@ public class VotingPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragment = (RankingFragment) new RankingFragment();
         setContentView(R.layout.activity_voting_page);
 
         Intent intent = getIntent();
@@ -420,6 +419,7 @@ public class VotingPageActivity extends BaseActivity {
                 setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                         R.id.playerNameView, R.id.timer);
 
+                fragment = new RankingFragment();
                 // Create and show the final ranking in the new fragment
                 fragment.putExtra(roomID,drawings,playersNames);
 
@@ -478,7 +478,7 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public void callOnStateChange(final DataSnapshot dataSnapshot, Account mockedAccount, DatabaseReference refMock) {
+    public void callOnStateChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

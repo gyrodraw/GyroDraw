@@ -41,7 +41,7 @@ public class RankingFragment extends ListFragment {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static final int RANK = 10;
-    private String roomID;
+    private String roomId;
 
     private DatabaseReference rankingRef;
     private DatabaseReference finishedRef;
@@ -70,8 +70,8 @@ public class RankingFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
-        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".finished");
+        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
+        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
         Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(typeMuro);
@@ -81,12 +81,12 @@ public class RankingFragment extends ListFragment {
 
     /**
      * Sets the attributes of this class.
-     * @param roomID the id of the room.
+     * @param roomId the id of the room.
      * @param drawings the users drawings.
      * @param playernames the usernames of the players.
      */
-    public void putExtra(String roomID, Bitmap[] drawings, String[] playernames) {
-        this.roomID = roomID;
+    public void putExtra(String roomId, Bitmap[] drawings, String[] playernames) {
+        this.roomId = roomId;
         this.drawings = drawings;
         this.playerNames = playernames;
     }

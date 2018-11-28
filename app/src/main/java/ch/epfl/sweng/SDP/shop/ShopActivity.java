@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,7 +31,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 public class ShopActivity extends Activity {
 
     private static boolean enableAnimations = true;
-    private static boolean isTesting = false;
 
     private Dialog buyDialog;
     private Dialog confirmationDialog;
@@ -247,11 +245,7 @@ public class ShopActivity extends Activity {
     public void fillShop() {
 
         shop = new Shop();
-        List<ShopItem> myItems = new LinkedList<>();
-
-        if(!isTesting) {
-            myItems = Account.getInstance(this).getItemsBought();
-        }
+        List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
 
         for (ColorsShop color : ColorsShop.values()) {
             boolean owned = false;
@@ -262,11 +256,6 @@ public class ShopActivity extends Activity {
 
             shop.addItem(new ShopItem(color, color.getPrice(), owned));
         }
-    }
-
-    @VisibleForTesting
-    public static void enableTesting() {
-        isTesting = true;
     }
 
     @VisibleForTesting

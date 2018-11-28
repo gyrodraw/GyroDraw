@@ -39,7 +39,7 @@ public class ShopActivityTest {
     private static final String USER_ID = "no_user";
     private static DatabaseReference usersRef = Database.getReference("users."
                                                     + USER_ID + ".boughtItems");
-    
+
     @Rule
     public final ActivityTestRule<ShopActivity> mActivityRule =
             new ActivityTestRule<ShopActivity>(ShopActivity.class) {
@@ -47,7 +47,6 @@ public class ShopActivityTest {
                 protected void beforeActivityLaunched() {
                     ShopActivity.disableAnimations();
                     usersRef.removeValue();
-                    //ShopActivity.enableTesting();
                 }
             };
 

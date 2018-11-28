@@ -3,14 +3,20 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.BaseActivity;
@@ -35,6 +44,8 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+
+import com.facebook.FacebookSdk;
 
 public class VotingPageActivity extends BaseActivity {
 
@@ -67,6 +78,78 @@ public class VotingPageActivity extends BaseActivity {
     private String roomID = "undefined";
 
     private static boolean enableAnimations = true;
+
+    // MARK: Sharing
+
+    private void shareDrawing() {
+        /*
+        try {
+            File myFile = new File("/storage/emulated/0/saved_images/Image-test.jpg");
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String ext = myFile.getName().substring(myFile.getName().lastIndexOf(".") + 1);
+            String type = mime.getMimeTypeFromExtension(ext);
+            Intent sharingIntent = new Intent("android.intent.action.SEND");
+            sharingIntent.setType(type);
+            sharingIntent.putExtra("android.intent.extra.STREAM", Uri.fromFile(myFile));
+            startActivity(Intent.createChooser(sharingIntent, "Share using"));
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }*/
+
+        Bitmap drawing = drawings[0];
+        saveDrawingToCache(drawing);
+
+        // Share
+        File imagePath = new File(getApplicationContext().getCacheDir(), "images");
+        File newFile = new File(imagePath, "image.png");
+        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.myapp.fileprovider", newFile);
+
+        if (contentUri != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            startActivity(Intent.createChooser(shareIntent, "Choose an app"));
+        }
+    }
+
+    private void saveDrawingToCache(Bitmap bitmap) {
+        // save bitmap to cache directory
+        try {
+
+            File cachePath = new File(getApplicationContext().getCacheDir(), "images");
+            cachePath.mkdirs(); // don't forget to make the directory
+            FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            stream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // MARK: Saving
+    private static void saveImage(Bitmap finalBitmap) {
+        // get directory
+        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File myDir = new File(root + "/saved_images");
+        Log.i("Directory", "==" + myDir);
+        myDir.mkdirs();
+
+        String fname = "Image-test" + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public int[] getRatings() {
         return ratings.clone();
@@ -374,7 +457,7 @@ public class VotingPageActivity extends BaseActivity {
                                             // Display the first drawing
                                             String playerName = playersNames[0];
                                             changeDrawing(drawings[0], playerName);
-
+                                            shareDrawing();
                                             // Enable the rating bar only if the image is not the player's one
                                             enableRatingBar(playerName);
 

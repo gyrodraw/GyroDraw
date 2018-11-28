@@ -32,7 +32,9 @@ import com.google.firebase.database.ValueEventListener;
 import static java.lang.String.format;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 public class LeaderboardActivity extends Activity {
 
@@ -214,13 +216,13 @@ public class LeaderboardActivity extends Activity {
     private class Leaderboard {
 
         private LinkedList<Player> allPlayers;
-        private LinkedList<Player> wantedPlayers;
+        private TreeSet<Player> wantedPlayers;
         private Context context;
 
         private Leaderboard(Context context) {
             this.context = context;
             allPlayers = new LinkedList<>();
-            wantedPlayers = new LinkedList<>();
+            wantedPlayers = new TreeSet<>();
             update("");
         }
 
@@ -238,8 +240,6 @@ public class LeaderboardActivity extends Activity {
                     filterByFriends(query);
                 } else {
                     filterWantedPlayers(query);
-                    Collections.sort(wantedPlayers);
-                    leaderboardView.removeAllViews();
                     addWantedPlayersToLayout();
                 }
             } else {
@@ -295,8 +295,6 @@ public class LeaderboardActivity extends Activity {
                                 }
                             }
                             filterWantedPlayers(query);
-                            Collections.sort(wantedPlayers);
-                            leaderboardView.removeAllViews();
                             addWantedPlayersToLayout();
                         }
 
@@ -354,7 +352,6 @@ public class LeaderboardActivity extends Activity {
 
                                 allPlayers.add(temp);
                                 filterWantedPlayers(query);
-                                Collections.sort(wantedPlayers);
                                 leaderboardView.removeAllViews();
                                 addWantedPlayersToLayout();
                             }
@@ -371,16 +368,20 @@ public class LeaderboardActivity extends Activity {
          * Adds wantedPlayers to the leaderboardView.
          */
         private void addWantedPlayersToLayout() {
+            leaderboardView.removeAllViews();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 20, 0, 0);
 
             // add all (max 20) players to the leaderboard
-            for (int i = 0; i < Math.min(20, wantedPlayers.size()); ++i) {
-                Player currentPlayer = wantedPlayers.get(i);
+            int i = 0;
+            Iterator<Player> playerIterator = wantedPlayers.iterator();
+            while(playerIterator.hasNext() && i < 20) {
+                Player currentPlayer = playerIterator.next();
                 currentPlayer.setRank(i + 1);
                 leaderboardView.addView(currentPlayer
                         .toLayout(getApplicationContext(), i), layoutParams);
+                ++i;
             }
         }
     }

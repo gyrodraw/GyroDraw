@@ -144,6 +144,9 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity() {
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
+        SystemClock.sleep(4000);
         Intents.init();
         SystemClock.sleep(4000);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext());

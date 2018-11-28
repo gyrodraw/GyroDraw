@@ -11,19 +11,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import java.io.ByteArrayOutputStream;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.R;
@@ -31,23 +22,29 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayOutputStream;
 
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
-    private DatabaseReference refMock;
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
@@ -72,7 +69,6 @@ public class VotingPageActivityTest {
     public void init() {
         Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
-        refMock = Mockito.mock(DatabaseReference.class);
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()

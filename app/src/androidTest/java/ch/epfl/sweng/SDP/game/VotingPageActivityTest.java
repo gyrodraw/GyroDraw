@@ -67,8 +67,8 @@ public class VotingPageActivityTest {
 
     @Before
     public void init() {
-        Database.getReference("realRooms.0123457890.ranking.username").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("username");
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
@@ -130,7 +130,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesNegativeNumber() {
-        Database.getReference("realRooms.0123457890.ranking.username").setValue(4);
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
         SystemClock.sleep(4000);
         int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
@@ -144,8 +144,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity() {
-        Database.getReference("realRooms.0123457890.ranking.username").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("username");
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(4000);
         Intents.init();
         SystemClock.sleep(4000);

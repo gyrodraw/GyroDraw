@@ -149,9 +149,6 @@ public class VotingPageActivityTest {
         SystemClock.sleep(4000);
         Intents.init();
         SystemClock.sleep(4000);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext());
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
-        SystemClock.sleep(4000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));

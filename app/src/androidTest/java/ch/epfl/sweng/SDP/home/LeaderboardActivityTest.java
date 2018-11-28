@@ -96,8 +96,8 @@ public class LeaderboardActivityTest {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(1000);
-        assertTrue(1 ==
-                ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
+        assertTrue(1
+                <= ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
                 .getChildCount());
     }
 
@@ -121,8 +121,8 @@ public class LeaderboardActivityTest {
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(2000);
         assertTrue(((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
-                .getChildCount()+"",expected ==
-                ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
+                .getChildCount()+"",expected
+                <= ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
                         .getChildCount());
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }

@@ -352,7 +352,7 @@ public class Account {
      * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
-        checkPrecondition(0 <= rating && rating <= 5, "Wrong rating given");
+        checkPrecondition(0 <= rating && rating <= 25, "Wrong rating given");
 
         double newAverageRating = averageRating == 0 ? rating
                 : (averageRating * (totalMatches - 1) + rating) / totalMatches;

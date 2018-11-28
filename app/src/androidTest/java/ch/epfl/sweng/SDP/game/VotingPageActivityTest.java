@@ -11,15 +11,21 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
 
+import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayOutputStream;
 
@@ -37,15 +43,18 @@ import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
+    private DatabaseReference refMock;
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
-    private Account accountMock;
     private StarAnimationView starsAnimation;
 
     @Rule
@@ -60,22 +69,19 @@ public class VotingPageActivityTest {
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
                     intent.putExtra("RoomID", "0123457890");
-
                     return intent;
                 }
             };
 
     @Before
     public void init() {
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
+        refMock = Mockito.mock(DatabaseReference.class);
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
-        accountMock = Mockito.mock(Account.class);
-        when(accountMock.getUserId()).thenReturn("test_user");
-        when(accountMock.getUsername()).thenReturn("test_user");
-        mActivityRule.getActivity().setMockedAccount(accountMock);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("FREDRIKB");
         SystemClock.sleep(5000);
     }
 
@@ -88,7 +94,8 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void addStarsHandlesBigNumber() {
+    public void
+    addStarsHandlesBigNumber() {
         int previousStars = starsAnimation.getNumStars();
         setStarsAnimationToVisible();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
@@ -99,9 +106,9 @@ public class VotingPageActivityTest {
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assertThat(starsAnimation.getNumStars(), is(previousStars + 5));
+        setStarsAnimationToGone();
         SystemClock.sleep(4000);
         assertThat(starsAnimation.getNumStars(), is(0));
-        setStarsAnimationToGone();
     }
 
     private void setStarsAnimationToVisible() {
@@ -132,6 +139,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesNegativeNumber() {
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        SystemClock.sleep(4000);
         int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();
@@ -145,9 +154,11 @@ public class VotingPageActivityTest {
     @Test
     public void startHomeActivityStartsHomeActivity() {
         Intents.init();
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+
+        SystemClock.sleep(4000);
         Account.getInstance(mActivityRule.getActivity().getApplicationContext());
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
-        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(4000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
@@ -157,11 +168,13 @@ public class VotingPageActivityTest {
 
     @Test
     public void testStateChange() {
-        SystemClock.sleep(1000);
+        Database.constructBuilder().addChildren("realRooms.0123457890.ranking").build().child("userC").setValue(4);
+        SystemClock.sleep(4000);
+        doNothing().when(refMock).addListenerForSingleValueEvent(any(ValueEventListener.class));
+        SystemClock.sleep(4000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
-        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+       // mActivityRule.getActivity().callOnStateChange(dataSnapshotMock,accountMock,refMock);
         SystemClock.sleep(7000);
-
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));

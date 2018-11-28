@@ -62,11 +62,7 @@ public class RankingFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        // Retrieve the ranking array, passed as argument on instantiation of the class
-        roomID = getArguments().getString("roomID");
-        this.drawings = (Bitmap[]) getArguments().getParcelableArray("drawings");
-        this.playerNames = getArguments().getStringArray("playerNames");
+        account = Account.getInstance(getActivity().getApplicationContext());
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
 
@@ -83,6 +79,22 @@ public class RankingFragment extends ListFragment {
         retrieveFinalRanking();
     }
 
+    /**
+     * Sets the attributes of this class.
+     * @param roomID the id of the room.
+     * @param drawings the users drawings.
+     * @param playernames the usernames of the players.
+     */
+    public void putExtra(String roomID, Bitmap[] drawings, String[] playernames) {
+        this.roomID = roomID;
+        this.drawings = drawings;
+        this.playerNames = playernames;
+    }
+
+    /**
+     * Retrieves the usernames.
+     * @return a list of user names.
+     */
     public List<String> getRankedUsernames() {
         return rankedUsernames;
     }
@@ -97,6 +109,7 @@ public class RankingFragment extends ListFragment {
     }
 
     private void retrieveFinalRanking() {
+
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -108,14 +121,14 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
-                String userNameId = account.getUsername();
+                String userName = account.getUsername();
 
                 // Sort the rankings
                 Integer[] tmp = new Integer[finalRanking.values().size()];
                 Integer[] rankings = (finalRanking.values().toArray(tmp));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
-                int rankForUser = dataSnapshot.child(userNameId).getValue(Integer.class);
+                int rankForUser = dataSnapshot.child(userName).getValue(Integer.class);
 
                 // Calculate trophies
                 Integer[] trophies = new Integer[rankings.length];
@@ -135,7 +148,7 @@ public class RankingFragment extends ListFragment {
 
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
-                Boolean won = usernames.get(0).equals(userNameId);
+                Boolean won = usernames.get(0).equals(userName);
                 updateUserStats(rankForUser, trophiesForUser, won);
                 createAndStoreGameResult(usernames, rankForUser, rankForUser, trophiesForUser);
 
@@ -182,14 +195,6 @@ public class RankingFragment extends ListFragment {
 
     private void setFinishedCollectingRanking() {
         finishedRef.child(account.getUsername()).setValue(1);
-    }
-
-    public void setAccount(Account account, Context context) {
-        if (account != null) {
-            this.account = account;
-        } else {
-            this.account = Account.getInstance(context);
-        }
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {
@@ -244,7 +249,7 @@ public class RankingFragment extends ListFragment {
             }
 
             // set the texts
-            name.setText(position + ". " + players[position]);
+            name.setText(position+1 + ". " + players[position]);
             trophiesText.setText(String.valueOf(this.trophies[position]));
             ranking.setText(String.valueOf(this.rankings[position]));
 

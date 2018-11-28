@@ -63,7 +63,7 @@ public class VotingPageActivity extends BaseActivity {
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
-    private Account mockedAccount;
+    private RankingFragment fragment;
 
     private String roomID = "undefined";
 
@@ -122,6 +122,7 @@ public class VotingPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragment = (RankingFragment) new RankingFragment();
         setContentView(R.layout.activity_voting_page);
 
         Intent intent = getIntent();
@@ -414,24 +415,16 @@ public class VotingPageActivity extends BaseActivity {
 
     private void startRankingFragment() {
 
-                // Prepare a Bundle for passing the ranking array to the fragment
-                Bundle bundle = new Bundle();
-                bundle.putString("roomID", roomID);
-                bundle.putParcelableArray("drawings", drawings);
-                bundle.putStringArray("playerNames", playersNames);
-
                 // Clear the UI; buttonChangeImage and rankingButton need
                 // to be removed after testing
                 setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                         R.id.playerNameView, R.id.timer);
 
                 // Create and show the final ranking in the new fragment
-                RankingFragment fragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
-                RankingFragment.class.getName(), bundle);
-                fragment.setAccount(mockedAccount, getApplicationContext());
+                fragment.putExtra(roomID,drawings,playersNames);
+
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.votingPageLayout,fragment
-                                )
+                        .add(R.id.votingPageLayout, fragment)
                         .addToBackStack(null).commit();
     }
 
@@ -485,7 +478,7 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public void callOnStateChange(final DataSnapshot dataSnapshot) {
+    public void callOnStateChange(final DataSnapshot dataSnapshot, Account mockedAccount, DatabaseReference refMock) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -494,7 +487,4 @@ public class VotingPageActivity extends BaseActivity {
         });
     }
 
-    public void setMockedAccount(Account mockedAccount) {
-        this.mockedAccount = mockedAccount;
-    }
 }

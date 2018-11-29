@@ -3,8 +3,11 @@ package ch.epfl.sweng.SDP.home;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.view.View;
+import android.view.ViewManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,11 +36,21 @@ public class BattleLogActivity extends Activity {
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
         TextView exitButton = findViewById(R.id.exitButton);
+        TextView emptyBattleLogText = findViewById(R.id.emptyBattleLogText);
         LayoutUtils.setExitListener(exitButton, this);
+
         exitButton.setTypeface(typeMuro);
+        emptyBattleLogText.setTypeface(typeMuro);
         ((TextView) findViewById(R.id.battleLogText)).setTypeface(typeMuro);
 
         fetchGameResults();
+
+        ScrollView scrollBattleLog = findViewById(R.id.scrollBattleLog);
+        if (battleLogView.getChildCount() == 0) {
+            ((ViewManager) scrollBattleLog.getParent()).removeView(scrollBattleLog);
+        } else {
+            ((ViewManager) emptyBattleLogText.getParent()).removeView(emptyBattleLogText);
+        }
     }
 
     /**

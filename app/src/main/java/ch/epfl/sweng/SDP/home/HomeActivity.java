@@ -142,11 +142,6 @@ public class HomeActivity extends BaseActivity {
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
 
-        practiceButton.setColorFilter(new LightingColorFilter(Color.WHITE,
-                getResources().getColor(R.color.colorButtonBlue)));
-        mysteryButton.setColorFilter(new LightingColorFilter(Color.WHITE,
-                getResources().getColor(R.color.colorButtonBlue)));
-
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
         starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));

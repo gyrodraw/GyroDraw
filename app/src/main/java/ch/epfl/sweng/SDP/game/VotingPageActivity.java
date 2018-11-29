@@ -276,7 +276,7 @@ public class VotingPageActivity extends BaseActivity {
             // Enable the rating bar only if the image is not the player's one
             ratingBar.setRating(0f);
             ratingBar.setIsIndicator(isCurrentPlayer);
-            ratingBar.setAlpha(isCurrentPlayer ? 0.8f : 1f);
+            ratingBar.setAlpha(isCurrentPlayer ? 0.5f : 1f);
         }
     }
 

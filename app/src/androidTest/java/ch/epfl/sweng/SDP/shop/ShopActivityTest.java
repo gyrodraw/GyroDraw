@@ -39,7 +39,6 @@ public class ShopActivityTest {
                 protected void beforeActivityLaunched() {
                     ShopActivity.disableAnimations();
                     usersRef.removeValue();
-                    ShopActivity.enableTesting();
                 }
             };
 
@@ -82,8 +81,9 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
+        Account.deleteAccount();
         Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
-                                                                    , "test@test.com");
+                , "test@test.com");
         Account.getInstance(mActivityRule.getActivity()).setStars(100);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);

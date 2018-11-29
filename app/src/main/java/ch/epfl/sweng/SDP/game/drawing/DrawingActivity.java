@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -102,10 +103,17 @@ public class DrawingActivity extends BaseActivity {
         ImageView image = new ImageView(this);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
-                LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams
-                                        .WRAP_CONTENT, 1f);
+                LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
+                                        .MATCH_PARENT, 1f);
 
-        params.setMargins(0, 10, 0, 10);
+        // Convert dp into px
+        int px = (int)TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                10,
+                getResources().getDisplayMetrics()
+        );
+
+        params.setMargins(0, px, 0, px);
         image.setLayoutParams(params);
 
         image.setImageDrawable(getResources().getDrawable(R.drawable.color_circle));

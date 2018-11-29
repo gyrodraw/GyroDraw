@@ -188,6 +188,11 @@ public class HomeActivity extends BaseActivity {
         launchActivity(LeaguesActivity.class);
     }
 
+    @VisibleForTesting
+    public Dialog getFriendRequestWindow() {
+        return friendRequestWindow;
+    }
+
     /**
      * Signs the current user out and starts the {@link MainActivity}.
      */
@@ -433,5 +438,16 @@ public class HomeActivity extends BaseActivity {
         leagueText.setText(getLeagueTextId(league));
         leagueText.setTextColor(getResources().getColor(getLeagueColorId(league)));
         ((ImageView) findViewById(R.id.leagueImage)).setImageResource(getLeagueImageId(league));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Update values of the textviews
+        Account account = Account.getInstance(this);
+        ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
+        ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
+                                                                        account.getTrophies()));
     }
 }

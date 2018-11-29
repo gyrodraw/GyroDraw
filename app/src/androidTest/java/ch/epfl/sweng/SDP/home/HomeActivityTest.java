@@ -122,12 +122,14 @@ public class HomeActivityTest {
 
     @Test
     public void testUsernameOpensPopUp() {
+        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFriendsRequestAccept() {
+        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -140,6 +142,7 @@ public class HomeActivityTest {
 
     @Test
     public void testFriendsRequestReject() {
+        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -4,6 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -20,9 +25,7 @@ import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
 
 
@@ -139,7 +142,9 @@ public class Account {
      */
     public static Account getInstance(Context context) {
         if (instance == null) {
-            createAccount(context, new ConstantsWrapper(), "", "");
+            ConstantsWrapper constantsWrapper = new ConstantsWrapper();
+            createAccount(context, constantsWrapper,
+                    constantsWrapper.getFirebaseUserId(), "");
         }
 
         return instance;
@@ -239,40 +244,6 @@ public class Account {
     void registerAccount() throws DatabaseException {
         usersRef.child(userId).setValue(this, createCompletionListener());
         localDbHandler.saveAccount(this);
-    }
-
-    /**
-     * Updates username to newName.
-     *
-     * @param newName new username
-     * @throws IllegalArgumentException if username not available anymore
-     * @throws DatabaseException        if problems with Firebase
-     */
-    public void updateUsername(final String newName) throws DatabaseException {
-        checkPrecondition(newName != null, "Username must not be null");
-
-        usersRef.orderByChild("username").equalTo(newName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            throw new IllegalArgumentException("Username already taken.");
-                        } else {
-                            DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder(
-                                    usersRef);
-                            builder.addChildren(userId + ".username").build()
-                                    .setValue(newName, createCompletionListener());
-                            username = newName;
-                            localDbHandler.saveAccount(instance);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
-                });
     }
 
     /**
@@ -400,13 +371,43 @@ public class Account {
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
+        Database.constructBuilder(usersRef).addChildren(userId + ".friends." + usernameId).build()
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            if (dataSnapshot.getValue(int.class)
+                                    == RECEIVED.ordinal()) {
+                                updateFriendship(usernameId, FRIENDS.ordinal(), FRIENDS.ordinal());
+                            } else {
+                                updateFriendship(usernameId, SENT.ordinal(), RECEIVED.ordinal());
+                            }
+                        } else {
+                            updateFriendship(usernameId, SENT.ordinal(), RECEIVED.ordinal());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        checkForDatabaseError(databaseError);
+                    }
+                });
+    }
+
+    /**
+     * Updates current users and friends friendship-state.
+     * @param friendId      id of friend
+     * @param stateUser     state that current user will save
+     * @param stateFriend   state that friend will save
+     */
+    private void updateFriendship(String friendId, int stateUser, int stateFriend) {
         // Update the user's friends' list
         Database.getReference(format(FRIENDS_LIST_FORMAT,
-                userId, usernameId)).setValue(FRIENDS.ordinal(), createCompletionListener());
+                userId, friendId)).setValue(stateUser, createCompletionListener());
 
         // Update the sender's friends' list
         Database.getReference(format(FRIENDS_LIST_FORMAT,
-                usernameId, userId)).setValue(FRIENDS.ordinal(), createCompletionListener());
+                friendId, userId)).setValue(stateFriend, createCompletionListener());
     }
 
     /**

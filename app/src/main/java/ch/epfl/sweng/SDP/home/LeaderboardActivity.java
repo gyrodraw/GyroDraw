@@ -59,6 +59,7 @@ public class LeaderboardActivity extends Activity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_leaderboard);
+
         filterByFriends = false;
         leaderboardView = findViewById(R.id.leaderboard);
 

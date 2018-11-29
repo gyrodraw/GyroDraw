@@ -28,6 +28,7 @@ public class BattleLogActivity extends Activity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_battle_log);
+
         battleLogView = findViewById(R.id.battleLog);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");

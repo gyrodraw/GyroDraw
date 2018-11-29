@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorDrawYellow</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">

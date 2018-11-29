@@ -1,29 +1,26 @@
 package ch.epfl.sweng.SDP;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.Shop;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.Shop;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -45,7 +42,7 @@ public abstract class Activity extends AppCompatActivity {
      * Set the visibility of the views corresponding to the given ids to the given value.
      *
      * @param visibility the value to set the visibility at
-     * @param ids the ids of the views whose visibility is to be set
+     * @param ids        the ids of the views whose visibility is to be set
      */
     public void setVisibility(int visibility, int... ids) {
         for (int id : ids) {
@@ -57,7 +54,7 @@ public abstract class Activity extends AppCompatActivity {
      * Set the visibility of the given views to the given value.
      *
      * @param visibility the value to set the visibility at
-     * @param views the views whose visibility is to be set
+     * @param views      the views whose visibility is to be set
      */
     public void setVisibility(int visibility, View... views) {
         for (View view : views) {
@@ -69,20 +66,21 @@ public abstract class Activity extends AppCompatActivity {
      * Set typeface to the given text views.
      *
      * @param typeface the typeface to be set
-     * @param views the text views whose typeface is to be set
+     * @param views    the text views whose typeface is to be set
      */
     public void setTypeFace(Typeface typeface, View... views) {
-        for(View view: views) {
+        for (View view : views) {
             ((TextView) view).setTypeface(typeface);
         }
     }
 
     /**
      * This methods creates a TextView according to the given parameters.
-     * @param text String displayed in textview
-     * @param color Color of the textview
-     * @param size Size of the textview
-     * @param typeface Typeface of the textview
+     *
+     * @param text         String displayed in textview
+     * @param color        Color of the textview
+     * @param size         Size of the textview
+     * @param typeface     Typeface of the textview
      * @param layoutParams Layout parameters of the textview
      * @return The newly created textview
      */
@@ -99,12 +97,13 @@ public abstract class Activity extends AppCompatActivity {
 
     /**
      * Add views to a layout.
+     *
      * @param layout Layout where the views will be added
-     * @param views Views to be added
+     * @param views  Views to be added
      * @return The layout with the views added
      */
     public LinearLayout addViews(LinearLayout layout, View... views) {
-        for(View view: views) {
+        for (View view : views) {
             layout.addView(view);
         }
 
@@ -139,7 +138,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("averageRating")).doubleValue(),
                         ((Long) user.get("maxTrophies")).intValue(),
                         Shop.firebaseToListShopItem((HashMap<String, String>)
-                                                    user.get("boughtItems")));
+                                user.get("boughtItems")));
 
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);

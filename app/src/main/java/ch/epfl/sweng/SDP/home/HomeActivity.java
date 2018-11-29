@@ -363,7 +363,6 @@ public class HomeActivity extends BaseActivity {
 
     private void showProfilePopup() {
         profileWindow.setContentView(R.layout.activity_profile_pop_up);
-
         Account userAccount = Account.getInstance(this);
 
         this.setMuroFont();

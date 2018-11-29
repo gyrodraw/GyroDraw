@@ -45,9 +45,7 @@ public class ShopActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         overridePendingTransition(0, 0);
-
         setContentView(R.layout.activity_shop);
 
         if (enableAnimations) {

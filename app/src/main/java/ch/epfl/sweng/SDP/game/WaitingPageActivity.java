@@ -184,9 +184,7 @@ public class WaitingPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         overridePendingTransition(0, 0);
-
         setContentView(R.layout.activity_waiting_page);
 
         Intent intent = getIntent();

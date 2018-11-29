@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -68,12 +69,21 @@ public class VotingPageActivityTest {
     @Before
     public void init() {
         Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext())
+                .setUsername("userC");
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
-        SystemClock.sleep(5000);
+        SystemClock.sleep(2000);
+    }
+
+    @After
+    public void end() {
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext())
+                .setUsername("userC");
+        SystemClock.sleep(2000);
     }
 
     @Test
@@ -143,16 +153,10 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity() {
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(4000);
         Intents.init();
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(4000);
         mActivityRule.getActivity().startHomeActivity(null);
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();

@@ -148,8 +148,12 @@ public class VotingPageActivityTest {
         Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(4000);
         Intents.init();
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(4000);
         mActivityRule.getActivity().startHomeActivity(null);
+        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Account.getInstance(mActivityRule.getActivity().getApplicationContext()).setUsername("userC");
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();

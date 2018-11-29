@@ -173,16 +173,16 @@
     <Button
         android:id="@+id/usernameButton"
         android:layout_width="wrap_content"
-        android:layout_height="31dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="3dp"
         android:background="@android:color/transparent"
-        android:gravity="end"
+        android:gravity="center_vertical|end"
         android:text="@string/user_name"
         android:textColor="@color/colorDrawYellow"
         android:textSize="25sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/trophiesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

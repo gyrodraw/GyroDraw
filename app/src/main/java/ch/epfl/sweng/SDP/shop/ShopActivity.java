@@ -24,6 +24,7 @@ import java.util.Locale;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -60,7 +61,9 @@ public class ShopActivity extends Activity {
         typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         shopItems = findViewById(R.id.shopItems);
+        Button leaveButton = findViewById(R.id.leaveButton);
 
+        leaveButton.setTypeface(typeMuro);
         ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeOptimus);
         ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
         ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
@@ -68,6 +71,7 @@ public class ShopActivity extends Activity {
 
         fillShop();
         addColorsToShop();
+        LayoutUtils.setLeaveButtonListener(leaveButton, this);
     }
 
     /**

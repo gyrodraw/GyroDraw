@@ -1,13 +1,11 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,13 +25,10 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
 public class WaitingPageActivity extends BaseActivity {
@@ -222,7 +217,7 @@ public class WaitingPageActivity extends BaseActivity {
                 findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
                 findViewById(R.id.waitingTime), findViewById(R.id.leaveButton));
 
-        setLeaveButtonListener();
+        LayoutUtils.setLeaveButtonListener(findViewById(R.id.leaveButton), this);
 
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
     }
@@ -294,27 +289,6 @@ public class WaitingPageActivity extends BaseActivity {
                 break;
             default:
         }
-    }
-
-    private void setLeaveButtonListener() {
-        final Context context = this;
-        int id = R.id.leaveButton;
-        findViewById(id).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view, LayoutUtils.AnimMode.CENTER, context);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, context);
-                        launchActivity(HomeActivity.class);
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
     }
 
     // Vote for the specified word and update the database

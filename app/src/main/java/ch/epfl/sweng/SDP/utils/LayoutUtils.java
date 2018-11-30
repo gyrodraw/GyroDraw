@@ -105,6 +105,28 @@ public class LayoutUtils {
     }
 
     /**
+     * Sets listener and animation for leave button.
+     */
+    public static void setLeaveButtonListener(final View leaveButton, final Activity activity) {
+        leaveButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, activity);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, activity);
+                        activity.launchActivity(HomeActivity.class);
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
+    /**
      * Get the league's image id.
      *
      * @param league the requested league

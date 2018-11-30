@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing.withItems;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
@@ -74,7 +73,6 @@ final class DrawingItems {
     Item findCollidingElement() {
         for (Item item : displayedItems.keySet()) {
             if (item.collision(paintView)) {
-
                 return item;
             }
         }

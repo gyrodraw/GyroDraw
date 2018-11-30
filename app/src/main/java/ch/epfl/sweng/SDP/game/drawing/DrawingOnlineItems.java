@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing.withItems;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOnline;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 
 public class DrawingOnlineItems extends DrawingOnline {

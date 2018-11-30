@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing.withItems;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -11,10 +11,13 @@ import java.util.HashMap;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.GyroDrawingActivity;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 
+/**
+ * Class representing the practice mode, which is offline and where the user has the choice of
+ * activating or not the mystery mode and the related item generation.
+ */
 public class DrawingOffline extends GyroDrawingActivity {
 
     private DrawingItems drawingItems;
@@ -53,6 +56,7 @@ public class DrawingOffline extends GyroDrawingActivity {
 
     /**
      * Toggle the mystery mode.
+     *
      * @param view the toggle button clicked
      */
     public void toggleMysteryMode(View view) {
@@ -66,6 +70,7 @@ public class DrawingOffline extends GyroDrawingActivity {
 
     /**
      * Leave the activity.
+     *
      * @param view the button clicked
      */
     public void exitClick(View view) {

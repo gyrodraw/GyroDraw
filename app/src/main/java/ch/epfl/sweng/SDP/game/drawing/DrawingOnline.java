@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing.withoutItems;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
 import android.graphics.Typeface;

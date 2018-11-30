@@ -97,9 +97,9 @@ public class HomeActivityTest {
     }
 
     @Test
-    public void testClickOnItemsButtonOpensDrawingOfflineItems() {
+    public void testClickOnMysteryButtonOpensWaitingPageActivity() {
         onView(ViewMatchers.withId(R.id.mysteryButton)).perform(click());
-        intended(hasComponent(DrawingOffline.class.getName()));
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
     }
 
     @Test

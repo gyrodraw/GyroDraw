@@ -2,13 +2,20 @@ package ch.epfl.sweng.SDP.home;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,12 +25,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
@@ -37,6 +51,7 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
+import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
@@ -47,6 +62,8 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
+
+import com.facebook.FacebookSdk;
 
 public class HomeActivity extends BaseActivity {
 
@@ -127,6 +144,18 @@ public class HomeActivity extends BaseActivity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.league_1);
+        ImageStorageManager.saveImage(bm, "HEY",getApplicationContext());
+       // shareDrawing(bm);
+
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(bm)
+                .build();
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhoto(photo)
+                .build();
+
+        ShareDialog.show(this, content);
         // Add listener to check for new friends requests
         addListenerForFriendsRequests();
 
@@ -172,6 +201,43 @@ public class HomeActivity extends BaseActivity {
 
         setLeague();
     }
+
+    private void shareDrawing(Bitmap drawing) {
+
+        saveDrawingToCache(drawing);
+
+        // Get image file
+        File imagePath = new File(getApplicationContext().getCacheDir(), "images");
+        File newFile = new File(imagePath, "image.png");
+        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.myapp.fileprovider", newFile);
+
+        // Share
+        if (contentUri != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            startActivity(Intent.createChooser(shareIntent, "Choose an app"));
+        }
+
+    }
+
+    private void saveDrawingToCache(Bitmap bitmap) {
+        // save bitmap to cache directory
+        try {
+
+            File cachePath = new File(getApplicationContext().getCacheDir(), "images");
+            cachePath.mkdirs(); // don't forget to make the directory
+            FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            stream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void addListenerForFriendsRequests() {
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))

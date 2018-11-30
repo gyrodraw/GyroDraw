@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,6 +45,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 
 import com.facebook.FacebookSdk;
 
@@ -81,22 +83,8 @@ public class VotingPageActivity extends BaseActivity {
 
     // MARK: Sharing
 
-    private void shareDrawing() {
-        /*
-        try {
-            File myFile = new File("/storage/emulated/0/saved_images/Image-test.jpg");
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
-            String ext = myFile.getName().substring(myFile.getName().lastIndexOf(".") + 1);
-            String type = mime.getMimeTypeFromExtension(ext);
-            Intent sharingIntent = new Intent("android.intent.action.SEND");
-            sharingIntent.setType(type);
-            sharingIntent.putExtra("android.intent.extra.STREAM", Uri.fromFile(myFile));
-            startActivity(Intent.createChooser(sharingIntent, "Share using"));
-        } catch (Exception e) {
-            Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }*/
+    private void shareDrawing(Bitmap drawing) {
 
-        Bitmap drawing = drawings[0];
         saveDrawingToCache(drawing);
 
         // Share
@@ -112,6 +100,7 @@ public class VotingPageActivity extends BaseActivity {
             shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
             startActivity(Intent.createChooser(shareIntent, "Choose an app"));
         }
+
     }
 
     private void saveDrawingToCache(Bitmap bitmap) {
@@ -129,25 +118,7 @@ public class VotingPageActivity extends BaseActivity {
         }
     }
 
-    // MARK: Saving
-    private void saveImage(Bitmap finalBitmap, String image_name) {
 
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root);
-        myDir.mkdirs();
-        String fname = "Image-" + image_name+ ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        Log.i("LOAD", root + fname);
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public int[] getRatings() {
         return ratings.clone();
@@ -455,8 +426,8 @@ public class VotingPageActivity extends BaseActivity {
                                             // Display the first drawing
                                             String playerName = playersNames[0];
                                             changeDrawing(drawings[0], playerName);
-                                            shareDrawing();
-                                            saveImage(drawings[0], "picasso");
+                                            shareDrawing(drawings[0]);
+                                            ImageStorageManager.saveImage(drawings[0], "picasso", getApplicationContext());
                                             // Enable the rating bar only if the image is not the player's one
                                             enableRatingBar(playerName);
 

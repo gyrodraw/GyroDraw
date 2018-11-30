@@ -67,16 +67,22 @@
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
-
-    <ch.epfl.sweng.SDP.game.drawing.PaintView
-        android:id="@+id/paintView"
+    <RelativeLayout
+        android:id="@+id/paintViewHolder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_weight="9">
+
+        <ch.epfl.sweng.SDP.game.drawing.PaintView
+            android:id="@+id/paintView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/colorLayout"

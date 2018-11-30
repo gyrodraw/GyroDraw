@@ -64,7 +64,7 @@ public class DrawingOnline extends GyroDrawingActivity {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case WAITING_UPLOAD:
-                        timeIsUpTextFeedback(getApplicationContext());
+                        paintViewHolder.addView(timeIsUpTextFeedback(DrawingOnline.this));
                         uploadDrawing().addOnCompleteListener(
                                 new OnCompleteListener<TaskSnapshot>() {
                                     @Override

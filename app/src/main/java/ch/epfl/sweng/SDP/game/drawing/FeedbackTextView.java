@@ -15,9 +15,9 @@ import ch.epfl.sweng.SDP.game.drawing.items.Item;
  */
 class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
 
-    private FeedbackTextView(Context context) {
+    private FeedbackTextView(Context context, String text, int colorId) {
         super(context);
-        setTextColor(context.getResources().getColor(R.color.colorDrawYellow));
+        setTextColor(context.getResources().getColor(colorId));
         setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorPrimaryDark));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -27,6 +27,7 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
         setLayoutParams(layoutParams);
         Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
         setTypeface(typeMuro, Typeface.ITALIC);
+        setText(text);
     }
 
     /**
@@ -39,8 +40,8 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
      */
     static TextView itemTextFeedback(Item item, final RelativeLayout paintViewHolder,
                                      Context context) {
-        final FeedbackTextView feedback = new FeedbackTextView(context);
-        feedback.setText(item.textFeedback());
+        final FeedbackTextView feedback = new FeedbackTextView(context, item.getTextFeedback(),
+                item.getColorId());
 
         new CountDownTimer(800, 40) {
 
@@ -62,8 +63,8 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
      * @return feedback text
      */
     static TextView timeIsUpTextFeedback(Context context) {
-        final FeedbackTextView feedback = new FeedbackTextView(context);
-        feedback.setText(context.getResources().getString(R.string.time_is_up));
+        final FeedbackTextView feedback = new FeedbackTextView(context, "TIME'S UP ! ",
+                R.color.colorDrawYellow);
 
         new CountDownTimer(800, 40) {
 

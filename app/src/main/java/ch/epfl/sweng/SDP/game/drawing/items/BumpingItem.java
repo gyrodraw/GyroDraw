@@ -61,7 +61,7 @@ public class BumpingItem extends Item {
     }
 
     @Override
-    public String textFeedback() {
+    public String getTextFeedback() {
         return " ";
     }
 

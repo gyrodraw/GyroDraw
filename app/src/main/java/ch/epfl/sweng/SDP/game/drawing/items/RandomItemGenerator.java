@@ -1,28 +1,19 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import android.widget.ImageView;
-
-import java.util.Map;
 import java.util.Random;
 
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
-import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
-import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
-import ch.epfl.sweng.SDP.game.drawing.items.Item;
-import ch.epfl.sweng.SDP.game.drawing.items.Items;
-import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
-import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
-import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
 
 public class RandomItemGenerator {
 
     private static final int ITEM_RADIUS = 50;
 
-    private RandomItemGenerator() {}
+    private RandomItemGenerator() {
+    }
 
     /**
      * Generates a random item at a random position.
+     *
      * @return the generated item
      */
     public static Item generateItem(PaintView paintView) {
@@ -48,12 +39,13 @@ public class RandomItemGenerator {
 
     /**
      * Random position which is fully visible on screen.
+     *
      * @param max upper bound of screen
      * @return random position
      */
     private static int randomIntWithinBounds(int max) {
         Random random = new Random();
-        return 2*ITEM_RADIUS + random.nextInt(max - 4*ITEM_RADIUS);
+        return 2 * ITEM_RADIUS + random.nextInt(max - 4 * ITEM_RADIUS);
     }
 
 

@@ -24,7 +24,6 @@ public class DrawingOfflineItems extends DrawingOffline {
 
     private static final int INTERVAL = 10000;
 
-    protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     private Map<Item, ImageView> displayedItems;
     private Random random = new Random();
@@ -32,7 +31,6 @@ public class DrawingOfflineItems extends DrawingOffline {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        paintViewHolder = findViewById(R.id.paintViewHolder);
         paintView = super.paintView;
         displayedItems = new HashMap<>();
         generateItems();

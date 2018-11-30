@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
 import com.google.android.gms.common.util.ArrayUtils;
@@ -24,6 +25,7 @@ import ch.epfl.sweng.SDP.utils.ColorUtils;
 
 public class DrawingActivity extends BaseActivity {
     protected static final String TAG = "DrawingActivity";
+    protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     protected Handler handler;
 
@@ -68,6 +70,7 @@ public class DrawingActivity extends BaseActivity {
             colorButtons[i+1] = colorView;
         }
 
+        paintViewHolder = findViewById(R.id.paintViewHolder);
         paintView = findViewById(R.id.paintView);
         paintView.setColors(colors);
 

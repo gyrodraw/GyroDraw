@@ -22,8 +22,6 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
-import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -46,9 +44,14 @@ import java.io.ByteArrayOutputStream;
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
+    private static final String USER_ID = "123456789";
+    private static final String TEST_EMAIL = "testEmail";
+    private static final String USERNAME = "userC";
+
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
+    private Account account;
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
@@ -69,8 +72,11 @@ public class VotingPageActivityTest {
     @Before
     public void init() {
         Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext())
-                .setUsername("userC");
+        Account.deleteAccount();
+        account = Account.getInstance(mActivityRule.getActivity().getApplicationContext());
+        account.setUserId(USER_ID);
+        account.setUsername(USERNAME);
+        account.setEmail(TEST_EMAIL);
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
@@ -81,8 +87,6 @@ public class VotingPageActivityTest {
     @After
     public void end() {
         Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        Account.getInstance(mActivityRule.getActivity().getApplicationContext())
-                .setUsername("userC");
         SystemClock.sleep(2000);
     }
 
@@ -153,9 +157,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity() {
-        SystemClock.sleep(4000);
         Intents.init();
-        SystemClock.sleep(4000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));

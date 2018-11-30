@@ -24,7 +24,7 @@ public enum ColorsShop {
             case "GREEN":
                 return GREEN;
             default:
-                throw new IllegalStateException();
+                throw new IllegalArgumentException(color + " not found");
         }
     }
 

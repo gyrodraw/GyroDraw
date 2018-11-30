@@ -78,6 +78,7 @@ public class VotingPageActivityTest {
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(TEST_EMAIL);
+        account.registerAccount();
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()

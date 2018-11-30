@@ -241,7 +241,7 @@ public class Account {
     /**
      * Registers this account in Firebase and in the local database.
      */
-    void registerAccount() throws DatabaseException {
+    public void registerAccount() throws DatabaseException {
         usersRef.child(userId).setValue(this, createCompletionListener());
         localDbHandler.saveAccount(this);
     }

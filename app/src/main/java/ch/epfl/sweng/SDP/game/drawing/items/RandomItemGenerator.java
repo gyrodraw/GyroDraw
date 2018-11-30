@@ -1,19 +1,8 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import android.widget.ImageView;
-
-import java.util.Map;
 import java.util.Random;
 
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
-import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
-import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
-import ch.epfl.sweng.SDP.game.drawing.items.Item;
-import ch.epfl.sweng.SDP.game.drawing.items.Items;
-import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
-import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
-import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
 
 public class RandomItemGenerator {
 

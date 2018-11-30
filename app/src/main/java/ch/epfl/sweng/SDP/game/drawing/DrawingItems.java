@@ -45,7 +45,8 @@ final class DrawingItems {
         }
     };
 
-    DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView, Map<Item, ImageView> displayedItems, Random random) {
+    DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView,
+                 Map<Item, ImageView> displayedItems, Random random) {
         this.context = context;
         this.paintViewHolder = paintViewHolder;
         this.paintView = paintView;

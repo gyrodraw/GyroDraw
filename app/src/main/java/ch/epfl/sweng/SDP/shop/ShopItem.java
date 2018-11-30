@@ -64,12 +64,12 @@ public class ShopItem {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ShopItem shopItem = (ShopItem) o;
-        return getPriceItem() == shopItem.getPriceItem() &&
-                getColorItem() == shopItem.getColorItem();
+    public boolean equals(Object obj) {
+        if (this == obj) { return true; }
+        if (obj == null || getClass() != obj.getClass()) { return false; }
+        ShopItem shopItem = (ShopItem) obj;
+        return getPriceItem() == shopItem.getPriceItem()
+                && getColorItem() == shopItem.getColorItem();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
@@ -32,11 +33,9 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
+import ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOffline;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
-
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
@@ -290,7 +289,9 @@ public class HomeActivity extends BaseActivity {
             case R.id.drawButton:
                 if (CheckConnection.isOnline(this)) {
                     ((ImageView) view).setImageResource(R.drawable.draw_button);
-                    launchActivity(LoadingScreenActivity.class);
+                    Intent intent = new Intent(this, LoadingScreenActivity.class);
+                    intent.putExtra("mode", 0);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(this, R.string.no_internet,
                             Toast.LENGTH_LONG).show();
@@ -318,7 +319,15 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(DrawingOffline.class);
                 break;
             case R.id.mysteryButton:
-                launchActivity(DrawingOfflineItems.class);
+                if (CheckConnection.isOnline(this)) {
+                    ((ImageView) view).setImageResource(R.drawable.home_mystery_button);
+                    Intent intent = new Intent(this, LoadingScreenActivity.class);
+                    intent.putExtra("mode", 1);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, R.string.no_internet,
+                            Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
         }

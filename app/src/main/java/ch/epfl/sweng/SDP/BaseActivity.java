@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP;
 
 import android.os.Bundle;
 
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -10,7 +10,7 @@ public class BaseActivity extends Activity {
     }
 
     /**
-     * Prevents the user from pressing the back button.
+     * Prevent the user from pressing the back button.
      */
     @Override
     public void onBackPressed() {

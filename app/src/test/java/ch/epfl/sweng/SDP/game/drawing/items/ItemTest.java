@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
@@ -38,13 +37,13 @@ public class ItemTest {
     @Test
     public void testTextFeedbacksFromDifferentItemClasses() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertThat(speedupItem.getTextFeedback(), is("SPEEDUP! "));
+        assertThat(speedupItem.getTextFeedback(), is("SPEEDUP ! "));
         SlowdownItem slowdownItem = SlowdownItem.createSlowdownItem(0, 0, 10);
-        assertThat(slowdownItem.getTextFeedback(), is("SLOWDOWN! "));
+        assertThat(slowdownItem.getTextFeedback(), is("SLOWDOWN ! "));
         SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(0, 0, 10);
-        assertThat(swapAxisItem.getTextFeedback(), is("SWAPPED! "));
+        assertThat(swapAxisItem.getTextFeedback(), is("SWAPPED ! "));
         AddStarsItem addStarsItem = AddStarsItem.createAddStarsItem(0, 0, 10);
-        assertThat(addStarsItem.getTextFeedback(), is("+3 STARS! "));
+        assertThat(addStarsItem.getTextFeedback(), is("+3 STARS ! "));
         BumpingItem bumpingItem = BumpingItem.createBumpingItem(0, 0, 10);
         assertThat(bumpingItem.getTextFeedback(), is(" "));
     }

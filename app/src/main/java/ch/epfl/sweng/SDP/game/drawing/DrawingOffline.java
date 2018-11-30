@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.game.drawing.withItems;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -9,12 +11,14 @@ import java.util.HashMap;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.GyroDrawingActivity;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 
-public class DrawingOfflineItems extends DrawingOffline {
+public class DrawingOffline extends GyroDrawingActivity {
 
     private DrawingItems drawingItems;
+    private boolean isToggled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,7 @@ public class DrawingOfflineItems extends DrawingOffline {
         drawingItems = new DrawingItems(this,
                 (RelativeLayout) findViewById(R.id.paintViewHolder), super.paintView,
                 new HashMap<Item, ImageView>(), new Random());
-        drawingItems.generateItems();
+        isToggled = false;
     }
 
     /**
@@ -45,6 +49,31 @@ public class DrawingOfflineItems extends DrawingOffline {
             drawingItems.getPaintViewHolder().addView(drawingItems.itemTextFeedback(collidingItem));
             drawingItems.getDisplayedItems().remove(collidingItem);
         }
+    }
+
+    /**
+     * Toggle the mystery mode.
+     * @param view the toggle button clicked
+     */
+    public void toggleMysteryMode(View view) {
+        isToggled = !isToggled;
+        if (isToggled) {
+            drawingItems.generateItemsForOfflineMode();
+        } else {
+            drawingItems.stopOfflineModeItemGeneration();
+        }
+    }
+
+    /**
+     * Leave the activity.
+     * @param view the button clicked
+     */
+    public void exitClick(View view) {
+        LocalDbHandlerForImages localDbHandlerForImages =
+                new LocalDbHandlerForImages(this, null, 1);
+        paintView.saveCanvasInDb(localDbHandlerForImages);
+        Log.d(TAG, "Exiting drawing view");
+        finish();
     }
 
     @VisibleForTesting

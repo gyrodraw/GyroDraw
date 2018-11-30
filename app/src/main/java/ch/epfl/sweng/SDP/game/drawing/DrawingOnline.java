@@ -100,7 +100,7 @@ public class DrawingOnline extends GyroDrawingActivity {
     @VisibleForTesting
     @Override
     public int getLayoutId() {
-        return R.layout.activity_drawing;
+        return R.layout.activity_drawing_online;
     }
 
     @Override

@@ -21,14 +21,30 @@ import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
 
-class DrawingItems {
+/**
+ * Utility class containing methods related to the special items mode.
+ */
+final class DrawingItems {
 
     private static final int INTERVAL = 10000;
+
     private Context context;
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
     private Map<Item, ImageView> displayedItems;
     private Random random;
+
+    private CountDownTimer offlineModeTimer = new CountDownTimer(INTERVAL, INTERVAL) {
+
+        public void onTick(long millisUntilFinished) {
+            // Does nothing
+        }
+
+        public void onFinish() {
+            convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
+            generateItemsForOfflineMode();
+        }
+    };
 
     DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView, Map<Item, ImageView> displayedItems, Random random) {
         this.context = context;
@@ -80,6 +96,25 @@ class DrawingItems {
                 generateItems();
             }
         }.start();
+    }
+
+    /**
+     * Generate a random item (add stars excluded) every INTERVAL seconds.
+     */
+    void generateItemsForOfflineMode() {
+        offlineModeTimer.start();
+    }
+
+    /**
+     * Stop the timer and the item generation.
+     */
+    void stopOfflineModeItemGeneration() {
+        offlineModeTimer.cancel();
+        for (ImageView item: displayedItems.values()) {
+            paintViewHolder.removeView(item);
+        }
+        displayedItems.clear();
+
     }
 
     private void convertAndAddItemToLayout(Item item) {
@@ -141,6 +176,11 @@ class DrawingItems {
     }
 
     @VisibleForTesting
+    void addRandomItemForOfflineMode() {
+        convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
+    }
+
+    @VisibleForTesting
     void addRandomItem() {
         convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
     }
@@ -150,7 +190,7 @@ class DrawingItems {
      */
     private class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
 
-        protected FeedbackTextView(Context context) {
+        private FeedbackTextView(Context context) {
             super(context);
             setTextColor(context.getResources().getColor(R.color.colorDrawYellow));
             setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorGrey));

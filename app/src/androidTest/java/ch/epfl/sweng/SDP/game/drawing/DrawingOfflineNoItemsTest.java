@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing.withoutItems;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.graphics.Color;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 

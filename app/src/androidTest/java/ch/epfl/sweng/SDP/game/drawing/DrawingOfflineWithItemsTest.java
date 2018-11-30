@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing.withItems;
+package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
@@ -38,12 +37,12 @@ public class DrawingOfflineItemsTest {
 
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
-    private DrawingOfflineItems activity;
+    private DrawingOffline activity;
     private Account account;
 
     @Rule
-    public final ActivityTestRule<DrawingOfflineItems> activityRule =
-            new ActivityTestRule<>(DrawingOfflineItems.class);
+    public final ActivityTestRule<DrawingOffline> activityRule =
+            new ActivityTestRule<>(DrawingOffline.class);
 
     /**
      * Initializes variables.
@@ -51,6 +50,7 @@ public class DrawingOfflineItemsTest {
     @Before
     public void init() {
         activity = activityRule.getActivity();
+        activity.toggleMysteryMode(null);
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
@@ -102,6 +102,7 @@ public class DrawingOfflineItemsTest {
                 SwapAxisItem.createSwapAxisItem(20, 20, 10), -1);
     }
 
+    // TODO To move to DrawingOnlineItemsTest
     @Test
     public void testAddStarsItemAddsStarsToAccount() {
         int initStars = account.getStars();
@@ -174,7 +175,7 @@ public class DrawingOfflineItemsTest {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    activity.getDrawingItems().addRandomItem();
+                    activity.getDrawingItems().addRandomItemForOfflineMode();
                 }
             });
         } catch (Throwable throwable) {

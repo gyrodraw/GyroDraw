@@ -17,8 +17,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.withItems.DrawingOfflineItems;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -100,7 +99,7 @@ public class HomeActivityTest {
     @Test
     public void testClickOnItemsButtonOpensDrawingOfflineItems() {
         onView(ViewMatchers.withId(R.id.mysteryButton)).perform(click());
-        intended(hasComponent(DrawingOfflineItems.class.getName()));
+        intended(hasComponent(DrawingOffline.class.getName()));
     }
 
     @Test

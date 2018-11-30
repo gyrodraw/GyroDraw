@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -80,6 +81,11 @@ public class VotingPageActivityTest {
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
+    }
+
+    @After
+    public void end() {
+        Account.deleteAccount();
     }
 
     @Test

@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -16,13 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.SortUtils;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +25,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.SortUtils;
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.

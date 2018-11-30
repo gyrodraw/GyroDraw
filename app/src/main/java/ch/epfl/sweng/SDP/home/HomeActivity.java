@@ -136,6 +136,7 @@ public class HomeActivity extends BaseActivity {
         final ImageView mysteryButton = findViewById(R.id.mysteryButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
+        final ImageView shopButton = findViewById(R.id.shopButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
@@ -158,6 +159,7 @@ public class HomeActivity extends BaseActivity {
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
+        setListener(shopButton, getMainAmplitude(), getMainFrequency());
         setListener(battleLogButton, getMainAmplitude(), getMainFrequency());
         setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
         setListener(starsButton, getMainAmplitude(), getMainFrequency());
@@ -295,6 +297,9 @@ public class HomeActivity extends BaseActivity {
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
                 break;
+            case R.id.shopButton:
+                launchActivity(ShopActivity.class);
+                break;
             case R.id.battleLogButton:
                 launchActivity(BattleLogActivity.class);
                 break;
@@ -383,15 +388,6 @@ public class HomeActivity extends BaseActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
-    }
-
-
-    /**
-     * Method called when shop button is clicked. Starts shop activity.
-     * @param view View referring the shop button
-     */
-    public void onShopButtonClicked(View view) {
-        launchActivity(ShopActivity.class);
     }
 
     @VisibleForTesting

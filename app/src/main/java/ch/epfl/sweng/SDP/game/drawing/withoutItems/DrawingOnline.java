@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.withoutItems;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,6 +21,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.game.drawing.GyroDrawingActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -96,8 +97,9 @@ public class DrawingOnline extends GyroDrawingActivity {
         }
     };
 
+    @VisibleForTesting
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_drawing;
     }
 

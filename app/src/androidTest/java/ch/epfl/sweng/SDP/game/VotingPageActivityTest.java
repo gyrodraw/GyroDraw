@@ -11,34 +11,33 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
 
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.BitmapManipulator;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayOutputStream;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayOutputStream;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -46,13 +45,12 @@ public class VotingPageActivityTest {
 
     private static final String USER_ID = "123456789";
     private static final String TEST_EMAIL = "testEmail";
-    private static final String USERNAME = "userC";
-    private static final String USER_ROOM_PATH = "realRooms.0123457890.ranking.userC";
+    private static final String USERNAME = "userA";
+    private static final String USER_ROOM_PATH = "realRooms.0123457890.ranking.userA";
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
-    private Account account;
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
@@ -72,37 +70,29 @@ public class VotingPageActivityTest {
 
     @Before
     public void init() {
-        Database.getReference(USER_ROOM_PATH).setValue(4);
+        Database.getReference(USER_ROOM_PATH).setValue(0);
         Account.deleteAccount();
-        account = Account.getInstance(mActivityRule.getActivity().getApplicationContext());
-        account.setUserId(USER_ID);
-        account.setUsername(USERNAME);
-        account.setEmail(TEST_EMAIL);
-        account.registerAccount();
+        Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
+                , TEST_EMAIL);
+        Account.getInstance(mActivityRule.getActivity()).setUsername(USERNAME);
+
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
-        SystemClock.sleep(2000);
-    }
-
-    @After
-    public void end() {
-        Database.getReference(USER_ROOM_PATH).setValue(4);
-        SystemClock.sleep(2000);
     }
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
+        SystemClock.sleep(5000);
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
         SystemClock.sleep(5000);
         assertThat(mActivityRule.getActivity().getRatings()[counter], is(3));
     }
 
     @Test
-    public void
-    addStarsHandlesBigNumber() {
+    public void addStarsHandlesBigNumber() {
         int previousStars = starsAnimation.getNumStars();
         setStarsAnimationToVisible();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
@@ -113,7 +103,7 @@ public class VotingPageActivityTest {
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assertThat(starsAnimation.getNumStars(), greaterThanOrEqualTo(previousStars + 5));
-        SystemClock.sleep(4000);
+        SystemClock.sleep(10000);
         setStarsAnimationToGone();
     }
 

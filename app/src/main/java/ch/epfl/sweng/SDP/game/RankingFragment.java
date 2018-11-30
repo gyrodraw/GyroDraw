@@ -128,7 +128,7 @@ public class RankingFragment extends ListFragment {
                 Integer[] rankings = (finalRanking.values().toArray(tmp));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
-                int rankForUser = dataSnapshot.child(userName).getValue(Integer.class);
+                int rankForUser = dataSnapshot.child(userName).getValue(int.class);
 
                 // Calculate trophies
                 Integer[] trophies = new Integer[rankings.length];

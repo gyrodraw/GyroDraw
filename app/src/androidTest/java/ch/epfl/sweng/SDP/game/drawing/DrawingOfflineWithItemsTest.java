@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
-public class DrawingOfflineItemsTest {
+public class DrawingOfflineWithItemsTest {
 
     private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";

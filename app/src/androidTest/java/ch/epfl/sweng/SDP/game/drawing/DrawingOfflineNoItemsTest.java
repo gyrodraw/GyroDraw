@@ -18,7 +18,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DrawingOfflineTest {
+public class DrawingOfflineNoItemsTest {
 
     private PaintView paintView;
 

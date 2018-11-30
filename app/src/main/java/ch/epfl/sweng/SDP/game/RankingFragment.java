@@ -203,8 +203,7 @@ public class RankingFragment extends ListFragment {
         private final Integer[] rankings;
         private final Integer[] trophies;
         private final Bitmap[] drawings;
-
-
+        
         private RankingAdapter(Context context, String[] players, Integer[] rankings,
                                Integer[] trophies, Bitmap[] drawings) {
             super(context, 0, players);
@@ -249,7 +248,7 @@ public class RankingFragment extends ListFragment {
             }
 
             // set the texts
-            name.setText(position+1 + ". " + players[position]);
+            name.setText(String.format("%d. %s", position + 1, players[position]));
             trophiesText.setText(String.valueOf(this.trophies[position]));
             ranking.setText(String.valueOf(this.rankings[position]));
 

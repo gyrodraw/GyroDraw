@@ -119,8 +119,8 @@ public class DrawingOnlineItemsTest {
         double angle = Math.atan2(1, 1);
         int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));
         int newY = 200 + (int) (Math.sin(angle) * (10 + paintView.getCircleRadius() + 5));
-        assertThat(paintView.getCircleX(), is(newX - 30));
-        assertThat(paintView.getCircleY(), is(newY + 13));
+        assertThat(paintView.getCircleX(), is(newX));
+        assertThat(paintView.getCircleY(), is(newY));
     }
 
     @Test

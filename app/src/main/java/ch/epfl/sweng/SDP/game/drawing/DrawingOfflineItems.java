@@ -1,13 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +17,8 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
+
+import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.itemTextFeedback;
 
 public class DrawingOfflineItems extends DrawingOffline {
 
@@ -60,7 +59,7 @@ public class DrawingOfflineItems extends DrawingOffline {
         if (collidingItem != null) {
             collidingItem.activate(paintView);
             paintViewHolder.removeView(displayedItems.get(collidingItem));
-            paintViewHolder.addView(itemTextFeedback(collidingItem));
+            paintViewHolder.addView(itemTextFeedback(collidingItem, paintViewHolder, this));
             displayedItems.remove(collidingItem);
         }
     }
@@ -128,50 +127,6 @@ public class DrawingOfflineItems extends DrawingOffline {
 
     private int getRandomByte() {
         return random.nextInt(155) + 100;
-    }
-
-    /**
-     * Creates a text feedback to inform the player which item
-     * has been picked up.
-     *
-     * @param item that was activated
-     * @return feedback text
-     */
-    private TextView itemTextFeedback(Item item) {
-        final FeedbackTextView feedback = new FeedbackTextView(this);
-        feedback.setText(item.textFeedback());
-
-        new CountDownTimer(800, 40) {
-
-            public void onTick(long millisUntilFinished) {
-                feedback.setTextSize(60 - millisUntilFinished / 15);
-            }
-
-            public void onFinish() {
-                paintViewHolder.removeView(feedback);
-            }
-        }.start();
-        return feedback;
-    }
-
-    /**
-     * Helper class that defines the style of the text feedback.
-     */
-    private class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
-
-        protected FeedbackTextView(Context context) {
-            super(context);
-            setTextColor(context.getResources().getColor(R.color.colorDrawYellow));
-            setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorGrey));
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            setTextSize(1);
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-            setLayoutParams(layoutParams);
-            Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
-            setTypeface(typeMuro, Typeface.ITALIC);
-        }
     }
 
     @VisibleForTesting

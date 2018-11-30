@@ -56,4 +56,5 @@
     <string name="reject">Reject</string>
     <string name="new_friend_request">New friend request</string>
     <string name="empty_battle_log">You have not done any game recently</string>
+    <string name="time_is_up">Time\'s up !</string>
 </resources>

@@ -7,33 +7,42 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Enum class to represent all different item types.
+ * Enum class representing all different item's types.
  */
 public enum Items {
-    SPEEDUP, SLOWDOWN, SWAPAXIS, ADDSTARS, BUMP;
+    SPEEDUP, SLOWDOWN, SWAP_AXIS, ADD_STARS, BUMP;
 
-    private static final List<Items> VALUES =
+    private static final List<Items> ITEMS =
             Collections.unmodifiableList(Arrays.asList(values()));
+    private static final int ITEMS_SIZE = ITEMS.size();
 
-    private static final int SIZE = VALUES.size();
+    private static final List<Items> ITEMS_OFFLINE_MODE = createItemsForOfflineMode();
+    private static final int ITEMS_OFFLINE_MODE_SIZE = ITEMS_OFFLINE_MODE.size();
+
     private static final Random RANDOM = new Random();
 
-    /**
-     * Function to pick a random item class.
-     * @return a random item class
-     */
-    protected static Items getRandomItem()  {
-        return VALUES.get(RANDOM.nextInt(SIZE));
+    private static List<Items> createItemsForOfflineMode() {
+        List<Items> items = new ArrayList<>(ITEMS);
+        items.remove(ADD_STARS);
+        return items;
     }
 
     /**
-     * Function to pick a random item class for the offline mode (ADDSTARS excluded).
+     * Picks a random item class.
+     *
+     * @return a random item class
+     */
+    protected static Items getRandomItem() {
+        return ITEMS.get(RANDOM.nextInt(ITEMS_SIZE));
+    }
+
+    /**
+     * Picks a random item class for the offline mode (ADD_STARS excluded).
+     *
      * @return a random item class
      */
     protected static Items getRandomItemForOfflineMode() {
-        List<Items> values = new ArrayList<>(VALUES);
-        values.remove(ADDSTARS);
-        return values.get(RANDOM.nextInt(values.size()));
+        return ITEMS_OFFLINE_MODE.get(RANDOM.nextInt(ITEMS_OFFLINE_MODE_SIZE));
     }
 
 }

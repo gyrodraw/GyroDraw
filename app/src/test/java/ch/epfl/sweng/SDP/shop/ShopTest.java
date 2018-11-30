@@ -65,26 +65,26 @@ public class ShopTest {
 
     @Test
     public void getColorBlueFromStringTest() {
-        assertThat(ColorUtils.getColorFromString("BLUE"), is(R.color.colorBlue));
+        assertThat(ColorUtils.getColorIdFromString("BLUE"), is(R.color.colorBlue));
     }
 
     @Test
     public void getColorGreenFromStringTest() {
-        assertThat(ColorUtils.getColorFromString("GREEN"), is(R.color.colorGreen));
+        assertThat(ColorUtils.getColorIdFromString("GREEN"), is(R.color.colorGreen));
     }
 
     @Test
     public void getColorYellowFromStringTest() {
-        assertThat(ColorUtils.getColorFromString("YELLOW"), is(R.color.colorYellow));
+        assertThat(ColorUtils.getColorIdFromString("YELLOW"), is(R.color.colorYellow));
     }
 
     @Test
     public void getColorRedFromStringTest() {
-        assertThat(ColorUtils.getColorFromString("RED"), is(R.color.colorRed));
+        assertThat(ColorUtils.getColorIdFromString("RED"), is(R.color.colorRed));
     }
 
     @Test (expected = IllegalStateException.class)
     public void getWrongColorFromStringTest() {
-        ColorUtils.getColorFromString("RAINBOW");
+        ColorUtils.getColorIdFromString("RAINBOW");
     }
 }

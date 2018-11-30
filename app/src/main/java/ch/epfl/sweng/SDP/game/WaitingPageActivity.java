@@ -26,8 +26,8 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -37,9 +37,17 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
+/**
+ * Class representing the first phase of an online game: a waiting page in which players can vote
+ * for the word to draw.
+ */
 public class WaitingPageActivity extends BaseActivity {
 
     private static final String TAG = "WaitingPageActivity";
+    private static final String WORD_CHILDREN_DB_ID = "words";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private static boolean enableSquareAnimation = true;
 
     private enum WordNumber {
         ONE, TWO
@@ -49,14 +57,10 @@ public class WaitingPageActivity extends BaseActivity {
 
     private int gameMode;
 
-    private static boolean enableSquareAnimation = true;
     private boolean isDrawingActivityLaunched = false;
 
     private boolean hasVoted = false;
     private boolean isWord1Voted = false;
-
-    private static final String WORD_CHILDREN_DB_ID = "words";
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private DatabaseReference stateRef;
     private DatabaseReference timerRef;
@@ -71,6 +75,7 @@ public class WaitingPageActivity extends BaseActivity {
     private String word2 = null;
     private String winningWord = null;
 
+    @VisibleForTesting
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -88,6 +93,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
+    @VisibleForTesting
     protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -124,6 +130,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
+    @VisibleForTesting
     protected final ValueEventListener listenerWord1 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -145,6 +152,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
+    @VisibleForTesting
     protected final ValueEventListener listenerWord2 = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -166,6 +174,7 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
+    @VisibleForTesting
     protected final ValueEventListener listenerCountUsers = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -231,7 +240,7 @@ public class WaitingPageActivity extends BaseActivity {
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
     }
 
-    protected void launchDrawingActivity(int gameMode) {
+    private void launchDrawingActivity(int gameMode) {
         Intent intent = new Intent(getApplicationContext(),
                 gameMode == 0 ? DrawingOnline.class : DrawingOnlineItems.class);
 
@@ -241,7 +250,6 @@ public class WaitingPageActivity extends BaseActivity {
         intent.putExtra("WinningWord", winningWord);
         startActivity(intent);
     }
-
 
     private void initRadioButton(Button button, String childString,
                                  DatabaseReference dbRef, WordNumber wordNumber) {
@@ -253,7 +261,7 @@ public class WaitingPageActivity extends BaseActivity {
     }
 
     /**
-     * Get the words that received the larger amount of votes.
+     * Gets the words that received the larger amount of votes.
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
@@ -360,7 +368,7 @@ public class WaitingPageActivity extends BaseActivity {
         b2.setEnabled(false);
     }
 
-    protected void removeVote(final DatabaseReference wordRef) {
+    private void removeVote(final DatabaseReference wordRef) {
         wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -382,10 +390,12 @@ public class WaitingPageActivity extends BaseActivity {
      *
      * @return the number of votes for word 1
      */
+    @VisibleForTesting
     public int getWord1Votes() {
         return word1Votes;
     }
 
+    @VisibleForTesting
     public void setWord1Votes(int votes) {
         word1Votes = votes;
     }
@@ -395,10 +405,12 @@ public class WaitingPageActivity extends BaseActivity {
      *
      * @return the number of votes for word 2
      */
+    @VisibleForTesting
     public int getWord2Votes() {
         return word2Votes;
     }
 
+    @VisibleForTesting
     public void setWord2Votes(int votes) {
         word2Votes = votes;
     }
@@ -414,6 +426,7 @@ public class WaitingPageActivity extends BaseActivity {
         word2Ref.removeEventListener(listenerWord2);
     }
 
+    @VisibleForTesting
     public static void disableAnimations() {
         enableSquareAnimation = false;
     }
@@ -443,7 +456,7 @@ public class WaitingPageActivity extends BaseActivity {
      *
      * @param dataSnapshot Snapshot of the database (mock snapshot in this case).
      */
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnDataChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override

@@ -1,36 +1,35 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 /**
- * Helper class to upload and download images from Firebase Storage.
+ * Helper class to upload and download images to/from Firebase Storage.
  */
-public class FbStorage {
+public final class FbStorage {
 
     private static final String TAG = "fbStorage";
     private static final int QUALITY = 20;
 
-    /**
-     * Hides the public constructor.
-     */
     private FbStorage() {
     }
 
     /**
      * Uploads a given bitmap to Firebase Storage at given StorageReference.
      *
-     * @param bitmap the image to upload
+     * @param bitmap   the image to upload
      * @param imageRef the name of the image
      * @return the {@link StorageTask} in charge of the upload
      */

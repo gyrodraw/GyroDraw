@@ -4,11 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
-import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -20,14 +15,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
+import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
-
 
 /**
  * Singleton class that represents an account.
@@ -55,9 +52,9 @@ public class Account {
     private LocalDbHandlerForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-            String email, String currentLeague,
-            int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
-            int maxTrophies, List<ShopItem> itemsBought) {
+                    String email, String currentLeague,
+                    int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
+                    int maxTrophies, List<ShopItem> itemsBought) {
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
         }
@@ -77,7 +74,7 @@ public class Account {
     }
 
     /**
-     * Create an account instance. Trophies, stars and statistics are initialized to 0.
+     * Creates an account instance. Trophies, stars and statistics are initialized to 0.
      *
      * @param context          the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
@@ -94,7 +91,7 @@ public class Account {
     }
 
     /**
-     * Create an account instance given the specified parameters.
+     * Creates an account instance given the specified parameters.
      *
      * @param context          the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
@@ -112,8 +109,8 @@ public class Account {
      * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-            String username, String email, String currentLeague, int trophies, int stars,
-            int matchesWon, int totalMatches, double averageRating, int maxTrophies,
+                                     String username, String email, String currentLeague, int trophies, int stars,
+                                     int matchesWon, int totalMatches, double averageRating, int maxTrophies,
                                      List<ShopItem> itemsBought) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
@@ -134,7 +131,7 @@ public class Account {
     }
 
     /**
-     * Get the account instance.
+     * Gets the account instance.
      *
      * @param context context calling this method
      * @return the account instance
@@ -281,14 +278,15 @@ public class Account {
     }
 
     /**
-     * Add a recently bought item to the account.
+     * Adds a recently bought item to the account.
+     *
      * @param shopItem Item that would be added to the account
      */
     public void updateItemsBought(ShopItem shopItem) {
         checkPrecondition(shopItem != null, "Shop item is null");
 
         Database.constructBuilder(usersRef).addChildren(userId + ".boughtItems."
-                                                        + shopItem.getColorItem().toString())
+                + shopItem.getColorItem().toString())
                 .build().setValue(shopItem.getPriceItem(), createCompletionListener());
 
         itemsBought.add(shopItem);
@@ -343,13 +341,13 @@ public class Account {
 
     /**
      * Method that allows one to change the average rating per game given a new rating.
-     * The rating passed as parameter should be the average rating obtained after a match.
+     * The rating passed as parameter should be the total rating obtained after a match.
      *
-     * @throws IllegalArgumentException in case a rating <= 0 or > 5 is given
+     * @throws IllegalArgumentException in case a rating <= 0 or > 25 is given
      * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
-        checkPrecondition(0 < rating && rating <= 5, "Wrong rating given");
+        checkPrecondition(0 < rating && rating <= 25, "Wrong rating given");
 
         double newAverageRating = averageRating == 0 ? rating
                 : (averageRating * (totalMatches - 1) + rating) / totalMatches;
@@ -395,9 +393,10 @@ public class Account {
 
     /**
      * Updates current users and friends friendship-state.
-     * @param friendId      id of friend
-     * @param stateUser     state that current user will save
-     * @param stateFriend   state that friend will save
+     *
+     * @param friendId    id of friend
+     * @param stateUser   state that current user will save
+     * @param stateFriend state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
         // Update the user's friends' list

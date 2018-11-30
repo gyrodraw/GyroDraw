@@ -6,6 +6,7 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -61,12 +62,13 @@ final class DrawingItems {
         return displayedItems;
     }
 
+    @VisibleForTesting
     PaintView getPaintView() {
         return paintView;
     }
 
     /**
-     * Check if the paintViews' circle collided with an item.
+     * Checks if the paintViews' circle collided with an item.
      *
      * @return item that collided, or null.
      */
@@ -80,7 +82,7 @@ final class DrawingItems {
     }
 
     /**
-     * Generate a random item every INTERVAL seconds.
+     * Generates a random item every INTERVAL seconds.
      */
     void generateItems() {
         new CountDownTimer(INTERVAL, INTERVAL) {
@@ -97,18 +99,18 @@ final class DrawingItems {
     }
 
     /**
-     * Generate a random item (add stars excluded) every INTERVAL seconds.
+     * Generates a random item (add stars excluded) every INTERVAL seconds.
      */
     void generateItemsForOfflineMode() {
         offlineModeTimer.start();
     }
 
     /**
-     * Stop the timer and the item generation.
+     * Stops the timer and the item generation.
      */
     void stopOfflineModeItemGeneration() {
         offlineModeTimer.cancel();
-        for (ImageView item: displayedItems.values()) {
+        for (ImageView item : displayedItems.values()) {
             paintViewHolder.removeView(item);
         }
         displayedItems.clear();
@@ -122,7 +124,7 @@ final class DrawingItems {
     }
 
     /**
-     * Convert an item into an ImageView to be displayed on the Activity.
+     * Converts an item into an {@link ImageView} to be displayed on the activity.
      *
      * @param item to be converted
      * @return ImageView of the item
@@ -150,8 +152,7 @@ final class DrawingItems {
     }
 
     /**
-     * Create a text feedback to inform the player which item
-     * has been picked up.
+     * Creates a text feedback to inform the player about which item has been picked up.
      *
      * @param item that was activated
      * @return feedback text
@@ -186,7 +187,7 @@ final class DrawingItems {
     /**
      * Helper class that defines the style of the text feedback.
      */
-    private class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
+    private class FeedbackTextView extends AppCompatTextView {
 
         private FeedbackTextView(Context context) {
             super(context);

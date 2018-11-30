@@ -30,7 +30,7 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.CheckConnection;
+import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
@@ -47,6 +47,9 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
+/**
+ * Class representing the homepage of the app.
+ */
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
@@ -103,6 +106,7 @@ public class HomeActivity extends BaseActivity {
     /**
      * Disables the background animation. Call this method in every HomeActivity test.
      */
+    @VisibleForTesting
     public static void disableBackgroundAnimation() {
         enableBackgroundAnimation = false;
     }
@@ -177,7 +181,7 @@ public class HomeActivity extends BaseActivity {
                 .addValueEventListener(listenerFriendsRequest);
     }
 
-    // Launch the LeaguesActivity.
+    // Launches the LeaguesActivity.
     private void showLeagues() {
         launchActivity(LeaguesActivity.class);
     }
@@ -261,7 +265,7 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-    // Set the listener for the friend request popup buttons using the given userId
+    // Sets the listener for the friend request popup buttons using the given userId
     // as the id of the sender of the request
     private void setFriendsRequestListener(final View view, final String userId) {
         final Context context = this;
@@ -402,6 +406,7 @@ public class HomeActivity extends BaseActivity {
 
     /**
      * Method called when shop button is clicked. Starts shop activity.
+     *
      * @param view View referring the shop button
      */
     public void onShopButtonClicked(View view) {
@@ -448,10 +453,10 @@ public class HomeActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
 
-        // Update values of the textviews
+        // Update values of the text views
         Account account = Account.getInstance(this);
         ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
         ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
-                                                                        account.getTrophies()));
+                account.getTrophies()));
     }
 }

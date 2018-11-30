@@ -16,6 +16,9 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
+/**
+ * Class representing the battle log.
+ */
 public class BattleLogActivity extends Activity {
 
     private LinearLayout battleLogView;
@@ -41,10 +44,10 @@ public class BattleLogActivity extends Activity {
     }
 
     /**
-     * Fetch the latest game results in the local database, convert them to views
+     * Fetches the latest game results in the local database, convert them to views
      * and add them to the layout.
      */
-    public void fetchGameResults() {
+    private void fetchGameResults() {
         LocalDbHandlerForGameResults localDb =
                 new LocalDbHandlerForGameResults(this, null, 1);
         List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
@@ -57,7 +60,7 @@ public class BattleLogActivity extends Activity {
     }
 
     /**
-     * Return the number of game result currently displayed.
+     * Returnsthe number of game result currently displayed.
      */
     @VisibleForTesting
     public int getGameResultsCount() {

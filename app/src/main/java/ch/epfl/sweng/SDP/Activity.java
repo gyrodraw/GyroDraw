@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -10,20 +9,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.Shop;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.Shop;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -32,7 +27,7 @@ import java.util.List;
 public abstract class Activity extends AppCompatActivity {
 
     /**
-     * Start the specified activity.
+     * Starts the specified activity.
      *
      * @param activityClass the class of the activity to launch
      */
@@ -42,7 +37,7 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
-     * Set the visibility of the views corresponding to the given ids to the given value.
+     * Sets the visibility of the views corresponding to the given ids to the given value.
      *
      * @param visibility the value to set the visibility at
      * @param ids the ids of the views whose visibility is to be set
@@ -54,7 +49,7 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
-     * Set the visibility of the given views to the given value.
+     * Sets the visibility of the given views to the given value.
      *
      * @param visibility the value to set the visibility at
      * @param views the views whose visibility is to be set
@@ -66,7 +61,7 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
-     * Set typeface to the given text views.
+     * Sets typeface to the given text views.
      *
      * @param typeface the typeface to be set
      * @param views the text views whose typeface is to be set
@@ -98,7 +93,7 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
-     * Add views to a layout.
+     * Adds views to a layout.
      * @param layout Layout where the views will be added
      * @param views Views to be added
      * @return The layout with the views added

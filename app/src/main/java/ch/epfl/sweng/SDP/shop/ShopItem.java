@@ -1,12 +1,13 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.Objects;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 /**
- * Item that can be bought in the shop for the moment only colors can be bought.
+ * Class representing an item that can be bought in the shop. For the moment, only colors can be bought.
  */
 public class ShopItem {
 
@@ -21,6 +22,7 @@ public class ShopItem {
      * @param price Price of the item
      */
     public ShopItem(ColorsShop color, int price) {
+        checkPrecondition(price >= 0, "price is negative");
         this.price = price;
         this.color = color;
         this.owned = false;
@@ -34,6 +36,7 @@ public class ShopItem {
      * @param owned Is this item owned by the player
      */
     public ShopItem(ColorsShop color, int price, boolean owned) {
+        checkPrecondition(price >= 0, "price is negative");
         this.price = price;
         this.color = color;
         this.owned = owned;
@@ -47,19 +50,21 @@ public class ShopItem {
         return price;
     }
 
-    public void setPriceItem(int price) {
+    @VisibleForTesting
+    void setPriceItem(int price) {
         this.price = price;
     }
 
-    public void setColorItem(ColorsShop color) {
+    @VisibleForTesting
+    void setColorItem(ColorsShop color) {
         this.color = color;
     }
 
-    public void setOwned(boolean owned) {
+    void setOwned(boolean owned) {
         this.owned = owned;
     }
 
-    public boolean getOwned() {
+    boolean getOwned() {
         return this.owned;
     }
 
@@ -72,7 +77,6 @@ public class ShopItem {
                 getColorItem() == shopItem.getColorItem();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
         return Objects.hash(price, color);

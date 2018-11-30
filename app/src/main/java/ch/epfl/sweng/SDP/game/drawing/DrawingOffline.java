@@ -15,8 +15,8 @@ import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 
 /**
- * Class representing the practice mode, which is offline and where the user has the choice of
- * activating or not the mystery mode and the related item generation.
+ * Class representing the offline practice mode. The user has the choice of
+ * activating or not the mystery mode and the related item generation via a toggle button.
  */
 public class DrawingOffline extends GyroDrawingActivity {
 
@@ -33,8 +33,8 @@ public class DrawingOffline extends GyroDrawingActivity {
     }
 
     /**
-     * Get called when sensor data changed. Update the paintViews' circle coordinates
-     * and check if there are collisions with any displayed items.
+     * Gets called when sensor data changed. Updates the paintViews' circle coordinates
+     * and checks if there are collisions with any displayed items.
      * If there is, the item gets activated and removed from the displayedItems.
      *
      * @param coordinateX new X coordinate for paintView
@@ -55,7 +55,7 @@ public class DrawingOffline extends GyroDrawingActivity {
     }
 
     /**
-     * Toggle the mystery mode.
+     * Toggles the mystery mode.
      *
      * @param view the toggle button clicked
      */
@@ -69,7 +69,7 @@ public class DrawingOffline extends GyroDrawingActivity {
     }
 
     /**
-     * Leave the activity.
+     * Leaves the activity.
      *
      * @param view the button clicked
      */

@@ -5,7 +5,7 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 /**
  * Class representing a league.
  */
-public class League {
+public final class League {
 
     private final String name;
     private final int minTrophies;
@@ -23,7 +23,7 @@ public class League {
     }
 
     /**
-     * Create League 1.
+     * Creates League 1.
      *
      * @return the desired league.
      */
@@ -32,7 +32,7 @@ public class League {
     }
 
     /**
-     * Create League 2.
+     * Creates League 2.
      *
      * @return the desired league.
      */
@@ -41,7 +41,7 @@ public class League {
     }
 
     /**
-     * Create League 3.
+     * Creates League 3.
      *
      * @return the desired league.
      */
@@ -50,7 +50,7 @@ public class League {
     }
 
     /**
-     * Check if the given number of trophies is inside the league's boundaries.
+     * Checks if the given number of trophies is inside the league's boundaries.
      *
      * @param trophies the number of trophies to check
      * @return true if the league contains the given number of trophies, false otherwise
@@ -62,7 +62,7 @@ public class League {
     }
 
     /**
-     * Get the league's name.
+     * Gets the league's name.
      *
      * @return the league's name
      */

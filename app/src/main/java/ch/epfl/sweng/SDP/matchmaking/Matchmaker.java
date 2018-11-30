@@ -21,31 +21,34 @@ import static java.lang.String.format;
  */
 public class Matchmaker implements MatchmakingInterface {
 
-    private static Matchmaker singleInstance = null;
+    private static Matchmaker instance = null;
 
     private DatabaseReference roomsRef;
     private Account account;
 
     /**
-     * Get (eventually create) the instance.
+     * Gets (eventually creates) the instance.
      *
      * @return the unique instance.
      */
     public static Matchmaker getInstance(Account account) {
-        if (singleInstance == null) {
-            singleInstance = new Matchmaker(account);
+        if (instance == null) {
+            instance = new Matchmaker(account);
         }
 
-        return singleInstance;
+        return instance;
     }
 
     private Matchmaker(Account account) {
+        if (instance != null) {
+            throw new IllegalStateException("Already instantiated");
+        }
         this.roomsRef = Database.getReference("realRooms");
         this.account = account;
     }
 
     /**
-     * Join a room by calling a FirebaseFunction that will handle
+     * Joins a room by calling a FirebaseFunction that will handle
      * which particular room a player should join.
      *
      * @return a {@link Task} wrapping the result
@@ -81,7 +84,7 @@ public class Matchmaker implements MatchmakingInterface {
     }
 
     /**
-     * Leave a room.
+     * Leaves a room.
      *
      * @param roomId the id of the room.
      */

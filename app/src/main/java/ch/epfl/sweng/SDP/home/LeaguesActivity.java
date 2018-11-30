@@ -6,10 +6,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.R;
+
 import com.bumptech.glide.Glide;
 
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+
+/**
+ * Class representing the leagues' list which can be opened from the {@link HomeActivity}.
+ */
 public class LeaguesActivity extends Activity {
 
     @Override

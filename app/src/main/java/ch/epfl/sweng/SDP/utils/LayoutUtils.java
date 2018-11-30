@@ -17,7 +17,10 @@ import static ch.epfl.sweng.SDP.home.League.createLeague2;
 import static ch.epfl.sweng.SDP.home.League.createLeague3;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
-public class LayoutUtils {
+/**
+ * Utility class containing methods for layout-related operations.
+ */
+public final class LayoutUtils {
 
     private static final int MAIN_FREQUENCY = 10;
     private static final double MAIN_AMPLITUDE = 0.1;
@@ -40,7 +43,7 @@ public class LayoutUtils {
     }
 
     /**
-     * Bounce the given view.
+     * Bounces the given view.
      *
      * @param view      the view
      * @param amplitude the amplitude of the bounce
@@ -59,7 +62,7 @@ public class LayoutUtils {
     }
 
     /**
-     * Bounce the given view with default amplitude and default frequency.
+     * Bounces the given view with default amplitude and default frequency.
      *
      * @param view    the view
      * @param context the context of the view
@@ -69,7 +72,7 @@ public class LayoutUtils {
     }
 
     /**
-     * Press the given view.
+     * Presses the given view.
      *
      * @param view     the view
      * @param animMode the animation mode
@@ -105,7 +108,7 @@ public class LayoutUtils {
     }
 
     /**
-     * Get the league's image id.
+     * Gets the league's image id.
      *
      * @param league the requested league
      * @return the league's image id
@@ -115,7 +118,7 @@ public class LayoutUtils {
     }
 
     /**
-     * Get the league's color id.
+     * Gets the league's color id.
      *
      * @param league the requested league
      * @return the league's color id
@@ -126,7 +129,7 @@ public class LayoutUtils {
     }
 
     /**
-     * Get the league's name id.
+     * Gets the league's name id.
      *
      * @param league the requested league
      * @return the league's name id
@@ -145,6 +148,9 @@ public class LayoutUtils {
         return league3Id;
     }
 
+    /**
+     * Enum representing the possible animation modes.
+     */
     public enum AnimMode {
         CENTER, LEFT, RIGHT;
 

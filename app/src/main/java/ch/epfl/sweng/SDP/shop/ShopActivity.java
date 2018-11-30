@@ -38,7 +38,6 @@ public class ShopActivity extends Activity {
     private LinearLayout shopItems;
 
     private Typeface typeMuro;
-    private Typeface typeOptimus;
 
     private Shop shop;
 
@@ -59,7 +58,7 @@ public class ShopActivity extends Activity {
         confirmationDialog = new Dialog(this);
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         shopItems = findViewById(R.id.shopItems);
 
@@ -73,7 +72,7 @@ public class ShopActivity extends Activity {
     }
 
     /**
-     * Create different layout for each available color in the shop.
+     * Creates different layout for each available color in the shop.
      */
     public void addColorsToShop() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -98,10 +97,10 @@ public class ShopActivity extends Activity {
 
         TextView colorView = createTextView(color.toString(), res.getColor(R.color.colorDrawYellow), 30,
                 typeMuro, new LinearLayout
-                    .LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+                        .LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
 
 
-        if(!item.getOwned()) {
+        if (!item.getOwned()) {
             TextView priceView = createTextView(price, res.getColor(R.color.colorPrimaryDark),
                     30, typeMuro, new LinearLayout.LayoutParams(0,
                             LinearLayout.LayoutParams.WRAP_CONTENT, 2));
@@ -133,7 +132,7 @@ public class ShopActivity extends Activity {
         layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         layout.setPadding(30, 10, 30, 10);
 
-        if(!item.getOwned()) {
+        if (!item.getOwned()) {
             layout.setClickable(true);
 
             layout.setOnTouchListener(new View.OnTouchListener() {
@@ -172,7 +171,7 @@ public class ShopActivity extends Activity {
             public void onClick(View view) {
                 boolean isSuccessful = false;
                 // Check if the user has enough stars
-                if(Account.getInstance(getApplicationContext()).getStars()
+                if (Account.getInstance(getApplicationContext()).getStars()
                         - (shop.getItemList()).get(index).getPriceItem() >= 0) {
                     Account.getInstance(getApplicationContext()).changeStars(
                             -(shop.getItemList()).get(index).getPriceItem());
@@ -192,13 +191,14 @@ public class ShopActivity extends Activity {
     }
 
     /**
-     * Displays a Pop up window displaying a success message or error message.
-     * @param isSuccessful Boolean that tells if the purchase went successful or not
+     * Shows a pop up window displaying a success/error message.
+     *
+     * @param isSuccessful Boolean that tells if the purchase was successful or not
      */
     public void showConfirmationPopUp(boolean isSuccessful) {
         confirmationDialog.setContentView(R.layout.shop_pop_up_confirmation);
 
-        if(isSuccessful) {
+        if (isSuccessful) {
             ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
                     .setText(getString(R.string.success));
             ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
@@ -206,7 +206,7 @@ public class ShopActivity extends Activity {
             ((TextView) confirmationDialog.findViewById(R.id.infoMessageView))
                     .setText(getString(R.string.buySuccess));
             ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
-                                        "%d", Account.getInstance(this).getStars()));
+                    "%d", Account.getInstance(this).getStars()));
 
             // This clears layout and updates the item bought with owned
             ((LinearLayout) findViewById(R.id.shopItems)).removeAllViews();
@@ -223,11 +223,11 @@ public class ShopActivity extends Activity {
 
         (confirmationDialog.findViewById(R.id.okButton))
                 .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmationDialog.dismiss();
-            }
-        });
+                    @Override
+                    public void onClick(View view) {
+                        confirmationDialog.dismiss();
+                    }
+                });
 
         confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         confirmationDialog.show();
@@ -239,11 +239,10 @@ public class ShopActivity extends Activity {
     }
 
     /**
-     * Fill the shop with the items available taking into account the colors the player
+     * Fills the shop with the items available taking into account the colors the player
      * has already bought.
      */
     public void fillShop() {
-
         shop = new Shop();
         List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
 

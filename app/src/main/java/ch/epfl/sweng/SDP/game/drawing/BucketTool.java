@@ -18,7 +18,7 @@ public class BucketTool {
     private boolean[] pixelsChecked;
     private Queue<FloodFillRange> ranges;
 
-    BucketTool(Bitmap img, int targetColor, int newColor) {
+    public BucketTool(Bitmap img, int targetColor, int newColor) {
         useImage(img);
         setFillColor(newColor);
         setTargetColor(targetColor);

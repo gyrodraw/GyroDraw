@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.home;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -20,9 +19,9 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.bitmapEqualsNewBitmap;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.compressBitmap;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOnlineTest.bitmapEqualsNewBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOnlineTest.compressBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOnlineTest.initializedBitmap;
 import static ch.epfl.sweng.SDP.home.LeaderboardActivityTest.testExitButtonBody;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;

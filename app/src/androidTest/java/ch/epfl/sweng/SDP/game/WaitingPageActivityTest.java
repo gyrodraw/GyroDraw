@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOnline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.support.test.espresso.Espresso.onView;

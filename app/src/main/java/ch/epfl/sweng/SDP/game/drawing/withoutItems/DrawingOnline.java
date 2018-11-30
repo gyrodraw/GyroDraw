@@ -143,8 +143,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         stateRef.removeEventListener(listenerState);
     }
 
-    // MARK: COUNTDOWN METHODS
-
     /**
      * Saves drawing in the local database and uploads it to Firebase Storage.
      *

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -50,7 +50,7 @@ public class DrawingOfflineItemsTest {
     @Before
     public void init() {
         activity = activityRule.getActivity();
-        paintViewHolder = activity.paintViewHolder;
+        paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.paintView;
         paintView.setCircle(0, 0);
         account = Account.getInstance(activityRule.getActivity().getApplicationContext());
@@ -75,7 +75,7 @@ public class DrawingOfflineItemsTest {
         do {
             addRandomItem();
             SystemClock.sleep(5000);
-            HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
+            Map<Item, ImageView> displayedItems = activity.getDrawingItems().getDisplayedItems();
             item = (Item) displayedItems.keySet().toArray()[0];
         }
         while (item instanceof BumpingItem);
@@ -173,7 +173,7 @@ public class DrawingOfflineItemsTest {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    activity.addRandomItem();
+                    activity.getDrawingItems().addRandomItem();
                 }
             });
         } catch (Throwable throwable) {

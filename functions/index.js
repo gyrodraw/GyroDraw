@@ -160,10 +160,8 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
     return snapshot.forEach((roomID) => {
 
       // Retrieve the room game mode
-      var roomGameMode = 0;
-      roomID.child("gameMode").once('value').then(function(snapshot) {
-          roomGameMode = snapshot.val();
-      })
+      var roomGameMode = roomID.val().gameMode;
+      console.log("Game mode:" + roomGameMode);
 
       const playingVal = roomID.child("playing").val();
       roomsList.push(parseInt(roomID.key, 10));
@@ -247,7 +245,7 @@ function generateRoomID(league, roomsList) {
 function createRoomAndJoin(league, roomsList, username, id, gameMode) {
   const roomID = generateRoomID(league, roomsList);
 
-  let roomObj = {[roomID]:{gameMode : [gameMode], state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
+  let roomObj = {[roomID]:{gameMode : gameMode, state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
 
   admin.database().ref(parentRoomID).update(roomObj);
   admin.database().ref(parentRoomID + roomID).update({"users":{[id]:username}});

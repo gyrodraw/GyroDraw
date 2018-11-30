@@ -47,6 +47,7 @@ public class VotingPageActivityTest {
     private static final String USER_ID = "123456789";
     private static final String TEST_EMAIL = "testEmail";
     private static final String USERNAME = "userC";
+    private static final String USER_ROOM_PATH = "realRooms.0123457890.ranking.userC";
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
@@ -71,7 +72,7 @@ public class VotingPageActivityTest {
 
     @Before
     public void init() {
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Database.getReference(USER_ROOM_PATH).setValue(4);
         Account.deleteAccount();
         account = Account.getInstance(mActivityRule.getActivity().getApplicationContext());
         account.setUserId(USER_ID);
@@ -86,7 +87,7 @@ public class VotingPageActivityTest {
 
     @After
     public void end() {
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
+        Database.getReference(USER_ROOM_PATH).setValue(4);
         SystemClock.sleep(2000);
     }
 
@@ -143,8 +144,6 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesNegativeNumber() {
-        Database.getReference("realRooms.0123457890.ranking.userC").setValue(4);
-        SystemClock.sleep(4000);
         int previousStars = starsAnimation.getNumStars();
         starsAnimation.onSizeChanged(100, 100, 100, 100);
         Canvas canvas = new Canvas();

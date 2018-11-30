@@ -153,7 +153,8 @@ public class RankingFragment extends ListFragment {
                 createAndStoreGameResult(usernames, rankForUser, rankForUser, trophiesForUser);
 
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
-                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(), tmpUserNames, rankings, trophies, drawings);
+                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
+                        tmpUserNames, rankings, trophies, drawings);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }

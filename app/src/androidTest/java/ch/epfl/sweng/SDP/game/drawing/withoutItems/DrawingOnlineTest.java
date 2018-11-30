@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.withoutItems;
+package ch.epfl.sweng.SDP.game.drawing.withoutItems;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,7 +29,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.drawing.BucketTool;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
-import ch.epfl.sweng.SDP.game.drawing.withoutItems.DrawingOnline;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -114,7 +113,7 @@ public class DrawingOnlineTest {
     public void testStateChange() {
         Intents.init();
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(3);
-        activityRule.getActivity().getListenerState().onDataChange(dataSnapshotMock);
+        activityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
         SystemClock.sleep(2000);
         intended(hasComponent(VotingPageActivity.class.getName()));
         Intents.release();

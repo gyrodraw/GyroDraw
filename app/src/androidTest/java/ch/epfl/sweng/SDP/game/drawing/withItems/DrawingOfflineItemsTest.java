@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.game.drawing;
+package ch.epfl.sweng.SDP.game.drawing.withItems;
 
 import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
@@ -13,6 +13,7 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
 import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
@@ -51,7 +52,7 @@ public class DrawingOfflineItemsTest {
     public void init() {
         activity = activityRule.getActivity();
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
-        paintView = activity.paintView;
+        paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
         account = Account.getInstance(activityRule.getActivity().getApplicationContext());
         account.setUserId(USER_ID);

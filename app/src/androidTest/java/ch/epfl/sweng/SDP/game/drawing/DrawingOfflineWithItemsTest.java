@@ -13,7 +13,6 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
@@ -54,7 +53,7 @@ public class DrawingOfflineWithItemsTest {
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
-        account = Account.getInstance(activityRule.getActivity().getApplicationContext());
+        account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(EMAIL);
@@ -100,14 +99,6 @@ public class DrawingOfflineWithItemsTest {
     public void testSwapAxisItemSwapsSpeedPaintView() {
         checkItemHasCorrectBehaviourOnPaintView(
                 SwapAxisItem.createSwapAxisItem(20, 20, 10), -1);
-    }
-
-    // TODO To move to DrawingOnlineItemsTest
-    @Test
-    public void testAddStarsItemAddsStarsToAccount() {
-        int initStars = account.getStars();
-        activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
-        assertThat(account.getStars(), is(initStars + 3));
     }
 
     @Test

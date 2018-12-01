@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
+import java.util.Comparator;
+
 /**
  * Item that can be bought in the shop for the moment only colors can be bought.
  */
@@ -60,7 +62,7 @@ public class ShopItem {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj != null) {
+        if (obj != null) {
             ShopItem item = (ShopItem) obj;
 
             return item.getPriceItem() == this.getPriceItem()

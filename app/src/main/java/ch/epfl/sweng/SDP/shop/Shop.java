@@ -32,13 +32,14 @@ public class Shop {
 
     /**
      * Convert an hashmap into a list of shop items.
+     *
      * @param map Map of the colors and prices
      * @return List of ShopItems
      */
     public static List<ShopItem> firebaseToListShopItem(HashMap<String, String> map) {
         List<ShopItem> listItem = new ArrayList<>();
 
-        if(map != null) {
+        if (map != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 int value = Integer.parseInt(String.valueOf(entry.getValue()));
                 listItem.add(new ShopItem(ColorsShop.getColorFromString(entry.getKey()), value));

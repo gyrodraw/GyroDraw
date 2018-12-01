@@ -17,12 +17,12 @@ public enum ColorsShop {
         switch (color) {
             case "BLUE":
                 return BLUE;
-            case "RED":
-                return RED;
-            case "YELLOW":
-                return YELLOW;
             case "GREEN":
                 return GREEN;
+            case "YELLOW":
+                return YELLOW;
+            case "RED":
+                return RED;
             default:
                 throw new IllegalStateException();
         }

@@ -413,7 +413,7 @@ public class LeaderboardActivity extends Activity {
 
         private void initLayout() {
             LinearLayout.LayoutParams friendsParams =
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             setLayoutParams(friendsParams);
 
             // give Button unique Tag to test them later

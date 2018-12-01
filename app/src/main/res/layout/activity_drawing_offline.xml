@@ -53,7 +53,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:onClick="exitClick"
             android:text="@string/cross"
             android:textColor="@color/colorDrawYellow"
             android:textSize="30sp"

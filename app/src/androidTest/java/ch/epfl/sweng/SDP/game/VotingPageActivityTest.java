@@ -17,9 +17,11 @@ import com.google.firebase.database.DatabaseException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
@@ -47,7 +49,7 @@ public class VotingPageActivityTest {
     private static final String USER_ID = "123456789";
     private static final String TEST_EMAIL = "testEmail";
     private static final String USERNAME = "userA";
-    private static final String USER_ROOM_PATH = "realRooms.0123457890.ranking.userA";
+    private static final String USER_ROOM_PATH = "realRooms.0123457890.ranking." + USERNAME;
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
@@ -59,6 +61,7 @@ public class VotingPageActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     VotingPageActivity.disableAnimations();
+                    RankingFragment.enableTesting();
                 }
 
                 @Override
@@ -71,11 +74,10 @@ public class VotingPageActivityTest {
 
     @Before
     public void init() {
-        Database.getReference(USER_ROOM_PATH).setValue(0);
-        Account.deleteAccount();
+        /*Account.deleteAccount();
         Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
                 , TEST_EMAIL);
-        Account.getInstance(mActivityRule.getActivity()).setUsername(USERNAME);
+        Account.getInstance(mActivityRule.getActivity()).setUsername(USERNAME);*/
 
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);

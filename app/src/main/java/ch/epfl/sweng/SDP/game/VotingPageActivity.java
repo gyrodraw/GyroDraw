@@ -414,18 +414,18 @@ public class VotingPageActivity extends BaseActivity {
 
     private void startRankingFragment() {
 
-                // Clear the UI; buttonChangeImage and rankingButton need
-                // to be removed after testing
-                setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
-                        R.id.playerNameView, R.id.timer);
+        // Clear the UI; buttonChangeImage and rankingButton need
+        // to be removed after testing
+        setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
+                R.id.playerNameView, R.id.timer);
 
-                fragment = new RankingFragment();
-                // Create and show the final ranking in the new fragment
-                fragment.putExtra(roomID,drawings,playersNames);
+        fragment = new RankingFragment();
+        // Create and show the final ranking in the new fragment
+        fragment.putExtra(roomID,drawings,playersNames);
 
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.votingPageLayout, fragment)
-                        .addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.votingPageLayout, fragment)
+                .addToBackStack(null).commit();
     }
 
 

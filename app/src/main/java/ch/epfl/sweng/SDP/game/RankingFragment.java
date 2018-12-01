@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
@@ -39,6 +41,7 @@ import ch.epfl.sweng.SDP.utils.SortUtils;
 public class RankingFragment extends ListFragment {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+    private static boolean isTesting = false;
     private static final int RANK = 10;
     private String roomId;
 
@@ -61,7 +64,6 @@ public class RankingFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        account = Account.getInstance(getActivity().getApplicationContext());
         return inflater.inflate(R.layout.ranking_list_fragment, container, false);
     }
 
@@ -74,6 +76,12 @@ public class RankingFragment extends ListFragment {
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
         Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(typeMuro);
+
+        if(!isTesting) {
+            account = Account.getInstance(getActivity().getApplicationContext());
+        } else {
+            createTestAccount();
+        }
 
         retrieveFinalRanking();
     }
@@ -127,7 +135,11 @@ public class RankingFragment extends ListFragment {
                 Integer[] rankings = (finalRanking.values().toArray(tmp));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
-                int rankForUser = dataSnapshot.child(userName).getValue(int.class);
+                int rankForUser = 0;
+
+                if(dataSnapshot.child(userName).getValue(int.class) != null) {
+                    rankForUser = dataSnapshot.child(userName).getValue(int.class);
+                }
 
                 // Calculate trophies
                 Integer[] trophies = new Integer[rankings.length];
@@ -195,6 +207,19 @@ public class RankingFragment extends ListFragment {
 
     private void setFinishedCollectingRanking() {
         finishedRef.child(account.getUsername()).setValue(1);
+    }
+
+    @VisibleForTesting
+    public static void enableTesting() {
+        isTesting = true;
+    }
+
+    public void createTestAccount() {
+        Account.deleteAccount();
+        Account.createAccount(getActivity().getApplicationContext(), new ConstantsWrapper(), "123456789"
+                , "test@test.com");
+        account = Account.getInstance(getActivity().getApplicationContext());
+        account.setUsername("userA");
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

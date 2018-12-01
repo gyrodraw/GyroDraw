@@ -49,12 +49,14 @@ public class LoginActivityTest {
 
     private IdpResponse mockIdpResponse;
     private Intent mockIntent;
+    private Activity loginActivity;
 
     /**
      * Initializes the mock objects.
      */
     @Before
     public void init() {
+        loginActivity = activityRule.getActivity();
         mockIdpResponse = Mockito.mock(IdpResponse.class);
         mockIntent = Mockito.mock(Intent.class);
         Mockito.when(mockIdpResponse.getEmail()).thenReturn("testEmail");
@@ -74,7 +76,7 @@ public class LoginActivityTest {
     public void testSuccessfulLoginNewUser() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         activityRule.getActivity().onActivityResult(42, -1, mockIntent);
-        assertTrue(activityRule.getActivity().isFinishing());
+        assertTrue(loginActivity.isFinishing());
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
         Assert.assertNotNull(accountCreationActivity);
@@ -85,7 +87,7 @@ public class LoginActivityTest {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
         activityRule.getActivity().onActivityResult(42, -1, mockIntent);
         SystemClock.sleep(3000);
-        assertTrue(activityRule.getActivity().isFinishing());
+        assertTrue(loginActivity.isFinishing());
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(homeMonitor, 5000);
         Assert.assertNotNull(homeActivity);
@@ -119,9 +121,9 @@ public class LoginActivityTest {
             }
         });
 
-        TextView feedbackView = activityRule.getActivity().findViewById(R.id.error_message);
+        TextView feedbackView = loginActivity.findViewById(R.id.error_message);
         ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
-                activityRule.getActivity().getResources().getString(expectedErrorMessageId))));
+               loginActivity.getResources().getString(expectedErrorMessageId))));
     }
 
     private void executeOnUiThread(Runnable runnable) {

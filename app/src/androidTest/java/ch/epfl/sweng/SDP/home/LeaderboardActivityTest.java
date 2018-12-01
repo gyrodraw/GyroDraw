@@ -33,8 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -73,9 +72,9 @@ public class LeaderboardActivityTest {
     public void testFriendsButtonsClickable() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         SystemClock.sleep(1000);
-        onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
+        onView(withTagValue(is((Object) "friendsButton0"))).perform(click());
         SystemClock.sleep(1000);
-        onView(withTagValue(is((Object)"friendsButton0"))).perform(click());
+        onView(withTagValue(is((Object) "friendsButton0"))).perform(click());
     }
 
     @Test
@@ -98,9 +97,8 @@ public class LeaderboardActivityTest {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(1000);
-        assertTrue(1
-                <= ((LinearLayout)activityRule.getActivity().findViewById(R.id.leaderboard))
-                .getChildCount());
+        assertThat(((LinearLayout) activityRule.getActivity().findViewById(R.id.leaderboard))
+                .getChildCount(), greaterThanOrEqualTo(1));
     }
 
     @Test

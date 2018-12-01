@@ -3,9 +3,8 @@ package ch.epfl.sweng.SDP.shop;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ShopItemTest {
 
@@ -27,7 +26,7 @@ public class ShopItemTest {
     public void setOwnedItemTest() {
         ShopItem shopItem = new ShopItem(ColorsShop.RED, 10, false);
         shopItem.setOwned(true);
-        assertTrue(shopItem.getOwned());
+        assertThat(shopItem.getOwned(), is(true));
     }
 
     @Test
@@ -41,6 +40,6 @@ public class ShopItemTest {
     public void notEqualsTest() {
         ShopItem shopItem1 = new ShopItem(ColorsShop.BLUE, 20, false);
         ShopItem shopItem2 = new ShopItem(ColorsShop.BLUE, 10, true);
-        assertNotEquals(shopItem1, shopItem2);
+        assertThat(shopItem1, is(not(shopItem2)));
     }
 }

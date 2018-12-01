@@ -2,11 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 public class ItemTest {
@@ -14,9 +10,9 @@ public class ItemTest {
     @Test
     public void testItemGetsInitializedCorrectly() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertThat(speedupItem.x, is(0));
-        assertThat(speedupItem.y, is(0));
-        assertThat(speedupItem.radius, is(10));
+        assertThat(speedupItem.getX(), is(0));
+        assertThat(speedupItem.getY(), is(0));
+        assertThat(speedupItem.getRadius(), is(10));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -27,8 +23,8 @@ public class ItemTest {
     @Test
     public void testCollisions() {
         SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
-        assertFalse(speedupItem.collision(21, 0, 10));
-        assertTrue(speedupItem.collision(20, 0, 11));
+        assertThat(speedupItem.collision(21, 0, 10), is(false));
+        assertThat(speedupItem.collision(20, 0, 11), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)

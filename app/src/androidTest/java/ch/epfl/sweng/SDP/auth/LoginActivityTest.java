@@ -1,25 +1,30 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
+
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
 import com.google.firebase.database.DataSnapshot;
-import java.util.HashMap;
+
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
+
+import java.util.HashMap;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -50,7 +55,7 @@ public class LoginActivityTest {
         Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
                 .thenReturn(null);
         loginActivity.onActivityResult(42, 0, mockIntent);
-        assertTrue(loginActivity.isFinishing());
+        assertThat(loginActivity.isFinishing(), is(true));
     }
 
     @Test
@@ -63,7 +68,7 @@ public class LoginActivityTest {
         assertTrue(loginActivity.isFinishing());
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(accountCreationActivity);
+        assertThat(accountCreationActivity, is(not(nullValue())));
     }
 
     @Test

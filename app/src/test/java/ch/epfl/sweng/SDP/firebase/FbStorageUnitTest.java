@@ -1,24 +1,27 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.when;
-
 import android.graphics.Bitmap;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import java.io.ByteArrayOutputStream;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayOutputStream;
+
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
+
 public class FbStorageUnitTest {
 
-    StorageReference mockReference;
-    UploadTask mockUploadTask;
-    StorageTask mockStorageTask;
-    Bitmap mockBitmap;
+    private StorageReference mockReference;
+    private UploadTask mockUploadTask;
+    private StorageTask mockStorageTask;
+    private Bitmap mockBitmap;
 
     @Before
     public void init(){

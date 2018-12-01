@@ -1,39 +1,36 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
 import android.support.test.rule.ActivityTestRule;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
-import com.google.firebase.database.DataSnapshot;
-import java.util.HashMap;
-import org.hamcrest.CoreMatchers;
+
+import static junit.framework.TestCase.assertTrue;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -51,7 +48,6 @@ public class LoginActivityTest {
             .addMonitor(HomeActivity.class.getName(), null, false);
 
     private IdpResponse mockIdpResponse;
-    private LoginActivity loginActivity;
     private Intent mockIntent;
 
     /**
@@ -61,7 +57,6 @@ public class LoginActivityTest {
     public void init() {
         mockIdpResponse = Mockito.mock(IdpResponse.class);
         mockIntent = Mockito.mock(Intent.class);
-        loginActivity = activityRule.getActivity();
         Mockito.when(mockIdpResponse.getEmail()).thenReturn("testEmail");
         Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
                 .thenReturn(mockIdpResponse);
@@ -71,15 +66,15 @@ public class LoginActivityTest {
     public void testFailedLoginNullResponse() {
         Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
                 .thenReturn(null);
-        loginActivity.onActivityResult(42, 0, mockIntent);
-        assertTrue(loginActivity.isFinishing());
+        activityRule.getActivity().onActivityResult(42, 0, mockIntent);
+        assertTrue(activityRule.getActivity().isFinishing());
     }
 
     @Test
     public void testSuccessfulLoginNewUser() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
-        loginActivity.onActivityResult(42, -1, mockIntent);
-        assertTrue(loginActivity.isFinishing());
+        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
+        assertTrue(activityRule.getActivity().isFinishing());
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
         Assert.assertNotNull(accountCreationActivity);
@@ -88,9 +83,9 @@ public class LoginActivityTest {
     @Test
     public void testSuccessfulLoginExistingUser() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
-        loginActivity.onActivityResult(42, -1, mockIntent);
+        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
         SystemClock.sleep(3000);
-        assertTrue(loginActivity.isFinishing());
+        assertTrue(activityRule.getActivity().isFinishing());
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(homeMonitor, 5000);
         Assert.assertNotNull(homeActivity);
@@ -100,7 +95,7 @@ public class LoginActivityTest {
     public void testSuccessfulLoginWithoutAccount() {
         Mockito.when(mockIdpResponse.getEmail()).thenReturn("weirdEmail");
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
-        loginActivity.onActivityResult(42, -1, mockIntent);
+        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
         Assert.assertNotNull(accountCreationActivity);
@@ -120,13 +115,13 @@ public class LoginActivityTest {
         executeOnUiThread(new Runnable() {
             @Override
             public void run() {
-                loginActivity.handleFailedSignIn(errorCode);
+                activityRule.getActivity().handleFailedSignIn(errorCode);
             }
         });
 
         TextView feedbackView = activityRule.getActivity().findViewById(R.id.error_message);
         ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
-                loginActivity.getResources().getString(expectedErrorMessageId))));
+                activityRule.getActivity().getResources().getString(expectedErrorMessageId))));
     }
 
     private void executeOnUiThread(Runnable runnable) {

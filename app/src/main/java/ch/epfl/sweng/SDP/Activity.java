@@ -123,11 +123,11 @@ public abstract class Activity extends AppCompatActivity {
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (userEntry != null && currentUser != null) {
+        if (userEntry != null) {
+            String currentUserId = (String)userEntry.keySet().toArray()[0];
             HashMap<String, Object> user = userEntry
-                    .get(currentUser.getUid());
+                    .get(currentUserId);
             if (user != null) {
                 Account.createAccount(getApplicationContext(),
                         new ConstantsWrapper(), (String) user.get("username"),
@@ -136,7 +136,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("stars")).intValue(),
                         ((Long) user.get("matchesWon")).intValue(),
                         ((Long) user.get("totalMatches")).intValue(),
-                        ((Long) user.get("averageRating")).doubleValue(),
+                        ((Double) user.get("averageRating")).doubleValue(),
                         ((Long) user.get("maxTrophies")).intValue(),
                         Shop.firebaseToListShopItem((HashMap<String, String>)
                                                     user.get("boughtItems")));

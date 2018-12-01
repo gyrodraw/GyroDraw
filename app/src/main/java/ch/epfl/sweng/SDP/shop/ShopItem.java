@@ -1,8 +1,5 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import java.util.Objects;
 
 /**
@@ -72,7 +69,6 @@ public class ShopItem {
                 && getColorItem() == shopItem.getColorItem();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
         return Objects.hash(price, color);

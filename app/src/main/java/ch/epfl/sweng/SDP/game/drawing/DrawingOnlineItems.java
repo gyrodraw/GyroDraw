@@ -30,7 +30,7 @@ public class DrawingOnlineItems extends DrawingOnline {
     }
 
     /**
-     * Get called when sensor data changed. Update the paintViews' circle coordinates
+     * Gets called when sensor data changed. Updates the paintViews' circle coordinates
      * and check if there are collisions with any displayed items.
      * If there is, the item gets activated and removed from the displayedItems.
      *

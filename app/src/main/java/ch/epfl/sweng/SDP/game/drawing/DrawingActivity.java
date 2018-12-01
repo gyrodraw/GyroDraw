@@ -98,7 +98,7 @@ public abstract class DrawingActivity extends BaseActivity {
     }
 
     /**
-     * Create an {@link ImageView} corresponding to a given color.
+     * Creates an {@link ImageView} corresponding to a given color.
      * @param color Index of the colors to be created
      * @return The ImageView of the color
      */
@@ -133,7 +133,7 @@ public abstract class DrawingActivity extends BaseActivity {
     }
 
     /**
-     * Clear the entire Path in paintView.
+     * Clears the entire Path in paintView.
      *
      * @param view paintView
      */
@@ -143,7 +143,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
 
     /**
-     * Set the clicked button to selected and set the corresponding color.
+     * Sets the clicked button to selected and set the corresponding color.
      *
      * @param view the clicked view
      */
@@ -160,7 +160,7 @@ public abstract class DrawingActivity extends BaseActivity {
     }
 
     /**
-     * Set the clicked button to selected and sets the corresponding color.
+     * Sets the clicked button to selected and sets the corresponding color.
      *
      * @param view the clicked view
      */

@@ -33,7 +33,7 @@ public class DrawingOffline extends GyroDrawingActivity {
     }
 
     /**
-     * Get called when sensor data changed. Update the paintViews' circle coordinates
+     * Gets called when sensor data changed. Updates the paintViews' circle coordinates
      * and check if there are collisions with any displayed items.
      * If there is, the item gets activated and removed from the displayedItems.
      *
@@ -56,7 +56,7 @@ public class DrawingOffline extends GyroDrawingActivity {
     }
 
     /**
-     * Toggle the mystery mode.
+     * Toggles the mystery mode.
      *
      * @param view the toggle button clicked
      */
@@ -70,7 +70,7 @@ public class DrawingOffline extends GyroDrawingActivity {
     }
 
     /**
-     * Leave the activity.
+     * Leaves the activity.
      *
      * @param view the button clicked
      */

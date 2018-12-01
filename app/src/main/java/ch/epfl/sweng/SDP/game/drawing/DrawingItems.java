@@ -67,7 +67,7 @@ final class DrawingItems {
     }
 
     /**
-     * Check if the paintViews' circle collided with an item.
+     * Checks if the paintViews' circle collided with an item.
      *
      * @return item that collided, or null.
      */
@@ -81,7 +81,7 @@ final class DrawingItems {
     }
 
     /**
-     * Generate a random item every INTERVAL seconds.
+     * Generates a random item every INTERVAL seconds.
      */
     void generateItems() {
         new CountDownTimer(INTERVAL, INTERVAL) {
@@ -98,14 +98,14 @@ final class DrawingItems {
     }
 
     /**
-     * Generate a random item (add stars excluded) every INTERVAL seconds.
+     * Generates a random item (add stars excluded) every INTERVAL seconds.
      */
     void generateItemsForOfflineMode() {
         offlineModeTimer.start();
     }
 
     /**
-     * Stop the timer and the item generation.
+     * Stops the timer and the item generation.
      */
     void stopOfflineModeItemGeneration() {
         offlineModeTimer.cancel();
@@ -123,7 +123,7 @@ final class DrawingItems {
     }
 
     /**
-     * Convert an item into an ImageView to be displayed on the Activity.
+     * Converts an item into an ImageView to be displayed on the Activity.
      *
      * @param item to be converted
      * @return ImageView of the item
@@ -151,7 +151,7 @@ final class DrawingItems {
     }
 
     /**
-     * Create a text feedback to inform the player which item
+     * Creates a text feedback to inform the player which item
      * has been picked up.
      *
      * @param item that was activated

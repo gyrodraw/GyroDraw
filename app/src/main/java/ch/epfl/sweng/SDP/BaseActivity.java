@@ -10,7 +10,7 @@ public abstract class BaseActivity extends Activity {
     }
 
     /**
-     * Prevent the user from pressing the back button.
+     * Prevents the user from pressing the back button.
      */
     @Override
     public void onBackPressed() {

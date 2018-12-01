@@ -299,8 +299,8 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testChangeAverageRatingWithGreaterThanFiveValue() {
-        account.changeAverageRating(6);
+    public void testChangeAverageRatingWithGreaterThanTwentyFiveValue() {
+        account.changeAverageRating(26);
     }
 
     @Test(expected = IllegalArgumentException.class)

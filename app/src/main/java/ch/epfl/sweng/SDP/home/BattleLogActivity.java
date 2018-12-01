@@ -25,7 +25,7 @@ public class BattleLogActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_battle_log);
 
         battleLogView = findViewById(R.id.battleLog);
@@ -37,7 +37,7 @@ public class BattleLogActivity extends BaseActivity {
 
         TextView exitButton = findViewById(R.id.exitButton);
         TextView emptyBattleLogText = findViewById(R.id.emptyBattleLogText);
-        LayoutUtils.setExitListener(exitButton, this);
+        LayoutUtils.setFadingExitListener(exitButton, this);
 
         exitButton.setTypeface(typeMuro);
         emptyBattleLogText.setTypeface(typeMuro);

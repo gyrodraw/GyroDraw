@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import static java.lang.String.format;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
@@ -57,7 +56,7 @@ public class LeaderboardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_leaderboard);
 
         filterByFriends = false;
@@ -71,7 +70,7 @@ public class LeaderboardActivity extends BaseActivity {
 
         final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);
-        LayoutUtils.setExitListener(exitButton, this);
+        LayoutUtils.setFadingExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 

@@ -34,9 +34,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_login);
 
-        overridePendingTransition(0, 0);
 
         createSignInIntent();
 
@@ -105,6 +105,7 @@ public class LoginActivity extends BaseActivity {
                                 Log.d(TAG, "User already has an account on Firebase");
                                 cloneAccountFromFirebase(snapshot);
                                 launchActivity(HomeActivity.class);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 finish();
                             } else {
                                 // User signed in but not did not create an account

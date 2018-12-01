@@ -39,14 +39,13 @@ public class ShopActivity extends BaseActivity {
     private LinearLayout shopItems;
 
     private Typeface typeMuro;
-    private Typeface typeOptimus;
 
     private Shop shop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
+        this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         setContentView(R.layout.activity_shop);
 
         if (enableAnimations) {
@@ -58,7 +57,7 @@ public class ShopActivity extends BaseActivity {
         confirmationDialog = new Dialog(this);
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         shopItems = findViewById(R.id.shopItems);
         Button leaveButton = findViewById(R.id.leaveButton);
@@ -71,7 +70,7 @@ public class ShopActivity extends BaseActivity {
 
         fillShop();
         addColorsToShop();
-        LayoutUtils.setLeaveButtonListener(leaveButton, this);
+        LayoutUtils.setSlideRightExitListener(leaveButton, this);
     }
 
     /**

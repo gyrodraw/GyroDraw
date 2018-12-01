@@ -29,12 +29,14 @@ public class LeaguesActivity extends BaseActivity {
             }
         });
 
+
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
         setGlobalTypeface(typeOptimus);
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.leaguesBackgroundAnimation));
-        LayoutUtils.setExitListener(findViewById(R.id.exitButton), this);
+        LayoutUtils.setFadingExitListener(findViewById(R.id.exitButton), this);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private void setGlobalTypeface(Typeface typeface) {

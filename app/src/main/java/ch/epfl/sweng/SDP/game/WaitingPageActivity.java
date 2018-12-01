@@ -179,7 +179,7 @@ public class WaitingPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
 
         Intent intent = getIntent();
@@ -217,7 +217,7 @@ public class WaitingPageActivity extends BaseActivity {
                 findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
                 findViewById(R.id.waitingTime), findViewById(R.id.leaveButton));
 
-        LayoutUtils.setLeaveButtonListener(findViewById(R.id.leaveButton), this);
+        LayoutUtils.setFadingExitListener(findViewById(R.id.leaveButton), this);
 
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
     }

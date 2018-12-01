@@ -42,8 +42,8 @@ public class DrawingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.overridePendingTransition(R.anim.fui_slide_in_right,
-                R.anim.fui_slide_out_left);
+        this.overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_left);
         setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

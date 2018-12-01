@@ -122,6 +122,7 @@ public class VotingPageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voting_page);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
@@ -230,6 +231,7 @@ public class VotingPageActivity extends BaseActivity {
             createAndStoreGameResult();
         }
         launchActivity(HomeActivity.class);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
 

@@ -109,13 +109,10 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
-
-        overridePendingTransition(0, 0);
 
         if (enableBackgroundAnimation) {
             Glide.with(this).load(R.drawable.background_animation)

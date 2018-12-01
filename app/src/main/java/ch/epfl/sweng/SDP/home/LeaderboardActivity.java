@@ -173,6 +173,7 @@ public class LeaderboardActivity extends BaseActivity {
             styleView(usernameView, rank + ". " + username, res.getColor(
                     isCurrentUser ? R.color.colorPrimaryDark : R.color.colorDrawYellow),
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+            usernameView.setPadding(0, 10, 0, 10);
 
             TextView trophiesView = new TextView(context);
             styleView(trophiesView, trophies.toString(),

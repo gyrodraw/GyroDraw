@@ -145,7 +145,9 @@ public class RankingFragment extends ListFragment {
 
                 Boolean won = usernames.get(0).equals(account.getUsername());
                 updateUserStats(rankForUser, trophiesForUser, won);
-                createAndStoreGameResult(usernames, rankForUser, rankForUser, trophiesForUser);
+                createAndStoreGameResult(usernames,
+                        positions[usernames.indexOf(account.getUsername())],
+                        rankForUser, trophiesForUser);
 
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
@@ -164,11 +166,13 @@ public class RankingFragment extends ListFragment {
     private void updateUserStats(int starIncrease, int trophiesIncrease, boolean won) {
         account.changeStars(starIncrease);
         account.changeTrophies(trophiesIncrease);
-        account.changeAverageRating(starIncrease);
         account.increaseTotalMatches();
         if (won) {
             account.increaseMatchesWon();
         }
+
+        account.changeAverageRating(starIncrease);
+
     }
 
     /**
@@ -211,7 +215,7 @@ public class RankingFragment extends ListFragment {
 
         private final String[] players;
         private final Integer[] rankings;
-        private final Integer[] trophies;
+        private final String[] trophies;
         private final Bitmap[] drawings;
         private final Integer[] positions;
         
@@ -220,7 +224,7 @@ public class RankingFragment extends ListFragment {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
-            this.trophies = trophies;
+            this.trophies = RankingUtils.addSignToNumber(trophies);
             this.drawings = drawings;
             this.positions = positions;
         }
@@ -260,7 +264,7 @@ public class RankingFragment extends ListFragment {
             }
 
             name.setText(String.format("%d. %s", positions[position], players[position]));
-            trophiesText.setText(String.valueOf(this.trophies[position]));
+            trophiesText.setText(this.trophies[position]);
             ranking.setText(String.valueOf(this.rankings[position]));
 
             // Return the completed view to render on screen

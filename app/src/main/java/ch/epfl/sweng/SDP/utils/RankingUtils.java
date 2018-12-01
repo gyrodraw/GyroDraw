@@ -48,4 +48,15 @@ public class RankingUtils {
 
         return positions;
     }
+
+    public static String[] addSignToNumber(Integer[] list) {
+        String[] numbersWithSign = new String[list.length];
+
+        for(int i = 0; i < numbersWithSign.length; ++i) {
+            numbersWithSign[i] = list[i] > 0 ? "+" + String.valueOf(list[i])
+                                                    : String.valueOf(list[i]);
+        }
+
+        return numbersWithSign;
+    }
 }

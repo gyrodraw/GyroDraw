@@ -46,11 +46,6 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
-    private static final String USER_ID = "123456789";
-    private static final String TEST_EMAIL = "testEmail";
-    private static final String USERNAME = "userA";
-    private static final String USER_ROOM_PATH = "realRooms.0123457890.ranking." + USERNAME;
-
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
@@ -74,11 +69,6 @@ public class VotingPageActivityTest {
 
     @Before
     public void init() {
-        /*Account.deleteAccount();
-        Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
-                , TEST_EMAIL);
-        Account.getInstance(mActivityRule.getActivity()).setUsername(USERNAME);*/
-
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
@@ -163,7 +153,7 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void testStateChange() {
+    public void testState5Change() {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
@@ -172,6 +162,14 @@ public class VotingPageActivityTest {
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));
+    }
+
+    @Test
+    public void testState4Change() {
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
     }
 
     @Test

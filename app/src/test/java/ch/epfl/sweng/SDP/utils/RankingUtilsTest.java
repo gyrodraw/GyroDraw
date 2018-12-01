@@ -1,0 +1,35 @@
+package ch.epfl.sweng.SDP.utils;
+
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+public class RankingUtilsTest {
+
+    @Test
+    public void testGenerateTrophiesFromRanking() {
+        Integer[] ranking = new Integer[] {5, 5, 4, 2, 0};
+
+        Integer[] trophies = RankingUtils.generateTrophiesFromRanking(ranking);
+        Integer[] result = new Integer[] {10, 10, 0, -5, -10};
+        assertThat(trophies, is(result));
+
+        ranking = new Integer[] {5, 5, 5, 5, 5};
+
+        trophies = RankingUtils.generateTrophiesFromRanking(ranking);
+        result = new Integer[] {10, 10, 10, 10, 10};
+
+        assertThat(trophies, is(result));
+    }
+
+
+    @Test
+    public void testGeneratePositionsFromRanking() {
+        Integer[] ranking = new Integer[] {5, 5, 4, 2, 0};
+
+        Integer[] trophies = RankingUtils.generatePositionsFromRanking(ranking);
+        Integer[] result = new Integer[] {1, 1, 3, 4, 5};
+        assertThat(trophies, is(result));
+    }
+}

@@ -33,6 +33,7 @@ import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.RankingUtils;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 
 /**
@@ -128,44 +129,32 @@ public class RankingFragment extends ListFragment {
                     }
                 }
 
-                String userName = account.getUsername();
-
-                // Sort the rankings
-                Integer[] tmp = new Integer[finalRanking.values().size()];
-                Integer[] rankings = (finalRanking.values().toArray(tmp));
+                // Sort the rankings (stars)
+                Integer[] rankings = (finalRanking.values().toArray(
+                        new Integer[finalRanking.values().size()]));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
                 int rankForUser = 0;
-
-                if(dataSnapshot.child(userName).getValue(int.class) != null) {
-                    rankForUser = dataSnapshot.child(userName).getValue(int.class);
+                if(dataSnapshot.child(account.getUsername()).getValue(int.class) != null) {
+                    rankForUser = dataSnapshot.child(account.getUsername()).getValue(int.class);
                 }
 
-                // Calculate trophies
-                Integer[] trophies = new Integer[rankings.length];
-                int lastRank = 0;
-                int trophiesForUser = 0;
-                int rank = RANK * 2;
-                for (int i = 0; i < rankings.length; i++) {
-                    if (rankForUser == rankings[i]) {
-                        trophiesForUser = rank;
-                    }
-                    if (rankings[i] != lastRank) {
-                        rank -= RANK;
-                    }
-                    trophies[i] = rank + RANK;
-                    lastRank = rankings[i];
-                }
-
+                Integer[] trophies = RankingUtils.generateTrophiesFromRanking(rankings);
+                Integer[] positions = RankingUtils.generatePositionsFromRanking(rankings);
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
-                Boolean won = usernames.get(0).equals(userName);
+                int trophiesForUser = 0;
+                if(usernames.indexOf(account.getUsername()) != -1) {
+                    trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
+                }
+
+                Boolean won = usernames.get(0).equals(account.getUsername());
                 updateUserStats(rankForUser, trophiesForUser, won);
                 createAndStoreGameResult(usernames, rankForUser, rankForUser, trophiesForUser);
 
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
-                        tmpUserNames, rankings, trophies, drawings);
+                        tmpUserNames, rankings, trophies, drawings, positions);
                 setListAdapter(adapter);
                 setFinishedCollectingRanking();
             }
@@ -228,14 +217,16 @@ public class RankingFragment extends ListFragment {
         private final Integer[] rankings;
         private final Integer[] trophies;
         private final Bitmap[] drawings;
+        private final Integer[] positions;
         
         private RankingAdapter(Context context, String[] players, Integer[] rankings,
-                               Integer[] trophies, Bitmap[] drawings) {
+                               Integer[] trophies, Bitmap[] drawings, Integer[] positions) {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
             this.trophies = trophies;
             this.drawings = drawings;
+            this.positions = positions;
         }
 
         @NonNull
@@ -272,8 +263,7 @@ public class RankingFragment extends ListFragment {
                 convertView.setBackgroundColor(darkColor);
             }
 
-            // set the texts
-            name.setText(String.format("%d. %s", position + 1, players[position]));
+            name.setText(String.format("%d. %s", positions[position], players[position]));
             trophiesText.setText(String.valueOf(this.trophies[position]));
             ranking.setText(String.valueOf(this.rankings[position]));
 

@@ -49,6 +49,12 @@ public class RankingUtils {
         return positions;
     }
 
+    /**
+     * Returns a string array with the sign of the number in front of this latter. In other words
+     * the number 10 becomes +10.
+     * @param list List of the numbers
+     * @return A list of number with the respective sign
+     */
     public static String[] addSignToNumber(Integer[] list) {
         String[] numbersWithSign = new String[list.length];
 

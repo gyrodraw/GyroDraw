@@ -194,6 +194,7 @@ public class HomeActivity extends BaseActivity {
                             Account.deleteAccount();
                             toastSignOut.cancel();
                             launchActivity(MainActivity.class);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             finish();
                         } else {
                             Log.e(TAG, "Sign out failed!");

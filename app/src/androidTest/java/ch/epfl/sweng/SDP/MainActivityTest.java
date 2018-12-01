@@ -1,21 +1,27 @@
 package ch.epfl.sweng.SDP;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import ch.epfl.sweng.SDP.auth.LoginActivity;
+import com.google.firebase.database.DataSnapshot;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
+
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -36,5 +42,11 @@ public class MainActivityTest {
         Assert.assertNotNull(loginActivity);
     }
 
+    @Test
+    public void testCloneAccountFromFirebase() {
+        DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.getValue()).thenReturn(new HashMap<String, HashMap<String, Object>>());
+        mActivityRule.getActivity().cloneAccountFromFirebase(snapshot);
+    }
 
 }

@@ -9,11 +9,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-public class LeaguesActivity extends Activity {
+public class LeaguesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

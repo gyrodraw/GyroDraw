@@ -5,16 +5,29 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.TreeSet;
 
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
@@ -23,17 +36,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
-
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import static java.lang.String.format;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.TreeSet;
 
 public class LeaderboardActivity extends BaseActivity {
 
@@ -52,6 +55,7 @@ public class LeaderboardActivity extends BaseActivity {
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
     private Boolean filterByFriends;
+    private long lastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,21 +79,30 @@ public class LeaderboardActivity extends BaseActivity {
         searchField.setTypeface(typeMuro);
 
         leaderboard = new Leaderboard(getApplicationContext());
-        final TextView friendsFilter = findViewById(R.id.friendsFilter);
-        friendsFilter.setTypeface(typeMuro);
-        friendsFilter.setOnClickListener(new View.OnClickListener() {
+        final CheckBox friendsFilterCheckbox = findViewById(R.id.friendsFilterCheckBox);
+        final TextView friendsFilterText = findViewById(R.id.friendsFilterText);
+        friendsFilterText.setTypeface(typeMuro);
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - lastClickTime < 500) {
+                    return;
+                }
+                lastClickTime = SystemClock.elapsedRealtime();
                 filterByFriends ^= true;
                 if (filterByFriends) {
                     leaderboard.update(searchField.getText().toString());
-                    friendsFilter.setText(R.string.removeFriendsFilter);
+                    friendsFilterCheckbox.setChecked(true);
                 } else {
                     leaderboard.fetchPlayersFromFirebase(searchField.getText().toString());
-                    friendsFilter.setText(R.string.friendsFilter);
+                    friendsFilterCheckbox.setChecked(false);
                 }
             }
-        });
+        };
+
+        friendsFilterCheckbox.setOnClickListener(clickListener);
+        friendsFilterText.setOnClickListener(clickListener);
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -318,7 +331,7 @@ public class LeaderboardActivity extends BaseActivity {
                             wantedPlayers.clear();
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
                                 if (s != null && !s.getKey().equals("123456789")
-                                && s.getValue(int.class) == FRIENDS) {
+                                        && s.getValue(int.class) == FRIENDS) {
                                     findAndAddPlayer(s.getKey(), query);
                                 }
                             }
@@ -337,7 +350,7 @@ public class LeaderboardActivity extends BaseActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()
-                                    && ((String)dataSnapshot.child(USERNAME_TAG)
+                                    && ((String) dataSnapshot.child(USERNAME_TAG)
                                     .getValue()).contains(query)) {
                                 String username = dataSnapshot.child(USERNAME_TAG)
                                         .getValue(String.class);
@@ -376,7 +389,7 @@ public class LeaderboardActivity extends BaseActivity {
             // add all (max 20) players to the leaderboard
             int i = 0;
             Iterator<Player> playerIterator = wantedPlayers.iterator();
-            while(playerIterator.hasNext() && i < 20) {
+            while (playerIterator.hasNext() && i < 20) {
                 Player currentPlayer = playerIterator.next();
                 currentPlayer.setRank(i + 1);
                 leaderboardView.addView(currentPlayer

@@ -44,4 +44,9 @@
         <item name="android:scaleType">fitXY</item>
     </style>
 
+    <style name="checkBoxStyle" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">@color/colorDrawYellow</item>
+        <item name="android:textColorSecondary">@color/colorDrawYellow</item>
+    </style>
+
 </resources>

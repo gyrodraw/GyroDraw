@@ -38,7 +38,6 @@
     <string name="max_trophies">Max trophies:</string>
     <string name="profile">Profile</string>
     <string name="usernameMustNotBeEmpty">Username must not be empty</string>
-    <string name="usernameAlreadyTaken">Username already taken, try again</string>
     <string name="usernameTaken">Username already taken, try again</string>
     <string name="enter_name_here">Enter name here</string>
     <string name="battle_log">Battle log</string>
@@ -46,8 +45,7 @@
     <string name="leave">Leave</string>
     <string name="practice">PRACTICE !</string>
     <string name="special">SPECIAL !</string>
-    <string name="friendsFilter">Filter for friends</string>
-    <string name="removeFriendsFilter">Remove filter</string>
+    <string name="friendsFilter">Filter friends</string>
     <string name="buySuccess">Purchase Successful</string>
     <string name="buyError">Not enough stars</string>
     <string name="error">Error</string>

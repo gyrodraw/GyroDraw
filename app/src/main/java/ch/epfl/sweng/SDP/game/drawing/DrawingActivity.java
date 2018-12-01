@@ -59,7 +59,7 @@ public class DrawingActivity extends BaseActivity {
         colorButtons = new ImageView[myItems.size() + 1];
         colorButtons[0] = findViewById(R.id.blackButton);
 
-        for(int i = 0; i < myItems.size(); ++i) {
+        for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
             int color = ColorUtils.getColorFromString(item.getColorItem().toString());
             colors.add(color);
@@ -67,7 +67,7 @@ public class DrawingActivity extends BaseActivity {
             // Adds the view to the layout
             layout.addView(colorView);
 
-            colorButtons[i+1] = colorView;
+            colorButtons[i + 1] = colorView;
         }
 
         paintViewHolder = findViewById(R.id.paintViewHolder);
@@ -84,6 +84,7 @@ public class DrawingActivity extends BaseActivity {
 
     /**
      * Create an imageview corresponding to a given color.
+     *
      * @param color Index of the colors to be created
      * @return The imageview of the color
      */
@@ -92,10 +93,10 @@ public class DrawingActivity extends BaseActivity {
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
                 LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-                                        .MATCH_PARENT, 1f);
+                .MATCH_PARENT, 1f);
 
         // Convert dp into px
-        int px = (int)TypedValue.applyDimension(
+        int px = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 10,
                 getResources().getDisplayMetrics()
@@ -114,7 +115,7 @@ public class DrawingActivity extends BaseActivity {
             }
         });
 
-       return image;
+        return image;
     }
 
     /**

@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
 public enum ColorsShop {
-    RED(150), BLUE(100), YELLOW(200), GREEN(150);
+    BLUE(100), GREEN(150), YELLOW(200), RED(150);
 
     private int price;
 
@@ -14,7 +14,7 @@ public enum ColorsShop {
     }
 
     public static ColorsShop getColorFromString(String color) {
-        switch(color) {
+        switch (color) {
             case "BLUE":
                 return BLUE;
             case "RED":

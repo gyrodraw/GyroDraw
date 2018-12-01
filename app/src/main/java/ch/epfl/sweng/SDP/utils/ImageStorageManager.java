@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 public class ImageStorageManager {
 
     // MARK: Saving
-
+    // TODO:add storge permission check
     public static void saveImage(Bitmap finalBitmap, String image_name, Context context) {
 
         String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Your_Directory_Name";

@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,8 +74,15 @@ public class LoginActivity extends BaseActivity {
                 assert response != null;
                 handleSuccessfulSignIn(response);
             } else {
+                // User pressed the back button
+                if (response == null) {
+                    launchActivity(MainActivity.class);
+                    finish();
+                    return;
+                }
                 // Sign in failed
-                handleFailedSignIn(response);
+                handleFailedSignIn(response.getError().getErrorCode());
+                Log.e(TAG, "Sign-in error: ", response.getError());
             }
         }
     }
@@ -126,20 +134,14 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * Handle failed signIn.
-     * @param response contains the response
+     * @param errorCode specifies the error that occurred
      */
-    private void handleFailedSignIn(IdpResponse response) {
+    @VisibleForTesting
+    public void handleFailedSignIn(int errorCode) {
         TextView errorMessage = findViewById(R.id.error_message);
 
-        // User pressed the back button
-        if (response == null) {
-            launchActivity(MainActivity.class);
-            finish();
-            return;
-        }
-
         // No network
-        if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+        if (errorCode == ErrorCodes.NO_NETWORK) {
             errorMessage.setText(getString(R.string.no_internet));
             errorMessage.setVisibility(View.VISIBLE);
             return;
@@ -148,7 +150,5 @@ public class LoginActivity extends BaseActivity {
         // Unknown error
         errorMessage.setText(getString(R.string.unknown_error));
         errorMessage.setVisibility(View.VISIBLE);
-
-        Log.e(TAG, "Sign-in error: ", response.getError());
     }
 }

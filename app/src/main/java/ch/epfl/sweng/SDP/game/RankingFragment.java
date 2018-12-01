@@ -21,8 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,15 +43,12 @@ public class RankingFragment extends ListFragment {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static boolean isTesting = false;
-    private static final int RANK = 10;
     private String roomId;
 
     private DatabaseReference rankingRef;
     private DatabaseReference finishedRef;
 
     private Map<String, Integer> finalRanking;
-
-    private List<String> rankedUsernames;
 
     private Bitmap[] drawings;
     private String[] playerNames;
@@ -76,8 +71,10 @@ public class RankingFragment extends ListFragment {
 
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
         finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
-        Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
-        Typeface typeOptimus = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Optimus.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(),
+                                                            "fonts/Muro.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getActivity().getAssets(),
+                                                        "fonts/Optimus.otf");
 
         ((TextView) getActivity().findViewById(R.id.rankingTitle)).setTypeface(typeOptimus);
 
@@ -103,14 +100,6 @@ public class RankingFragment extends ListFragment {
         this.roomId = roomId;
         this.drawings = drawings;
         this.playerNames = playernames;
-    }
-
-    /**
-     * Retrieves the usernames.
-     * @return a list of user names.
-     */
-    public List<String> getRankedUsernames() {
-        return rankedUsernames;
     }
 
     private int getIndexForUserName(String username) {
@@ -209,10 +198,11 @@ public class RankingFragment extends ListFragment {
         isTesting = true;
     }
 
-    public void createTestAccount() {
+    //
+    private void createTestAccount() {
         Account.deleteAccount();
-        Account.createAccount(getActivity().getApplicationContext(), new ConstantsWrapper(), "123456789"
-                , "test@test.com");
+        Account.createAccount(getActivity().getApplicationContext(), new ConstantsWrapper(),
+                "123456789", "");
         account = Account.getInstance(getActivity().getApplicationContext());
         account.setUsername("userA");
     }

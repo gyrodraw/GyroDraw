@@ -70,6 +70,14 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
+     * Prevents the user from pressing the back button.
+     */
+    @Override
+    public void onBackPressed() {
+        // Does nothing in here because we want to disable back button
+    }
+
+    /**
      * Start the specified activity.
      *
      * @param activityClass the class of the activity to launch

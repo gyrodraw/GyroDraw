@@ -6,14 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import com.bumptech.glide.Glide;
 
-public class LeaguesActivity extends BaseActivity {
+import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
+
+public class LeaguesActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

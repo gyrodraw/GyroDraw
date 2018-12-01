@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,7 +10,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +43,6 @@ public class ShopActivity extends BaseActivity {
     private LinearLayout shopItems;
 
     private Resources res;
-    private Typeface typeMuro;
 
     private Shop shop;
 
@@ -63,7 +62,7 @@ public class ShopActivity extends BaseActivity {
         buyDialog = new Dialog(this);
         confirmationDialog = new Dialog(this);
 
-        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         shopItems = findViewById(R.id.shopItems);
         TextView exitButton = findViewById(R.id.exitButton);
@@ -90,72 +89,24 @@ public class ShopActivity extends BaseActivity {
         List<ShopItem> itemsList = shop.getItemList();
 
         for (int i = 0; i < itemsList.size(); ++i) {
-            shopItems.addView(toLayout(itemsList.get(i), i), layoutParams);
+            ShopItem item = itemsList.get(i);
+            LinearLayout itemLayout = item.toLayout(this);
+            shopItems.addView(itemLayout, layoutParams);
+            if (!item.getOwned()) {
+                itemLayout.setClickable(true);
+
+                final int index = i;
+                itemLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent event) {
+                        touchItem(index);
+                        return true;
+                    }
+                });
+            }
+
+            itemLayout.setTag(item.getColorItem());
         }
-    }
-
-    @SuppressLint({"NewApi", "ClickableViewAccessibility"})
-    private LinearLayout toLayout(ShopItem item, final int index) {
-        LinearLayout layout;
-
-        String colorName = item.getColorItem().toString();
-        String price = Integer.toString(item.getPriceItem());
-
-        TextView colorTextView = createTextView(colorName, res.getColor(R.color.colorDrawYellow),
-                30, typeMuro, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 4));
-
-        ImageView colorImageView = new ImageView(this);
-        LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
-
-        colorImageView.setLayoutParams(params);
-        colorImageView.setPadding(0, 0, 30, 0);
-        colorImageView.setImageDrawable(res.getDrawable(R.drawable.color_circle));
-        colorImageView.setColorFilter(res.getColor(ColorUtils.getColorFromString(colorName)),
-                PorterDuff.Mode.SRC_ATOP);
-
-        if (!item.getOwned()) {
-            TextView priceView = createTextView(price, res.getColor(R.color.colorPrimaryDark),
-                    30, typeMuro, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 2));
-
-            priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-            priceView.setPadding(0, 0, 20, 0);
-
-            ImageView image = new ImageView(this);
-            image.setBackgroundResource(R.drawable.star);
-            image.setPadding(0, 0, 30, 0);
-            LayoutParams layoutParams = new LayoutParams(100, 100);
-            image.setLayoutParams(layoutParams);
-
-            layout = addViews(new LinearLayout(this), colorImageView,
-                    colorTextView, priceView, image);
-        } else {
-            TextView ownedView = createTextView("✔", res.getColor(R.color.colorGreen),
-                    30, typeMuro, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 2));
-            ownedView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-            ownedView.setPadding(0, 0, 30, 0);
-            colorImageView.setImageDrawable(res.getDrawable(R.drawable.color_circle_selected));
-            layout = addViews(new LinearLayout(this), colorImageView, colorTextView, ownedView);
-        }
-
-
-        layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
-        layout.setPadding(30, 10, 30, 10);
-
-        if (!item.getOwned()) {
-            layout.setClickable(true);
-
-            layout.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    touchItem(index);
-                    return true;
-                }
-            });
-        }
-
-        layout.setTag(item.getColorItem());
-
-        return layout;
     }
 
     @SuppressLint("DefaultLocale")

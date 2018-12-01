@@ -30,7 +30,7 @@ public class ShopActivityTest {
 
     private static final String USER_ID = "no_user";
     private static DatabaseReference usersRef = Database.getReference("users."
-                                                    + USER_ID + ".boughtItems");
+            + USER_ID + ".boughtItems");
 
     @Rule
     public final ActivityTestRule<ShopActivity> mActivityRule =
@@ -75,8 +75,6 @@ public class ShopActivityTest {
 
         onView(withId(R.id.okButton)).perform(click());
         onView(withId(R.id.okButton)).check(doesNotExist());
-
-
     }
 
     @Test
@@ -84,7 +82,7 @@ public class ShopActivityTest {
         Account.deleteAccount();
         Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
                 , "test@test.com");
-        Account.getInstance(mActivityRule.getActivity()).setStars(100);
+        Account.getInstance(mActivityRule.getActivity()).setStars(1000);
         SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(1);

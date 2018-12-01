@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -19,10 +18,9 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DrawingOfflineTest {
+public class DrawingOfflineNoItemsTest {
 
     private PaintView paintView;
-    private Resources res;
 
     @Rule
     public final ActivityTestRule<DrawingOffline> activityRule =
@@ -34,7 +32,6 @@ public class DrawingOfflineTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
-        res = activityRule.getActivity().getResources();
         Account.getInstance(activityRule.getActivity().getApplicationContext())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())

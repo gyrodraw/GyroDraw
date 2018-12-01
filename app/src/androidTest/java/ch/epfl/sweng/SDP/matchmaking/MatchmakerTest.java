@@ -23,8 +23,6 @@ public class MatchmakerTest {
     private static final String FAKE_ROOM = "Testroom";
     private static final String FAKE_LEAGUE = "league1";
     private ConstantsWrapper mockConstantsWrapper;
-    private DatabaseReference mockReference;
-    private Task mockTask;
     private Account mockAccount;
 
     /**
@@ -33,8 +31,8 @@ public class MatchmakerTest {
     @Before
     public void init() {
         mockConstantsWrapper = mock(ConstantsWrapper.class);
-        mockReference = mock(DatabaseReference.class);
-        mockTask = mock(Task.class);
+        DatabaseReference mockReference = mock(DatabaseReference.class);
+        Task mockTask = mock(Task.class);
         mockAccount = mock(Account.class);
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.removeValue()).thenReturn(mockTask);
@@ -49,7 +47,7 @@ public class MatchmakerTest {
         when(mockAccount.getUserId()).thenReturn(USER_ID);
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
         when(mockAccount.getCurrentLeague()).thenReturn(FAKE_LEAGUE);
-        Task<String> task = Matchmaker.getInstance(mockAccount).joinRoom();
+        Task<String> task = Matchmaker.getInstance(mockAccount).joinRoom(0);
         assertNotNull(task);
     }
 

@@ -1,17 +1,14 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
+
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
 import com.google.firebase.database.DataSnapshot;
-import java.util.HashMap;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +17,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
+
+import java.util.HashMap;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -73,5 +76,10 @@ public class LoginActivityTest {
         Mockito.when(mockSnapshot.getValue())
                 .thenReturn(userEntry);
         assertThat(mockSnapshot.getValue(), CoreMatchers.<Object>is(userEntry));
+    }
+
+    @Test
+    public void testPressingBackButtonDoesNothing() {
+        activityRule.getActivity().onBackPressed();
     }
 }

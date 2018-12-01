@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,6 +77,10 @@ public class RankingFragment extends ListFragment {
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
         finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
         Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Muro.otf");
+        Typeface typeOptimus = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Optimus.otf");
+
+        ((TextView) getActivity().findViewById(R.id.rankingTitle)).setTypeface(typeOptimus);
+
         Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(typeMuro);
 

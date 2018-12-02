@@ -1,15 +1,13 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.utils;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BooleanListenerUnitTest {
+public class BooleanVariableListenerUnitTest {
 
     private BooleanVariableListener boolSpy;
     private int varTest = 0;

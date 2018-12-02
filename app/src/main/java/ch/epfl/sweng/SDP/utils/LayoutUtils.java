@@ -100,6 +100,7 @@ public class LayoutUtils {
                         bounceButton(view, activity);
                         activity.launchActivity(HomeActivity.class);
                         activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        activity.finish();
                         break;
                     default:
                 }
@@ -126,6 +127,7 @@ public class LayoutUtils {
                         activity.launchActivity(HomeActivity.class);
                         activity.overridePendingTransition(R.anim.slide_in_right,
                                 R.anim.slide_out_left);
+                        activity.finish();
                         break;
                     default:
                 }
@@ -152,6 +154,7 @@ public class LayoutUtils {
                         activity.launchActivity(HomeActivity.class);
                         activity.overridePendingTransition(R.anim.slide_in_left,
                                 R.anim.slide_out_right);
+                        activity.finish();
                         break;
                     default:
                 }

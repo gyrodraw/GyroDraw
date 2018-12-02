@@ -15,15 +15,13 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class ShopActivityTest {
@@ -49,7 +47,8 @@ public class ShopActivityTest {
 
     @Test
     public void testPressItemAndCancel() {
-        SystemClock.sleep(5000);
+        setStarsAndRefresh();
+
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
@@ -62,28 +61,20 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemNoStars() {
-        SystemClock.sleep(5000);
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
         layoutChild.setId(id);
 
         onView(withId(id)).perform(click());
-        onView(withId(R.id.buyButton)).perform(click());
-
-        onView(withId(R.id.confirmationText)).check(matches(withText("Error")));
-
-        onView(withId(R.id.okButton)).perform(click());
-        onView(withId(R.id.okButton)).check(doesNotExist());
+        onView(withId(R.id.buyButton)).check(doesNotExist());
+        onView(withId(R.id.cancelButton)).check(doesNotExist());
     }
 
     @Test
     public void testPressBuyItemSuccess() {
-        Account.deleteAccount();
-        Account.createAccount(mActivityRule.getActivity(), new ConstantsWrapper(), USER_ID
-                , "test@test.com");
-        Account.getInstance(mActivityRule.getActivity()).setStars(1000);
-        SystemClock.sleep(5000);
+        setStarsAndRefresh();
+
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(1);
         int id = View.generateViewId();
@@ -92,9 +83,12 @@ public class ShopActivityTest {
         onView(withId(id)).perform(click());
         onView(withId(R.id.buyButton)).perform(click());
 
-        onView(withId(R.id.confirmationText)).check(matches(withText("Success")));
+        onView(withId(id)).check(doesNotExist());
+    }
 
-        onView(withId(R.id.okButton)).perform(click());
-        onView(withId(R.id.okButton)).check(doesNotExist());
+    private void setStarsAndRefresh() {
+        onView(withId(R.id.exitButton)).perform(click());
+        Account.getInstance(mActivityRule.getActivity()).setStars(1000);
+        onView(withId(R.id.shopButton)).perform(click());
     }
 }

@@ -119,7 +119,6 @@
             android:layout_marginBottom="32dp"
             android:clickable="true"
             android:focusable="true"
-            android:scaleX="-1"
             app:srcCompat="@drawable/leaderboard_button"
             tools:ignore="ContentDescription" />
 
@@ -129,7 +128,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:scaleX="-1"
             app:srcCompat="@drawable/battle_log_button"
             tools:ignore="ContentDescription" />
 

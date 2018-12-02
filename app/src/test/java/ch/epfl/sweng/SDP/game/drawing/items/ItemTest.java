@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 
 import org.junit.Test;
 
+import ch.epfl.sweng.SDP.R;
+
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
@@ -46,5 +48,19 @@ public class ItemTest {
         assertThat(addStarsItem.getTextFeedback(), is("+3 STARS ! "));
         BumpingItem bumpingItem = BumpingItem.createBumpingItem(0, 0, 10);
         assertThat(bumpingItem.getTextFeedback(), is(" "));
+    }
+
+    @Test
+    public void testItemsHaveTheRightColor() {
+        SpeedupItem speedupItem = SpeedupItem.createSpeedupItem(0, 0, 10);
+        assertThat(speedupItem.getColorId(), is(R.color.colorExitRed));
+        SlowdownItem slowdownItem = SlowdownItem.createSlowdownItem(0, 0, 10);
+        assertThat(slowdownItem.getColorId(), is(R.color.colorGreen));
+        SwapAxisItem swapAxisItem = SwapAxisItem.createSwapAxisItem(0, 0, 10);
+        assertThat(swapAxisItem.getColorId(), is(R.color.colorExitRed));
+        AddStarsItem addStarsItem = AddStarsItem.createAddStarsItem(0, 0, 10);
+        assertThat(addStarsItem.getColorId(), is(R.color.colorGreen));
+        BumpingItem bumpingItem = BumpingItem.createBumpingItem(0, 0, 10);
+        assertThat(bumpingItem.getColorId(), is(R.color.colorExitRed));
     }
 }

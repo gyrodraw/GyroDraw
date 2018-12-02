@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 public class DrawingOfflineWithItemsTest {
@@ -66,6 +67,13 @@ public class DrawingOfflineWithItemsTest {
         addRandomItem();
         SystemClock.sleep(5000);
         assertThat(paintViewHolder.getChildCount(), greaterThan(1));
+    }
+
+    @Test
+    public void testItemsGetRemoved() {
+        toggleMysteryMode();
+        assertThat(paintViewHolder.getChildCount(), lessThanOrEqualTo(1));
+        toggleMysteryMode();
     }
 
     @Test

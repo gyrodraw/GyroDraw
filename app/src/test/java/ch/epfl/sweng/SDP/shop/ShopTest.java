@@ -17,9 +17,9 @@ public class ShopTest {
 
     @Test
     public void addItemShopTest() {
-        ShopItem item1 = new ShopItem(ColorsShop.YELLOW, 10);
-        ShopItem item2 = new ShopItem(ColorsShop.BLUE, 20);
-        ShopItem item3 = new ShopItem(ColorsShop.GREEN, 30);
+        ShopItem item1 = new ShopItem(ColorsShop.YELLOW, 10, false);
+        ShopItem item2 = new ShopItem(ColorsShop.BLUE, 20, false);
+        ShopItem item3 = new ShopItem(ColorsShop.GREEN, 30, false);
         List<ShopItem> shopItem = Arrays.asList(item1, item2, item3);
 
         Shop shop = new Shop();
@@ -33,9 +33,9 @@ public class ShopTest {
 
     @Test
     public void removeItemShopTest() {
-        ShopItem item1 = new ShopItem(ColorsShop.YELLOW, 10);
-        ShopItem item2 = new ShopItem(ColorsShop.BLUE, 20);
-        ShopItem item3 = new ShopItem(ColorsShop.GREEN, 30);
+        ShopItem item1 = new ShopItem(ColorsShop.YELLOW, 10, false);
+        ShopItem item2 = new ShopItem(ColorsShop.BLUE, 20, false);
+        ShopItem item3 = new ShopItem(ColorsShop.GREEN, 30, false);
         List<ShopItem> shopItem = Arrays.asList(item2, item3);
 
         Shop shop = new Shop();
@@ -56,8 +56,8 @@ public class ShopTest {
         map.put("RED", "200");
 
         List<ShopItem> listItems = new LinkedList<>();
-        listItems.add(new ShopItem(ColorsShop.BLUE, 100));
-        listItems.add(new ShopItem(ColorsShop.RED, 200));
+        listItems.add(new ShopItem(ColorsShop.BLUE, 100, false));
+        listItems.add(new ShopItem(ColorsShop.RED, 200, false));
 
         assertThat(Shop.firebaseToListShopItem(map), is(listItems));
 

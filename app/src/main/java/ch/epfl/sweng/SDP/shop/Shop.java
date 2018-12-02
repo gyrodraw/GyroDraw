@@ -14,7 +14,7 @@ public class Shop {
 
     private List<ShopItem> itemList;
 
-    public Shop() {
+    Shop() {
         itemList = new ArrayList<>();
     }
 

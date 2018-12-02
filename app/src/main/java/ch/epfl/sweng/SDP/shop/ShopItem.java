@@ -39,22 +39,6 @@ public class ShopItem {
         this.owned = owned;
     }
 
-    /**
-     * Constructor of a ShopItem that computes the layout.
-     *
-     * @param color   the color of the item
-     * @param price   the price of the item
-     * @param stars   the current amount of stars
-     * @param owned   is this item owned by the player
-     * @param context the context of the shop
-     */
-    public ShopItem(ColorsShop color, int price, int stars, boolean owned, ShopActivity context) {
-        this.price = price;
-        this.color = color;
-        this.owned = owned;
-        setLayout(stars, context);
-    }
-
     public ColorsShop getColorItem() {
         return color;
     }
@@ -95,8 +79,8 @@ public class ShopItem {
     }
 
     /**
-     * @param stars
-     * @param context
+     * @param stars   the current amount of stars
+     * @param context the context of the shop
      */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     public void setLayout(int stars, ShopActivity context) {
@@ -124,7 +108,7 @@ public class ShopItem {
             starView.setImageResource(R.drawable.star);
 
             TextView priceView = context.createTextView(Integer.toString(price),
-                    price <= stars ? res.getColor(R.color.colorGreen) :
+                    price <= stars ? res.getColor(R.color.colorGreenStar) :
                             res.getColor(R.color.colorExitRed),
                     DEFAULT_PADDING, typeMuro, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 2));
 

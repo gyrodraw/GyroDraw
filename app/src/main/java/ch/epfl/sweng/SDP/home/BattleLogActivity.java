@@ -13,12 +13,12 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-public class BattleLogActivity extends BaseActivity {
+public class BattleLogActivity extends Activity {
 
     private LinearLayout battleLogView;
 

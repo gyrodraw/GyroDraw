@@ -18,13 +18,13 @@ import com.google.android.gms.common.util.ArrayUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
-public abstract class DrawingActivity extends BaseActivity {
+public abstract class DrawingActivity extends Activity {
 
     protected static final String TAG = "DrawingActivity";
     protected RelativeLayout paintViewHolder;

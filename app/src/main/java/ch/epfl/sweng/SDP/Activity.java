@@ -40,7 +40,7 @@ public abstract class Activity extends AppCompatActivity {
      * Sets the visibility of the views corresponding to the given ids to the given value.
      *
      * @param visibility the value to set the visibility at
-     * @param ids the ids of the views whose visibility is to be set
+     * @param ids        the ids of the views whose visibility is to be set
      */
     public void setVisibility(int visibility, int... ids) {
         for (int id : ids) {
@@ -52,7 +52,7 @@ public abstract class Activity extends AppCompatActivity {
      * Sets the visibility of the given views to the given value.
      *
      * @param visibility the value to set the visibility at
-     * @param views the views whose visibility is to be set
+     * @param views      the views whose visibility is to be set
      */
     public void setVisibility(int visibility, View... views) {
         for (View view : views) {
@@ -64,20 +64,21 @@ public abstract class Activity extends AppCompatActivity {
      * Sets typeface to the given text views.
      *
      * @param typeface the typeface to be set
-     * @param views the text views whose typeface is to be set
+     * @param views    the text views whose typeface is to be set
      */
     public void setTypeFace(Typeface typeface, View... views) {
-        for(View view: views) {
+        for (View view : views) {
             ((TextView) view).setTypeface(typeface);
         }
     }
 
     /**
      * This methods creates a TextView according to the given parameters.
-     * @param text String displayed in textview
-     * @param color Color of the textview
-     * @param size Size of the textview
-     * @param typeface Typeface of the textview
+     *
+     * @param text         String displayed in textview
+     * @param color        Color of the textview
+     * @param size         Size of the textview
+     * @param typeface     Typeface of the textview
      * @param layoutParams Layout parameters of the textview
      * @return The newly created textview
      */
@@ -95,11 +96,11 @@ public abstract class Activity extends AppCompatActivity {
     /**
      * Adds views to a layout.
      * @param layout Layout where the views will be added
-     * @param views Views to be added
+     * @param views  Views to be added
      * @return The layout with the views added
      */
     public LinearLayout addViews(LinearLayout layout, View... views) {
-        for(View view: views) {
+        for (View view : views) {
             layout.addView(view);
         }
 
@@ -115,6 +116,12 @@ public abstract class Activity extends AppCompatActivity {
         view.setLayoutParams(layoutParams);
     }
 
+    /**
+     * Clones the {@link Account}, corresponding to the user logged in,
+     * from Firebase, and stores it in the local database.
+     *
+     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase Database
+     */
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
@@ -134,7 +141,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("averageRating")).doubleValue(),
                         ((Long) user.get("maxTrophies")).intValue(),
                         Shop.firebaseToListShopItem((HashMap<String, String>)
-                                                    user.get("boughtItems")));
+                                user.get("boughtItems")));
 
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);

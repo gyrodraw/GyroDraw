@@ -46,7 +46,8 @@ final class DrawingItems {
         }
     };
 
-    DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView, Map<Item, ImageView> displayedItems, Random random) {
+    DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView,
+                 Map<Item, ImageView> displayedItems, Random random) {
         this.context = context;
         this.paintViewHolder = paintViewHolder;
         this.paintView = paintView;
@@ -152,7 +153,8 @@ final class DrawingItems {
     }
 
     /**
-     * Creates a text feedback to inform the player about which item has been picked up.
+     * Creates a text feedback to inform the player about which item
+     * has been picked up.
      *
      * @param item that was activated
      * @return feedback text

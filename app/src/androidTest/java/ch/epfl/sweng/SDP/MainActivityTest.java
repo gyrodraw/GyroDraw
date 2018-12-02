@@ -5,9 +5,14 @@ import android.app.Instrumentation;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.firebase.database.DataSnapshot;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
 
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 
@@ -19,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -39,5 +45,11 @@ public class MainActivityTest {
         assertThat(loginActivity, is(not(nullValue())));
     }
 
+    @Test
+    public void testCloneAccountFromFirebase() {
+        DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.getValue()).thenReturn(new HashMap<String, HashMap<String, Object>>());
+        mActivityRule.getActivity().cloneAccountFromFirebase(snapshot);
+    }
 
 }

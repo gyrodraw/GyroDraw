@@ -148,7 +148,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
 
     /**
-     * Set the clicked button to selected and set the corresponding color.
+     * Sets the clicked button to selected and set the corresponding color.
      *
      * @param view the clicked view
      */

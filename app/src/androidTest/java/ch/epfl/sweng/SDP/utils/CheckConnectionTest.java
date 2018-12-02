@@ -1,10 +1,8 @@
-package ch.epfl.sweng.SDP.firebase;
+package ch.epfl.sweng.SDP.utils;
 
 import android.support.test.InstrumentationRegistry;
 
 import org.junit.Test;
-
-import ch.epfl.sweng.SDP.utils.CheckConnection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

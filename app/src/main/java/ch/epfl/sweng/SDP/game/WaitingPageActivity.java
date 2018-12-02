@@ -214,14 +214,15 @@ public class WaitingPageActivity extends BaseActivity {
 
         DatabaseReference wordsVotesRef = Database.getReference(
                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
+        word1Ref = wordsVotesRef.child(word1);
+        word2Ref = wordsVotesRef.child(word2);
 
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." +
+                roomID + ".users");
         usersCountRef.addValueEventListener(listenerCountUsers);
-        word1Ref = wordsVotesRef.child(word1);
-        word2Ref = wordsVotesRef.child(word2);
 
         initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
                 WordNumber.ONE);

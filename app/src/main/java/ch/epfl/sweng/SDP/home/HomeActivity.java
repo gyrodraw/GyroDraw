@@ -291,15 +291,7 @@ public class HomeActivity extends BaseActivity {
     private void listenerEventSelector(final View view, int resourceId) {
         switch (resourceId) {
             case R.id.drawButton:
-                if (CheckConnection.isOnline(this)) {
-                    ((ImageView) view).setImageResource(R.drawable.draw_button);
-                    Intent intent = new Intent(this, LoadingScreenActivity.class);
-                    intent.putExtra("mode", 0);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, R.string.no_internet,
-                            Toast.LENGTH_LONG).show();
-                }
+                launchOnlineGame((ImageView) view, R.drawable.draw_button, 0);
                 break;
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
@@ -323,17 +315,21 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(DrawingOffline.class);
                 break;
             case R.id.mysteryButton:
-                if (CheckConnection.isOnline(this)) {
-                    ((ImageView) view).setImageResource(R.drawable.home_mystery_button);
-                    Intent intent = new Intent(this, LoadingScreenActivity.class);
-                    intent.putExtra("mode", 1);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, R.string.no_internet,
-                            Toast.LENGTH_LONG).show();
-                }
+                launchOnlineGame((ImageView) view, R.drawable.home_mystery_button, 1);
                 break;
             default:
+        }
+    }
+
+    private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
+        if (CheckConnection.isOnline(this)) {
+            view.setImageResource(resourceId);
+            Intent intent = new Intent(this, LoadingScreenActivity.class);
+            intent.putExtra("mode", gameMode);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.no_internet,
+                    Toast.LENGTH_LONG).show();
         }
     }
 

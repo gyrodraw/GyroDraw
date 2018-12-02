@@ -79,4 +79,9 @@ public class LoginActivityTest {
                 .thenReturn(userEntry);
         assertThat(mockSnapshot.getValue(), CoreMatchers.<Object>is(userEntry));
     }
+
+    @Test
+    public void testPressingBackButtonDoesNothing() {
+        activityRule.getActivity().onBackPressed();
+    }
 }

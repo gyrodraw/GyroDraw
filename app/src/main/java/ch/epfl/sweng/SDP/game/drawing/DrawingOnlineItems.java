@@ -49,7 +49,8 @@ public class DrawingOnlineItems extends DrawingOnline {
 
         if (collidingItem != null) {
             collidingItem.activate(paintView);
-            drawingItems.getPaintViewHolder().removeView(drawingItems.getDisplayedItems().get(collidingItem));
+            drawingItems.getPaintViewHolder().removeView(
+                    drawingItems.getDisplayedItems().get(collidingItem));
             drawingItems.getPaintViewHolder().addView(drawingItems.itemTextFeedback(collidingItem));
             drawingItems.getDisplayedItems().remove(collidingItem);
         }

@@ -24,7 +24,7 @@ public class FbStorageUnitTest {
     private Bitmap mockBitmap;
 
     @Before
-    public void init(){
+    public void init() {
         mockReference = Mockito.mock(StorageReference.class);
         mockUploadTask = Mockito.mock(UploadTask.class);
         mockBitmap = Mockito.mock(Bitmap.class);
@@ -32,7 +32,7 @@ public class FbStorageUnitTest {
     }
 
     @Test
-    public void testSendBitmapToStorage(){
+    public void testSendBitmapToStorage() {
         when(mockReference.putBytes(isA(byte[].class))).thenReturn(mockUploadTask);
         when(mockUploadTask.addOnFailureListener(isA(OnFailureListener.class)))
                 .thenReturn(mockStorageTask);

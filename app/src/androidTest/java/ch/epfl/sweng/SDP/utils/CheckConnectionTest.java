@@ -1,10 +1,12 @@
-package ch.epfl.sweng.SDP.firebase;
+package ch.epfl.sweng.SDP.utils;
 
 import android.support.test.InstrumentationRegistry;
 
-import static junit.framework.TestCase.assertTrue;
-
 import org.junit.Test;
+
+import ch.epfl.sweng.SDP.firebase.CheckConnection;
+
+import static org.junit.Assert.assertTrue;
 
 public class CheckConnectionTest {
 

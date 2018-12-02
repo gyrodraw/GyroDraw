@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.VisibleForTesting;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,7 +23,8 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
-public class DrawingActivity extends BaseActivity {
+public abstract class DrawingActivity extends BaseActivity {
+
     protected static final String TAG = "DrawingActivity";
     protected PaintView paintView;
     protected Handler handler;
@@ -33,7 +35,8 @@ public class DrawingActivity extends BaseActivity {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
-    protected int getLayoutId() {
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    public int getLayoutId() {
         return R.layout.activity_drawing_offline;
     }
 
@@ -74,9 +77,9 @@ public class DrawingActivity extends BaseActivity {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE);
+
         // Set the content to appear under the system bars so that the
         // content doesn't resize when the system bars hide and show.
-
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -95,9 +98,9 @@ public class DrawingActivity extends BaseActivity {
     }
 
     /**
-     * Create an imageview corresponding to a given color.
+     * Creates an {@link ImageView} corresponding to a given color.
      * @param color Index of the colors to be created
-     * @return The imageview of the color
+     * @return The ImageView of the color
      */
     public ImageView createColorImageView(int color) {
         ImageView image = new ImageView(this);
@@ -140,12 +143,12 @@ public class DrawingActivity extends BaseActivity {
 
 
     /**
-     * Sets the clicked button to selected and sets the corresponding color.
+     * Sets the clicked button to selected and set the corresponding color.
      *
      * @param view the clicked view
      */
     public void colorClickHandler(View view) {
-        int index = ArrayUtils.indexOf(colorButtons, view);
+        int index = ArrayUtils.toArrayList(colorButtons).indexOf(view);
         paintView.setColor(index);
         colorButtons[index].setImageResource(R.drawable.color_circle_selected);
 

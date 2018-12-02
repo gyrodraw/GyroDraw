@@ -1,23 +1,20 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import static java.lang.String.format;
-
 import android.support.annotation.NonNull;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+
+import static java.lang.String.format;
 
 /**
  * Singleton class that represents the matchmaker.
@@ -53,7 +50,7 @@ public class Matchmaker implements MatchmakingInterface {
      *
      * @return a {@link Task} wrapping the result
      */
-    public Task<String> joinRoom() {
+    public Task<String> joinRoom(int gameMode) {
         FirebaseFunctions mFunctions;
         mFunctions = FirebaseFunctions.getInstance();
 
@@ -68,6 +65,8 @@ public class Matchmaker implements MatchmakingInterface {
         // TODO to the league
         data.put("league", account.getCurrentLeague().replaceAll("\\D+", ""));
         data.put("mode", 0);
+
+        data.put("mode", gameMode);
 
         return mFunctions.getHttpsCallable("joinGame2")
                 .call(data)

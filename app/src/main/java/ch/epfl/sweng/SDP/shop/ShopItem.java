@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
+import java.util.Objects;
+
 /**
  * Item that can be bought in the shop for the moment only colors can be bought.
  */
@@ -60,13 +62,16 @@ public class ShopItem {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj != null) {
-            ShopItem item = (ShopItem) obj;
+        if (this == obj) { return true; }
+        if (obj == null || getClass() != obj.getClass()) { return false; }
+        ShopItem shopItem = (ShopItem) obj;
+        return getPriceItem() == shopItem.getPriceItem()
+                && getColorItem() == shopItem.getColorItem();
+    }
 
-            return item.getPriceItem() == this.getPriceItem()
-                    && (item.getColorItem()).equals(this.getColorItem());
-        }
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(price, color);
     }
 }
 

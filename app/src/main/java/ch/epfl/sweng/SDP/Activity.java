@@ -129,6 +129,12 @@ public abstract class Activity extends AppCompatActivity {
             HashMap<String, Object> user = userEntry
                     .get(currentUserId);
             if (user != null) {
+                double averageRating;
+                if (user.get("averageRating") instanceof Long) {
+                    averageRating = ((Long) user.get("averageRating")).doubleValue();
+                } else {
+                    averageRating = (double)user.get("averageRating");
+                }
                 Account.createAccount(getApplicationContext(),
                         new ConstantsWrapper(), (String) user.get("username"),
                         (String) user.get("email"), (String) user.get("currentLeague"),
@@ -136,7 +142,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("stars")).intValue(),
                         ((Long) user.get("matchesWon")).intValue(),
                         ((Long) user.get("totalMatches")).intValue(),
-                        ((Long) user.get("averageRating")).doubleValue(),
+                        averageRating,
                         ((Long) user.get("maxTrophies")).intValue(),
                         Shop.firebaseToListShopItem((HashMap<String, String>)
                                                     user.get("boughtItems")));

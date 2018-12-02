@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -88,42 +90,29 @@ public class VotingPageActivity extends BaseActivity {
 
     // MARK: Sharing
 
-    private void shareDrawing(Bitmap drawing) {
-
-        saveDrawingToCache(drawing);
-
-        // Share
-        File imagePath = new File(getApplicationContext().getCacheDir(), "images");
-        File newFile = new File(imagePath, "image.png");
-        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.myapp.fileprovider", newFile);
-
-        if (contentUri != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
-            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
-            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-            startActivity(Intent.createChooser(shareIntent, "Choose an app"));
-        }
-
+    private void getImageUrl() {
+        String imageName = Account.getInstance(getApplicationContext()).getUserId() + ".jpg";
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                userDrawingUri = uri;
+                shareDrawingToFacebook(uri);
+                // Got the download URL for 'users/me/profile.png'
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
     }
 
-    private void saveDrawingToCache(Bitmap bitmap) {
-        // save bitmap to cache directory
-        try {
-
-            File cachePath = new File(getApplicationContext().getCacheDir(), "images");
-            cachePath.mkdirs(); // don't forget to make the directory
-            FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            stream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void shareDrawingToFacebook(Uri uri) {
+        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
+                .build();
+        ShareDialog.show(this,linkContent);
     }
-
-
 
     public int[] getRatings() {
         return ratings.clone();
@@ -268,13 +257,6 @@ public class VotingPageActivity extends BaseActivity {
         finish();
     }
 
-    private void shareDrawingToFacebook(Uri uri) {
-        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
-                .build();
-
-        ShareDialog.show(this,linkContent);
-    }
-
     /**
      * Start the {@link HomeActivity} when the button is pressed. The button is used at the end of
      * the game to return to the home screen.
@@ -398,16 +380,19 @@ public class VotingPageActivity extends BaseActivity {
                     if (currentId != null) {
                         if (currentId
                                 .equals(Account.getInstance(getApplicationContext()).getUserId())) {
+
+                            //getDownloadUrl(storage.getReference().child(currentId + ".jpg"));
                             // Get the image from the local database instead
                             LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
-                            storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
+                            Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
+                            getImageUrl();
+                          //  ImageStorageManager.saveImage(localImage, "picasso", getApplicationContext());
+                            storeBitmap(localImage, currentId);
                         } else {
+
                             refs[i] = storage.getReference().child(currentId + ".jpg");
 
-                            if (currentId.equals(Account.getInstance(getApplicationContext()).getUserId())) {
-                                getDownloadUrl(refs[i]);
-                            }
                             // Download the image
                             refs[i].getBytes(FIFTY_KB).addOnCompleteListener(
                                     new OnCompleteListener<byte[]>() {
@@ -441,11 +426,8 @@ public class VotingPageActivity extends BaseActivity {
                                             // Display the first drawing
                                             String playerName = playersNames[0];
                                             changeDrawing(drawings[0], playerName);
-                                            shareDrawing(drawings[0]);
-                                            ImageStorageManager.saveImage(drawings[0], "picasso", getApplicationContext());
                                             // Enable the rating bar only if the image is not the player's one
                                             enableRatingBar(playerName);
-
                                             // Display the voting page layout
                                             setLayoutToVisible();
                                         }
@@ -461,22 +443,6 @@ public class VotingPageActivity extends BaseActivity {
             }
 
         });
-    }
-
-    public void getDownloadUrl(StorageReference ref) {
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                userDrawingUri = uri;
-                // Got the download URL for 'users/me/profile.png'
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
-
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
@@ -28,11 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,15 +36,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-
-import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.Manifest;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.CheckConnection;
@@ -194,6 +183,8 @@ public class HomeActivity extends BaseActivity {
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.league_1);
 
         setLeague();
     }

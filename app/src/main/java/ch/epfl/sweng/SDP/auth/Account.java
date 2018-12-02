@@ -237,6 +237,10 @@ public class Account {
         this.maxTrophies = maxTrophies;
     }
 
+    public String getImageFileName() {
+        return this.username + "_" + this.totalMatches;
+    }
+
     /**
      * Registers this account in Firebase and in the local database.
      */

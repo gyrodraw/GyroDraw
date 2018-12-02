@@ -24,7 +24,7 @@ public enum Items {
     private static List<Items> createItemsForOfflineMode() {
         List<Items> items = new ArrayList<>(ITEMS);
         items.remove(ADD_STARS);
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     /**

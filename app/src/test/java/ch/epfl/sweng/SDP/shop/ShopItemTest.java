@@ -43,4 +43,10 @@ public class ShopItemTest {
         ShopItem shopItem2 = new ShopItem(ColorsShop.BLUE, 10, true);
         assertNotEquals(shopItem1, shopItem2);
     }
+
+    @Test
+    public void notEqualsWithNullTest() {
+        ShopItem shopItem1 = new ShopItem(ColorsShop.BLUE, 20, false);
+        assertNotEquals(shopItem1, null);
+    }
 }

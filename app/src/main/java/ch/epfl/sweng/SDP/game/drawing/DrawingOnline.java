@@ -21,6 +21,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.game.drawing.GyroDrawingActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -102,9 +103,10 @@ public class DrawingOnline extends GyroDrawingActivity {
         }
     };
 
+    @VisibleForTesting
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_drawing;
+    public int getLayoutId() {
+        return R.layout.activity_drawing_online;
     }
 
     @Override
@@ -148,8 +150,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         timerRef.removeEventListener(listenerTimer);
         stateRef.removeEventListener(listenerState);
     }
-
-    // MARK: COUNTDOWN METHODS
 
     /**
      * Saves drawing in the local database and uploads it to Firebase Storage.

@@ -4,7 +4,10 @@ import java.util.Random;
 
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
-public class RandomItemGenerator {
+/**
+ * Class representing a random {@link Item} generator.
+ */
+public final class RandomItemGenerator {
 
     private static final int ITEM_RADIUS = 50;
 
@@ -17,7 +20,7 @@ public class RandomItemGenerator {
      * @return the generated item
      */
     public static Item generateItem(PaintView paintView) {
-        Items item = Items.randomItem();
+        Items item = Items.getRandomItem();
         int x = randomIntWithinBounds(paintView.getWidth());
         int y = randomIntWithinBounds(paintView.getHeight());
         switch (item) {
@@ -31,7 +34,29 @@ public class RandomItemGenerator {
                 return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS);
             case BUMP:
                 return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
+            default:
+                throw new IllegalArgumentException("Unknown item type");
+        }
+    }
 
+    /**
+     * Generates a random item (add stars excluded) at a random position.
+     *
+     * @return the generated item
+     */
+    public static Item generateItemForOfflineMode(PaintView paintView) {
+        Items item = Items.getRandomItemForOfflineMode();
+        int x = randomIntWithinBounds(paintView.getWidth());
+        int y = randomIntWithinBounds(paintView.getHeight());
+        switch (item) {
+            case SPEEDUP:
+                return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS);
+            case SLOWDOWN:
+                return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS);
+            case SWAPAXIS:
+                return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS);
+            case BUMP:
+                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
             default:
                 throw new IllegalArgumentException("Unknown item type");
         }

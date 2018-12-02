@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
@@ -18,48 +18,60 @@ import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
 
-import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.itemTextFeedback;
-
-public class DrawingOfflineItems extends DrawingOffline {
+/**
+ * Utility class containing methods related to the special items mode.
+ */
+final class DrawingItems {
 
     private static final int INTERVAL = 10000;
 
-    protected PaintView paintView;
+    private Context context;
+    private RelativeLayout paintViewHolder;
+    private PaintView paintView;
     private Map<Item, ImageView> displayedItems;
-    private Random random = new Random();
+    private Random random;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        paintView = super.paintView;
-        displayedItems = new HashMap<>();
-        generateItems();
+    private CountDownTimer offlineModeTimer = new CountDownTimer(INTERVAL, INTERVAL) {
+
+        public void onTick(long millisUntilFinished) {
+            // Does nothing
+        }
+
+        public void onFinish() {
+            convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
+            generateItemsForOfflineMode();
+        }
+    };
+
+    DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView,
+                 Map<Item, ImageView> displayedItems, Random random) {
+        this.context = context;
+        this.paintViewHolder = paintViewHolder;
+        this.paintView = paintView;
+        this.displayedItems = new HashMap<>(displayedItems);
+        this.random = random;
     }
 
-    protected HashMap<Item, ImageView> getDisplayedItems() {
-        return new HashMap<>(displayedItems);
+    RelativeLayout getPaintViewHolder() {
+        return paintViewHolder;
+    }
+
+    Map<Item, ImageView> getDisplayedItems() {
+        return displayedItems;
+    }
+
+    PaintView getPaintView() {
+        return paintView;
     }
 
     /**
-     * Gets called when sensor data changed. Updates the paintViews' circle coordinates
-     * and checks if there are collisions with any displayed items.
-     * If there is, the item gets activated and removed from the displayedItems.
+     * Return the feedback TextView of the given item.
      *
-     * @param coordinateX new X coordinate for paintView
-     * @param coordinateY new Y coordinate for paintView
+     * @param item the given item
+     * @return the associated feedback TextView
      */
-    @Override
-    public void updateValues(float coordinateX, float coordinateY) {
-        paintView.updateCoordinates(coordinateX, coordinateY);
-
-        Item collidingItem = findCollidingElement();
-
-        if (collidingItem != null) {
-            collidingItem.activate(paintView);
-            paintViewHolder.removeView(displayedItems.get(collidingItem));
-            paintViewHolder.addView(itemTextFeedback(collidingItem, paintViewHolder, this));
-            displayedItems.remove(collidingItem);
-        }
+    TextView getTextFeedback(Item item) {
+        return FeedbackTextView.itemTextFeedback(item, paintViewHolder, context);
     }
 
     /**
@@ -67,7 +79,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      *
      * @return item that collided, or null.
      */
-    private Item findCollidingElement() {
+    Item findCollidingElement() {
         for (Item item : displayedItems.keySet()) {
             if (item.collision(paintView)) {
                 return item;
@@ -79,7 +91,7 @@ public class DrawingOfflineItems extends DrawingOffline {
     /**
      * Generates a random item every INTERVAL seconds.
      */
-    private void generateItems() {
+    void generateItems() {
         new CountDownTimer(INTERVAL, INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
@@ -91,6 +103,25 @@ public class DrawingOfflineItems extends DrawingOffline {
                 generateItems();
             }
         }.start();
+    }
+
+    /**
+     * Generates a random item (add stars excluded) every INTERVAL seconds.
+     */
+    void generateItemsForOfflineMode() {
+        offlineModeTimer.start();
+    }
+
+    /**
+     * Stops the timer and the item generation.
+     */
+    void stopOfflineModeItemGeneration() {
+        offlineModeTimer.cancel();
+        for (ImageView item : displayedItems.values()) {
+            paintViewHolder.removeView(item);
+        }
+        displayedItems.clear();
+
     }
 
     private void convertAndAddItemToLayout(Item item) {
@@ -106,7 +137,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      * @return ImageView of the item
      */
     private ImageView itemToImageView(Item item) {
-        ImageView view = new ImageView(this);
+        ImageView view = new ImageView(context);
         view.setX(item.getX() - item.getRadius());
         view.setY(item.getY() - item.getRadius());
         view.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -128,7 +159,12 @@ public class DrawingOfflineItems extends DrawingOffline {
     }
 
     @VisibleForTesting
-    public void addRandomItem() {
+    void addRandomItemForOfflineMode() {
+        convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
+    }
+
+    @VisibleForTesting
+    void addRandomItem() {
         convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
     }
 }

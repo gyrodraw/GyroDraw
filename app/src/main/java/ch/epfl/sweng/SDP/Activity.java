@@ -168,6 +168,12 @@ public abstract class Activity extends AppCompatActivity {
         view.setLayoutParams(layoutParams);
     }
 
+    /**
+     * Clones the {@link Account}, corresponding to the user logged in,
+     * from Firebase, and stores it in the local database.
+     *
+     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase Database
+     */
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();

@@ -11,6 +11,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
@@ -82,13 +84,20 @@ public class ShopItem {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof ShopItem) {
-            ShopItem item = (ShopItem) obj;
-
-            return item.getPriceItem() == this.getPriceItem()
-                    && (item.getColorItem()).equals(this.getColorItem());
+        if (this == obj) {
+            return true;
         }
-        return false;
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ShopItem shopItem = (ShopItem) obj;
+        return getPriceItem() == shopItem.getPriceItem()
+                && getColorItem() == shopItem.getColorItem();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(price, color);
     }
 
     /**

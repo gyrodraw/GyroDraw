@@ -3,8 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorDarkGrey"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/winningWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Word"
+        android:textColor="@color/colorWhite"
+        android:textSize="35sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +26,8 @@
             android:id="@+id/pencilButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             android:rotation="180"
@@ -28,8 +37,8 @@
             android:id="@+id/eraserButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/eraser" />
@@ -38,37 +47,26 @@
             android:id="@+id/bucketButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/bucket" />
 
-        <ImageView
-            android:id="@+id/mysteryModeButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:onClick="toggleMysteryMode"
-            app:srcCompat="@drawable/mystery_box" />
-
         <TextView
-            android:id="@+id/exit"
+            android:id="@+id/timeRemaining"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="@string/cross"
-            android:textColor="@color/colorDrawYellow"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
+            android:textColor="@color/colorWhite"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/paintViewHolder"
@@ -80,6 +78,7 @@
             android:id="@+id/paintView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="10"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,8 +98,8 @@
             android:id="@+id/blackButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle_selected" />

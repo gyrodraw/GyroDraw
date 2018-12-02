@@ -24,6 +24,7 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -41,6 +42,8 @@ public class WaitingPageActivity extends BaseActivity {
 
     private String roomID = null;
 
+    private int gameMode;
+
     private static boolean enableSquareAnimation = true;
     private boolean isDrawingActivityLaunched = false;
 
@@ -50,8 +53,6 @@ public class WaitingPageActivity extends BaseActivity {
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
-    private DatabaseReference usersCountRef;
-    private DatabaseReference wordsVotesRef;
     private DatabaseReference stateRef;
     private DatabaseReference timerRef;
 
@@ -105,7 +106,7 @@ public class WaitingPageActivity extends BaseActivity {
                         if (timerRef != null) {
                             timerRef.removeEventListener(listenerTimer);
                         }
-                        launchDrawingActivity();
+                        launchDrawingActivity(gameMode);
                         break;
                     default:
                 }
@@ -186,6 +187,7 @@ public class WaitingPageActivity extends BaseActivity {
         roomID = intent.getStringExtra("roomID");
         word1 = intent.getStringExtra("word1");
         word2 = intent.getStringExtra("word2");
+        gameMode = intent.getIntExtra("mode", 0);
 
         if (enableSquareAnimation) {
             Glide.with(this).load(R.drawable.waiting_animation_square)
@@ -194,16 +196,17 @@ public class WaitingPageActivity extends BaseActivity {
                     .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
         }
 
-        wordsVotesRef = Database.getReference(
+        DatabaseReference wordsVotesRef = Database.getReference(
                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
+        word1Ref = wordsVotesRef.child(word1);
+        word2Ref = wordsVotesRef.child(word2);
 
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." +
+                roomID + ".users");
         usersCountRef.addValueEventListener(listenerCountUsers);
-        word1Ref = wordsVotesRef.child(word1);
-        word2Ref = wordsVotesRef.child(word2);
 
         initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
                 WordNumber.ONE);
@@ -222,8 +225,9 @@ public class WaitingPageActivity extends BaseActivity {
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
     }
 
-    protected void launchDrawingActivity() {
-        Intent intent = new Intent(getApplicationContext(), DrawingOnline.class);
+    protected void launchDrawingActivity(int gameMode) {
+        Intent intent = new Intent(getApplicationContext(),
+                gameMode == 0 ? DrawingOnline.class : DrawingOnlineItems.class);
 
         isDrawingActivityLaunched = true;
 

@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
@@ -28,6 +29,7 @@ import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 public class LoadingScreenActivity extends BaseActivity {
 
     private String roomID = null;
+    private int gameMode = 0;
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
@@ -58,6 +60,7 @@ public class LoadingScreenActivity extends BaseActivity {
                         intent.putExtra("word1", word1);
                         intent.putExtra("word2", word2);
                         intent.putExtra("roomID", roomID);
+                        intent.putExtra("mode", gameMode);
                         startActivity(intent);
                     }
                 }
@@ -108,8 +111,10 @@ public class LoadingScreenActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
+        gameMode = getIntent().getIntExtra("mode", 0);
+
         if (!isTesting) {
-            lookingForRoom();
+            lookingForRoom(gameMode);
         }
 
 
@@ -125,9 +130,9 @@ public class LoadingScreenActivity extends BaseActivity {
 
     }
 
-    protected void lookingForRoom() {
+    protected void lookingForRoom(int gameMode) {
         Matchmaker.getInstance(Account.getInstance(this))
-                .joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
+                .joinRoom(gameMode).addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()) {
@@ -162,10 +167,12 @@ public class LoadingScreenActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @VisibleForTesting
     public static void disableLoadingAnimations() {
         enableWaitingAnimation = false;
     }
 
+    @VisibleForTesting
     public static void setOnTest() {
         isTesting = true;
     }

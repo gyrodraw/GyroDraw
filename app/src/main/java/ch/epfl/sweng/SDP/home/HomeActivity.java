@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -32,7 +33,6 @@ import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
@@ -281,13 +281,7 @@ public class HomeActivity extends BaseActivity {
     private void listenerEventSelector(final View view, int resourceId) {
         switch (resourceId) {
             case R.id.drawButton:
-                if (CheckConnection.isOnline(this)) {
-                    ((ImageView) view).setImageResource(R.drawable.draw_button);
-                    launchActivity(LoadingScreenActivity.class);
-                } else {
-                    Toast.makeText(this, R.string.no_internet,
-                            Toast.LENGTH_LONG).show();
-                }
+                launchOnlineGame((ImageView) view, R.drawable.draw_button, 0);
                 break;
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
@@ -314,9 +308,21 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(DrawingOffline.class);
                 break;
             case R.id.mysteryButton:
-                launchActivity(DrawingOfflineItems.class);
+                launchOnlineGame((ImageView) view, R.drawable.home_mystery_button, 1);
                 break;
             default:
+        }
+    }
+
+    private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
+        if (CheckConnection.isOnline(this)) {
+            view.setImageResource(resourceId);
+            Intent intent = new Intent(this, LoadingScreenActivity.class);
+            intent.putExtra("mode", gameMode);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.no_internet,
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -429,6 +435,6 @@ public class HomeActivity extends BaseActivity {
         Account account = Account.getInstance(this);
         ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
         ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
-                                                                        account.getTrophies()));
+                account.getTrophies()));
     }
 }

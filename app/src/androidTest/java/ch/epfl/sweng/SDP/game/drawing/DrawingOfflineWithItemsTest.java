@@ -9,11 +9,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.drawing.items.AddStarsItem;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
@@ -29,7 +28,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
-public class DrawingOfflineItemsTest {
+public class DrawingOfflineWithItemsTest {
 
     private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";
@@ -37,12 +36,12 @@ public class DrawingOfflineItemsTest {
 
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
-    private DrawingOfflineItems activity;
+    private DrawingOffline activity;
     private Account account;
 
     @Rule
-    public final ActivityTestRule<DrawingOfflineItems> activityRule =
-            new ActivityTestRule<>(DrawingOfflineItems.class);
+    public final ActivityTestRule<DrawingOffline> activityRule =
+            new ActivityTestRule<>(DrawingOffline.class);
 
     /**
      * Initializes variables.
@@ -50,10 +49,11 @@ public class DrawingOfflineItemsTest {
     @Before
     public void init() {
         activity = activityRule.getActivity();
-        paintViewHolder = activity.paintViewHolder;
-        paintView = activity.paintView;
+        activity.toggleMysteryMode(null);
+        paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
+        paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
-        account = Account.getInstance(activityRule.getActivity().getApplicationContext());
+        account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(EMAIL);
@@ -75,7 +75,7 @@ public class DrawingOfflineItemsTest {
         do {
             addRandomItem();
             SystemClock.sleep(5000);
-            HashMap<Item, ImageView> displayedItems = activity.getDisplayedItems();
+            Map<Item, ImageView> displayedItems = activity.getDrawingItems().getDisplayedItems();
             item = (Item) displayedItems.keySet().toArray()[0];
         }
         while (item instanceof BumpingItem);
@@ -99,13 +99,6 @@ public class DrawingOfflineItemsTest {
     public void testSwapAxisItemSwapsSpeedPaintView() {
         checkItemHasCorrectBehaviourOnPaintView(
                 SwapAxisItem.createSwapAxisItem(20, 20, 10), -1);
-    }
-
-    @Test
-    public void testAddStarsItemAddsStarsToAccount() {
-        int initStars = account.getStars();
-        activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
-        assertThat(account.getStars(), is(initStars + 3));
     }
 
     @Test
@@ -173,7 +166,7 @@ public class DrawingOfflineItemsTest {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    activity.addRandomItem();
+                    activity.getDrawingItems().addRandomItemForOfflineMode();
                 }
             });
         } catch (Throwable throwable) {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
 import android.view.ViewGroup;
@@ -21,48 +20,50 @@ import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
 
-public class DrawingOfflineItems extends DrawingOffline {
+/**
+ * Utility class containing methods related to the special items mode.
+ */
+final class DrawingItems {
 
     private static final int INTERVAL = 10000;
 
-    protected RelativeLayout paintViewHolder;
-    protected PaintView paintView;
+    private Context context;
+    private RelativeLayout paintViewHolder;
+    private PaintView paintView;
     private Map<Item, ImageView> displayedItems;
-    private Random random = new Random();
+    private Random random;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        paintViewHolder = findViewById(R.id.paintViewHolder);
-        paintView = super.paintView;
-        displayedItems = new HashMap<>();
-        generateItems();
-    }
+    private CountDownTimer offlineModeTimer = new CountDownTimer(INTERVAL, INTERVAL) {
 
-    protected HashMap<Item, ImageView> getDisplayedItems() {
-        return new HashMap<>(displayedItems);
-    }
-
-    /**
-     * Gets called when sensor data changed. Updates the paintViews' circle coordinates
-     * and checks if there are collisions with any displayed items.
-     * If there is, the item gets activated and removed from the displayedItems.
-     *
-     * @param coordinateX new X coordinate for paintView
-     * @param coordinateY new Y coordinate for paintView
-     */
-    @Override
-    public void updateValues(float coordinateX, float coordinateY) {
-        paintView.updateCoordinates(coordinateX, coordinateY);
-
-        Item collidingItem = findCollidingElement();
-
-        if (collidingItem != null) {
-            collidingItem.activate(paintView);
-            paintViewHolder.removeView(displayedItems.get(collidingItem));
-            paintViewHolder.addView(itemTextFeedback(collidingItem));
-            displayedItems.remove(collidingItem);
+        public void onTick(long millisUntilFinished) {
+            // Does nothing
         }
+
+        public void onFinish() {
+            convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
+            generateItemsForOfflineMode();
+        }
+    };
+
+    DrawingItems(Context context, RelativeLayout paintViewHolder, PaintView paintView,
+                 Map<Item, ImageView> displayedItems, Random random) {
+        this.context = context;
+        this.paintViewHolder = paintViewHolder;
+        this.paintView = paintView;
+        this.displayedItems = new HashMap<>(displayedItems);
+        this.random = random;
+    }
+
+    RelativeLayout getPaintViewHolder() {
+        return paintViewHolder;
+    }
+
+    Map<Item, ImageView> getDisplayedItems() {
+        return displayedItems;
+    }
+
+    PaintView getPaintView() {
+        return paintView;
     }
 
     /**
@@ -70,7 +71,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      *
      * @return item that collided, or null.
      */
-    private Item findCollidingElement() {
+    Item findCollidingElement() {
         for (Item item : displayedItems.keySet()) {
             if (item.collision(paintView)) {
                 return item;
@@ -82,7 +83,7 @@ public class DrawingOfflineItems extends DrawingOffline {
     /**
      * Generates a random item every INTERVAL seconds.
      */
-    private void generateItems() {
+    void generateItems() {
         new CountDownTimer(INTERVAL, INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
@@ -94,6 +95,25 @@ public class DrawingOfflineItems extends DrawingOffline {
                 generateItems();
             }
         }.start();
+    }
+
+    /**
+     * Generates a random item (add stars excluded) every INTERVAL seconds.
+     */
+    void generateItemsForOfflineMode() {
+        offlineModeTimer.start();
+    }
+
+    /**
+     * Stops the timer and the item generation.
+     */
+    void stopOfflineModeItemGeneration() {
+        offlineModeTimer.cancel();
+        for (ImageView item: displayedItems.values()) {
+            paintViewHolder.removeView(item);
+        }
+        displayedItems.clear();
+
     }
 
     private void convertAndAddItemToLayout(Item item) {
@@ -109,7 +129,7 @@ public class DrawingOfflineItems extends DrawingOffline {
      * @return ImageView of the item
      */
     private ImageView itemToImageView(Item item) {
-        ImageView view = new ImageView(this);
+        ImageView view = new ImageView(context);
         view.setX(item.getX() - item.getRadius());
         view.setY(item.getY() - item.getRadius());
         view.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -137,8 +157,8 @@ public class DrawingOfflineItems extends DrawingOffline {
      * @param item that was activated
      * @return feedback text
      */
-    private TextView itemTextFeedback(Item item) {
-        final FeedbackTextView feedback = new FeedbackTextView(this);
+    TextView itemTextFeedback(Item item) {
+        final FeedbackTextView feedback = new FeedbackTextView(context);
         feedback.setText(item.textFeedback());
 
         new CountDownTimer(800, 40) {
@@ -154,12 +174,22 @@ public class DrawingOfflineItems extends DrawingOffline {
         return feedback;
     }
 
+    @VisibleForTesting
+    void addRandomItemForOfflineMode() {
+        convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
+    }
+
+    @VisibleForTesting
+    void addRandomItem() {
+        convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
+    }
+
     /**
      * Helper class that defines the style of the text feedback.
      */
     private class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
 
-        protected FeedbackTextView(Context context) {
+        private FeedbackTextView(Context context) {
             super(context);
             setTextColor(context.getResources().getColor(R.color.colorDrawYellow));
             setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorGrey));
@@ -172,10 +202,5 @@ public class DrawingOfflineItems extends DrawingOffline {
             Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
             setTypeface(typeMuro, Typeface.ITALIC);
         }
-    }
-
-    @VisibleForTesting
-    public void addRandomItem() {
-        convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
     }
 }

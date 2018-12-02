@@ -133,4 +133,9 @@ public class LoginActivityTest {
             throwable.printStackTrace();
         }
     }
+
+    @Test
+    public void testPressingBackButtonDoesNothing() {
+        activityRule.getActivity().onBackPressed();
+    }
 }

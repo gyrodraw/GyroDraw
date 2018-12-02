@@ -34,4 +34,9 @@ public class ColorShopTest {
         assertThat(ColorsShop.getColorFromString("GREEN"), is(ColorsShop.GREEN));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetUnknownColorFromString() {
+        ColorsShop.getColorFromString("MAGENTA");
+    }
+
 }

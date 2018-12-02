@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +41,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class VotingPageActivityTest {
+public class VotingPageActivityTest{
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
@@ -54,11 +53,11 @@ public class VotingPageActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     VotingPageActivity.disableAnimations();
-                    //RankingFragment.enableTesting();
                     Account.deleteAccount();
                     Account.createAccount(InstrumentationRegistry.getTargetContext(),
                             new ConstantsWrapper(), "userA", "test");
-                    Account.getInstance(InstrumentationRegistry.getTargetContext()).setUserId("userA");
+                    Account.getInstance(InstrumentationRegistry.getTargetContext())
+                            .setUserId("userA");
                 }
 
                 @Override

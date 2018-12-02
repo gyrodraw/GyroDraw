@@ -42,7 +42,6 @@ import ch.epfl.sweng.SDP.utils.SortUtils;
 public class RankingFragment extends ListFragment {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static boolean isTesting = false;
     private String roomId;
 
     private DatabaseReference rankingRef;
@@ -81,11 +80,7 @@ public class RankingFragment extends ListFragment {
         Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(typeMuro);
 
-        if(!isTesting) {
-            account = Account.getInstance(getActivity().getApplicationContext());
-        } else {
-            createTestAccount();
-        }
+        account = Account.getInstance(getActivity().getApplicationContext());
 
         retrieveFinalRanking();
     }
@@ -198,19 +193,6 @@ public class RankingFragment extends ListFragment {
 
     private void setFinishedCollectingRanking() {
         finishedRef.child(account.getUsername()).setValue(1);
-    }
-
-    @VisibleForTesting
-    public static void enableTesting() {
-        isTesting = true;
-    }
-
-    //
-    private void createTestAccount() {
-        Account.deleteAccount();
-        Account.createAccount(getActivity().getApplicationContext(), new ConstantsWrapper(),
-                "userA", "");
-        account = Account.getInstance(getActivity().getApplicationContext());
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

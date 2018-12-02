@@ -346,7 +346,7 @@ public class Account {
      * Method that allows one to change the average rating per game given a new rating.
      * The rating passed as parameter should be the average rating obtained after a match.
      *
-     * @throws IllegalArgumentException in case a rating <= 0 or > 5 is given
+     * @throws IllegalArgumentException in case a rating <= 0 or > 25 is given
      * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {

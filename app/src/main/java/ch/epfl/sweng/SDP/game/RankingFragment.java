@@ -133,16 +133,9 @@ public class RankingFragment extends ListFragment {
                 Integer[] positions = RankingUtils.generatePositionsFromRanking(rankings);
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
-                int trophiesForUser = 0;
-                if(usernames.indexOf(account.getUsername()) != -1) {
-                    trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
-                }
-
-                int positionForUser = 5;
-                if(usernames.indexOf(account.getUsername()) != -1) {
-                    positionForUser = positions[usernames.indexOf(account.getUsername())];
-                }
-
+                int trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
+                int positionForUser = positions[usernames.indexOf(account.getUsername())];
+                
                 Boolean won = usernames.get(0).equals(account.getUsername());
                 updateUserStats(rankForUser, trophiesForUser, won);
                 createAndStoreGameResult(usernames, positionForUser, rankForUser, trophiesForUser);

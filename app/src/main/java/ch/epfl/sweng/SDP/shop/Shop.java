@@ -43,7 +43,7 @@ public class Shop {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 int value = Integer.parseInt(String.valueOf(entry.getValue()));
                 listItem.add(new ShopItem(
-                        ColorsShop.getColorFromString(entry.getKey()), value, false));
+                        ColorsShop.getColorFromString(entry.getKey()), value));
             }
         }
 

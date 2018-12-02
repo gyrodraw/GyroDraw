@@ -72,7 +72,7 @@ public class ShopActivity extends BaseActivity {
         List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
 
         for (ColorsShop color : ColorsShop.values()) {
-            ShopItem item = new ShopItem(color, color.getPrice(), false);
+            ShopItem item = new ShopItem(color, color.getPrice());
 
             if (myItems.contains(item)) {
                 item = new ShopItem(color, color.getPrice(), true);

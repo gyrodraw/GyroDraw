@@ -31,6 +31,19 @@ public class ShopItem {
      *
      * @param color the color of the item
      * @param price the price of the item
+     */
+    public ShopItem(ColorsShop color, int price) {
+        this.price = price;
+        this.color = color;
+        owned = false;
+    }
+
+
+    /**
+     * Constructor of a ShopItem.
+     *
+     * @param color the color of the item
+     * @param price the price of the item
      * @param owned is this item owned by the player
      */
     public ShopItem(ColorsShop color, int price, boolean owned) {

@@ -109,8 +109,9 @@ public class Account {
      * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-                                     String username, String email, String currentLeague, int trophies, int stars,
-                                     int matchesWon, int totalMatches, double averageRating, int maxTrophies,
+                                     String username, String email, String currentLeague,
+                                     int trophies, int stars, int matchesWon, int totalMatches,
+                                     double averageRating, int maxTrophies,
                                      List<ShopItem> itemsBought) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");

@@ -13,8 +13,9 @@ public enum Database {
     INSTANCE;
 
     /**
-     * Gets and returns the {@link DatabaseReference} associated to the given path. The path can be a
-     * single keyword or multiple nested keywords and has the format "root.child1.child2...childN".
+     * Gets and returns the {@link DatabaseReference} associated to the given path.
+     * The path can be a single keyword or multiple nested keywords and has the format
+     * "root.child1.child2...childN".
      *
      * @param path the path to follow inside the database in order to retrieve the reference
      * @return the DatabaseReference associated to the given path

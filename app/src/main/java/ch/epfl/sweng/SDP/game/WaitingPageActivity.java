@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -32,7 +32,7 @@ import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import static java.lang.String.format;
 
-public class WaitingPageActivity extends Activity {
+public class WaitingPageActivity extends BaseActivity {
 
     private static final String TAG = "WaitingPageActivity";
 

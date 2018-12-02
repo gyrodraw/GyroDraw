@@ -5,10 +5,12 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +37,7 @@ public class ShopActivity extends Activity {
     private Dialog buyDialog;
     private LinearLayout shopItems;
     private Shop shop;
+    private Typeface typeMuro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class ShopActivity extends Activity {
                     .into((ImageView) findViewById(R.id.shopBackgroundAnimation));
         }
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         buyDialog = new Dialog(this);
         shopItems = findViewById(R.id.shopItems);
         TextView exitButton = findViewById(R.id.exitButton);
@@ -119,17 +122,27 @@ public class ShopActivity extends Activity {
     private void touchItem(int index, ShopItem item) {
         buyDialog.setContentView(R.layout.shop_pop_up_buy);
 
-        ((TextView) buyDialog.findViewById(R.id.infoMessageView)).setText(String.format(
-                "Do you really want to buy %s color for %d stars", item.getColorItem(),
-                item.getPriceItem()));
+        final TextView priceText = buyDialog.findViewById(R.id.priceText);
+        priceText.setTypeface(typeMuro);
+        priceText.setText(String.format(Locale.getDefault(), "%d", item.getPriceItem()));
 
-        setOnBuyClick(((Button) buyDialog.findViewById(R.id.buyButton)), index);
+        TextView colorText = buyDialog.findViewById(R.id.colorText);
+        colorText.setTypeface(typeMuro);
+        colorText.setText(item.getColorItem().toString());
+
+        Button confirmButton = buyDialog.findViewById(R.id.confirmButton);
+        confirmButton.setTypeface(typeMuro);
+        setConfirmClick(confirmButton, index);
+
+        Button cancelButton = buyDialog.findViewById(R.id.cancelButton);
+        cancelButton.setTypeface(typeMuro);
+        setCancelClick(cancelButton);
 
         buyDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         buyDialog.show();
     }
 
-    private void setOnBuyClick(final Button button, final int index) {
+    private void setConfirmClick(final Button button, final int index) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,8 +170,13 @@ public class ShopActivity extends Activity {
         });
     }
 
-    public void onCancelPopUp(View view) {
-        buyDialog.dismiss();
+    private void setCancelClick(final Button button) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buyDialog.dismiss();
+            }
+        });
     }
 
     @VisibleForTesting

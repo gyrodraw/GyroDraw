@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -21,7 +20,6 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class ShopActivityTest {
@@ -56,7 +54,7 @@ public class ShopActivityTest {
 
         onView(withId(id)).perform(click());
         onView(withId(R.id.cancelButton)).perform(click());
-        onView(withId(R.id.buyButton)).check(doesNotExist());
+        onView(withId(R.id.confirmButton)).check(doesNotExist());
     }
 
     @Test
@@ -67,7 +65,7 @@ public class ShopActivityTest {
         layoutChild.setId(id);
 
         onView(withId(id)).perform(click());
-        onView(withId(R.id.buyButton)).check(doesNotExist());
+        onView(withId(R.id.confirmButton)).check(doesNotExist());
         onView(withId(R.id.cancelButton)).check(doesNotExist());
     }
 
@@ -81,7 +79,7 @@ public class ShopActivityTest {
         layoutChild.setId(id);
 
         onView(withId(id)).perform(click());
-        onView(withId(R.id.buyButton)).perform(click());
+        onView(withId(R.id.confirmButton)).perform(click());
 
         onView(withId(id)).check(doesNotExist());
     }

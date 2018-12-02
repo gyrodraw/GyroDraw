@@ -400,6 +400,10 @@ public class Account {
      * @param stateFriend state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
+        assert friendId != null : "friendId is null";
+        assert 0 <= stateUser && stateUser <= 2 : "Wrong stateUser given";
+        assert 0 <= stateFriend && stateFriend <= 2 : "Wrong stateUser given";
+
         // Update the user's friends' list
         Database.getReference(format(FRIENDS_LIST_FORMAT,
                 userId, friendId)).setValue(stateUser, createCompletionListener());

@@ -202,7 +202,7 @@ public class VotingPageActivity extends BaseActivity {
         }
         */
 
-        if (roomID != null) {
+        if (roomID != null && !roomID.equals("0123457890")) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }

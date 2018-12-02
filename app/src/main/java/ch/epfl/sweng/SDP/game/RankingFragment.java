@@ -139,7 +139,6 @@ public class RankingFragment extends ListFragment {
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
                 int trophiesForUser = 0;
-
                 if(usernames.indexOf(account.getUsername()) != -1) {
                     trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
                 }
@@ -210,9 +209,8 @@ public class RankingFragment extends ListFragment {
     private void createTestAccount() {
         Account.deleteAccount();
         Account.createAccount(getActivity().getApplicationContext(), new ConstantsWrapper(),
-                "123456789", "");
+                "userA", "");
         account = Account.getInstance(getActivity().getApplicationContext());
-        account.setUsername("userA");
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

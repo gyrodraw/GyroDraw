@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
@@ -51,7 +54,11 @@ public class VotingPageActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     VotingPageActivity.disableAnimations();
-                    RankingFragment.enableTesting();
+                    //RankingFragment.enableTesting();
+                    Account.deleteAccount();
+                    Account.createAccount(InstrumentationRegistry.getTargetContext(),
+                            new ConstantsWrapper(), "userA", "test");
+                    Account.getInstance(InstrumentationRegistry.getTargetContext()).setUserId("userA");
                 }
 
                 @Override

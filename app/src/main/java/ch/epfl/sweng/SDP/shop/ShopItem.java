@@ -1,13 +1,13 @@
 package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,30 +24,35 @@ public class ShopItem {
     private int price;
     private ColorsShop color;
     private boolean owned;
+    private LinearLayout layout;
 
     /**
      * Constructor of a ShopItem.
      *
-     * @param color Color of the item
-     * @param price Price of the item
-     */
-    public ShopItem(ColorsShop color, int price) {
-        this.price = price;
-        this.color = color;
-        this.owned = false;
-    }
-
-    /**
-     * Constructor of a ShopItem.
-     *
-     * @param color Color of the item
-     * @param price Price of the item
-     * @param owned Is this item owned by the player
+     * @param color the color of the item
+     * @param price the price of the item
+     * @param owned is this item owned by the player
      */
     public ShopItem(ColorsShop color, int price, boolean owned) {
         this.price = price;
         this.color = color;
         this.owned = owned;
+    }
+
+    /**
+     * Constructor of a ShopItem that computes the layout.
+     *
+     * @param color   the color of the item
+     * @param price   the price of the item
+     * @param stars   the current amount of stars
+     * @param owned   is this item owned by the player
+     * @param context the context of the shop
+     */
+    public ShopItem(ColorsShop color, int price, int stars, boolean owned, ShopActivity context) {
+        this.price = price;
+        this.color = color;
+        this.owned = owned;
+        setLayout(stars, context);
     }
 
     public ColorsShop getColorItem() {
@@ -56,6 +61,14 @@ public class ShopItem {
 
     public int getPriceItem() {
         return price;
+    }
+
+    public boolean getOwned() {
+        return owned;
+    }
+
+    public LinearLayout getLayout() {
+        return layout;
     }
 
     public void setPriceItem(int price) {
@@ -70,10 +83,6 @@ public class ShopItem {
         this.owned = owned;
     }
 
-    public boolean getOwned() {
-        return this.owned;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof ShopItem) {
@@ -85,19 +94,18 @@ public class ShopItem {
         return false;
     }
 
+    /**
+     * @param stars
+     * @param context
+     */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
-    public LinearLayout toLayout(final ShopActivity context) {
+    public void setLayout(int stars, ShopActivity context) {
         Resources res = context.getResources();
         String colorName = color.toString();
         Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
 
-        TextView colorTextView = context.createTextView(colorName,
-                res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
-
         ImageView colorImageView = new ImageView(context);
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 
         colorImageView.setLayoutParams(params);
         colorImageView.setPadding(0, 0, DEFAULT_PADDING, 0);
@@ -105,40 +113,38 @@ public class ShopItem {
         colorImageView.setColorFilter(res.getColor(ColorUtils.getColorFromString(colorName)),
                 PorterDuff.Mode.SRC_ATOP);
 
-        LinearLayout layout;
-
         if (!owned) {
+            TextView colorTextView = context.createTextView(colorName,
+                    res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
+                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 4));
+
+            ImageView starView = new ImageView(context);
+            LayoutParams layoutParams = new LayoutParams(0, ActionBar.LayoutParams.MATCH_PARENT, 0.5f);
+            starView.setLayoutParams(layoutParams);
+            starView.setImageResource(R.drawable.star);
+
             TextView priceView = context.createTextView(Integer.toString(price),
-                    res.getColor(R.color.colorPrimaryDark),
-                    DEFAULT_PADDING, typeMuro,
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+                    price <= stars ? res.getColor(R.color.colorGreen) :
+                            res.getColor(R.color.colorExitRed),
+                    DEFAULT_PADDING, typeMuro, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 2));
 
             priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-            priceView.setPadding(0, 0, DEFAULT_PADDING, 0);
-
-            ImageView image = new ImageView(context);
-            image.setBackgroundResource(R.drawable.star);
-            image.setPadding(0, 0, 0, DEFAULT_PADDING);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(75, 75);
-            image.setLayoutParams(layoutParams);
-
+            priceView.setPadding(0, 0, 10, 0);
             layout = context.addViews(new LinearLayout(context), colorImageView,
-                    colorTextView, priceView, image);
+                    colorTextView, priceView, starView);
+            layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         } else {
-            TextView ownedView = context.createTextView("✔", res.getColor(R.color.colorGreen),
-                    DEFAULT_PADDING, typeMuro,
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
-            ownedView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-            ownedView.setPadding(0, 0, DEFAULT_PADDING, 0);
+            TextView colorTextView = context.createTextView(colorName,
+                    res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
+                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 6.5f));
+
             colorImageView.setImageDrawable(res.getDrawable(R.drawable.color_circle_selected));
-            layout = context.addViews(new LinearLayout(context), colorImageView, colorTextView, ownedView);
+            layout = context.addViews(new LinearLayout(context), colorImageView, colorTextView);
+            layout.setBackgroundColor(res.getColor(R.color.colorGrey));
         }
 
-
-        layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         layout.setPadding(DEFAULT_PADDING, 10, DEFAULT_PADDING, 10);
-
-        return layout;
+        layout.setClickable(price <= stars && !owned);
     }
 }
 

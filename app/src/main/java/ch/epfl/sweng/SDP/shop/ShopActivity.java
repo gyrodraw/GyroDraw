@@ -2,10 +2,7 @@ package ch.epfl.sweng.SDP.shop;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +23,6 @@ import java.util.Locale;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.utils.ColorUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 /**
@@ -38,12 +33,7 @@ public class ShopActivity extends BaseActivity {
     private static boolean enableAnimations = true;
 
     private Dialog buyDialog;
-    private Dialog confirmationDialog;
-
     private LinearLayout shopItems;
-
-    private Resources res;
-
     private Shop shop;
 
     @Override
@@ -57,13 +47,8 @@ public class ShopActivity extends BaseActivity {
                     .into((ImageView) findViewById(R.id.shopBackgroundAnimation));
         }
 
-        res = getResources();
-
-        buyDialog = new Dialog(this);
-        confirmationDialog = new Dialog(this);
-
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
+        buyDialog = new Dialog(this);
         shopItems = findViewById(R.id.shopItems);
         TextView exitButton = findViewById(R.id.exitButton);
 
@@ -79,6 +64,25 @@ public class ShopActivity extends BaseActivity {
     }
 
     /**
+     * Fill the shop with the items available taking into account the colors the player
+     * has already bought.
+     */
+    public void fillShop() {
+        shop = new Shop();
+        List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
+
+        for (ColorsShop color : ColorsShop.values()) {
+            ShopItem item = new ShopItem(color, color.getPrice(), false);
+
+            if (myItems.contains(item)) {
+                item = new ShopItem(color, color.getPrice(), true);
+            }
+
+            shop.addItem(item);
+        }
+    }
+
+    /**
      * Create different layout for each available color in the shop.
      */
     public void addColorsToShop() {
@@ -87,19 +91,21 @@ public class ShopActivity extends BaseActivity {
         layoutParams.setMargins(0, 40, 0, 0);
 
         List<ShopItem> itemsList = shop.getItemList();
+        int stars = Account.getInstance(this).getStars();
 
         for (int i = 0; i < itemsList.size(); ++i) {
-            ShopItem item = itemsList.get(i);
-            LinearLayout itemLayout = item.toLayout(this);
-            shopItems.addView(itemLayout, layoutParams);
-            if (!item.getOwned()) {
-                itemLayout.setClickable(true);
+            final ShopItem item = itemsList.get(i);
+            final int index = i;
 
-                final int index = i;
+            item.setLayout(stars, this);
+            LinearLayout itemLayout = item.getLayout();
+            shopItems.addView(itemLayout, layoutParams);
+
+            if (!item.getOwned() && item.getPriceItem() <= stars) {
                 itemLayout.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
-                        touchItem(index);
+                        touchItem(index, item);
                         return true;
                     }
                 });
@@ -110,14 +116,12 @@ public class ShopActivity extends BaseActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void touchItem(int index) {
+    private void touchItem(int index, ShopItem item) {
         buyDialog.setContentView(R.layout.shop_pop_up_buy);
 
-        List<ShopItem> list = shop.getItemList();
-
         ((TextView) buyDialog.findViewById(R.id.infoMessageView)).setText(String.format(
-                "Do you really want to buy %s color for %d stars", list.get(index).getColorItem(),
-                list.get(index).getPriceItem()));
+                "Do you really want to buy %s color for %d stars", item.getColorItem(),
+                item.getPriceItem()));
 
         setOnBuyClick(((Button) buyDialog.findViewById(R.id.buyButton)), index);
 
@@ -129,93 +133,32 @@ public class ShopActivity extends BaseActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isSuccessful = false;
+                Account account = Account.getInstance(ShopActivity.this);
+                ShopItem item = shop.getItemList().get(index);
+                int stars = account.getStars();
+                int price = item.getPriceItem();
+
                 // Check if the user has enough stars
-                if (Account.getInstance(getApplicationContext()).getStars()
-                        - (shop.getItemList()).get(index).getPriceItem() >= 0) {
-                    Account.getInstance(getApplicationContext()).changeStars(
-                            -(shop.getItemList()).get(index).getPriceItem());
+                if (stars >= price) {
+                    account.changeStars(-price);
+                    account.updateItemsBought(item);
+                    item.setOwned(true);
 
-                    Account.getInstance(getApplicationContext())
-                            .updateItemsBought((shop.getItemList()).get(index));
+                    ((TextView) findViewById(R.id.yourStars))
+                            .setText(String.format(Locale.getDefault(), "%d", account.getStars()));
 
-                    ((shop.getItemList()).get(index)).setOwned(true);
-                    isSuccessful = true;
+                    // This clears layout and updates the item bought with owned
+                    ((LinearLayout) findViewById(R.id.shopItems)).removeAllViews();
+                    addColorsToShop();
                 }
 
                 buyDialog.dismiss();
-                showConfirmationPopUp(isSuccessful);
-
             }
         });
     }
 
-    /**
-     * Displays a Pop up window displaying a success message or error message.
-     *
-     * @param isSuccessful Boolean that tells if the purchase went successful or not
-     */
-    public void showConfirmationPopUp(boolean isSuccessful) {
-        confirmationDialog.setContentView(R.layout.shop_pop_up_confirmation);
-
-        if (isSuccessful) {
-            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
-                    .setText(getString(R.string.success));
-            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
-                    .setTextColor(res.getColor(R.color.colorGreen));
-            ((TextView) confirmationDialog.findViewById(R.id.infoMessageView))
-                    .setText(getString(R.string.buySuccess));
-            ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(),
-                    "%d", Account.getInstance(this).getStars()));
-
-            // This clears layout and updates the item bought with owned
-            ((LinearLayout) findViewById(R.id.shopItems)).removeAllViews();
-            addColorsToShop();
-
-        } else {
-            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
-                    .setText(getString(R.string.error));
-            ((TextView) confirmationDialog.findViewById(R.id.confirmationText))
-                    .setTextColor(res.getColor(R.color.colorRed));
-            ((TextView) confirmationDialog.findViewById(R.id.infoMessageView))
-                    .setText(getString(R.string.buyError));
-        }
-
-        (confirmationDialog.findViewById(R.id.okButton))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        confirmationDialog.dismiss();
-                    }
-                });
-
-        confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        confirmationDialog.show();
-
-    }
-
     public void onCancelPopUp(View view) {
         buyDialog.dismiss();
-    }
-
-    /**
-     * Fill the shop with the items available taking into account the colors the player
-     * has already bought.
-     */
-    public void fillShop() {
-
-        shop = new Shop();
-        List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
-
-        for (ColorsShop color : ColorsShop.values()) {
-            boolean owned = false;
-
-            if (myItems.contains(new ShopItem(color, color.getPrice()))) {
-                owned = true;
-            }
-
-            shop.addItem(new ShopItem(color, color.getPrice(), owned));
-        }
     }
 
     @VisibleForTesting

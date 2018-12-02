@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -206,6 +208,31 @@ public class RankingFragment extends ListFragment {
             this.positions = positions;
         }
 
+        private void setTextToViews(int position, View convertView) {
+            ((TextView) convertView.findViewById(R.id.playerName))
+                    .setText(String.format("%d. %s", positions[position], players[position]));
+            ((TextView) convertView.findViewById(R.id.trophiesWon))
+                    .setText(trophies[position]);
+            ((TextView) convertView.findViewById(R.id.starsWon))
+                    .setText(String.valueOf(rankings[position]));
+        }
+
+        private void setHighlightColors(View convertView) {
+            int yellowColor = getResources().getColor(R.color.colorDrawYellow);
+            int darkColor = getResources().getColor(R.color.colorPrimaryDark);
+
+            ((TextView) convertView.findViewById(R.id.playerName)).setTextColor(yellowColor);
+            ((TextView) convertView.findViewById(R.id.trophiesWon)).setTextColor(yellowColor);
+            ((TextView) convertView.findViewById(R.id.starsWon)).setTextColor(yellowColor);
+            convertView.setBackgroundColor(darkColor);
+        }
+
+        private void setTypeFace(Typeface typeface, View ...views) {
+            for(View view : views) {
+                ((TextView) view).setTypeface(typeface);
+            }
+        }
+
         @NonNull
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -217,32 +244,20 @@ public class RankingFragment extends ListFragment {
             AssetManager assets = getActivity().getAssets();
             Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");
 
-            // Set the font
-            TextView name = convertView.findViewById(R.id.playerName);
-            name.setTypeface(typeMuro);
-            TextView ranking = convertView.findViewById(R.id.starsWon);
-            ranking.setTypeface(typeMuro);
-            TextView trophiesText = convertView.findViewById(R.id.trophiesWon);
-            trophiesText.setTypeface(typeMuro);
+            setTypeFace(typeMuro, convertView.findViewById(R.id.playerName),
+                                convertView.findViewById(R.id.starsWon),
+                                convertView.findViewById(R.id.trophiesWon));
 
             // Update image
             ImageView imageview = convertView.findViewById(R.id.drawing);
             imageview.setImageBitmap(drawings[getIndexForUserName(players[position])]);
 
-            int yellowColor = getResources().getColor(R.color.colorDrawYellow);
-            int darkColor = getResources().getColor(R.color.colorPrimaryDark);
-
             // Set the color
             if (!players[position].equals(account.getUsername())) {
-                name.setTextColor(yellowColor);
-                ranking.setTextColor(yellowColor);
-                trophiesText.setTextColor(yellowColor);
-                convertView.setBackgroundColor(darkColor);
+                setHighlightColors(convertView);
             }
 
-            name.setText(String.format("%d. %s", positions[position], players[position]));
-            trophiesText.setText(this.trophies[position]);
-            ranking.setText(String.valueOf(this.rankings[position]));
+            setTextToViews(position, convertView);
 
             // Return the completed view to render on screen
             return convertView;

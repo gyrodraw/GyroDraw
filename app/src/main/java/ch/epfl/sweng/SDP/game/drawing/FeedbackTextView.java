@@ -72,7 +72,9 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
                 feedback.setTextSize(60 - millisUntilFinished / 15);
             }
 
-            public void onFinish() {}
+            public void onFinish() {
+                // Nothing to do, the time's up message stays until the end
+            }
         }.start();
         return feedback;
     }

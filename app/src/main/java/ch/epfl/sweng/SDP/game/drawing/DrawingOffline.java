@@ -34,8 +34,11 @@ public class DrawingOffline extends GyroDrawingActivity {
         drawingItems = new DrawingItems(this, (RelativeLayout) findViewById(R.id.paintViewHolder),
                 super.paintView, new HashMap<Item, ImageView>(), new Random());
         isToggled = false;
-
         mysteryButton = findViewById(R.id.mysteryModeButton);
+        setExitButtonListener();
+    }
+
+    private void setExitButtonListener() {
         TextView exitButton = findViewById(R.id.exit);
         final DrawingOffline activity = this;
 

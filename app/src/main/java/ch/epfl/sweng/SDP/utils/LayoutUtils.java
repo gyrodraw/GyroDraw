@@ -82,85 +82,56 @@ public class LayoutUtils {
         view.startAnimation(press);
     }
 
+    private static void setExitListener(final View exitButton, final Activity activity,
+                                        final int inTranstionId, final int outTransitionId) {
+        exitButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, AnimMode.CENTER, activity);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, activity);
+                        activity.launchActivity(HomeActivity.class);
+                        activity.overridePendingTransition(inTranstionId, outTransitionId);
+                        activity.finish();
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
     /**
      * Sets listener and animation for exit button with a fade transition.
      *
      * @param exitButton the exit button
-     * @param activity the context of the exit button
+     * @param activity   the context of the exit button
      */
     public static void setFadingExitListener(final View exitButton, final Activity activity) {
-        exitButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view, AnimMode.CENTER, activity);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, activity);
-                        activity.launchActivity(HomeActivity.class);
-                        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        activity.finish();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+        setExitListener(exitButton, activity, R.anim.fade_in, R.anim.fade_out);
     }
 
     /**
      * Sets listener and animation for exit button with a right slide transition.
+     *
      * @param exitButton the exit button
-     * @param activity the context of the exit button
+     * @param activity   the context of the exit button
      */
     public static void setSlideRightExitListener(final View exitButton, final Activity activity) {
-        exitButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view, AnimMode.CENTER, activity);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, activity);
-                        activity.launchActivity(HomeActivity.class);
-                        activity.overridePendingTransition(R.anim.slide_in_right,
-                                R.anim.slide_out_left);
-                        activity.finish();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+        setExitListener(exitButton, activity, R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     /**
      * Sets listener and animation for exit button with a left slide transition.
+     *
      * @param exitButton the exit button
-     * @param activity the context of the exit button
+     * @param activity   the context of the exit button
      */
     public static void setSlideLeftExitListener(final View exitButton, final Activity activity) {
-        exitButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view, AnimMode.CENTER, activity);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, activity);
-                        activity.launchActivity(HomeActivity.class);
-                        activity.overridePendingTransition(R.anim.slide_in_left,
-                                R.anim.slide_out_right);
-                        activity.finish();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+        setExitListener(exitButton, activity, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     /**

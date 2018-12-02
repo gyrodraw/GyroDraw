@@ -80,15 +80,14 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testFilterButtonBehavesCorrectly() {
-        TextView filterText = activityRule.getActivity().findViewById(R.id.friendsFilterText);
         onView(withId(R.id.friendsFilter)).perform(click());
         SystemClock.sleep(1000);
         onView(withId(R.id.searchField)).perform(typeText("P"));
         onView(withId(R.id.friendsFilter)).perform(click());
         SystemClock.sleep(1000);
+        TextView filterText = activityRule.getActivity().findViewById(R.id.friendsFilterText);
         assertThat(filterText.getText().toString(),
-                is(equalTo(activityRule.getActivity().getResources()
-                        .getString(R.string.friendsFilter))));
+                is(activityRule.getActivity().getResources().getString(R.string.friendsFilter)));
     }
 
     @Test

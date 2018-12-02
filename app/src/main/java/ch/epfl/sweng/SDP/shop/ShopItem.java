@@ -101,6 +101,8 @@ public class ShopItem {
     }
 
     /**
+     * Create the layout of this item.
+     *
      * @param stars   the current amount of stars
      * @param context the context of the shop
      */
@@ -120,12 +122,9 @@ public class ShopItem {
                 PorterDuff.Mode.SRC_ATOP);
 
         if (!owned) {
-            TextView colorTextView = context.createTextView(colorName,
-                    res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
-                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 4));
-
             ImageView starView = new ImageView(context);
-            LayoutParams layoutParams = new LayoutParams(0, ActionBar.LayoutParams.MATCH_PARENT, 0.5f);
+            LayoutParams layoutParams =
+                    new LayoutParams(0, ActionBar.LayoutParams.MATCH_PARENT, 0.5f);
             starView.setLayoutParams(layoutParams);
             starView.setImageResource(R.drawable.star);
 
@@ -133,9 +132,13 @@ public class ShopItem {
                     price <= stars ? res.getColor(R.color.colorGreenStar) :
                             res.getColor(R.color.colorExitRed),
                     DEFAULT_PADDING, typeMuro, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 2));
-
             priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
             priceView.setPadding(0, 0, 10, 0);
+
+            TextView colorTextView = context.createTextView(colorName,
+                    res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
+                    new LayoutParams(0, LayoutParams.WRAP_CONTENT, 4));
+
             layout = context.addViews(new LinearLayout(context), colorImageView,
                     colorTextView, priceView, starView);
             layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));

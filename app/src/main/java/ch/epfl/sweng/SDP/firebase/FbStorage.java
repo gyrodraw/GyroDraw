@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -35,7 +36,7 @@ public class FbStorage {
      * @return the {@link StorageTask} in charge of the upload
      */
     public static StorageTask<TaskSnapshot> sendBitmapToFirebaseStorage(
-            final Bitmap bitmap, final StorageReference imageRef) {
+            final Bitmap bitmap, final StorageReference imageRef, OnSuccessListener<UploadTask.TaskSnapshot> onSucessListener) {
         checkPrecondition(bitmap != null, "bitmap is null");
         checkPrecondition(imageRef != null, "imageRef is null");
         ByteArrayOutputStream byteArrayOutputStream =
@@ -50,11 +51,17 @@ public class FbStorage {
             e.printStackTrace();
         }
 
-        return uploadTask.addOnFailureListener(new OnFailureListener() {
+        StorageTask<TaskSnapshot> task = uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.d(TAG, "Upload to Firebase Storage failed.");
             }
         });
+
+        if (onSucessListener != null) {
+            task.addOnSuccessListener(onSucessListener);
+        }
+
+        return task;
     }
 }

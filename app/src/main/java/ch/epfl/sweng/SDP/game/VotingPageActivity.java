@@ -44,6 +44,7 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
@@ -54,6 +55,7 @@ import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 
 import com.facebook.FacebookSdk;
+import com.google.firebase.storage.UploadTask;
 
 public class VotingPageActivity extends BaseActivity {
 
@@ -90,20 +92,48 @@ public class VotingPageActivity extends BaseActivity {
 
     // MARK: Sharing
 
-    private void getImageUrl() {
-        String imageName = Account.getInstance(getApplicationContext()).getUserId() + ".jpg";
-        StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
+    private void shareImage(Bitmap image) {
+        // Check if Facebook app is installed.
+        if (ShareDialog.canShow(SharePhotoContent.class)) {
+            SharePhoto photo = new SharePhoto.Builder()
+                    .setBitmap(image)
+                    .build();
+            SharePhotoContent content = new SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .build();
+            ShareDialog.show(this,content);
+        } else {
+            // Facebook app not install, use web instead.
+            uploadImageToFireBase(image);
+        }
+    }
+
+    private void uploadImageToFireBase(Bitmap image) {
+
+        Account account = Account.getInstance(getApplicationContext());
+        String imageName =  "DRAWING_" + account.getTotalMatches() + "_" + account.getUsername() + ".jpg";
+        final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
+        FbStorage.sendBitmapToFirebaseStorage(image, ref, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                getUrl(ref);
+            }
+        });
+
+    }
+    private void getUrl(StorageReference ref) {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 userDrawingUri = uri;
+                // Share image to facebook after getting url
                 shareDrawingToFacebook(uri);
-                // Got the download URL for 'users/me/profile.png'
+                Log.d("SUCESS", "Successfully uploaded a task");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+                Log.d("ERROR", "Error uploading task");
             }
         });
     }
@@ -386,7 +416,7 @@ public class VotingPageActivity extends BaseActivity {
                             LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
                             Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-                            getImageUrl();
+                            getImageUrl(localImage);
                           //  ImageStorageManager.saveImage(localImage, "picasso", getApplicationContext());
                             storeBitmap(localImage, currentId);
                         } else {

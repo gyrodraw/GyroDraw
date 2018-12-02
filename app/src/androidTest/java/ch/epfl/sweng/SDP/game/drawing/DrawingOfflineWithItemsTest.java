@@ -49,7 +49,7 @@ public class DrawingOfflineWithItemsTest {
     @Before
     public void init() {
         activity = activityRule.getActivity();
-        activity.toggleMysteryMode(null);
+        toggleMysteryMode();
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
@@ -133,6 +133,19 @@ public class DrawingOfflineWithItemsTest {
         double init = paintView.getSpeed();
         activateItem(item);
         assertThat(paintView.getSpeed(), is(init * factor));
+    }
+
+    private void toggleMysteryMode() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.toggleMysteryMode(null);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     private void activateItem(final Item item) {

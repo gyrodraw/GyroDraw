@@ -77,6 +77,27 @@ public class LeaderboardActivity extends BaseActivity {
         searchField.setTypeface(typeMuro);
 
         leaderboard = new Leaderboard(getApplicationContext());
+        setCheckBoxListener(searchField);
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence query, int start, int count, int after) {
+                // Not what we need.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+                // Not what we need.
+            }
+
+            @Override
+            public void afterTextChanged(Editable query) {
+                leaderboard.update(query.toString());
+            }
+        });
+    }
+
+    private void setCheckBoxListener(final EditText searchField) {
         final CheckBox friendsFilterCheckbox = findViewById(R.id.friendsFilterCheckBox);
         final TextView friendsFilterText = findViewById(R.id.friendsFilterText);
         friendsFilterText.setTypeface(typeMuro);
@@ -101,23 +122,6 @@ public class LeaderboardActivity extends BaseActivity {
 
         friendsFilterCheckbox.setOnClickListener(clickListener);
         friendsFilterText.setOnClickListener(clickListener);
-
-        searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence query, int start, int count, int after) {
-                // Not what we need.
-            }
-
-            @Override
-            public void onTextChanged(CharSequence query, int start, int before, int count) {
-                // Not what we need.
-            }
-
-            @Override
-            public void afterTextChanged(Editable query) {
-                leaderboard.update(query.toString());
-            }
-        });
     }
 
     /**

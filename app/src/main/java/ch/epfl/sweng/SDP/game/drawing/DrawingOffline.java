@@ -51,10 +51,7 @@ public class DrawingOffline extends GyroDrawingActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         LayoutUtils.bounceButton(view, activity);
-                        LocalDbHandlerForImages localDbHandlerForImages =
-                                new LocalDbHandlerForImages(activity, null, 1);
-                        paintView.saveCanvasInDb(localDbHandlerForImages);
-                        Log.d(TAG, "Exiting drawing view");
+                        saveImageInDb();
                         activity.launchActivity(HomeActivity.class);
                         activity.overridePendingTransition(R.anim.slide_in_left,
                                 R.anim.slide_out_right);
@@ -65,6 +62,13 @@ public class DrawingOffline extends GyroDrawingActivity {
                 return true;
             }
         });
+    }
+
+    private void saveImageInDb() {
+        LocalDbHandlerForImages localDbHandlerForImages =
+                new LocalDbHandlerForImages(this, null, 1);
+        paintView.saveCanvasInDb(localDbHandlerForImages);
+        Log.d(TAG, "Exiting drawing view");
     }
 
     /**

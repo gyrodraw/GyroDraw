@@ -112,6 +112,7 @@ public class ShopItem {
         String colorName = color.toString();
         Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
 
+        // Create the color image
         ImageView colorImageView = new ImageView(context);
         LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 
@@ -122,12 +123,14 @@ public class ShopItem {
                 PorterDuff.Mode.SRC_ATOP);
 
         if (!owned) {
+            // Create the star image
             ImageView starView = new ImageView(context);
             LayoutParams layoutParams =
                     new LayoutParams(0, ActionBar.LayoutParams.MATCH_PARENT, 0.5f);
             starView.setLayoutParams(layoutParams);
             starView.setImageResource(R.drawable.star);
 
+            // Create the price text
             TextView priceView = context.createTextView(Integer.toString(price),
                     price <= stars ? res.getColor(R.color.colorGreenStar) :
                             res.getColor(R.color.colorExitRed),
@@ -135,19 +138,24 @@ public class ShopItem {
             priceView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
             priceView.setPadding(0, 0, 10, 0);
 
+            // Create the color text
             TextView colorTextView = context.createTextView(colorName,
                     res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
                     new LayoutParams(0, LayoutParams.WRAP_CONTENT, 4));
 
+            // Create the global layout
             layout = context.addViews(new LinearLayout(context), colorImageView,
                     colorTextView, priceView, starView);
             layout.setBackgroundColor(res.getColor(R.color.colorLightGrey));
         } else {
+            // Create the color text
             TextView colorTextView = context.createTextView(colorName,
                     res.getColor(R.color.colorDrawYellow), DEFAULT_PADDING, typeMuro,
                     new LayoutParams(0, LayoutParams.WRAP_CONTENT, 6.5f));
 
             colorImageView.setImageDrawable(res.getDrawable(R.drawable.color_circle_selected));
+
+            // Create the global layout
             layout = context.addViews(new LinearLayout(context), colorImageView, colorTextView);
             layout.setBackgroundColor(res.getColor(R.color.colorGrey));
         }

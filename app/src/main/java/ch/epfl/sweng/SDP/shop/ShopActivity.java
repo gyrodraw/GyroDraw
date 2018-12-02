@@ -96,6 +96,7 @@ public class ShopActivity extends BaseActivity {
         List<ShopItem> itemsList = shop.getItemList();
         int stars = Account.getInstance(this).getStars();
 
+        // Create a layout for each color and set an onTouchListener if they can be purchased
         for (int i = 0; i < itemsList.size(); ++i) {
             final ShopItem item = itemsList.get(i);
             final int index = i;

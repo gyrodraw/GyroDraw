@@ -45,6 +45,7 @@ public class BattleLogActivity extends BaseActivity {
 
         fetchGameResults();
 
+        // Hide or display the empty battle log text
         ScrollView scrollBattleLog = findViewById(R.id.scrollBattleLog);
         if (battleLogView.getChildCount() == 0) {
             ((ViewManager) scrollBattleLog.getParent()).removeView(scrollBattleLog);

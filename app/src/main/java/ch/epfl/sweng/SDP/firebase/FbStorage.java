@@ -37,10 +37,12 @@ public final class FbStorage {
             final Bitmap bitmap, final StorageReference imageRef) {
         checkPrecondition(bitmap != null, "bitmap is null");
         checkPrecondition(imageRef != null, "imageRef is null");
+
         ByteArrayOutputStream byteArrayOutputStream =
                 new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,
                 QUALITY, byteArrayOutputStream);
+
         byte[] data = byteArrayOutputStream.toByteArray();
         UploadTask uploadTask = imageRef.putBytes(data);
         try {

@@ -23,7 +23,7 @@ admin.initializeApp();
 
 function checkUsersReady(path, snapshot) {
   if(snapshot.child("users").numChildren() === maxPlayers) {
-    if(snapshot.child("state").val() === StateEnum.Idle || 
+    if(snapshot.child("state").val() === StateEnum.Idle ||
       snapshot.child("state").val() === StateEnum.EndVoting) {
       admin.database().ref(path + "/state").set(StateEnum.ChoosingWordsCountdown);
     }
@@ -95,7 +95,7 @@ function functionTimer (seconds, state, roomID, call) {
       elapsedSeconds++;
     }
   }).catch(function(error) {
-    // log and rethrow 
+    // log and rethrow
     console.log(error);
     throw error;
   });
@@ -149,6 +149,8 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   const id = data.id;
   const username = data.username;
   const league = data.league - 1;
+  const gameMode = data.mode;
+
   let _roomID;
   console.log(username);
   var alreadyJoined = false;
@@ -157,13 +159,17 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
   return admin.database().ref(parentRoomID).once('value', (snapshot) => {
     return snapshot.forEach((roomID) => {
 
+      // Retrieve the room game mode
+      var roomGameMode = roomID.val().gameMode;
+      console.log("Game mode:" + roomGameMode);
+
       const playingVal = roomID.child("playing").val();
       roomsList.push(parseInt(roomID.key, 10));
 
-      // Check if the room is full, if the user already joined a room and if 
+      // Check if the room is full, if the user already joined a room and if
       // the game is not already playing
       if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
-        && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true) {
+        && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true && roomGameMode === gameMode) {
         const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
         const path = parentRoomID + roomID.key;
         _roomID = roomID.key;
@@ -184,7 +190,7 @@ exports.joinGame2 = functions.https.onCall((data, context) => {
     });
   }).then(() => {
     if(alreadyJoined === false) {
-        _roomID = createRoomAndJoin(league, roomsList, username, id);
+        _roomID = createRoomAndJoin(league, roomsList, username, id, gameMode);
     }
     console.log(_roomID);
     return _roomID;
@@ -236,10 +242,10 @@ function generateRoomID(league, roomsList) {
   return roomID;
 }
 
-function createRoomAndJoin(league, roomsList, username, id) {
+function createRoomAndJoin(league, roomsList, username, id, gameMode) {
   const roomID = generateRoomID(league, roomsList);
 
-  let roomObj = {[roomID]:{state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
+  let roomObj = {[roomID]:{gameMode : gameMode, state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
 
   admin.database().ref(parentRoomID).update(roomObj);
   admin.database().ref(parentRoomID + roomID).update({"users":{[id]:username}});
@@ -257,7 +263,7 @@ function removeRoomData(roomID) {
 }
 
 function removeRoom(roomID) {
-  // Do not remove the testing room 
+  // Do not remove the testing room
   if(roomID !== "0123457890") {
     admin.database().ref(parentRoomID + roomID).remove();
   }

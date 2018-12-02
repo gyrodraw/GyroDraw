@@ -18,7 +18,6 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -98,9 +97,9 @@ public class HomeActivityTest {
     }
 
     @Test
-    public void testClickOnItemsButtonOpensDrawingOfflineItems() {
+    public void testClickOnMysteryButtonOpensWaitingPageActivity() {
         onView(ViewMatchers.withId(R.id.mysteryButton)).perform(click());
-        intended(hasComponent(DrawingOfflineItems.class.getName()));
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
     }
 
     @Test
@@ -122,12 +121,14 @@ public class HomeActivityTest {
 
     @Test
     public void testUsernameOpensPopUp() {
+        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFriendsRequestAccept() {
+        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -140,6 +141,7 @@ public class HomeActivityTest {
 
     @Test
     public void testFriendsRequestReject() {
+        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

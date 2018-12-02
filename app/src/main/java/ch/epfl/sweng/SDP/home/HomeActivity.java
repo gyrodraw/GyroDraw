@@ -3,9 +3,9 @@ package ch.epfl.sweng.SDP.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
@@ -55,11 +55,11 @@ import ch.epfl.sweng.SDP.firebase.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
+
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
@@ -153,10 +153,6 @@ public class HomeActivity extends BaseActivity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.league_1);
-        ImageStorageManager.saveImage(bm, "HEY",getApplicationContext());
-        shareDrawingToFacebook(bm);
-
         addListenerForFriendsRequests();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
@@ -228,49 +224,6 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-    private void shareDrawingToFacebook(Bitmap bitmap) {
-        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(Uri.parse("https://firebasestorage.googleapis.com/v0/b/gyrodraw.appspot.com/o/user1.jpg?alt=media&token=8db5c201-aadd-4614-bd10-dbc44dbbee6c"))
-                .build();
-
-        ShareDialog.show(this,linkContent);
-    }
-
-    private void shareDrawing(Bitmap drawing) {
-
-        saveDrawingToCache(drawing);
-
-        // Get image file
-        File imagePath = new File(getApplicationContext().getCacheDir(), "images");
-        File newFile = new File(imagePath, "image.png");
-        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.myapp.fileprovider", newFile);
-
-        // Share
-        if (contentUri != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
-            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
-            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-            startActivity(Intent.createChooser(shareIntent, "Choose an app"));
-        }
-
-    }
-
-    private void saveDrawingToCache(Bitmap bitmap) {
-        // save bitmap to cache directory
-        try {
-
-            File cachePath = new File(getApplicationContext().getCacheDir(), "images");
-            cachePath.mkdirs(); // don't forget to make the directory
-            FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            stream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void addListenerForFriendsRequests() {
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
@@ -280,6 +233,11 @@ public class HomeActivity extends BaseActivity {
     // Launch the LeaguesActivity.
     private void showLeagues() {
         launchActivity(LeaguesActivity.class);
+    }
+
+    @VisibleForTesting
+    public Dialog getFriendRequestWindow() {
+        return friendRequestWindow;
     }
 
     /**
@@ -382,13 +340,7 @@ public class HomeActivity extends BaseActivity {
     private void listenerEventSelector(final View view, int resourceId) {
         switch (resourceId) {
             case R.id.drawButton:
-                if (CheckConnection.isOnline(this)) {
-                    ((ImageView) view).setImageResource(R.drawable.draw_button);
-                    launchActivity(LoadingScreenActivity.class);
-                } else {
-                    Toast.makeText(this, R.string.no_internet,
-                            Toast.LENGTH_LONG).show();
-                }
+                launchOnlineGame((ImageView) view, R.drawable.draw_button, 0);
                 break;
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
@@ -412,9 +364,21 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(DrawingOffline.class);
                 break;
             case R.id.mysteryButton:
-                launchActivity(DrawingOfflineItems.class);
+                launchOnlineGame((ImageView) view, R.drawable.home_mystery_button, 1);
                 break;
             default:
+        }
+    }
+
+    private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
+        if (CheckConnection.isOnline(this)) {
+            view.setImageResource(resourceId);
+            Intent intent = new Intent(this, LoadingScreenActivity.class);
+            intent.putExtra("mode", gameMode);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.no_internet,
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -487,6 +451,7 @@ public class HomeActivity extends BaseActivity {
 
     /**
      * Method called when shop button is clicked. Starts shop activity.
+     *
      * @param view View referring the shop button
      */
     public void onShopButtonClicked(View view) {
@@ -527,5 +492,16 @@ public class HomeActivity extends BaseActivity {
         leagueText.setText(getLeagueTextId(league));
         leagueText.setTextColor(getResources().getColor(getLeagueColorId(league)));
         ((ImageView) findViewById(R.id.leagueImage)).setImageResource(getLeagueImageId(league));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Update values of the textviews
+        Account account = Account.getInstance(this);
+        ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
+        ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
+                account.getTrophies()));
     }
 }

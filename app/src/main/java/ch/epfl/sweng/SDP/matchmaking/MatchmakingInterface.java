@@ -7,6 +7,6 @@ public interface MatchmakingInterface {
 
     void leaveRoom(String roomId);
 
-    Task<String> joinRoom();
+    Task<String> joinRoom(int gameMode);
 }
 

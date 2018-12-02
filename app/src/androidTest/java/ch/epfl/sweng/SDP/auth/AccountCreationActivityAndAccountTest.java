@@ -1,31 +1,16 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.shop.ColorsShop;
-import ch.epfl.sweng.SDP.shop.ShopItem;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +22,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityAndAccountTest {
@@ -45,45 +47,22 @@ public class AccountCreationActivityAndAccountTest {
     private static final String TEST_EMAIL = "testEmail";
     private static final String USERNAME = "username";
     private static final String LEAGUE = "league1";
+    private static final String USERS_TAG = "users.";
+    private static final String TEST_FRIEND = "HFNDgmFKQPX92nmfmi2qAUfTzxJ3";
+    private static final String TEST_FRIEND_TAG = ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3";
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
             new ActivityTestRule<>(AccountCreationActivity.class);
 
-    private ConstantsWrapper mockConstantsWrapper;
-    private Account mockAccount;
     private Account account;
 
     @Before
     public void init() {
-        mockConstantsWrapper = mock(ConstantsWrapper.class);
-        mockAccount = mock(Account.class);
-        DatabaseReference mockReference = mock(DatabaseReference.class);
-        Query mockQuery = mock(Query.class);
-
-        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
-
-        when(mockReference.child(isA(String.class))).thenReturn(mockReference);
-        when(mockReference.orderByChild(isA(String.class))).thenReturn(mockQuery);
-
-        when(mockQuery.equalTo(isA(String.class))).thenReturn(mockQuery);
-
-        doNothing().when(mockReference)
-                .setValue(isA(Integer.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .setValue(isA(Boolean.class), isA(DatabaseReference.CompletionListener.class));
-        doNothing().when(mockReference)
-                .removeValue(isA(DatabaseReference.CompletionListener.class));
-
-        doNothing().when(mockQuery).addListenerForSingleValueEvent(isA(ValueEventListener.class));
-
-        doNothing().when(mockAccount).updateUsername(isA(String.class));
-
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper, USERNAME,
-                TEST_EMAIL);
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
+        account.setUsername(USERNAME);
+        account.setEmail(TEST_EMAIL);
     }
 
     @After
@@ -200,21 +179,27 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testAddFriend() {
-        account.addFriend("EPFLien");
+    public void testNewFriend() {
+        Database.getReference(USERS_TAG
+                + USER_ID + TEST_FRIEND_TAG)
+                .setValue(FriendsRequestState.SENT.ordinal());
+        setListenerAndAssertToFirebaseForFriendsTest(true);
+        account.addFriend(TEST_FRIEND);
+    }
+
+    @Test
+    public void testConfirmFriend() {
+        Database.getReference(USERS_TAG
+                + USER_ID + TEST_FRIEND_TAG)
+                .setValue(FriendsRequestState.RECEIVED.ordinal());
+        setListenerAndAssertToFirebaseForFriendsTest(true);
+        account.addFriend(TEST_FRIEND);
     }
 
     @Test
     public void testRemoveFriend() {
-        account.removeFriend("EPFLien");
-    }
-
-    @Test
-    public void testUpdateUsername() {
-        final String newUsername = "987654321";
-        mockAccount.updateUsername(newUsername);
-        account.setUsername(newUsername);
-        assertThat(account.getUsername(), is(newUsername));
+        setListenerAndAssertToFirebaseForFriendsTest(false);
+        account.removeFriend(TEST_FRIEND);
     }
 
     @Test
@@ -224,14 +209,14 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test(expected = IllegalStateException.class)
     public void testCreateAccountWhenAlreadyCreated() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME,
                 TEST_EMAIL);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullContext() {
-        Account.createAccount(null, mockConstantsWrapper, USERNAME, null);
+        Account.createAccount(null, new ConstantsWrapper(), USERNAME, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -242,19 +227,19 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullUsername() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 null, TEST_EMAIL);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullEmail() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullCurrentLeague() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, null, 0, 0,
                 0, 0, 0.0, 0,
                 new ArrayList<ShopItem>());
@@ -262,49 +247,44 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTrophies() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, -1, 0,
                 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeStars() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 -1, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMatchesWon() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, -1, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeTotalMatches() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, -1, 0.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeAverageRating() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, 0, -1.0, 0, new ArrayList<ShopItem>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNegativeMaxTrophies() {
-        Account.createAccount(activityRule.getActivity(), mockConstantsWrapper,
+        Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME, TEST_EMAIL, LEAGUE, 0,
                 0, 0, 0, 0.0, -1, new ArrayList<ShopItem>());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdateUsernameWithNull() {
-        account.updateUsername(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -358,8 +338,32 @@ public class AccountCreationActivityAndAccountTest {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("PICASSO"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
-        assertNotEquals(null, Account.getInstance(activityRule.getActivity()));
+        assertNotEquals(null, account);
     }
 
+    private void setListenerAndAssertToFirebaseForFriendsTest(final boolean state) {
+        final CountingIdlingResource countingResource =
+                new CountingIdlingResource("WaitForFirebase");
+        countingResource.increment();
+        final ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                countingResource.decrement();
+                assertThat(dataSnapshot.exists(), is(state));
+                Database.getReference(USERS_TAG
+                        + USER_ID
+                        + TEST_FRIEND_TAG)
+                        .removeEventListener(this);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        };
+
+        Database.getReference(USERS_TAG
+                + USER_ID + TEST_FRIEND_TAG)
+                .addValueEventListener(valueEventListener);
+    }
 }

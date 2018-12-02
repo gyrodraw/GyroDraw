@@ -21,18 +21,20 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.game.drawing.GyroDrawingActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import static java.lang.String.format;
 
+/**
+ * Class representing the drawing phase of an online game in normal mode.
+ */
 public class DrawingOnline extends GyroDrawingActivity {
 
-    private String winningWord;
-
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private String winningWord;
 
     private String roomId;
 
@@ -140,7 +142,7 @@ public class DrawingOnline extends GyroDrawingActivity {
         finish();
     }
 
-    protected void removeAllListeners() {
+    private void removeAllListeners() {
         timerRef.removeEventListener(listenerTimer);
         stateRef.removeEventListener(listenerState);
     }
@@ -161,7 +163,7 @@ public class DrawingOnline extends GyroDrawingActivity {
      *
      * @param dataSnapshot Snapshot of the database (mock snapshot in out case).
      */
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {
             @Override

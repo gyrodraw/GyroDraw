@@ -2,11 +2,15 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
+import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
+/**
+ * Class representing a bumping item.
+ */
 public class BumpingItem extends Item {
 
     private ImageView imageView;
@@ -31,9 +35,9 @@ public class BumpingItem extends Item {
      */
     @Override
     public boolean collision(PaintView paintView) {
-        if (Math.hypot(this.x - paintView.getCircleX(),
-                this.y - paintView.getCircleY())
-                < this.radius + paintView.getCircleRadius()) {
+        if (Math.hypot(this.getX() - paintView.getCircleX(),
+                this.getY() - paintView.getCircleY())
+                < this.getRadius() + paintView.getCircleRadius()) {
             activate(paintView);
             if (!isActivated && imageView != null) {
                 imageView.setImageResource(R.drawable.bumping_item);
@@ -51,13 +55,13 @@ public class BumpingItem extends Item {
      */
     @Override
     public void activate(final PaintView paintView) {
-        double angle = Math.atan2(paintView.getCircleY() - this.y,
-                paintView.getCircleX() - this.x);
+        double angle = Math.atan2(paintView.getCircleY() - this.getY(),
+                paintView.getCircleX() - this.getX());
         paintView.setCircle(
-                this.x + (int) (Math.cos(angle)
-                        * (this.radius + paintView.getCircleRadius() + 5)),
-                this.y + (int) (Math.sin(angle)
-                        * (this.radius + paintView.getCircleRadius() + 5)));
+                this.getX() + (int) (Math.cos(angle)
+                        * (this.getRadius() + paintView.getCircleRadius() + 5)),
+                this.getY() + (int) (Math.sin(angle)
+                        * (this.getRadius() + paintView.getCircleRadius() + 5)));
     }
 
     @Override
@@ -69,6 +73,7 @@ public class BumpingItem extends Item {
         this.imageView = imageView;
     }
 
+    @VisibleForTesting
     public ImageView getImageView() {
         return imageView;
     }

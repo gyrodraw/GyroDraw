@@ -23,6 +23,9 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
+/**
+ * Abstract class representing the drawing page of the game.
+ */
 public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
@@ -60,15 +63,15 @@ public abstract class DrawingActivity extends BaseActivity {
         colorButtons = new ImageView[myItems.size() + 1];
         colorButtons[0] = findViewById(R.id.blackButton);
 
-        for(int i = 0; i < myItems.size(); ++i) {
+        for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
-            int color = ColorUtils.getColorFromString(item.getColorItem().toString());
+            int color = ColorUtils.getColorIdFromString(item.getColorItem().toString());
             colors.add(color);
             ImageView colorView = createColorImageView(color);
             // Adds the view to the layout
             layout.addView(colorView);
 
-            colorButtons[i+1] = colorView;
+            colorButtons[i + 1] = colorView;
         }
 
         paintView = findViewById(R.id.paintView);
@@ -83,6 +86,7 @@ public abstract class DrawingActivity extends BaseActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
+
                 paintView.invalidate();
             }
         };
@@ -99,6 +103,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
     /**
      * Creates an {@link ImageView} corresponding to a given color.
+     *
      * @param color Index of the colors to be created
      * @return The ImageView of the color
      */
@@ -107,10 +112,10 @@ public abstract class DrawingActivity extends BaseActivity {
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
                 LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-                                        .MATCH_PARENT, 1f);
+                .MATCH_PARENT, 1f);
 
         // Convert dp into px
-        int px = (int)TypedValue.applyDimension(
+        int px = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 10,
                 getResources().getDisplayMetrics()
@@ -129,7 +134,7 @@ public abstract class DrawingActivity extends BaseActivity {
             }
         });
 
-       return image;
+        return image;
     }
 
     /**

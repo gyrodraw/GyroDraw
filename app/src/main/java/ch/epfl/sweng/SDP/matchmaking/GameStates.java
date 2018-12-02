@@ -1,11 +1,14 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
+/**
+ * Enum representing the states of an online game.
+ */
 public enum GameStates {
     HOMESTATE, CHOOSE_WORDS_TIMER_START, START_DRAWING_ACTIVITY, WAITING_UPLOAD,
     START_VOTING_ACTIVITY, END_VOTING_ACTIVITY;
 
     /**
-     * Convert the an integer value into its corresponding GameStates.
+     * Converts the an integer value into its corresponding {@link GameStates} value.
      *
      * @param value Integer value to be converted
      * @return Returns the game state

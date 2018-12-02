@@ -1,17 +1,17 @@
 package ch.epfl.sweng.SDP.home;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class BooleanListenerUnitTest {
 
     private BooleanVariableListener boolSpy;
-    private BooleanVariableListener.ChangeListener testChangeListener;
     private int varTest = 0;
 
     @Before
@@ -27,7 +27,7 @@ public class BooleanListenerUnitTest {
 
     @Test
     public void listenerTest() {
-        testChangeListener = new BooleanVariableListener.ChangeListener() {
+        BooleanVariableListener.ChangeListener testChangeListener = new BooleanVariableListener.ChangeListener() {
             @Override
             public void onChange() {
                 varTest = 5;

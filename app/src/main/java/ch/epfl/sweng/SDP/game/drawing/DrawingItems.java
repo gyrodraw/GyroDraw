@@ -6,6 +6,7 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -62,6 +63,7 @@ final class DrawingItems {
         return displayedItems;
     }
 
+    @VisibleForTesting
     PaintView getPaintView() {
         return paintView;
     }
@@ -109,7 +111,7 @@ final class DrawingItems {
      */
     void stopOfflineModeItemGeneration() {
         offlineModeTimer.cancel();
-        for (ImageView item: displayedItems.values()) {
+        for (ImageView item : displayedItems.values()) {
             paintViewHolder.removeView(item);
         }
         displayedItems.clear();
@@ -123,7 +125,7 @@ final class DrawingItems {
     }
 
     /**
-     * Converts an item into an ImageView to be displayed on the Activity.
+     * Converts an item into an {@link ImageView} to be displayed on the activity.
      *
      * @param item to be converted
      * @return ImageView of the item
@@ -151,7 +153,7 @@ final class DrawingItems {
     }
 
     /**
-     * Creates a text feedback to inform the player which item
+     * Creates a text feedback to inform the player about which item
      * has been picked up.
      *
      * @param item that was activated
@@ -187,7 +189,7 @@ final class DrawingItems {
     /**
      * Helper class that defines the style of the text feedback.
      */
-    private class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
+    private class FeedbackTextView extends AppCompatTextView {
 
         private FeedbackTextView(Context context) {
             super(context);

@@ -8,7 +8,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,6 +34,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
 import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
@@ -183,6 +186,6 @@ public class HomeActivityTest {
         pressBack();
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 3000);
-        Assert.assertNotNull(homeActivity);
+        assertThat(homeActivity, is(not(nullValue())));
     }
 }

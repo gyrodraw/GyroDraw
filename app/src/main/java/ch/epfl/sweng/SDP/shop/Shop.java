@@ -14,31 +14,32 @@ public class Shop {
 
     private List<ShopItem> itemList;
 
-    public Shop() {
+    Shop() {
         itemList = new ArrayList<>();
     }
 
-    public void removeItem(ShopItem shopItem) {
+    void removeItem(ShopItem shopItem) {
         itemList.remove(shopItem);
     }
 
-    public void addItem(ShopItem shopItem) {
+    void addItem(ShopItem shopItem) {
         itemList.add(shopItem);
     }
 
-    public List<ShopItem> getItemList() {
+    List<ShopItem> getItemList() {
         return new LinkedList<>(itemList);
     }
 
     /**
-     * Convert an hashmap into a list of shop items.
+     * Converts an {@link HashMap} into a list of shop items.
+     *
      * @param map Map of the colors and prices
      * @return List of ShopItems
      */
     public static List<ShopItem> firebaseToListShopItem(HashMap<String, String> map) {
         List<ShopItem> listItem = new ArrayList<>();
 
-        if(map != null) {
+        if (map != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 int value = Integer.parseInt(String.valueOf(entry.getValue()));
                 listItem.add(new ShopItem(ColorsShop.getColorFromString(entry.getKey()), value));

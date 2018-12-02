@@ -11,6 +11,9 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * Local database handler for storing and retrieving the user's images.
+ */
 public class LocalDbHandlerForImages extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "myImages.db";

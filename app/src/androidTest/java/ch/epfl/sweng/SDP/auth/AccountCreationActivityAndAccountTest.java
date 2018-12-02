@@ -38,7 +38,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotEquals;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityAndAccountTest {
@@ -298,8 +299,8 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testChangeAverageRatingWithGreaterThanFiveValue() {
-        account.changeAverageRating(6);
+    public void testChangeAverageRatingWithGreaterThanTwentyFiveValue() {
+        account.changeAverageRating(26);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -338,7 +339,7 @@ public class AccountCreationActivityAndAccountTest {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("PICASSO"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
-        assertNotEquals(null, account);
+        assertThat(account, is(not(nullValue())));
     }
 
     private void setListenerAndAssertToFirebaseForFriendsTest(final boolean state) {

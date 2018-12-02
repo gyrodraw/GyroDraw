@@ -28,8 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.BaseActivity;
@@ -152,17 +155,8 @@ public class HomeActivity extends BaseActivity {
 
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.league_1);
         ImageStorageManager.saveImage(bm, "HEY",getApplicationContext());
-       // shareDrawing(bm);
+        shareDrawingToFacebook(bm);
 
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(bm)
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
-
-        ShareDialog.show(this, content);
-        // Add listener to check for new friends requests
         addListenerForFriendsRequests();
 
         final ImageView drawButton = findViewById(R.id.drawButton);
@@ -232,6 +226,13 @@ public class HomeActivity extends BaseActivity {
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
             Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
         }
+    }
+
+    private void shareDrawingToFacebook(Bitmap bitmap) {
+        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(Uri.parse("https://firebasestorage.googleapis.com/v0/b/gyrodraw.appspot.com/o/user1.jpg?alt=media&token=8db5c201-aadd-4614-bd10-dbc44dbbee6c"))
+                .build();
+
+        ShareDialog.show(this,linkContent);
     }
 
     private void shareDrawing(Bitmap drawing) {

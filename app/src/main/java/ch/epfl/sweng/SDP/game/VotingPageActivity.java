@@ -20,7 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,6 +82,7 @@ public class VotingPageActivity extends BaseActivity {
     private StarAnimationView starsAnimation;
 
     private String roomID = "undefined";
+    private Uri userDrawingUri = null;
 
     private static boolean enableAnimations = true;
 
@@ -263,6 +268,13 @@ public class VotingPageActivity extends BaseActivity {
         finish();
     }
 
+    private void shareDrawingToFacebook(Uri uri) {
+        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
+                .build();
+
+        ShareDialog.show(this,linkContent);
+    }
+
     /**
      * Start the {@link HomeActivity} when the button is pressed. The button is used at the end of
      * the game to return to the home screen.
@@ -393,6 +405,9 @@ public class VotingPageActivity extends BaseActivity {
                         } else {
                             refs[i] = storage.getReference().child(currentId + ".jpg");
 
+                            if (currentId.equals(Account.getInstance(getApplicationContext()).getUserId())) {
+                                getDownloadUrl(refs[i]);
+                            }
                             // Download the image
                             refs[i].getBytes(FIFTY_KB).addOnCompleteListener(
                                     new OnCompleteListener<byte[]>() {
@@ -446,6 +461,22 @@ public class VotingPageActivity extends BaseActivity {
             }
 
         });
+    }
+
+    public void getDownloadUrl(StorageReference ref) {
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                userDrawingUri = uri;
+                // Got the download URL for 'users/me/profile.png'
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {

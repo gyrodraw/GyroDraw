@@ -24,11 +24,6 @@ public class DrawingOnlineItems extends DrawingOnline {
         drawingItems.generateItems();
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_drawing_online_items;
-    }
-
     /**
      * Gets called when sensor data changed. Updates the paintViews' circle coordinates
      * and check if there are collisions with any displayed items.

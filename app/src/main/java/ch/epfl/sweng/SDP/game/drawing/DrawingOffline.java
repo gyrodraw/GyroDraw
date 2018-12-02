@@ -24,6 +24,7 @@ import ch.epfl.sweng.SDP.utils.LayoutUtils;
  */
 public class DrawingOffline extends GyroDrawingActivity {
 
+    private ImageView mysteryButton;
     private DrawingItems drawingItems;
     private boolean isToggled;
 
@@ -34,6 +35,7 @@ public class DrawingOffline extends GyroDrawingActivity {
                 super.paintView, new HashMap<Item, ImageView>(), new Random());
         isToggled = false;
 
+        mysteryButton = findViewById(R.id.mysteryModeButton);
         TextView exitButton = findViewById(R.id.exit);
         final DrawingOffline activity = this;
 
@@ -93,8 +95,10 @@ public class DrawingOffline extends GyroDrawingActivity {
     public void toggleMysteryMode(View view) {
         isToggled = !isToggled;
         if (isToggled) {
+            mysteryButton.setImageResource(R.drawable.mystery_mode_selected);
             drawingItems.generateItemsForOfflineMode();
         } else {
+            mysteryButton.setImageResource(R.drawable.mystery_mode);
             drawingItems.stopOfflineModeItemGeneration();
         }
     }

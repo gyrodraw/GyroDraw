@@ -135,14 +135,14 @@ public class LoginActivity extends BaseActivity {
      * @param response the response to process
      */
     private void handleFailedSignIn(IdpResponse response) {
-        TextView errorMessage = findViewById(R.id.error_message);
-
         // User pressed the back button
         if (response == null) {
             launchActivity(MainActivity.class);
             finish();
             return;
         }
+
+        TextView errorMessage = findViewById(R.id.error_message);
 
         // No network
         if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {

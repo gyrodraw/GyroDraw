@@ -58,7 +58,7 @@ public enum Database {
         /**
          * Constructs a builder.
          */
-        public DatabaseReferenceBuilder() {
+        private DatabaseReferenceBuilder() {
             ref = null;
         }
 
@@ -68,7 +68,7 @@ public enum Database {
          * @param initialRef the reference used to start building
          * @throws IllegalArgumentException if the given reference is null
          */
-        public DatabaseReferenceBuilder(DatabaseReference initialRef) {
+        private DatabaseReferenceBuilder(DatabaseReference initialRef) {
             checkPrecondition(initialRef != null, "initialRef is null");
 
             ref = initialRef;

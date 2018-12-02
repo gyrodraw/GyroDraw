@@ -9,8 +9,8 @@ public final class Preconditions {
     }
 
     /**
-     * Checks if the given precondition is true; if not, an {@link IllegalArgumentException} with the
-     * given error message is thrown.
+     * Checks if the given precondition is true; if not, an {@link IllegalArgumentException} with
+     * the given error message is thrown.
      *
      * @param precondition the precondition to assert
      * @param errorMessage the error message to show

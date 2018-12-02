@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ShopItemTest {
@@ -19,7 +20,7 @@ public class ShopItemTest {
     public void setPriceItemTest() {
         ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10, true);
         shopItem.setPriceItem(20);
-        assertThat(shopItem.getPriceItem(),is(20));
+        assertThat(shopItem.getPriceItem(), is(20));
     }
 
     @Test
@@ -46,6 +47,6 @@ public class ShopItemTest {
     @Test
     public void notEqualsWithNullTest() {
         ShopItem shopItem1 = new ShopItem(ColorsShop.BLUE, 20, false);
-        assertNotEquals(shopItem1, null);
+        assertThat(shopItem1, is(not(nullValue())));
     }
 }

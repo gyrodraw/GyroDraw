@@ -7,7 +7,8 @@ import java.util.Objects;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
- * Class representing an item that can be bought in the shop. For the moment, only colors can be bought.
+ * Class representing an item that can be bought in the shop. For the moment, only colors can be
+ * bought.
  */
 public class ShopItem {
 

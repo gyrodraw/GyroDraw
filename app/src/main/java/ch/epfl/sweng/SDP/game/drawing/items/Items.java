@@ -12,17 +12,17 @@ import java.util.Random;
 public enum Items {
     SPEEDUP, SLOWDOWN, SWAP_AXIS, ADD_STARS, BUMP;
 
-    private static final List<Items> ITEMS =
+    private static final List<Items> VALUES =
             Collections.unmodifiableList(Arrays.asList(values()));
-    private static final int ITEMS_SIZE = ITEMS.size();
+    private static final int VALUES_SIZE = VALUES.size();
 
-    private static final List<Items> ITEMS_OFFLINE_MODE = createItemsForOfflineMode();
-    private static final int ITEMS_OFFLINE_MODE_SIZE = ITEMS_OFFLINE_MODE.size();
+    private static final List<Items> VALUES_OFFLINE_MODE = createItemsForOfflineMode();
+    private static final int VALUES_OFFLINE_MODE_SIZE = VALUES_OFFLINE_MODE.size();
 
     private static final Random RANDOM = new Random();
 
     private static List<Items> createItemsForOfflineMode() {
-        List<Items> items = new ArrayList<>(ITEMS);
+        List<Items> items = new ArrayList<>(VALUES);
         items.remove(ADD_STARS);
         return Collections.unmodifiableList(items);
     }
@@ -33,7 +33,7 @@ public enum Items {
      * @return a random item class
      */
     protected static Items getRandomItem() {
-        return ITEMS.get(RANDOM.nextInt(ITEMS_SIZE));
+        return VALUES.get(RANDOM.nextInt(VALUES_SIZE));
     }
 
     /**
@@ -42,7 +42,7 @@ public enum Items {
      * @return a random item class
      */
     protected static Items getRandomItemForOfflineMode() {
-        return ITEMS_OFFLINE_MODE.get(RANDOM.nextInt(ITEMS_OFFLINE_MODE_SIZE));
+        return VALUES_OFFLINE_MODE.get(RANDOM.nextInt(VALUES_OFFLINE_MODE_SIZE));
     }
 
 }

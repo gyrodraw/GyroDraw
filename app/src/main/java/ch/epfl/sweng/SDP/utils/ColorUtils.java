@@ -11,6 +11,7 @@ public final class ColorUtils {
 
     /**
      * Convert the string value of a color into an integer ID.
+     *
      * @param color String value of the colors
      * @return The integer ID of the color
      */

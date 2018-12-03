@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
-
 @RunWith(AndroidJUnit4.class)
 public class DrawingOnlineItemsTest {
 

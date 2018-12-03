@@ -64,7 +64,6 @@ public class Matchmaker implements MatchmakingInterface {
         // TODO define a method in account that extracts directly the number corresponding
         // TODO to the league
         data.put("league", account.getCurrentLeague().replaceAll("\\D+", ""));
-
         data.put("mode", gameMode);
 
         return mFunctions.getHttpsCallable("joinGame2")

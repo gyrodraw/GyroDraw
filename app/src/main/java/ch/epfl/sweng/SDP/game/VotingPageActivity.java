@@ -124,6 +124,7 @@ public class VotingPageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voting_page);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
@@ -228,6 +229,7 @@ public class VotingPageActivity extends BaseActivity {
             createAndStoreGameResult();
         }
         launchActivity(HomeActivity.class);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
 
@@ -274,7 +276,7 @@ public class VotingPageActivity extends BaseActivity {
             // Enable the rating bar only if the image is not the player's one
             ratingBar.setRating(0f);
             ratingBar.setIsIndicator(isCurrentPlayer);
-            ratingBar.setAlpha(isCurrentPlayer ? 0.8f : 1f);
+            ratingBar.setAlpha(isCurrentPlayer ? 0.5f : 1f);
         }
     }
 

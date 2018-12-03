@@ -3,16 +3,20 @@ package ch.epfl.sweng.SDP.game.drawing;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Random;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 /**
  * Class representing the offline practice mode. The user has the choice of
@@ -20,16 +24,51 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
  */
 public class DrawingOffline extends GyroDrawingActivity {
 
+    private ImageView mysteryButton;
     private DrawingItems drawingItems;
     private boolean isToggled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        drawingItems = new DrawingItems(this,
-                (RelativeLayout) findViewById(R.id.paintViewHolder), super.paintView,
-                new HashMap<Item, ImageView>(), new Random());
+        drawingItems = new DrawingItems(this, (RelativeLayout) findViewById(R.id.paintViewHolder),
+                super.paintView, new HashMap<Item, ImageView>(), new Random());
         isToggled = false;
+        mysteryButton = findViewById(R.id.mysteryModeButton);
+        setExitButtonListener();
+    }
+
+    private void setExitButtonListener() {
+        TextView exitButton = findViewById(R.id.exit);
+        final DrawingOffline activity = this;
+
+        exitButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        LayoutUtils.pressButton(view, LayoutUtils.AnimMode.CENTER, activity);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        LayoutUtils.bounceButton(view, activity);
+                        saveImageInDb();
+                        activity.launchActivity(HomeActivity.class);
+                        activity.overridePendingTransition(R.anim.slide_in_left,
+                                R.anim.slide_out_right);
+                        activity.finish();
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
+    }
+
+    private void saveImageInDb() {
+        LocalDbHandlerForImages localDbHandlerForImages =
+                new LocalDbHandlerForImages(this, null, 1);
+        paintView.saveCanvasInDb(localDbHandlerForImages);
+        Log.d(TAG, "Exiting drawing view");
     }
 
     /**
@@ -50,7 +89,7 @@ public class DrawingOffline extends GyroDrawingActivity {
             collidingItem.activate(paintView);
             drawingItems.getPaintViewHolder().removeView(drawingItems.getDisplayedItems()
                     .get(collidingItem));
-            drawingItems.getPaintViewHolder().addView(drawingItems.itemTextFeedback(collidingItem));
+            drawingItems.getPaintViewHolder().addView(drawingItems.getTextFeedback(collidingItem));
             drawingItems.getDisplayedItems().remove(collidingItem);
         }
     }
@@ -63,23 +102,12 @@ public class DrawingOffline extends GyroDrawingActivity {
     public void toggleMysteryMode(View view) {
         isToggled = !isToggled;
         if (isToggled) {
+            mysteryButton.setImageResource(R.drawable.mystery_mode_selected);
             drawingItems.generateItemsForOfflineMode();
         } else {
+            mysteryButton.setImageResource(R.drawable.mystery_mode);
             drawingItems.stopOfflineModeItemGeneration();
         }
-    }
-
-    /**
-     * Leaves the activity.
-     *
-     * @param view the button clicked
-     */
-    public void exitClick(View view) {
-        LocalDbHandlerForImages localDbHandlerForImages =
-                new LocalDbHandlerForImages(this, null, 1);
-        paintView.saveCanvasInDb(localDbHandlerForImages);
-        Log.d(TAG, "Exiting drawing view");
-        finish();
     }
 
     @VisibleForTesting

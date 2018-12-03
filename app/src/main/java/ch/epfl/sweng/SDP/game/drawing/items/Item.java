@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
@@ -68,6 +69,13 @@ public abstract class Item {
      * String to show to the player which item class was picked.
      * @return feedback text
      */
-    public abstract String textFeedback();
+    public abstract String getTextFeedback();
 
+    /**
+     * Return the id of the feedback text's color.
+     * @return the color id
+     */
+    public int getColorId() {
+        return R.color.colorExitRed;
+    }
 }

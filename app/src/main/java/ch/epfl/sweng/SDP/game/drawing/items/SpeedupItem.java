@@ -47,7 +47,7 @@ public class SpeedupItem extends Item {
     }
 
     @Override
-    public String textFeedback() {
-        return "SPEEDUP! ";
+    public String getTextFeedback() {
+        return "SPEEDUP ! ";
     }
 }

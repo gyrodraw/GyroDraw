@@ -45,7 +45,7 @@ public class SwapAxisItem extends Item {
     }
 
     @Override
-    public String textFeedback() {
-        return "SWAPPED! ";
+    public String getTextFeedback() {
+        return "SWAPPED ! ";
     }
 }

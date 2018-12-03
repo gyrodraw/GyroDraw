@@ -27,12 +27,6 @@ public class DrawingOnlineItems extends DrawingOnline {
         drawingItems.generateItems();
     }
 
-    @VisibleForTesting
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_drawing_online_items;
-    }
-
     /**
      * Gets called when sensor data changed. Updates the paintViews' circle coordinates
      * and checks if there are collisions with any displayed items.
@@ -51,7 +45,8 @@ public class DrawingOnlineItems extends DrawingOnline {
             collidingItem.activate(paintView);
             drawingItems.getPaintViewHolder().removeView(
                     drawingItems.getDisplayedItems().get(collidingItem));
-            drawingItems.getPaintViewHolder().addView(drawingItems.itemTextFeedback(collidingItem));
+            drawingItems.getPaintViewHolder().addView(
+                    FeedbackTextView.itemTextFeedback(collidingItem, paintViewHolder, this));
             drawingItems.getDisplayedItems().remove(collidingItem);
         }
     }

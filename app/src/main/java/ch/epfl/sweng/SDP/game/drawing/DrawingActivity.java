@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
 import com.google.android.gms.common.util.ArrayUtils;
@@ -29,6 +30,7 @@ import ch.epfl.sweng.SDP.utils.ColorUtils;
 public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
+    protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     protected Handler handler;
 
@@ -46,8 +48,8 @@ public abstract class DrawingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.overridePendingTransition(R.anim.fui_slide_in_right,
-                R.anim.fui_slide_out_left);
+        this.overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_left);
         setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -74,15 +76,9 @@ public abstract class DrawingActivity extends BaseActivity {
             colorButtons[i + 1] = colorView;
         }
 
+        paintViewHolder = findViewById(R.id.paintViewHolder);
         paintView = findViewById(R.id.paintView);
         paintView.setColors(colors);
-
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE);
-
-        // Set the content to appear under the system bars so that the
-        // content doesn't resize when the system bars hide and show.
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -90,15 +86,6 @@ public abstract class DrawingActivity extends BaseActivity {
                 paintView.invalidate();
             }
         };
-
-        // hides UI bar
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     /**

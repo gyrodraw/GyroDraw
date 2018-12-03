@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
                             if (dataSnapshot.exists()) {
                                 cloneAccountFromFirebase(dataSnapshot);
                                 launchActivity(HomeActivity.class);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 finish();
                             } else {
                                 displayMainLayout();

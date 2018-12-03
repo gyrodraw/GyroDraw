@@ -25,6 +25,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
+import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
 import static java.lang.String.format;
 
 /**
@@ -66,6 +67,11 @@ public class DrawingOnline extends GyroDrawingActivity {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case WAITING_UPLOAD:
+                        DrawingOnline.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                paintViewHolder.addView(timeIsUpTextFeedback(DrawingOnline.this));
+                            }
+                        });
                         uploadDrawing().addOnCompleteListener(
                                 new OnCompleteListener<TaskSnapshot>() {
                                     @Override

@@ -11,15 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Utility class containing methods related to the special items mode.
@@ -66,6 +64,16 @@ final class DrawingItems {
     @VisibleForTesting
     PaintView getPaintView() {
         return paintView;
+    }
+
+    /**
+     * Return the feedback TextView of the given item.
+     *
+     * @param item the given item
+     * @return the associated feedback TextView
+     */
+    TextView getTextFeedback(Item item) {
+        return FeedbackTextView.itemTextFeedback(item, paintViewHolder, context);
     }
 
     /**
@@ -152,30 +160,6 @@ final class DrawingItems {
         return random.nextInt(155) + 100;
     }
 
-    /**
-     * Creates a text feedback to inform the player about which item
-     * has been picked up.
-     *
-     * @param item that was activated
-     * @return feedback text
-     */
-    TextView itemTextFeedback(Item item) {
-        final FeedbackTextView feedback = new FeedbackTextView(context);
-        feedback.setText(item.textFeedback());
-
-        new CountDownTimer(800, 40) {
-
-            public void onTick(long millisUntilFinished) {
-                feedback.setTextSize(60 - millisUntilFinished / 15);
-            }
-
-            public void onFinish() {
-                paintViewHolder.removeView(feedback);
-            }
-        }.start();
-        return feedback;
-    }
-
     @VisibleForTesting
     void addRandomItemForOfflineMode() {
         convertAndAddItemToLayout(RandomItemGenerator.generateItemForOfflineMode(paintView));
@@ -184,25 +168,5 @@ final class DrawingItems {
     @VisibleForTesting
     void addRandomItem() {
         convertAndAddItemToLayout(RandomItemGenerator.generateItem(paintView));
-    }
-
-    /**
-     * Helper class that defines the style of the text feedback.
-     */
-    private class FeedbackTextView extends AppCompatTextView {
-
-        private FeedbackTextView(Context context) {
-            super(context);
-            setTextColor(context.getResources().getColor(R.color.colorDrawYellow));
-            setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorGrey));
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            setTextSize(1);
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-            setLayoutParams(layoutParams);
-            Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
-            setTypeface(typeMuro, Typeface.ITALIC);
-        }
     }
 }

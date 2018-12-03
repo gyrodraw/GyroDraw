@@ -157,7 +157,7 @@ public class HomeActivityTest {
 
     @Test
     public void testLaunchShop() {
-        onView(withId(R.id.startShop)).perform(click());
+        onView(withId(R.id.shopButton)).perform(click());
         intended(hasComponent(ShopActivity.class.getName()));
     }
 

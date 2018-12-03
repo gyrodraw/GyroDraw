@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -38,7 +40,7 @@ import static java.lang.String.format;
 /**
  * Class representing the leaderboard.
  */
-public class LeaderboardActivity extends Activity {
+public class LeaderboardActivity extends BaseActivity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
@@ -55,12 +57,14 @@ public class LeaderboardActivity extends Activity {
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
     private Boolean filterByFriends;
+    private long lastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_leaderboard);
+
         filterByFriends = false;
         leaderboardView = findViewById(R.id.leaderboard);
 
@@ -71,26 +75,12 @@ public class LeaderboardActivity extends Activity {
 
         final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);
-        LayoutUtils.setExitListener(exitButton, this);
+        LayoutUtils.setFadingExitListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 
         leaderboard = new Leaderboard(getApplicationContext());
-        final TextView friendsFilter = findViewById(R.id.friendsFilter);
-        friendsFilter.setTypeface(typeMuro);
-        friendsFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filterByFriends ^= true;
-                if (filterByFriends) {
-                    leaderboard.update(searchField.getText().toString());
-                    friendsFilter.setText(R.string.removeFriendsFilter);
-                } else {
-                    leaderboard.fetchPlayersFromFirebase(searchField.getText().toString());
-                    friendsFilter.setText(R.string.friendsFilter);
-                }
-            }
-        });
+        setCheckBoxListener(searchField);
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,6 +98,33 @@ public class LeaderboardActivity extends Activity {
                 leaderboard.update(query.toString());
             }
         });
+    }
+
+    private void setCheckBoxListener(final EditText searchField) {
+        final CheckBox friendsFilterCheckbox = findViewById(R.id.friendsFilterCheckBox);
+        final TextView friendsFilterText = findViewById(R.id.friendsFilterText);
+        friendsFilterText.setTypeface(typeMuro);
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - lastClickTime < 500) {
+                    return;
+                }
+                lastClickTime = SystemClock.elapsedRealtime();
+                filterByFriends ^= true;
+                if (filterByFriends) {
+                    leaderboard.update(searchField.getText().toString());
+                    friendsFilterCheckbox.setChecked(true);
+                } else {
+                    leaderboard.fetchPlayersFromFirebase(searchField.getText().toString());
+                    friendsFilterCheckbox.setChecked(false);
+                }
+            }
+        };
+
+        friendsFilterCheckbox.setOnClickListener(clickListener);
+        friendsFilterText.setOnClickListener(clickListener);
     }
 
     /**
@@ -161,6 +178,7 @@ public class LeaderboardActivity extends Activity {
             styleView(usernameView, rank + ". " + username, res.getColor(
                     isCurrentUser ? R.color.colorPrimaryDark : R.color.colorDrawYellow),
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+            usernameView.setPadding(0, 10, 0, 10);
 
             TextView trophiesView = new TextView(context);
             styleView(trophiesView, trophies.toString(),
@@ -416,7 +434,7 @@ public class LeaderboardActivity extends Activity {
 
         private void initLayout() {
             LinearLayout.LayoutParams friendsParams =
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             setLayoutParams(friendsParams);
 
             // Give Button unique Tag to test them later
@@ -509,4 +527,3 @@ public class LeaderboardActivity extends Activity {
         }
     }
 }
-

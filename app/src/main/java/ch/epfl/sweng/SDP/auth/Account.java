@@ -55,7 +55,7 @@ public class Account {
     private LocalDbHandlerForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-                    String email, String currentLeague,
+            String email, String currentLeague,
             int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
             int maxTrophies, List<ShopItem> itemsBought) {
 
@@ -352,11 +352,11 @@ public class Account {
      * Method that allows one to change the average rating per game given a new rating.
      * The rating passed as parameter should be the average rating obtained after a match.
      *
-     * @throws IllegalArgumentException in case a rating <= 0 or > 25 is given
+     * @throws IllegalArgumentException in case a rating <= 0 or > 20 is given
      * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
-        checkPrecondition(0 <= rating && rating <= 25, "Wrong rating given");
+        checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
 
         double newAverageRating = averageRating == 0 ? rating
                 : (averageRating * (totalMatches - 1) + rating) / totalMatches;

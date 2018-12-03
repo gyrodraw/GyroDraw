@@ -186,7 +186,6 @@ public abstract class Activity extends AppCompatActivity {
                         Shop.firebaseToListShopItem((HashMap<String, String>)
                                 user.get("boughtItems")));
 
-
                 LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);
                 handler.saveAccount(Account.getInstance(getApplicationContext()));

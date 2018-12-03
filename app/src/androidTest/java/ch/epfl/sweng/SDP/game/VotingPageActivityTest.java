@@ -42,7 +42,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class VotingPageActivityTest{
+public class VotingPageActivityTest {
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
@@ -87,7 +87,7 @@ public class VotingPageActivityTest{
 
         // To ensure that the rating value does not get above 20
         Database.getReference("realRooms.0123457890.ranking.userA").setValue(0);
-        
+
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);

@@ -1,6 +1,9 @@
 package ch.epfl.sweng.SDP.utils;
 
-public class RankingUtils {
+/**
+ * Utility methods that helps generating positions and trophies distributions.
+ */
+public final class RankingUtils {
 
     private static final int MAX_RANK = 10;
     private static final int DELTA_RANK = 5;

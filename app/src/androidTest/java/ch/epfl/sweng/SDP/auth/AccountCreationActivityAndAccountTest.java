@@ -342,25 +342,25 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testCreateAccountWithTooShortUsername() {
-        testIllegalUsernameGivesCorrectError("MAX", R.string.usernameTooShort);
+        testIllegalUsernameGivesCorrectError("MAX", R.string.usernameTooShort, "");
     }
 
     @Test
     public void testCreateAccountWithTooLongUsername() {
         testIllegalUsernameGivesCorrectError("SUPERDUPERLONGUSERNAMEWHICHISSUPPOSEDTOFAIL",
-                R.string.usernameTooLong);
+                R.string.usernameTooLong, "");
     }
 
     @Test
     public void testCreateAccountWithDoubleSpace() {
         testIllegalUsernameGivesCorrectError("MAX   MUSTER",
-                R.string.usernameNoDoubleSpace);
+                R.string.usernameIllegalChar, " double spaces");
     }
 
     @Test
-    public void testCreateAccountWithNewLineChar() {
+    public void testCreateAccountWithBackslash() {
         testIllegalUsernameGivesCorrectError("MAX"+'\\'+"MUSTER",
-                R.string.usernameNoBackSlash);
+                R.string.usernameIllegalChar, " \\");
     }
 
     @Test
@@ -400,11 +400,12 @@ public class AccountCreationActivityAndAccountTest {
                 .addValueEventListener(valueEventListener);
     }
 
-    private void testIllegalUsernameGivesCorrectError(String username, int errorId) {
+    private void testIllegalUsernameGivesCorrectError(String username, int errorId, String append) {
         onView(withId(R.id.usernameInput)).perform(typeText(username), closeSoftKeyboard());
         TextView feedback = activityRule.getActivity().findViewById(R.id.usernameTaken);
         assertThat(feedback.getText().toString(),
-                is(equalTo(activityRule.getActivity().getResources().getString(errorId))));
+                is(equalTo(activityRule.getActivity().getResources().getString(errorId)
+                        + append)));
         Button createAccount = activityRule.getActivity().findViewById(R.id.createAccount);
         assertThat(createAccount.isEnabled(), is(false));
     }

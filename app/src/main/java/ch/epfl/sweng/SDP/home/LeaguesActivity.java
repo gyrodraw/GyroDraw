@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -33,17 +32,12 @@ public class LeaguesActivity extends BaseActivity {
         Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
-        ((TextView) findViewById(R.id.league1Name)).setTypeface(typeOptimus);
-        ((TextView) findViewById(R.id.league2Name)).setTypeface(typeOptimus);
-        ((TextView) findViewById(R.id.league3Name)).setTypeface(typeOptimus);
+        setTypeFace(typeOptimus, findViewById(R.id.league1Name), findViewById(R.id.league2Name),
+                findViewById(R.id.league3Name), findViewById(R.id.league1Text),
+                findViewById(R.id.league2Text), findViewById(R.id.league3Text));
 
-        ((TextView) findViewById(R.id.league1Text)).setTypeface(typeOptimus);
-        ((TextView) findViewById(R.id.league2Text)).setTypeface(typeOptimus);
-        ((TextView) findViewById(R.id.league3Text)).setTypeface(typeOptimus);
-
-        ((TextView) findViewById(R.id.league1Difficulty)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.league2Difficulty)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.league3Difficulty)).setTypeface(typeMuro);
+        setTypeFace(typeMuro, findViewById(R.id.league1Difficulty),
+                findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty));
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.leaguesBackgroundAnimation));

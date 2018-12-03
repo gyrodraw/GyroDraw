@@ -21,11 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
 import ch.epfl.sweng.SDP.home.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
-import ch.epfl.sweng.SDP.shop.ShopItemComparator;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static java.lang.String.format;
@@ -76,7 +74,11 @@ public class Account {
         this.averageRating = averageRating;
         this.maxTrophies = maxTrophies;
         this.itemsBought = new LinkedList<>(itemsBought);
-        Collections.sort(this.itemsBought, new ShopItemComparator());
+        sortItemsBought();
+    }
+
+    private void sortItemsBought() {
+        Collections.sort(itemsBought, ShopItem.getComparator());
     }
 
     /**
@@ -295,7 +297,7 @@ public class Account {
                 .build().setValue(shopItem.getPriceItem(), createCompletionListener());
 
         itemsBought.add(shopItem);
-        Collections.sort(itemsBought, new ShopItemComparator());
+        sortItemsBought();
         localDbHandler.saveAccount(instance);
     }
 

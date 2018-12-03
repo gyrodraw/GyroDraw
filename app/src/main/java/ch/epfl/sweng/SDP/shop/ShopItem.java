@@ -11,6 +11,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 import ch.epfl.sweng.SDP.R;
@@ -22,6 +23,7 @@ import ch.epfl.sweng.SDP.utils.ColorUtils;
 public class ShopItem {
 
     private static final int DEFAULT_PADDING = 30;
+    private static final ShopItemComparator comparator = new ShopItemComparator();
 
     private int price;
     private ColorsShop color;
@@ -52,6 +54,10 @@ public class ShopItem {
         this.price = price;
         this.color = color;
         this.owned = owned;
+    }
+
+    public static ShopItemComparator getComparator() {
+        return comparator;
     }
 
     public ColorsShop getColorItem() {
@@ -162,6 +168,13 @@ public class ShopItem {
 
         layout.setPadding(DEFAULT_PADDING, 10, DEFAULT_PADDING, 10);
         layout.setClickable(price <= stars && !owned);
+    }
+
+    private static class ShopItemComparator implements Comparator<ShopItem> {
+        @Override
+        public int compare(ShopItem item1, ShopItem item2) {
+            return item1.getColorItem().compareTo(item2.getColorItem());
+        }
     }
 }
 

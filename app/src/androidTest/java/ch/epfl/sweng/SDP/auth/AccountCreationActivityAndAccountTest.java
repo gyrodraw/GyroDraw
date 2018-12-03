@@ -1,10 +1,14 @@
 package ch.epfl.sweng.SDP.auth;
 
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.KeyEvent;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,11 +35,13 @@ import ch.epfl.sweng.SDP.shop.ShopItem;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
@@ -320,13 +326,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testCreateAccountWithNullName() {
-        onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
-        onView(ViewMatchers.withId(R.id.usernameTaken))
-                .check(matches(withText("Username must not be empty")));
-    }
-
-    @Test
     public void testUsernameInputInputsCorrectly() {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("Max Muster"), closeSoftKeyboard())
@@ -339,6 +338,40 @@ public class AccountCreationActivityAndAccountTest {
                 .perform(typeText("PICASSO"), closeSoftKeyboard());
         onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
         assertNotEquals(null, account);
+    }
+
+    @Test
+    public void testCreateAccountWithTooShortUsername() {
+        testIllegalUsernameGivesCorrectError("MAX", R.string.usernameTooShort);
+    }
+
+    @Test
+    public void testCreateAccountWithTooLongUsername() {
+        testIllegalUsernameGivesCorrectError("SUPERDUPERLONGUSERNAMEWHICHISSUPPOSEDTOFAIL",
+                R.string.usernameTooLong);
+    }
+
+    @Test
+    public void testCreateAccountWithDoubleSpace() {
+        testIllegalUsernameGivesCorrectError("MAX   MUSTER",
+                R.string.usernameNoDoubleSpace);
+    }
+
+    @Test
+    public void testCreateAccountWithNewLineChar() {
+        testIllegalUsernameGivesCorrectError("MAX"+'\\'+"MUSTER",
+                R.string.usernameNoBackSlash);
+    }
+
+    @Test
+    public void testCreateAccountWithEmptyUsername() {
+        onView(withId(R.id.usernameInput)).perform(typeText("T"));
+        onView(withId(R.id.usernameInput)).perform(pressKey(KeyEvent.KEYCODE_DEL),
+                closeSoftKeyboard());
+        TextView feedback = activityRule.getActivity().findViewById(R.id.usernameTaken);
+        assertThat(feedback.getText().toString(),
+                is(equalTo(activityRule.getActivity().getResources()
+                        .getString(R.string.usernameMustNotBeEmpty))));
     }
 
     private void setListenerAndAssertToFirebaseForFriendsTest(final boolean state) {
@@ -365,5 +398,14 @@ public class AccountCreationActivityAndAccountTest {
         Database.getReference(USERS_TAG
                 + USER_ID + TEST_FRIEND_TAG)
                 .addValueEventListener(valueEventListener);
+    }
+
+    private void testIllegalUsernameGivesCorrectError(String username, int errorId) {
+        onView(withId(R.id.usernameInput)).perform(typeText(username), closeSoftKeyboard());
+        TextView feedback = activityRule.getActivity().findViewById(R.id.usernameTaken);
+        assertThat(feedback.getText().toString(),
+                is(equalTo(activityRule.getActivity().getResources().getString(errorId))));
+        Button createAccount = activityRule.getActivity().findViewById(R.id.createAccount);
+        assertThat(createAccount.isEnabled(), is(false));
     }
 }

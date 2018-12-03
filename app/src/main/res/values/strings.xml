@@ -59,4 +59,9 @@
     <string name="empty_battle_log">You have not done any game recently</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="usernameValid">Valid username</string>
+    <string name="usernameTooShort">Username is too short</string>
+    <string name="usernameTooLong">Username is too long</string>
+    <string name="usernameNoDoubleSpace">Username must not contain double spaces</string>
+    <string name="usernameNoBackSlash">Username must not contain the char \\</string>
 </resources>

@@ -11,7 +11,7 @@ public class ShopItemTest {
 
     @Test
     public void setColorItemTest() {
-        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10);
+        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10, false);
         shopItem.setColorItem(ColorsShop.YELLOW);
         assertThat(shopItem.getColorItem(), is(ColorsShop.YELLOW));
     }

@@ -181,7 +181,7 @@ public abstract class Activity extends AppCompatActivity {
                         ((Long) user.get("stars")).intValue(),
                         ((Long) user.get("matchesWon")).intValue(),
                         ((Long) user.get("totalMatches")).intValue(),
-                        (Long) user.get("averageRating"),
+                        Double.parseDouble((user.get("averageRating")).toString()),
                         ((Long) user.get("maxTrophies")).intValue(),
                         Shop.firebaseToListShopItem((HashMap<String, String>)
                                 user.get("boughtItems")));

@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
@@ -83,6 +84,10 @@ public class VotingPageActivityTest{
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
+
+        // To ensure that the rating value does not get above 20
+        Database.getReference("realRooms.0123457890.ranking.userA").setValue(0);
+        
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);

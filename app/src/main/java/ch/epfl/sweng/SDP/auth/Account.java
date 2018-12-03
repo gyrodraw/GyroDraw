@@ -1,30 +1,27 @@
 package ch.epfl.sweng.SDP.auth;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.League;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Singleton class that represents an account.
@@ -344,11 +341,11 @@ public class Account {
      * Method that allows one to change the average rating per game given a new rating.
      * The rating passed as parameter should be the total rating obtained after a match.
      *
-     * @throws IllegalArgumentException in case a rating <= 0 or > 25 is given
+     * @throws IllegalArgumentException in case a rating <= 0 or > 20 is given
      * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
-        checkPrecondition(0 < rating && rating <= 25, "Wrong rating given");
+        checkPrecondition(0 < rating && rating <= 20, "Wrong rating given");
 
         double newAverageRating = averageRating == 0 ? rating
                 : (averageRating * (totalMatches - 1) + rating) / totalMatches;

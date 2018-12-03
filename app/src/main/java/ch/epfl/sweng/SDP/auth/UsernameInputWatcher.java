@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.R;
 
+/**
+ * This class is a listener which can be applied to the username input
+ * box to check if the entered username contains problematic chars or not.
+ */
 class UsernameInputWatcher implements TextWatcher {
 
     private final TextView feedback;
@@ -37,27 +41,30 @@ class UsernameInputWatcher implements TextWatcher {
 
     private void validate(String username) {
         disableButton();
-        if (check(username != null, R.string.usernameMustNotBeEmpty, "")
-                && check(!username.isEmpty(), R.string.usernameMustNotBeEmpty, "")
-                && check(username.length() >= 5, R.string.usernameTooShort, "")
-                && check(username.length() <= 20, R.string.usernameTooLong, "")
-                && check(!username.contains("  "),
-                            R.string.usernameIllegalChar, " double spaces")
-                && check(!username.contains("\\"), R.string.usernameIllegalChar, " \\")
-                && check(!username.contains("%"), R.string.usernameIllegalChar, " %")
-                && check(!username.contains("\""), R.string.usernameIllegalChar, " \"")
-                && check(!username.contains("'"), R.string.usernameIllegalChar, " '")) {
+        if (checkAll(username)) {
             feedback.setText(username);
             enableButton(true, R.color.colorDrawYellow);
         }
     }
 
-    private boolean check(boolean legal, int errorCode, String append) {
-        if (!legal) {
+    private boolean check(boolean condition, int errorCode, String append) {
+        if (!condition) {
             feedback.setText(getString(errorCode) + append);
-            return false;
         }
-        return true;
+        return condition;
+    }
+
+    private boolean checkAll(String username) {
+        return check(username != null, R.string.usernameMustNotBeEmpty, "")
+                && check(!username.isEmpty(), R.string.usernameMustNotBeEmpty, "")
+                && check(username.length() >= 5, R.string.usernameTooShort, "")
+                && check(username.length() <= 20, R.string.usernameTooLong, "")
+                && check(!username.contains("  "),
+                R.string.usernameIllegalChar, " double spaces")
+                && check(!username.contains("\\"), R.string.usernameIllegalChar, " \\")
+                && check(!username.contains("%"), R.string.usernameIllegalChar, " %")
+                && check(!username.contains("\""), R.string.usernameIllegalChar, " \"")
+                && check(!username.contains("'"), R.string.usernameIllegalChar, " '");
     }
 
     private void enableButton(boolean enable, int colorId) {

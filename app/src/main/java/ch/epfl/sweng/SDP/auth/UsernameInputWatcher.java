@@ -21,60 +21,43 @@ class UsernameInputWatcher implements TextWatcher {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(CharSequence username, int start, int count, int after) {
         // Needs to be implemented, but we don't need it.
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(CharSequence username, int start, int before, int count) {
         // Needs to be implemented, but we don't need it.
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-        validate(s.toString());
+    public void afterTextChanged(Editable username) {
+        validate(username.toString());
     }
 
     private void validate(String username) {
         disableButton();
-        if (username == null || username.isEmpty()) {
-            feedback.setText(getString(R.string.usernameMustNotBeEmpty));
-            return;
+        if (check(username != null, R.string.usernameMustNotBeEmpty, "")
+                && check(!username.isEmpty(), R.string.usernameMustNotBeEmpty, "")
+                && check(username.length() >= 5, R.string.usernameTooShort, "")
+                && check(username.length() <= 20, R.string.usernameTooLong, "")
+                && check(!username.contains("  "),
+                            R.string.usernameIllegalChar, " double spaces")
+                && check(!username.contains("\\"), R.string.usernameIllegalChar, " \\")
+                && check(!username.contains("%"), R.string.usernameIllegalChar, " %")
+                && check(!username.contains("\""), R.string.usernameIllegalChar, " \"")
+                && check(!username.contains("'"), R.string.usernameIllegalChar, " '")) {
+            feedback.setText(username);
+            enableButton(true, R.color.colorDrawYellow);
         }
-        if (username.length() < 5) {
-            feedback.setText(getString(R.string.usernameTooShort));
-            return;
+    }
+
+    private boolean check(boolean legal, int errorCode, String append) {
+        if (!legal) {
+            feedback.setText(getString(errorCode) + append);
+            return false;
         }
-        if (username.length() > 20) {
-            feedback.setText(getString(R.string.usernameTooLong));
-            return;
-        }
-        if (username.contains("  ")) {
-            feedback.setText(getString(R.string.usernameIllegalChar) + " double spaces");
-            return;
-        }
-        if (username.contains("\\")) {
-            feedback.setText(getString(R.string.usernameIllegalChar) + " \\");
-            return;
-        }
-        if (username.contains("%")) {
-            feedback.setText(getString(R.string.usernameIllegalChar) + " %");
-            return;
-        }
-        if (username.contains("\"")) {
-            feedback.setText(getString(R.string.usernameIllegalChar) + " \"");
-            return;
-        }
-        if (username.contains("\'")) {
-            feedback.setText(getString(R.string.usernameIllegalChar) + "  \'");
-            return;
-        }
-        if (username.contains("\'")) {
-            feedback.setText(getString(R.string.usernameIllegalChar) + "  \'");
-            return;
-        }
-        feedback.setText(username);
-        enableButton(true, R.color.colorDrawYellow);
+        return true;
     }
 
     private void enableButton(boolean enable, int colorId) {

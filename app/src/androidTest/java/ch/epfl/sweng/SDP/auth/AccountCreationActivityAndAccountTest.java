@@ -364,6 +364,24 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
+    public void testCreateAccountWithPercent() {
+        testIllegalUsernameGivesCorrectError("MAX"+'%'+"MUSTER",
+                R.string.usernameIllegalChar, " %");
+    }
+
+    @Test
+    public void testCreateAccountWithDoubleQuotes() {
+        testIllegalUsernameGivesCorrectError("MAX\"MUSTER",
+                R.string.usernameIllegalChar, " \"");
+    }
+
+    @Test
+    public void testCreateAccountWithQuotes() {
+        testIllegalUsernameGivesCorrectError("MAX\'MUSTER",
+                R.string.usernameIllegalChar, " '");
+    }
+
+    @Test
     public void testCreateAccountWithEmptyUsername() {
         onView(withId(R.id.usernameInput)).perform(typeText("T"));
         onView(withId(R.id.usernameInput)).perform(pressKey(KeyEvent.KEYCODE_DEL),

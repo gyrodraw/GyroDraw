@@ -156,12 +156,10 @@ public class RankingFragment extends ListFragment {
         account.changeStars(starIncrease);
         account.changeTrophies(trophiesIncrease);
         account.increaseTotalMatches();
+        account.changeAverageRating(starIncrease);
         if (won) {
             account.increaseMatchesWon();
         }
-
-        account.changeAverageRating(starIncrease);
-
     }
 
     /**

@@ -357,9 +357,9 @@ public class Account {
      */
     public void changeAverageRating(double rating) throws DatabaseException {
         checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
+        checkPrecondition(totalMatches >= 1, "Wrong total matches");
 
-        double newAverageRating = averageRating == 0 ? rating
-                : (averageRating * (totalMatches - 1) + rating) / totalMatches;
+        double newAverageRating = (averageRating * (totalMatches - 1) + rating) / totalMatches;
         Database.constructBuilder(usersRef).addChildren(userId + ".averageRating").build()
                 .setValue(newAverageRating, createCompletionListener());
         averageRating = newAverageRating;

@@ -61,6 +61,7 @@ public class AccountCreationActivityAndAccountTest {
 
     private static final String USER_ID = "123456789";
     private static final String TEST_EMAIL = "testEmail";
+    private static final String EMAIL_TAG = "email";
     private static final String USERNAME = "username";
     private static final String LEAGUE = "league1";
     private static final String USERS_TAG = "users.";
@@ -74,7 +75,7 @@ public class AccountCreationActivityAndAccountTest {
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra("email", TEST_EMAIL);
+                    intent.putExtra(EMAIL_TAG, TEST_EMAIL);
 
                     return intent;
                 }
@@ -99,8 +100,8 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testSetGetEmail() {
-        account.setEmail("email");
-        assertThat(account.getEmail(), is("email"));
+        account.setEmail(EMAIL_TAG);
+        assertThat(account.getEmail(), is(EMAIL_TAG));
     }
 
     @Test
@@ -205,19 +206,18 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testNewFriend() {
-        Database.getReference(USERS_TAG
-                + USER_ID + TEST_FRIEND_TAG)
-                .setValue(FriendsRequestState.SENT.ordinal());
-        setListenerAndAssertToFirebaseForFriendsTest(true,
-                USERS_TAG + USER_ID + TEST_FRIEND_TAG);
-        account.addFriend(TEST_FRIEND);
+        friendsTestHelper(FriendsRequestState.SENT.ordinal());
     }
 
     @Test
     public void testConfirmFriend() {
+        friendsTestHelper(FriendsRequestState.RECEIVED.ordinal());
+    }
+
+    private void friendsTestHelper(int state) {
         Database.getReference(USERS_TAG
                 + USER_ID + TEST_FRIEND_TAG)
-                .setValue(FriendsRequestState.RECEIVED.ordinal());
+                .setValue(state);
         setListenerAndAssertToFirebaseForFriendsTest(true,
                 USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);

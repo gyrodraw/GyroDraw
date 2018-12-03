@@ -42,7 +42,7 @@ class UsernameInputWatcher implements TextWatcher {
     private void validate(String username) {
         disableButton();
         if (checkAll(username)) {
-            feedback.setText(username);
+            feedback.setText(resources.getString(R.string.usernameValid));
             enableButton(true, R.color.colorDrawYellow);
         }
     }

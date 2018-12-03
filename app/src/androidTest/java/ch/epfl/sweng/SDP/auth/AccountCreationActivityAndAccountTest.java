@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.auth;
 
+import android.content.Intent;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
 import static android.support.test.espresso.action.ViewActions.click;
@@ -34,8 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -64,7 +69,16 @@ public class AccountCreationActivityAndAccountTest {
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
-            new ActivityTestRule<>(AccountCreationActivity.class);
+            new ActivityTestRule<AccountCreationActivity>(AccountCreationActivity.class){
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra("email", TEST_EMAIL);
+
+                    return intent;
+                }
+            };
 
     private Account account;
 
@@ -194,7 +208,8 @@ public class AccountCreationActivityAndAccountTest {
         Database.getReference(USERS_TAG
                 + USER_ID + TEST_FRIEND_TAG)
                 .setValue(FriendsRequestState.SENT.ordinal());
-        setListenerAndAssertToFirebaseForFriendsTest(true);
+        setListenerAndAssertToFirebaseForFriendsTest(true,
+                USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);
     }
 
@@ -203,13 +218,15 @@ public class AccountCreationActivityAndAccountTest {
         Database.getReference(USERS_TAG
                 + USER_ID + TEST_FRIEND_TAG)
                 .setValue(FriendsRequestState.RECEIVED.ordinal());
-        setListenerAndAssertToFirebaseForFriendsTest(true);
+        setListenerAndAssertToFirebaseForFriendsTest(true,
+                USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);
     }
 
     @Test
     public void testRemoveFriend() {
-        setListenerAndAssertToFirebaseForFriendsTest(false);
+        setListenerAndAssertToFirebaseForFriendsTest(false,
+                USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.removeFriend(TEST_FRIEND);
     }
 
@@ -397,19 +414,25 @@ public class AccountCreationActivityAndAccountTest {
                         .getString(R.string.usernameMustNotBeEmpty))));
     }
 
-    private void setListenerAndAssertToFirebaseForFriendsTest(final boolean state) {
+    @Test
+    public void testCreateNewAccountSucceeds() {
+        Account.deleteAccount();
+        setListenerAndAssertToFirebaseForFriendsTest(true, USERS_TAG + USER_ID);
+        onView(withId(R.id.usernameInput))
+                .perform(typeText("TESTINGUSERNAME"), closeSoftKeyboard());
+        onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
+    }
+
+    private void setListenerAndAssertToFirebaseForFriendsTest(
+            final boolean state, String path) {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
         final ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                countingResource.decrement();
                 assertThat(dataSnapshot.exists(), is(state));
-                Database.getReference(USERS_TAG
-                        + USER_ID
-                        + TEST_FRIEND_TAG)
-                        .removeEventListener(this);
+                countingResource.decrement();
             }
 
             @Override
@@ -418,9 +441,8 @@ public class AccountCreationActivityAndAccountTest {
             }
         };
 
-        Database.getReference(USERS_TAG
-                + USER_ID + TEST_FRIEND_TAG)
-                .addValueEventListener(valueEventListener);
+        Database.getReference(path)
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
     private void testIllegalUsernameGivesCorrectError(String username, int errorId, String append) {

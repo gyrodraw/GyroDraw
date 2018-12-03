@@ -30,9 +30,9 @@ public class AccountCreationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         userEmail = getIntent().getStringExtra("email");
-        overridePendingTransition(0, 0);
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
@@ -59,8 +59,8 @@ public class AccountCreationActivity extends BaseActivity {
         if (username != null && !username.isEmpty()) {
             Database.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
 
+                        @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 usernameTaken.setText(getString(R.string.usernameTaken));
@@ -68,6 +68,7 @@ public class AccountCreationActivity extends BaseActivity {
                                 Account.createAccount(getApplicationContext(),
                                         new ConstantsWrapper(), username, userEmail);
                                 Account.getInstance(getApplicationContext()).registerAccount();
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 launchActivity(HomeActivity.class);
                                 finish();
                             }

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
@@ -21,7 +22,12 @@ public class AddStarsItem extends Item {
     }
 
     @Override
-    public String textFeedback() {
-        return "+"+ADD_STARS+" STARS! ";
+    public String getTextFeedback() {
+        return "+" + ADD_STARS + " STARS ! ";
+    }
+
+    @Override
+    public int getColorId() {
+        return R.color.colorGreen;
     }
 }

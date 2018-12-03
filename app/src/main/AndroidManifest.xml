@@ -53,7 +53,6 @@
         <activity
             android:name=".shop.ShopActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".game.drawing.DrawingOffline"
             android:screenOrientation="portrait" />
@@ -61,5 +60,4 @@
             android:name=".game.drawing.DrawingOnlineItems"
             android:screenOrientation="portrait" />
     </application>
-
 </manifest>

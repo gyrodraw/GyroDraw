@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 
 import android.os.CountDownTimer;
 
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 public class SlowdownItem extends Item {
@@ -32,13 +33,16 @@ public class SlowdownItem extends Item {
     }
 
     private void deactivate(PaintView paintView) {
-        paintView.multSpeed(1/SLOWDOWN_FACTOR);
+        paintView.multSpeed(1 / SLOWDOWN_FACTOR);
     }
 
     @Override
-    public String textFeedback() {
-        return "SLOWDOWN! ";
+    public String getTextFeedback() {
+        return "SLOWDOWN ! ";
     }
 
-
+    @Override
+    public int getColorId() {
+        return R.color.colorGreen;
+    }
 }

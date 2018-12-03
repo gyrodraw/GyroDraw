@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.LightingColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -110,13 +109,10 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
-
-        overridePendingTransition(0, 0);
 
         if (enableBackgroundAnimation) {
             Glide.with(this).load(R.drawable.background_animation)
@@ -134,17 +130,13 @@ public class HomeActivity extends BaseActivity {
         final ImageView mysteryButton = findViewById(R.id.mysteryButton);
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
+        final ImageView shopButton = findViewById(R.id.shopButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
-
-        practiceButton.setColorFilter(new LightingColorFilter(Color.WHITE,
-                getResources().getColor(R.color.colorButtonBlue)));
-        mysteryButton.setColorFilter(new LightingColorFilter(Color.WHITE,
-                getResources().getColor(R.color.colorButtonBlue)));
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
@@ -161,6 +153,7 @@ public class HomeActivity extends BaseActivity {
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
+        setListener(shopButton, getMainAmplitude(), getMainFrequency());
         setListener(battleLogButton, getMainAmplitude(), getMainFrequency());
         setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
         setListener(starsButton, getMainAmplitude(), getMainFrequency());
@@ -201,6 +194,7 @@ public class HomeActivity extends BaseActivity {
                             Account.deleteAccount();
                             toastSignOut.cancel();
                             launchActivity(MainActivity.class);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             finish();
                         } else {
                             Log.e(TAG, "Sign out failed!");
@@ -292,6 +286,9 @@ public class HomeActivity extends BaseActivity {
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
                 break;
+            case R.id.shopButton:
+                launchActivity(ShopActivity.class);
+                break;
             case R.id.battleLogButton:
                 launchActivity(BattleLogActivity.class);
                 break;
@@ -373,7 +370,6 @@ public class HomeActivity extends BaseActivity {
 
     private void showProfilePopup() {
         profileWindow.setContentView(R.layout.activity_profile_pop_up);
-
         Account userAccount = Account.getInstance(this);
 
         this.setMuroFont();
@@ -393,16 +389,6 @@ public class HomeActivity extends BaseActivity {
 
         profileWindow.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         profileWindow.show();
-    }
-
-
-    /**
-     * Method called when shop button is clicked. Starts shop activity.
-     *
-     * @param view View referring the shop button
-     */
-    public void onShopButtonClicked(View view) {
-        launchActivity(ShopActivity.class);
     }
 
     @VisibleForTesting

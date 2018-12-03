@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 public class DrawingOfflineWithItemsTest {
@@ -49,7 +50,7 @@ public class DrawingOfflineWithItemsTest {
     @Before
     public void init() {
         activity = activityRule.getActivity();
-        activity.toggleMysteryMode(null);
+        toggleMysteryMode();
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
@@ -66,6 +67,13 @@ public class DrawingOfflineWithItemsTest {
         addRandomItem();
         SystemClock.sleep(5000);
         assertThat(paintViewHolder.getChildCount(), greaterThan(1));
+    }
+
+    @Test
+    public void testItemsGetRemoved() {
+        toggleMysteryMode();
+        assertThat(paintViewHolder.getChildCount(), lessThanOrEqualTo(1));
+        toggleMysteryMode();
     }
 
     @Test
@@ -133,6 +141,19 @@ public class DrawingOfflineWithItemsTest {
         double init = paintView.getSpeed();
         activateItem(item);
         assertThat(paintView.getSpeed(), is(init * factor));
+    }
+
+    private void toggleMysteryMode() {
+        try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.toggleMysteryMode(null);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     private void activateItem(final Item item) {

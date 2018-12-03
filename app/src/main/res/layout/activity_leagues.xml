@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -65,14 +64,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="8dp"
                 android:drawableEnd="@drawable/trophy"
                 android:drawablePadding="8dp"
-                android:drawableRight="@drawable/trophy"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="@string/league_3_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorLighterGrey" />
+
+            <TextView
+                android:id="@+id/league3Difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/league_3_difficulty"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorLightGrey" />
 
             <ImageView
@@ -101,14 +112,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="8dp"
                 android:drawableEnd="@drawable/trophy"
                 android:drawablePadding="8dp"
-                android:drawableRight="@drawable/trophy"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="@string/league_2_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorLighterGrey" />
+
+            <TextView
+                android:id="@+id/league2Difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/league_2_difficulty"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorLightGrey" />
 
             <ImageView
@@ -137,15 +160,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="8dp"
                 android:drawableEnd="@drawable/trophy"
                 android:drawablePadding="8dp"
-                android:drawableRight="@drawable/trophy"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="@string/league_1_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorLighterGrey" />
+
+            <TextView
+                android:id="@+id/league1Difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/league_1_difficulty"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorLightGrey" />
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/exitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:includeFontPadding="false"
+        android:text="@string/cross"
+        android:textColor="@color/colorDrawYellow"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </RelativeLayout>

@@ -62,6 +62,5 @@
     <string name="usernameValid">Valid username</string>
     <string name="usernameTooShort">Username is too short</string>
     <string name="usernameTooLong">Username is too long</string>
-    <string name="usernameNoDoubleSpace">Username must not contain double spaces</string>
-    <string name="usernameNoBackSlash">Username must not contain the char \\</string>
+    <string name="usernameIllegalChar">Username must not contain</string>
 </resources>

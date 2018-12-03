@@ -9,7 +9,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
  */
 public final class RandomItemGenerator {
 
-    private static final int ITEM_RADIUS = 50;
+    public static final int ITEM_RADIUS = 50;
 
     private RandomItemGenerator() {
     }

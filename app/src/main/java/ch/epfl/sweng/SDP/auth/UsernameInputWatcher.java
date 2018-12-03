@@ -50,11 +50,27 @@ class UsernameInputWatcher implements TextWatcher {
             return;
         }
         if (username.contains("  ")) {
-            feedback.setText(getString(R.string.usernameNoDoubleSpace));
+            feedback.setText(getString(R.string.usernameIllegalChar) + " double spaces");
             return;
         }
         if (username.contains("\\")) {
-            feedback.setText(getString(R.string.usernameNoBackSlash));
+            feedback.setText(getString(R.string.usernameIllegalChar) + " \\");
+            return;
+        }
+        if (username.contains("%")) {
+            feedback.setText(getString(R.string.usernameIllegalChar) + " %");
+            return;
+        }
+        if (username.contains("\"")) {
+            feedback.setText(getString(R.string.usernameIllegalChar) + " \"");
+            return;
+        }
+        if (username.contains("\'")) {
+            feedback.setText(getString(R.string.usernameIllegalChar) + "  \'");
+            return;
+        }
+        if (username.contains("\'")) {
+            feedback.setText(getString(R.string.usernameIllegalChar) + "  \'");
             return;
         }
         feedback.setText(username);

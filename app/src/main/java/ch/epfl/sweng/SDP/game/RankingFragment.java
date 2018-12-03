@@ -132,11 +132,11 @@ public class RankingFragment extends ListFragment {
                 List<String> usernames = SortUtils.sortByValue(finalRanking);
 
                 int trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
-                int positionForUser = positions[usernames.indexOf(account.getUsername())];
-                
+
                 Boolean won = usernames.get(0).equals(account.getUsername());
                 updateUserStats(rankForUser, trophiesForUser, won);
-                createAndStoreGameResult(usernames, positionForUser, rankForUser, trophiesForUser);
+                createAndStoreGameResult(usernames, usernames.indexOf(account.getUsername()),
+                                            rankForUser, trophiesForUser);
 
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),

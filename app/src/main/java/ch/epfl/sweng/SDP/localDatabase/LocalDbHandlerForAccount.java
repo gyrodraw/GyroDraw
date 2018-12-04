@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 
+/**
+ * Local database handler for storing and retrieving the user's account.
+ */
 public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "account.db";
@@ -64,7 +67,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
     }
 
     /**
-     * Save the given account in the local database.
+     * Saves the given account in the local database.
      *
      * @param account the account to be saved
      */
@@ -88,7 +91,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
 
 
     /**
-     * Retrieve the account data stored in the local database and update the given account with it.
+     * Retrieves the account data stored in the local database and update the given account with it.
      *
      * @param account the account to be updated
      */

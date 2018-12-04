@@ -7,7 +7,6 @@ import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
 
 public class FriendsRequestStateUnitTest {
 
@@ -26,8 +25,8 @@ public class FriendsRequestStateUnitTest {
         assertThat(FriendsRequestState.fromInteger(2), is(FRIENDS));
     }
 
-    @Test
-    public void testFromIntegerNull() {
-        assertNull(FriendsRequestState.fromInteger(5));
+    @Test(expected = IllegalArgumentException.class)
+    public void testFromIntegerWrongInteger() {
+        FriendsRequestState.fromInteger(5);
     }
 }

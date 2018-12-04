@@ -5,27 +5,22 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import java.util.List;
-import java.util.Locale;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import com.bumptech.glide.Glide;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -67,8 +62,8 @@ public class ShopActivity extends BaseActivity {
     }
 
     /**
-     * Fill the shop with the items available taking into account the colors the player
-     * has already bought.
+     * Fills the shop with the items available taking into account the colors the player has already
+     * bought.
      */
     public void fillShop() {
         shop = new Shop();
@@ -86,7 +81,7 @@ public class ShopActivity extends BaseActivity {
     }
 
     /**
-     * Create different layout for each available color in the shop.
+     * Creates different layout for each available color in the shop.
      */
     public void addColorsToShop() {
         LayoutParams layoutParams =

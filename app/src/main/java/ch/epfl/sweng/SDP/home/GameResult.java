@@ -23,19 +23,6 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
  */
 public class GameResult {
 
-    private static final int USERNAME_SIZE = 20;
-    private static final int REWARD_SIZE = 15;
-
-    private final List<String> rankedUsername;
-    private final int rank;
-    private final int stars;
-    private final int trophies;
-    private final Bitmap drawing;
-
-    private Context context;
-    private Resources res;
-    private Typeface typeMuro;
-
     private static final LayoutParams rankListParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     private static final LayoutParams rankParams =
@@ -50,6 +37,19 @@ public class GameResult {
             new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
     private static final LayoutParams imagesParams =
             new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+
+    private static final int USERNAME_SIZE = 20;
+    private static final int REWARD_SIZE = 15;
+
+    private final List<String> rankedUsername;
+    private final int rank;
+    private final int stars;
+    private final int trophies;
+    private final Bitmap drawing;
+
+    private Context context;
+    private Resources res;
+    private Typeface typeMuro;
 
     /**
      * Creates a new game result.
@@ -109,7 +109,7 @@ public class GameResult {
      * @return LinearLayout that will be displayed
      */
     @SuppressLint("NewApi")
-    public LinearLayout toLayout() {
+    LinearLayout toLayout() {
         LinearLayout layout = new LinearLayout(context);
         layout.setLayoutParams(rankListParams);
         layout.setOrientation(LinearLayout.VERTICAL);

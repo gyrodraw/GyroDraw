@@ -1,9 +1,13 @@
 package ch.epfl.sweng.SDP.auth;
 
-import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
+import ch.epfl.sweng.SDP.firebase.Database;
+
+/**
+ * Wrapper class useful for testing.
+ */
 public class ConstantsWrapper {
 
     /**
@@ -14,7 +18,8 @@ public class ConstantsWrapper {
     }
 
     /**
-     * Return the {@link DatabaseReference} specified by the given path.
+     * Returns the {@link DatabaseReference} specified by the given path.
+     *
      * @param path the path corresponding to the desired reference
      * @return the desired reference
      */
@@ -23,7 +28,8 @@ public class ConstantsWrapper {
     }
 
     /**
-     * Return the current user id.
+     * Returns the current user id.
+     *
      * @return the user id
      */
     public String getFirebaseUserId() {

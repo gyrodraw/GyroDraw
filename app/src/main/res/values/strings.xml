@@ -20,6 +20,9 @@
     <string name="league_1_description">0 &#8211; 99</string>
     <string name="league_2_description">100 &#8211; 199</string>
     <string name="league_3_description">200+</string>
+    <string name="league_1_difficulty">Drawing themes: basic</string>
+    <string name="league_2_difficulty">Drawing themes: advanced</string>
+    <string name="league_3_difficulty">Drawing themes: expert</string>
     <string name="draw">Draw!</string>
     <string name="fly">Fly!</string>
     <string name="clear">Clear</string>
@@ -38,7 +41,6 @@
     <string name="max_trophies">Max trophies:</string>
     <string name="profile">Profile</string>
     <string name="usernameMustNotBeEmpty">Username must not be empty</string>
-    <string name="usernameAlreadyTaken">Username already taken, try again</string>
     <string name="usernameTaken">Username already taken, try again</string>
     <string name="enter_name_here">Enter name here</string>
     <string name="battle_log">Battle log</string>
@@ -46,14 +48,16 @@
     <string name="leave">Leave</string>
     <string name="practice">PRACTICE !</string>
     <string name="special">SPECIAL !</string>
-    <string name="friendsFilter">Filter for friends</string>
-    <string name="removeFriendsFilter">Remove filter</string>
+    <string name="friendsFilter">Filter friends</string>
     <string name="buySuccess">Purchase Successful</string>
     <string name="buyError">Not enough stars</string>
     <string name="error">Error</string>
     <string name="success">Success</string>
-    <string name="accept">Accept!</string>
+    <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="new_friend_request">New friend request</string>
     <string name="facebook_app_id">348464052628931</string>
+    <string name="empty_battle_log">You have not done any game recently</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>

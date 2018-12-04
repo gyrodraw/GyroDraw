@@ -8,14 +8,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 public class AccountCreationActivity extends BaseActivity {
 
@@ -27,9 +28,9 @@ public class AccountCreationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         userEmail = getIntent().getStringExtra("email");
-        overridePendingTransition(0, 0);
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
@@ -63,6 +64,7 @@ public class AccountCreationActivity extends BaseActivity {
                                         new ConstantsWrapper(), username, userEmail);
                                 Account.getInstance(getApplicationContext()).registerAccount();
                                 launchActivity(HomeActivity.class);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 finish();
                             }
                         }

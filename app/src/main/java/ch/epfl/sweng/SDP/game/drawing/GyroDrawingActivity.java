@@ -62,6 +62,4 @@ public abstract class GyroDrawingActivity extends DrawingActivity implements Sen
     public void updateValues(float coordinateX, float coordinateY) {
         paintView.updateCoordinates(coordinateX, coordinateY);
     }
-
-
 }

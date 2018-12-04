@@ -18,7 +18,7 @@ import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.ArrayList;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -26,7 +26,7 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 
-public class LoadingScreenActivity extends Activity {
+public class LoadingScreenActivity extends BaseActivity {
 
     private String roomID = null;
     private int gameMode = 0;
@@ -108,6 +108,7 @@ public class LoadingScreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
         gameMode = getIntent().getIntExtra("mode", 0);
@@ -116,7 +117,6 @@ public class LoadingScreenActivity extends Activity {
             lookingForRoom(gameMode);
         }
 
-        overridePendingTransition(0, 0);
 
         isRoomReady.setListener(listenerRoomReady);
         areWordsReady.setListener(listenerRoomReady);
@@ -162,6 +162,7 @@ public class LoadingScreenActivity extends Activity {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             hasLeft = true;
             launchActivity(HomeActivity.class);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
         return super.onKeyDown(keyCode, event);
     }

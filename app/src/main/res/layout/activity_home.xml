@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     tools:context=".home.HomeActivity">
 
     <ImageView
@@ -39,12 +39,13 @@
 
     <ImageView
         android:id="@+id/trophiesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="40dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/trophiesCount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/home_trophies_button"
@@ -52,12 +53,13 @@
 
     <ImageView
         android:id="@+id/starsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/starsCount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trophiesButton"
         app:srcCompat="@drawable/home_stars_button"
@@ -66,9 +68,8 @@
     <ImageView
         android:id="@+id/leagueImage"
         android:layout_width="200dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="80dp"
-        android:layout_marginTop="60dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/practiceButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,43 +77,58 @@
         app:srcCompat="@drawable/league_1"
         tools:ignore="ContentDescription" />
 
-    <ImageView
-        android:id="@+id/leaderboardButton"
+    <LinearLayout
+        android:id="@+id/leftIcons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/leagueText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/leagueImage"
-        app:layout_constraintTop_toTopOf="@+id/leagueImage"
-        app:srcCompat="@drawable/leaderboard_button"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
-        android:id="@+id/battleLogButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/leagueText"
-        app:layout_constraintEnd_toStartOf="@+id/leagueImage"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/leagueImage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/leagueImage"
-        app:srcCompat="@drawable/battle_log_button"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="@id/rightIcons">
+
+        <ImageView
+            android:id="@+id/shopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/shop_button"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rightIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/leagueImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/leagueImage"
+        app:layout_constraintTop_toTopOf="@id/leagueImage">
+
+        <ImageView
+            android:id="@+id/leaderboardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/leaderboard_button"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/battleLogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/battle_log_button"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/leagueText"
@@ -130,10 +146,10 @@
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
 
     <ImageView
+
         android:id="@+id/drawButton"
-        android:layout_width="500dp"
-        android:layout_height="75dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="450dp"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toTopOf="@+id/mysteryButton"
@@ -146,7 +162,6 @@
         android:id="@+id/practiceButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toTopOf="@+id/drawButton"
@@ -159,7 +174,7 @@
         android:id="@+id/mysteryButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -171,16 +186,15 @@
     <Button
         android:id="@+id/usernameButton"
         android:layout_width="wrap_content"
-        android:layout_height="31dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="3dp"
         android:background="@android:color/transparent"
-        android:gravity="end"
+        android:gravity="center_vertical|end"
         android:text="@string/user_name"
         android:textColor="@color/colorDrawYellow"
         android:textSize="25sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/trophiesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -189,10 +203,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:drawableEnd="@drawable/trophy"
         android:drawablePadding="8dp"
-        android:drawableRight="@drawable/trophy"
         android:gravity="bottom"
         android:text="@string/zero"
         android:textColor="@color/colorBlueTrophy"
@@ -206,10 +218,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:drawableEnd="@drawable/star"
         android:drawablePadding="8dp"
-        android:drawableRight="@drawable/star"
         android:gravity="bottom"
         android:text="@string/zero"
         android:textColor="@color/colorGreenStar"
@@ -217,21 +227,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/starsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/starsButton" />
-
-    <Button
-        android:id="@+id/startShop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="136dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Shop"
-        android:onClick="onShopButtonClicked"
-        app:layout_constraintEnd_toStartOf="@+id/leaderboardButton"
-        app:layout_constraintHorizontal_bias="0.039"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

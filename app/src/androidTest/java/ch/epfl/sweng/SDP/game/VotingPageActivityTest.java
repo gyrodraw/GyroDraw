@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,8 +27,9 @@ import org.mockito.Mockito;
 import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
@@ -34,12 +37,10 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.sweng.SDP.game.VotingPageActivity.disableAnimations;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -54,13 +55,17 @@ public class VotingPageActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     VotingPageActivity.disableAnimations();
+                    Account.deleteAccount();
+                    Account.createAccount(InstrumentationRegistry.getTargetContext(),
+                            new ConstantsWrapper(), "userA", "test");
+                    Account.getInstance(InstrumentationRegistry.getTargetContext())
+                            .setUserId("userA");
                 }
 
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
                     intent.putExtra("RoomID", "0123457890");
-
                     return intent;
                 }
             };
@@ -73,6 +78,10 @@ public class VotingPageActivityTest {
                 .findViewById(R.id.starsAnimation);
     }
 
+    @After
+    public void end() {
+        Account.deleteAccount();
+    }
 
     @Test
     public void testSharingImage() {
@@ -82,7 +91,12 @@ public class VotingPageActivityTest {
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
+
+        // To ensure that the rating value does not get above 20
+        Database.getReference("realRooms.0123457890.ranking.userA").setValue(0);
+
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
+        SystemClock.sleep(5000);
         ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
         SystemClock.sleep(5000);
         assertThat(mActivityRule.getActivity().getRatings()[counter], is(3));
@@ -100,7 +114,7 @@ public class VotingPageActivityTest {
         starsAnimation.updateState(1000);
         starsAnimation.onDraw(canvas);
         assertThat(starsAnimation.getNumStars(), greaterThanOrEqualTo(previousStars + 5));
-        SystemClock.sleep(4000);
+        SystemClock.sleep(10000);
         setStarsAnimationToGone();
     }
 
@@ -145,9 +159,6 @@ public class VotingPageActivityTest {
     @Test
     public void startHomeActivityStartsHomeActivity() {
         Intents.init();
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
-        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
@@ -155,7 +166,7 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void testStateChange() {
+    public void testState5Change() {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
@@ -167,8 +178,15 @@ public class VotingPageActivityTest {
     }
 
     @Test
+    public void testState4Change() {
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+    }
+
+    @Test
     public void testShowDrawingImage() {
-        Database.constructBuilder().addChildren("realRooms.0123457890.state").build().setValue(4);
         Bitmap image = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
         mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
@@ -178,6 +196,7 @@ public class VotingPageActivityTest {
     public void testChangeImage() {
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         mActivityRule.getActivity().callChangeImage();
+
         SystemClock.sleep(6000);
 
         assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(),

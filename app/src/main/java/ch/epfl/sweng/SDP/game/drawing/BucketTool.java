@@ -6,7 +6,7 @@ import android.graphics.Color;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BucketTool {
+class BucketTool {
 
     private Bitmap image = null;
     private int[] tolerance = new int[]{0, 0, 0};

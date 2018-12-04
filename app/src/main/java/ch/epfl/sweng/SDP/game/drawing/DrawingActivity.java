@@ -4,11 +4,13 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.VisibleForTesting;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
 import com.google.android.gms.common.util.ArrayUtils;
@@ -22,8 +24,10 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
-public class DrawingActivity extends BaseActivity {
+public abstract class DrawingActivity extends BaseActivity {
+
     protected static final String TAG = "DrawingActivity";
+    protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     protected Handler handler;
 
@@ -33,15 +37,16 @@ public class DrawingActivity extends BaseActivity {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
-    protected int getLayoutId() {
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    public int getLayoutId() {
         return R.layout.activity_drawing_offline;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.overridePendingTransition(R.anim.fui_slide_in_right,
-                R.anim.fui_slide_out_left);
+        this.overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_left);
         setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -57,7 +62,7 @@ public class DrawingActivity extends BaseActivity {
         colorButtons = new ImageView[myItems.size() + 1];
         colorButtons[0] = findViewById(R.id.blackButton);
 
-        for(int i = 0; i < myItems.size(); ++i) {
+        for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
             int color = ColorUtils.getColorFromString(item.getColorItem().toString());
             colors.add(color);
@@ -65,49 +70,35 @@ public class DrawingActivity extends BaseActivity {
             // Adds the view to the layout
             layout.addView(colorView);
 
-            colorButtons[i+1] = colorView;
+            colorButtons[i + 1] = colorView;
         }
 
+        paintViewHolder = findViewById(R.id.paintViewHolder);
         paintView = findViewById(R.id.paintView);
         paintView.setColors(colors);
-
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE);
-        // Set the content to appear under the system bars so that the
-        // content doesn't resize when the system bars hide and show.
-
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
                 paintView.invalidate();
             }
         };
-
-        // hides UI bar
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     /**
-     * Create an imageview corresponding to a given color.
+     * Creates an {@link ImageView} corresponding to a given color.
+     *
      * @param color Index of the colors to be created
-     * @return The imageview of the color
+     * @return The ImageView of the color
      */
     public ImageView createColorImageView(int color) {
         ImageView image = new ImageView(this);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
                 LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-                                        .MATCH_PARENT, 1f);
+                .MATCH_PARENT, 1f);
 
         // Convert dp into px
-        int px = (int)TypedValue.applyDimension(
+        int px = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 10,
                 getResources().getDisplayMetrics()
@@ -126,7 +117,7 @@ public class DrawingActivity extends BaseActivity {
             }
         });
 
-       return image;
+        return image;
     }
 
     /**
@@ -140,12 +131,12 @@ public class DrawingActivity extends BaseActivity {
 
 
     /**
-     * Sets the clicked button to selected and sets the corresponding color.
+     * Sets the clicked button to selected and set the corresponding color.
      *
      * @param view the clicked view
      */
     public void colorClickHandler(View view) {
-        int index = ArrayUtils.indexOf(colorButtons, view);
+        int index = ArrayUtils.toArrayList(colorButtons).indexOf(view);
         paintView.setColor(index);
         colorButtons[index].setImageResource(R.drawable.color_circle_selected);
 

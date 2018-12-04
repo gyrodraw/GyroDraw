@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/backgroundImage"
@@ -55,7 +54,7 @@
                 android:layout_centerHorizontal="true"
                 android:text="@string/battle_log"
                 android:textColor="@color/colorLightGrey"
-                android:textSize="30sp"/>
+                android:textSize="30sp" />
 
             <TextView
                 android:id="@+id/exitButton"
@@ -73,8 +72,19 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/emptyBattleLogText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="@string/empty_battle_log"
+            android:textColor="@color/colorDrawYellow"
+            android:textSize="25sp" />
 
         <ScrollView
             android:id="@+id/scrollBattleLog"
@@ -106,7 +116,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/searchField">
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

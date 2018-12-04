@@ -18,7 +18,6 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineItems;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -98,9 +97,9 @@ public class HomeActivityTest {
     }
 
     @Test
-    public void testClickOnItemsButtonOpensDrawingOfflineItems() {
+    public void testClickOnMysteryButtonOpensWaitingPageActivity() {
         onView(ViewMatchers.withId(R.id.mysteryButton)).perform(click());
-        intended(hasComponent(DrawingOfflineItems.class.getName()));
+        intended(hasComponent(LoadingScreenActivity.class.getName()));
     }
 
     @Test
@@ -155,7 +154,7 @@ public class HomeActivityTest {
 
     @Test
     public void testLaunchShop() {
-        onView(withId(R.id.startShop)).perform(click());
+        onView(withId(R.id.shopButton)).perform(click());
         intended(hasComponent(ShopActivity.class.getName()));
     }
 

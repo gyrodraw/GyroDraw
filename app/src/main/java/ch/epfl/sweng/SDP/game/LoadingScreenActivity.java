@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
@@ -17,7 +18,7 @@ import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.ArrayList;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -25,9 +26,10 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 
-public class LoadingScreenActivity extends Activity {
+public class LoadingScreenActivity extends BaseActivity {
 
     private String roomID = null;
+    private int gameMode = 0;
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
@@ -58,6 +60,7 @@ public class LoadingScreenActivity extends Activity {
                         intent.putExtra("word1", word1);
                         intent.putExtra("word2", word2);
                         intent.putExtra("roomID", roomID);
+                        intent.putExtra("mode", gameMode);
                         startActivity(intent);
                     }
                 }
@@ -105,13 +108,15 @@ public class LoadingScreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
+        gameMode = getIntent().getIntExtra("mode", 0);
+
         if (!isTesting) {
-            lookingForRoom();
+            lookingForRoom(gameMode);
         }
 
-        overridePendingTransition(0, 0);
 
         isRoomReady.setListener(listenerRoomReady);
         areWordsReady.setListener(listenerRoomReady);
@@ -125,9 +130,9 @@ public class LoadingScreenActivity extends Activity {
 
     }
 
-    protected void lookingForRoom() {
+    protected void lookingForRoom(int gameMode) {
         Matchmaker.getInstance(Account.getInstance(this))
-                .joinRoom().addOnCompleteListener(new OnCompleteListener<String>() {
+                .joinRoom(gameMode).addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()) {
@@ -157,14 +162,17 @@ public class LoadingScreenActivity extends Activity {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             hasLeft = true;
             launchActivity(HomeActivity.class);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    @VisibleForTesting
     public static void disableLoadingAnimations() {
         enableWaitingAnimation = false;
     }
 
+    @VisibleForTesting
     public static void setOnTest() {
         isTesting = true;
     }

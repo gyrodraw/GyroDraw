@@ -22,15 +22,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.List;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -56,13 +52,14 @@ public class VotingPageActivity extends BaseActivity {
 
     private String[] playersNames = new String[NUMBER_OF_DRAWINGS];
     private String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
-    private RankingFragment rankingFragment;
 
     private ImageView drawingView;
     private TextView playerNameView;
     private TextView timer;
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
+
+    private RankingFragment fragment;
 
     private String roomID = "undefined";
 
@@ -122,6 +119,7 @@ public class VotingPageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voting_page);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
@@ -197,13 +195,15 @@ public class VotingPageActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
         /*if (rankingRef != null) {
             // Remove the ranking reference in the database
             rankingRef.removeValue(); has to be decommented when a method for creating the entries
                                       corresponding to the ranking in the DB has been implemented
         }
         */
-        if (roomID != null) {
+
+        if (roomID != null && !roomID.equals("0123457890")) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
@@ -226,32 +226,9 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
-        if (rankingFragment != null) {
-            createAndStoreGameResult();
-        }
         launchActivity(HomeActivity.class);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
-    }
-
-    private void createAndStoreGameResult() {
-        List<String> rankedUsernames = rankingFragment.getRankedUsernames();
-        int rank = rankedUsernames.indexOf(username);
-        Bitmap drawing = null;
-
-        for (int i = 0; i < playersNames.length; i++) {
-            if (playersNames[i] != null && playersNames[i].equals(username)) {
-                drawing = drawings[i];
-            }
-        }
-
-        // TODO: replace constants and drawing by the good values
-        if (drawing != null) {
-            GameResult gameResult = new GameResult(rankedUsernames, rank, 23, -5,
-                    drawing, this);
-            LocalDbHandlerForGameResults localDb =
-                    new LocalDbHandlerForGameResults(this, null, 1);
-            localDb.addGameResultToDb(gameResult);
-        }
     }
 
     /**
@@ -276,7 +253,7 @@ public class VotingPageActivity extends BaseActivity {
             // Enable the rating bar only if the image is not the player's one
             ratingBar.setRating(0f);
             ratingBar.setIsIndicator(isCurrentPlayer);
-            ratingBar.setAlpha(isCurrentPlayer ? 0.8f : 1f);
+            ratingBar.setAlpha(isCurrentPlayer ? 0.5f : 1f);
         }
     }
 
@@ -434,21 +411,20 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void startRankingFragment() {
-        // Prepare a Bundle for passing the ranking array to the fragment
-        Bundle bundle = new Bundle();
-        bundle.putString("roomID", roomID);
 
         // Clear the UI
         setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                 R.id.playerNameView, R.id.timer);
 
+        fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        rankingFragment = (RankingFragment) RankingFragment.instantiate(getApplicationContext(),
-                RankingFragment.class.getName(), bundle);
+        fragment.putExtra(roomID,drawings,playersNames);
+
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.votingPageLayout, rankingFragment)
+                .add(R.id.votingPageLayout, fragment)
                 .addToBackStack(null).commit();
     }
+
 
     /**
      * Display the drawing of the winner.
@@ -507,4 +483,5 @@ public class VotingPageActivity extends BaseActivity {
             }
         });
     }
+
 }

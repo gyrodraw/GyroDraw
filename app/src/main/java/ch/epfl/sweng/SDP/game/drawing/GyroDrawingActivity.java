@@ -5,12 +5,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-public class GyroDrawingActivity extends DrawingActivity implements SensorEventListener {
+public abstract class GyroDrawingActivity extends DrawingActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
 
@@ -21,10 +19,6 @@ public class GyroDrawingActivity extends DrawingActivity implements SensorEventL
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
 
-
-    // MARK: ACCELEROMETER METHODS
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
         super.onResume();
@@ -68,6 +62,4 @@ public class GyroDrawingActivity extends DrawingActivity implements SensorEventL
     public void updateValues(float coordinateX, float coordinateY) {
         paintView.updateCoordinates(coordinateX, coordinateY);
     }
-
-
 }

@@ -153,6 +153,7 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testChangeAverageRating() {
+        account.increaseTotalMatches();
         account.changeAverageRating(3.5);
         assertThat(account.getAverageRating(), is(3.5));
     }

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.VisibleForTesting;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -174,6 +175,21 @@ public abstract class DrawingActivity extends BaseActivity {
                 break;
             default:
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                paintView.setDrawWidth(Math.max(10, paintView.getDrawWidth()-10));
+                paintView.setCircleRadius(Math.max(10, paintView.getCircleRadius()-10));
+                break;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                paintView.setDrawWidth(Math.min(300, paintView.getDrawWidth()+10));
+                paintView.setCircleRadius(Math.min(300, paintView.getCircleRadius()+10));
+                break;
+        }
+        return true;
     }
 
 }

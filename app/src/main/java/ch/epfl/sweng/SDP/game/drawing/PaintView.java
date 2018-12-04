@@ -142,6 +142,9 @@ public class PaintView extends View {
 
     public void setDrawWidth(int newWidth) {
         drawWidth = newWidth;
+        for(Paint paint : colors) {
+            paint.setStrokeWidth(drawWidth);
+        }
     }
 
     public int getDrawWidth() {
@@ -280,19 +283,6 @@ public class PaintView extends View {
         return true;
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                drawWidth = Math.max(0, drawWidth-1);
-                break;
-            case KeyEvent.KEYCODE_BACK:
-                drawWidth = Math.min(50, drawWidth+1);
-                break;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     private int colorToGrey(int color) {
         int red = (color >> 16) & 0xff;
         int green = (color >> 8) & 0xff;
@@ -303,14 +293,14 @@ public class PaintView extends View {
 
     private void drawStart() {
         isDrawing = true;
-        circleRadius = 3 * drawWidth / 4;
+        circleRadius = drawWidth;
         path.reset();
         path.moveTo(circleX, circleY);
     }
 
     private void drawEnd() {
         isDrawing = false;
-        circleRadius = drawWidth;
+        circleRadius = drawWidth + 10;
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors.get(color));
         path.reset();

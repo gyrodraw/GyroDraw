@@ -11,6 +11,9 @@ import java.util.Random;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 
+/**
+ * Class representing the drawing phase of an online game in special mode.
+ */
 public class DrawingOnlineItems extends DrawingOnline {
 
     private DrawingItems drawingItems;
@@ -26,7 +29,7 @@ public class DrawingOnlineItems extends DrawingOnline {
 
     /**
      * Gets called when sensor data changed. Updates the paintViews' circle coordinates
-     * and check if there are collisions with any displayed items.
+     * and checks if there are collisions with any displayed items.
      * If there is, the item gets activated and removed from the displayedItems.
      *
      * @param coordinateX new X coordinate for paintView

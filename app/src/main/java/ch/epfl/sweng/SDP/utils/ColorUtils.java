@@ -7,15 +7,18 @@ import ch.epfl.sweng.SDP.R;
  */
 public final class ColorUtils {
 
-    private ColorUtils() {}
+    private ColorUtils() {
+    }
 
     /**
-     * Convert the string value of a color into an integer ID.
+     * Converts the string value of a color into an integer resource ID.
      *
      * @param color String value of the colors
-     * @return The integer ID of the color
+     * @return The integer resource ID of the color
+     * @throws IllegalArgumentException if the given string does not correspond to a color
+     *                                  in the shop
      */
-    public static int getColorFromString(String color) {
+    public static int getColorIdFromString(String color) {
         switch (color) {
             case "BLUE":
                 return R.color.colorBlue;
@@ -26,7 +29,7 @@ public final class ColorUtils {
             case "GREEN":
                 return R.color.colorGreen;
             default:
-                throw new IllegalStateException();
+                throw new IllegalArgumentException(color + " resource not found");
         }
     }
 }

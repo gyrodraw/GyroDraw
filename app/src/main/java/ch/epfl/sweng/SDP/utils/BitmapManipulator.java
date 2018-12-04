@@ -36,7 +36,7 @@ public final class BitmapManipulator {
     }
 
     /**
-     * Decode the {@link Bitmap} generated from the given resource optimising it for the given
+     * Decodes the {@link Bitmap} generated from the given resource optimising it for the given
      * view's dimensions.
      *
      * @param res the application's resources
@@ -62,7 +62,7 @@ public final class BitmapManipulator {
     }
 
     /**
-     * Decode the {@link Bitmap} generated from the given byte array optimising it for the given
+     * Decodes the {@link Bitmap} generated from the given byte array optimising it for the given
      * view's dimensions.
      *
      * @param array the byte array containing the data

@@ -36,7 +36,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
-import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
 
@@ -155,8 +156,8 @@ public class WaitingPageActivityTest {
         onView(withId(R.id.buttonWord2)).perform(click());
         onView(withId(R.id.buttonWord2)).perform(click());
 
-        assert (mActivityRule.getActivity().getWord1Votes() == 1);
-        assert (mActivityRule.getActivity().getWord2Votes() == 0);
+        assertThat(mActivityRule.getActivity().getWord1Votes(), is(1));
+        assertThat(mActivityRule.getActivity().getWord2Votes(), is(0));
     }
 
     @Test
@@ -169,8 +170,8 @@ public class WaitingPageActivityTest {
         onView(withId(R.id.buttonWord1)).perform(click());
         onView(withId(R.id.buttonWord1)).perform(click());
 
-        assert (mActivityRule.getActivity().getWord1Votes() == 0);
-        assert (mActivityRule.getActivity().getWord2Votes() == 1);
+        assertThat(mActivityRule.getActivity().getWord1Votes(), is(0));
+        assertThat(mActivityRule.getActivity().getWord2Votes(), is(1));
     }
 
     @Test
@@ -183,24 +184,24 @@ public class WaitingPageActivityTest {
         String[] words = {"cat", "dog"};
         String winningWord = WaitingPageActivity.getWinningWord(2, 1,
                 words);
-        assertEquals("cat", winningWord);
+        assertThat(winningWord, is("cat"));
 
         winningWord = WaitingPageActivity.getWinningWord(2, 2,
                 words);
-        assertEquals("cat", winningWord);
+        assertThat(winningWord, is("cat"));
 
         winningWord = WaitingPageActivity.getWinningWord(2, 3,
                 words);
-        assertEquals("dog", winningWord);
+        assertThat(winningWord, is("dog"));
     }
 
     @Test
     public void testGettersSettersWords() {
         mActivityRule.getActivity().setWord1Votes(10);
-        assertEquals(10, mActivityRule.getActivity().getWord1Votes());
+        assertThat(mActivityRule.getActivity().getWord1Votes(), is(10));
 
         mActivityRule.getActivity().setWord2Votes(10);
-        assertEquals(10, mActivityRule.getActivity().getWord2Votes());
+        assertThat(mActivityRule.getActivity().getWord2Votes(), is(10));
     }
 
     @Test

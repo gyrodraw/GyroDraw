@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,6 +37,9 @@ import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;
 
+/**
+ * Class representing the leaderboard.
+ */
 public class LeaderboardActivity extends BaseActivity {
 
     private static final String TAG = "LeaderboardActivity";
@@ -68,7 +72,6 @@ public class LeaderboardActivity extends BaseActivity {
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
-
 
         final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);
@@ -125,7 +128,7 @@ public class LeaderboardActivity extends BaseActivity {
     }
 
     /**
-     * Helper classes to manage and display data from Firebase.
+     * Helper class to manage and display data from Firebase.
      */
     private class Player implements Comparable {
 
@@ -229,6 +232,9 @@ public class LeaderboardActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Helper class to manage and display data from Firebase.
+     */
     private class Leaderboard {
 
         private LinkedList<Player> allPlayers;
@@ -402,14 +408,14 @@ public class LeaderboardActivity extends BaseActivity {
         }
     }
 
-    private class FriendsButton extends android.support.v7.widget.AppCompatImageView {
+    private class FriendsButton extends AppCompatImageView {
 
         private final Context context;
         private final Player player;
         private final int index;
         private final boolean isCurrentUser;
 
-        public FriendsButton(Context context, Player player, int index, boolean isCurrentUser) {
+        private FriendsButton(Context context, Player player, int index, boolean isCurrentUser) {
             super(context);
             this.context = context;
             this.player = player;
@@ -431,10 +437,10 @@ public class LeaderboardActivity extends BaseActivity {
                     new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
             setLayoutParams(friendsParams);
 
-            // give Button unique Tag to test them later
+            // Give Button unique Tag to test them later
             setTag("friendsButton" + index);
 
-            // set friendsButton invisible to yourself
+            // Set friendsButton invisible to yourself
             if (isCurrentUser) {
                 setVisibility(View.INVISIBLE);
             }
@@ -454,7 +460,7 @@ public class LeaderboardActivity extends BaseActivity {
         }
 
         /**
-         * Check if users are already friends and set image accordingly.
+         * Checks if users are already friends and sets image accordingly.
          *
          * @return listener
          */
@@ -521,4 +527,3 @@ public class LeaderboardActivity extends BaseActivity {
         }
     }
 }
-

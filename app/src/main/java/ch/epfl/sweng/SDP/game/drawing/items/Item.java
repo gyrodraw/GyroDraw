@@ -2,18 +2,22 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
-import ch.epfl.sweng.SDP.utils.Preconditions;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
+/**
+ * Abstract class representing an item.
+ */
 public abstract class Item {
 
     protected static final int ITEM_DURATION = 10000;
 
-    protected int x;
-    protected int y;
-    protected int radius;
+    private int x;
+    private int y;
+    private int radius;
 
     protected Item(int x, int y, int radius) {
-        Preconditions.checkPrecondition(x >= 0 && y >= 0 && radius >= 0,
+        checkPrecondition(x >= 0 && y >= 0 && radius >= 0,
                 "Coordinates and radius must not be negative");
         this.x = x;
         this.y = y;

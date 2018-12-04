@@ -4,6 +4,7 @@ import android.animation.TimeAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -15,18 +16,22 @@ import java.util.Random;
 import ch.epfl.sweng.SDP.R;
 
 /**
- * Animation of stars when a player votes for the current picture.
+ * Class representing the animation of stars when a player votes for the current picture.
  */
 public class StarAnimationView extends View {
 
-    public static final int X_SPEED_COEF = 300;
-    public static final int Y_SPEED_STEP = 20;
+    private static final int X_SPEED_COEFF = 300;
+    private static final int Y_SPEED_STEP = 20;
     private static final int INIT_SPEED = 0;
     private static final int SEED = 1337;
+
     private final ArrayList<Star> stars = new ArrayList<>();
+
     private final Random rand = new Random(SEED);
+
     private TimeAnimator timeAnimator;
     private Drawable starDrawable;
+
     private int starSize;
     private int starSpeed;
     private int height;
@@ -126,10 +131,11 @@ public class StarAnimationView extends View {
     }
 
     /**
-     * Progress the animation by moving the stars based on the elapsed time.
+     * Progresses the animation by moving the stars based on the elapsed time.
      *
      * @param deltaMs time delta since the last frame, in milliseconds
      */
+    @VisibleForTesting
     public void updateState(float deltaMs) {
         for (int i = 0; i < stars.size(); i++) {
             Star star = stars.get(i);
@@ -152,7 +158,7 @@ public class StarAnimationView extends View {
         // Add a random offset to create a small delay before the star appears.
         star.y -= height * rand.nextFloat() / 8f;
         star.rotation = rand.nextBoolean() ? -1 : 1;
-        star.xSpeed = star.rotation * rand.nextFloat() * X_SPEED_COEF;
+        star.xSpeed = star.rotation * rand.nextFloat() * X_SPEED_COEFF;
         star.ySpeed = starSpeed;
     }
 
@@ -161,6 +167,7 @@ public class StarAnimationView extends View {
      *
      * @param number The number of stars
      */
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public void addStars(int number) {
         for (int i = 0; i < Math.min(number, 5); i++) {
             final Star star = new Star();
@@ -172,6 +179,7 @@ public class StarAnimationView extends View {
     /**
      * Gives the number of stars displayed.
      */
+    @VisibleForTesting
     public int getNumStars() {
         return stars.size();
     }

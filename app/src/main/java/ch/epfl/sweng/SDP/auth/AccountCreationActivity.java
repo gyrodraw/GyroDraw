@@ -20,6 +20,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Class representing the account creation page.
+ */
 public class AccountCreationActivity extends BaseActivity {
 
     private EditText usernameInput;
@@ -51,9 +54,9 @@ public class AccountCreationActivity extends BaseActivity {
     }
 
     /**
-     * Gets called when user entered username and clicked on create account.
+     * Gets called when user entered username and clicked on the create account button.
      */
-    public void createAccClicked(View view) {
+    public void createAccountClicked(View view) {
         final String username = usernameInput.getText().toString().toUpperCase();
 
         if (username != null && !username.isEmpty()) {

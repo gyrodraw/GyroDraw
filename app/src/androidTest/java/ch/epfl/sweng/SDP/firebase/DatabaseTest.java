@@ -49,7 +49,7 @@ public class DatabaseTest {
     @Test(expected = IllegalArgumentException.class)
     public void getDatabaseReferenceBuilderWithNullReference() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        new DatabaseReferenceBuilder(null);
+        Database.constructBuilder(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -67,6 +67,6 @@ public class DatabaseTest {
     private DatabaseReferenceBuilder init() {
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         DatabaseReference ref = Database.getReference("test.tests");
-        return new DatabaseReferenceBuilder(ref);
+        return Database.constructBuilder(ref);
     }
 }

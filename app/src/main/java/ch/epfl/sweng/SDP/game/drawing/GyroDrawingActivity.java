@@ -8,6 +8,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 
+/**
+ * Class representing the drawing via gyroscope page of the game.
+ */
 public abstract class GyroDrawingActivity extends DrawingActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
@@ -33,7 +36,7 @@ public abstract class GyroDrawingActivity extends DrawingActivity implements Sen
     }
 
     /**
-     * Fires when a sensor detected a change.
+     * Fires when a sensor detects a change.
      *
      * @param sensorEvent the sensor that has changed
      */
@@ -54,7 +57,7 @@ public abstract class GyroDrawingActivity extends DrawingActivity implements Sen
     }
 
     /**
-     * Called when accelerometer changed, circle coordinates are updated.
+     * Called when accelerometer changed. Updates circle's coordinates.
      *
      * @param coordinateX coordinate
      * @param coordinateY coordinate

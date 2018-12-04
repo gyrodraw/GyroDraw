@@ -32,10 +32,15 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
+/**
+ * Class representing the voting phase of an online game, where players vote for the drawings.
+ */
 public class VotingPageActivity extends BaseActivity {
 
+    private static boolean enableAnimations = true;
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+
     private final String username = Account.getInstance(this).getUsername();
 
     private DatabaseReference rankingRef;
@@ -63,12 +68,7 @@ public class VotingPageActivity extends BaseActivity {
 
     private String roomID = "undefined";
 
-    private static boolean enableAnimations = true;
-
-    public int[] getRatings() {
-        return ratings.clone();
-    }
-
+    @VisibleForTesting
     protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -95,6 +95,7 @@ public class VotingPageActivity extends BaseActivity {
         }
     };
 
+    @VisibleForTesting
     protected final ValueEventListener listenerCounter = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -169,7 +170,7 @@ public class VotingPageActivity extends BaseActivity {
                 ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating,
-                            boolean fromUser) {
+                                                boolean fromUser) {
                         ratingBar.setIsIndicator(true);
                         ratingBar.setAlpha(0.8f);
 
@@ -196,23 +197,17 @@ public class VotingPageActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        /*if (rankingRef != null) {
-            // Remove the ranking reference in the database
-            rankingRef.removeValue(); has to be decommented when a method for creating the entries
-                                      corresponding to the ranking in the DB has been implemented
-        }
-        */
-
         if (roomID != null && !roomID.equals("0123457890")) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
+
         removeAllListeners();
         finish();
     }
 
     /**
-     * Start the {@link HomeActivity} when the button is pressed. The button is used at the end of
+     * Starts the {@link HomeActivity} when the button is pressed. The button is used at the end of
      * the game to return to the home screen.
      *
      * @param view the view corresponding to the button pressed
@@ -232,7 +227,7 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     /**
-     * Change the drawing.
+     * Changes the drawing displayed.
      */
     public void changeImage() {
         ++changeDrawingCounter;
@@ -381,9 +376,6 @@ public class VotingPageActivity extends BaseActivity {
         drawings[index] = bitmap;
     }
 
-    /* public for testing only, the users in the database should be already sorted by their ranking
-    before calling this */
-
     // Send "playerName" drawing's rating to the database.
     private void sendRatingToDatabase(String playerName) {
         final int rating = ratings[changeDrawingCounter];
@@ -427,9 +419,9 @@ public class VotingPageActivity extends BaseActivity {
 
 
     /**
-     * Display the drawing of the winner.
+     * Displays the drawing of the winner.
      *
-     * @param img Drawing of the winner
+     * @param img        Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {
@@ -446,12 +438,19 @@ public class VotingPageActivity extends BaseActivity {
      * Disables the background and stars animation. Call this method in every VotingPageActivity
      * test
      */
+    @VisibleForTesting
     public static void disableAnimations() {
         enableAnimations = false;
     }
 
+    @VisibleForTesting
     public short getChangeDrawingCounter() {
         return changeDrawingCounter;
+    }
+
+    @VisibleForTesting
+    public int[] getRatings() {
+        return ratings.clone();
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)

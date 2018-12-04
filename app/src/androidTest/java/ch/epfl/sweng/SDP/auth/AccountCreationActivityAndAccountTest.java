@@ -150,6 +150,7 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testChangeAverageRating() {
+        account.increaseTotalMatches();
         account.changeAverageRating(3.5);
         assertThat(account.getAverageRating(), is(3.5));
     }
@@ -290,13 +291,8 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testChangeAverageRatingWithZero() {
-        account.changeAverageRating(0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testChangeAverageRatingWithGreaterThanTwentyValue() {
-        account.changeAverageRating(21);
+        account.changeAverageRating(26);
     }
 
     @Test(expected = IllegalArgumentException.class)

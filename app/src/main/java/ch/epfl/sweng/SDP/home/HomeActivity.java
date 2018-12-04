@@ -172,6 +172,7 @@ public class HomeActivity extends BaseActivity {
     private void addListenerForFriendsRequests() {
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
                 .addValueEventListener(listenerFriendsRequest);
+
     }
 
     // Launches the LeaguesActivity.

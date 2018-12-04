@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import android.app.Notification;
 import android.graphics.Color;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
@@ -89,16 +90,19 @@ public class DrawingOfflineNoItemsTest {
     @Test
     public void testChangeBrushWidth() {
         int initWidth = paintView.getDrawWidth();
-        paintView.onKeyDown(KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(initWidth-1));
-        paintView.onKeyDown(KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
+        activityRule.getActivity().onKeyDown(
+                KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
+        assertThat(paintView.getDrawWidth(), is(initWidth-10));
+        activityRule.getActivity().onKeyDown(
+                KeyEvent.KEYCODE_VOLUME_UP, new KeyEvent(-1, 1));
         assertThat(paintView.getDrawWidth(), is(initWidth));
     }
 
     @Test
     public void testChangeBrushWidthBelowZero() {
-        paintView.setDrawWidth(0);
-        paintView.onKeyDown(KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(0));
+        paintView.setDrawWidth(10);
+        activityRule.getActivity().onKeyDown(
+                KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
+        assertThat(paintView.getDrawWidth(), is(10));
     }
 }

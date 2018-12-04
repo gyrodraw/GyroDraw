@@ -28,9 +28,12 @@ import ch.epfl.sweng.SDP.utils.ColorUtils;
 public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
+
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     protected Handler handler;
+
+    private static final int MAX_DRAW_WIDTH = 300;
 
     private ImageView[] colorButtons;
 
@@ -181,15 +184,21 @@ public abstract class DrawingActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                paintView.setDrawWidth(Math.max(10, paintView.getDrawWidth()-10));
-                paintView.setCircleRadius(Math.max(10, paintView.getCircleRadius()-10));
+                adjustDrawingAndCircleWidth(
+                        Math.max(10, paintView.getDrawWidth() - 10));
                 break;
             case KeyEvent.KEYCODE_VOLUME_UP:
-                paintView.setDrawWidth(Math.min(300, paintView.getDrawWidth()+10));
-                paintView.setCircleRadius(Math.min(300, paintView.getCircleRadius()+10));
+                adjustDrawingAndCircleWidth(
+                        Math.min(MAX_DRAW_WIDTH, paintView.getDrawWidth() + 10));
                 break;
+            default:
         }
         return true;
+    }
+
+    private void adjustDrawingAndCircleWidth(int newVal) {
+        paintView.setDrawWidth(newVal);
+        paintView.setCircleRadius(newVal);
     }
 
 }

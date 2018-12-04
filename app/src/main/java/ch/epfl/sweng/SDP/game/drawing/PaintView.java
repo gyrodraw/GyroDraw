@@ -25,7 +25,6 @@ import java.util.List;
 
 public class PaintView extends View {
 
-    private static final int MAX_DRAW_WIDTH = 50;
     private static final int QUALITY = 20;
     private static final float INIT_SPEED = 5;
 

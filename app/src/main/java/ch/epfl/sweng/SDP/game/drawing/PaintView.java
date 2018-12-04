@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -24,9 +25,9 @@ import java.util.List;
 
 public class PaintView extends View {
 
-    private static final int DRAW_WIDTH = 30;
+    private static final int MAX_DRAW_WIDTH = 50;
     private static final int QUALITY = 20;
-    private static final double INIT_SPEED = 5;
+    private static final float INIT_SPEED = 5;
 
     private boolean canDraw = true;
     private boolean isDrawing = false;
@@ -49,7 +50,8 @@ public class PaintView extends View {
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
-    private double speed;
+    private float speed;
+    private int drawWidth = 30;
 
     /**
      * Constructor for the view.
@@ -65,9 +67,9 @@ public class PaintView extends View {
 
         paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(DRAW_WIDTH / 2);
+        paintC.setStrokeWidth(drawWidth / 2);
 
-        circleRadius = DRAW_WIDTH;
+        circleRadius = drawWidth;
         speed = INIT_SPEED;
     }
 
@@ -76,7 +78,7 @@ public class PaintView extends View {
         newPaint.setColor(color);
         newPaint.setStyle(Paint.Style.STROKE);
         newPaint.setStrokeJoin(Paint.Join.ROUND);
-        newPaint.setStrokeWidth(DRAW_WIDTH);
+        newPaint.setStrokeWidth(drawWidth);
         newPaint.setStrokeCap(Paint.Cap.ROUND);
         return newPaint;
     }
@@ -122,7 +124,7 @@ public class PaintView extends View {
         return circleRadius;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 
@@ -136,6 +138,14 @@ public class PaintView extends View {
 
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
+    }
+
+    public void setDrawWidth(int newWidth) {
+        drawWidth = newWidth;
+    }
+
+    public int getDrawWidth() {
+        return drawWidth;
     }
 
     /**
@@ -270,6 +280,19 @@ public class PaintView extends View {
         return true;
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                drawWidth = Math.max(0, drawWidth-1);
+                break;
+            case KeyEvent.KEYCODE_BACK:
+                drawWidth = Math.min(50, drawWidth+1);
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     private int colorToGrey(int color) {
         int red = (color >> 16) & 0xff;
         int green = (color >> 8) & 0xff;
@@ -280,14 +303,14 @@ public class PaintView extends View {
 
     private void drawStart() {
         isDrawing = true;
-        circleRadius = 3 * DRAW_WIDTH / 4;
+        circleRadius = 3 * drawWidth / 4;
         path.reset();
         path.moveTo(circleX, circleY);
     }
 
     private void drawEnd() {
         isDrawing = false;
-        circleRadius = DRAW_WIDTH;
+        circleRadius = drawWidth;
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors.get(color));
         path.reset();

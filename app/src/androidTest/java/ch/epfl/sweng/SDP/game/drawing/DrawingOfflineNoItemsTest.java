@@ -1,8 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.app.Notification;
 import android.graphics.Color;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
+import android.view.KeyEvent;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,6 +18,8 @@ import ch.epfl.sweng.SDP.shop.ShopItem;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class DrawingOfflineNoItemsTest {
@@ -80,5 +84,21 @@ public class DrawingOfflineNoItemsTest {
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertEquals(paintView.getColor(),
                 paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+    }
+
+    @Test
+    public void testChangeBrushWidth() {
+        int initWidth = paintView.getDrawWidth();
+        paintView.onKeyDown(KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
+        assertThat(paintView.getDrawWidth(), is(initWidth-1));
+        paintView.onKeyDown(KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
+        assertThat(paintView.getDrawWidth(), is(initWidth));
+    }
+
+    @Test
+    public void testChangeBrushWidthBelowZero() {
+        paintView.setDrawWidth(0);
+        paintView.onKeyDown(KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
+        assertThat(paintView.getDrawWidth(), is(0));
     }
 }

@@ -23,10 +23,9 @@ import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.bitmapEqualsNewBi
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.compressBitmap;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
 import static ch.epfl.sweng.SDP.home.LeaderboardActivityTest.testExitButtonBody;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 @RunWith(AndroidJUnit4.class)
 public class BattleLogActivityTest {
@@ -67,20 +66,20 @@ public class BattleLogActivityTest {
         GameResult newGameResult =
                 localDbHandler.getGameResultsFromDb(activityRule.getActivity()).get(0);
 
-        assertEquals(rankedUsernames, newGameResult.getRankedUsername());
-        assertEquals(RANK, newGameResult.getRank());
-        assertEquals(STARS, newGameResult.getStars());
-        assertEquals(TROPHIES, newGameResult.getTrophies());
+        assertThat(newGameResult.getRankedUsername(), is(rankedUsernames));
+        assertThat(newGameResult.getRank(), is(RANK));
+        assertThat(newGameResult.getStars(), is(STARS));
+        assertThat(newGameResult.getTrophies(), is(TROPHIES));
         Bitmap compressedDrawing = compressBitmap(DRAWING, 20);
         bitmapEqualsNewBitmap(compressedDrawing, newGameResult.getDrawing());
     }
 
     @Test
     public void testGameResult() {
-        assertEquals(rankedUsernames, gameResult.getRankedUsername());
-        assertEquals(RANK, gameResult.getRank());
-        assertEquals(STARS, gameResult.getStars());
-        assertEquals(TROPHIES, gameResult.getTrophies());
+        assertThat(gameResult.getRankedUsername(), is(rankedUsernames));
+        assertThat(gameResult.getRank(), is(RANK));
+        assertThat(gameResult.getStars(), is(STARS));
+        assertThat(gameResult.getTrophies(), is(TROPHIES));
         bitmapEqualsNewBitmap(DRAWING, gameResult.getDrawing());
     }
 
@@ -89,7 +88,7 @@ public class BattleLogActivityTest {
         localDbHandler.addGameResultToDb(gameResult);
         onView(withId(R.id.exitButton)).perform(click());
         onView(withId(R.id.battleLogButton)).perform(click());
-        assertTrue(activityRule.getActivity().getGameResultsCount() >= 1);
+        assertThat(activityRule.getActivity().getGameResultsCount(), greaterThanOrEqualTo(1));
     }
 
     @Test

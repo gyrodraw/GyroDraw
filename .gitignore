@@ -1,11 +1,7 @@
 *.iml
 .gradle
 /local.properties
-/.idea/assetWizardSettings.xml
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/caches
+/.idea
 .DS_Store
 /functions/package-lock.json
 /functions/node_modules
@@ -15,3 +11,4 @@
 npm-debug.log
 /functions/node_modules/
 /functions/etc/
+/release

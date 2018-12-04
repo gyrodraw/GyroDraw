@@ -25,6 +25,9 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.utils.ColorUtils;
 
+/**
+ * Abstract class representing the drawing page of the game.
+ */
 public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
@@ -68,7 +71,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
         for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
-            int color = ColorUtils.getColorFromString(item.getColorItem().toString());
+            int color = ColorUtils.getColorIdFromString(item.getColorItem().toString());
             colors.add(color);
             ImageView colorView = createColorImageView(color);
             // Adds the view to the layout
@@ -83,6 +86,7 @@ public abstract class DrawingActivity extends BaseActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
+
                 paintView.invalidate();
             }
         };

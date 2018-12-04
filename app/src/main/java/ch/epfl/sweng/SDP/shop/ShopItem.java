@@ -1,24 +1,26 @@
 package ch.epfl.sweng.SDP.shop;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.ColorUtils;
 import java.util.Comparator;
 import java.util.Objects;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.utils.ColorUtils;
-
 /**
- * Item that can be bought in the shop for the moment only colors can be bought.
+ * Class representing an item that can be bought in the shop. For the moment, only colors can be
+ * bought.
  */
 public class ShopItem {
 
@@ -37,6 +39,7 @@ public class ShopItem {
      * @param price the price of the item
      */
     public ShopItem(ColorsShop color, int price) {
+        checkPrecondition(price >= 0, "price is negative");
         this.price = price;
         this.color = color;
         owned = false;
@@ -51,6 +54,7 @@ public class ShopItem {
      * @param owned is this item owned by the player
      */
     public ShopItem(ColorsShop color, int price, boolean owned) {
+        checkPrecondition(price >= 0, "price is negative");
         this.price = price;
         this.color = color;
         this.owned = owned;
@@ -76,15 +80,17 @@ public class ShopItem {
         return layout;
     }
 
-    public void setPriceItem(int price) {
+    @VisibleForTesting
+    void setPriceItem(int price) {
         this.price = price;
     }
 
-    public void setColorItem(ColorsShop color) {
+    @VisibleForTesting
+    void setColorItem(ColorsShop color) {
         this.color = color;
     }
 
-    public void setOwned(boolean owned) {
+    void setOwned(boolean owned) {
         this.owned = owned;
     }
 
@@ -109,7 +115,7 @@ public class ShopItem {
     /**
      * Create the layout of this item.
      *
-     * @param stars   the current amount of stars
+     * @param stars the current amount of stars
      * @param context the context of the shop
      */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
@@ -125,7 +131,7 @@ public class ShopItem {
         colorImageView.setLayoutParams(params);
         colorImageView.setPadding(0, 0, DEFAULT_PADDING, 0);
         colorImageView.setImageDrawable(res.getDrawable(R.drawable.color_circle));
-        colorImageView.setColorFilter(res.getColor(ColorUtils.getColorFromString(colorName)),
+        colorImageView.setColorFilter(res.getColor(ColorUtils.getColorIdFromString(colorName)),
                 PorterDuff.Mode.SRC_ATOP);
 
         if (!owned) {
@@ -171,10 +177,10 @@ public class ShopItem {
     }
 
     private static class ShopItemComparator implements Comparator<ShopItem> {
+
         @Override
         public int compare(ShopItem item1, ShopItem item2) {
             return item1.getColorItem().compareTo(item2.getColorItem());
         }
     }
 }
-

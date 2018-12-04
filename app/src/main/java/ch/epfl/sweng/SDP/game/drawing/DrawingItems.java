@@ -3,20 +3,21 @@ package ch.epfl.sweng.SDP.game.drawing;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
+import android.graphics.Typeface;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
+import android.support.v7.widget.AppCompatTextView;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Utility class containing methods related to the special items mode.
@@ -60,6 +61,7 @@ final class DrawingItems {
         return displayedItems;
     }
 
+    @VisibleForTesting
     PaintView getPaintView() {
         return paintView;
     }
@@ -131,7 +133,7 @@ final class DrawingItems {
     }
 
     /**
-     * Converts an item into an ImageView to be displayed on the Activity.
+     * Converts an item into an {@link ImageView} to be displayed on the activity.
      *
      * @param item to be converted
      * @return ImageView of the item

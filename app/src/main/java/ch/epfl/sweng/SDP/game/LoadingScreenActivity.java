@@ -26,19 +26,25 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 
+/**
+ * Class encapsulating methods necessary for communicating with the backend before showing to the
+ * player the {@link WaitingPageActivity}.
+ */
 public class LoadingScreenActivity extends BaseActivity {
+
+    private static final String WORD_CHILDREN_DB_ID = "words";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private static boolean enableWaitingAnimation = true;
+    private static boolean isTesting = false;
 
     private String roomID = null;
     private int gameMode = 0;
 
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
-    private static boolean enableWaitingAnimation = true;
-    private static boolean isTesting = false;
-    private boolean hasLeft = false;
 
-    private static final String WORD_CHILDREN_DB_ID = "words";
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
+    private boolean hasLeft = false;
 
     private boolean isWord1Ready = false;
     private boolean isWord2Ready = false;
@@ -86,6 +92,7 @@ public class LoadingScreenActivity extends BaseActivity {
         }
     };
 
+    @VisibleForTesting
     protected boolean areWordsReady(ArrayList<String> words) {
         try {
             word1 = words.get(0);
@@ -130,7 +137,7 @@ public class LoadingScreenActivity extends BaseActivity {
 
     }
 
-    protected void lookingForRoom(int gameMode) {
+    private void lookingForRoom(int gameMode) {
         Matchmaker.getInstance(Account.getInstance(this))
                 .joinRoom(gameMode).addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -139,6 +146,7 @@ public class LoadingScreenActivity extends BaseActivity {
                     Exception exception = task.getException();
                     if (exception instanceof FirebaseFunctionsException) {
                         FirebaseFunctionsException ffe = (FirebaseFunctionsException) exception;
+                        ffe.printStackTrace();
                     }
                 } else {
                     roomID = task.getResult();

@@ -11,6 +11,7 @@ public enum FriendsRequestState {
      *
      * @param integer the integer corresponding to the desired enum value
      * @return an enum value
+     * @throws IllegalArgumentException if the given integer does not correspond to a state
      */
     public static FriendsRequestState fromInteger(int integer) {
         switch (integer) {
@@ -21,7 +22,7 @@ public enum FriendsRequestState {
             case 2:
                 return FRIENDS;
             default:
-                return null;
+                throw new IllegalArgumentException(integer + " does not correspond to a state");
         }
     }
 }

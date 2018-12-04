@@ -180,6 +180,12 @@ public abstract class DrawingActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Adjusts the width of paintView's brush when one of the volume buttons was pressed.
+     * @param keyCode   code of the button that was pressed
+     * @param event     event must be implemented, but is not used here
+     * @return          always true
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {

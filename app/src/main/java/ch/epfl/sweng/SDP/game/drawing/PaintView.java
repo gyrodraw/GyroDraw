@@ -139,14 +139,18 @@ public class PaintView extends View {
         this.circleRadius = circleRadius;
     }
 
-    public void setDrawWidth(int newWidth) {
+    /**
+     * Sets a new width to the brush and to all current paths.
+     * @param newWidth the new width of the brush
+     */
+    protected void setDrawWidth(int newWidth) {
         drawWidth = newWidth;
         for(Paint paint : colors) {
             paint.setStrokeWidth(drawWidth);
         }
     }
 
-    public int getDrawWidth() {
+    protected int getDrawWidth() {
         return drawWidth;
     }
 

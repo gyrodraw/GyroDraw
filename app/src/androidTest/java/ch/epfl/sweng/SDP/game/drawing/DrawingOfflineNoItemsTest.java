@@ -15,8 +15,8 @@ import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DrawingOfflineNoItemsTest {
 
@@ -41,19 +41,19 @@ public class DrawingOfflineNoItemsTest {
     @Test
     public void testCorrectLayout() {
         int layoutId = activityRule.getActivity().getLayoutId();
-        assertEquals(layoutId, R.layout.activity_drawing_offline);
+        assertThat(layoutId, is(R.layout.activity_drawing_offline));
     }
 
     @Test
     public void testExitClick() {
         onView(ViewMatchers.withId(R.id.exit)).perform(click());
-        assertTrue(activityRule.getActivity().isFinishing());
+        assertThat(activityRule.getActivity().isFinishing(), is(true));
     }
 
     @Test
     public void testBlackButton() {
         onView(ViewMatchers.withId(R.id.blackButton)).perform(click());
-        assertEquals(Color.BLACK, paintView.getColor());
+        assertThat(paintView.getColor(), is(Color.BLACK));
     }
 
     @Test
@@ -61,16 +61,16 @@ public class DrawingOfflineNoItemsTest {
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(Color.WHITE,
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+        assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
+                is(Color.WHITE));
     }
 
     @Test
     public void testEraserTool() {
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(Color.WHITE,
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+        assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
+                is(Color.WHITE));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class DrawingOfflineNoItemsTest {
         activityRule.getActivity().clear(null);
         onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertEquals(paintView.getColor(),
-                paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()));
+        assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
+                is(paintView.getColor()));
     }
 }

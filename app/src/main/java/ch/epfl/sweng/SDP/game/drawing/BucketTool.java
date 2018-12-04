@@ -6,16 +6,26 @@ import android.graphics.Color;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Class modelling the bucket tool used in the drawing activities.
+ */
 class BucketTool {
 
     private Bitmap image = null;
+
     private int[] tolerance = new int[]{0, 0, 0};
+
     private int width = 0;
     private int height = 0;
+
     private int[] pixels = null;
+
     private int fillColor = 0;
+
     private int[] startColor = new int[]{0, 0, 0};
+
     private boolean[] pixelsChecked;
+
     private Queue<FloodFillRange> ranges;
 
     BucketTool(Bitmap img, int targetColor, int newColor) {
@@ -57,7 +67,7 @@ class BucketTool {
      * @param x the starting x
      * @param y the starting y
      */
-    public void floodFill(int x, int y) {
+    void floodFill(int x, int y) {
         prepare();
 
         if (startColor[0] == 0) {

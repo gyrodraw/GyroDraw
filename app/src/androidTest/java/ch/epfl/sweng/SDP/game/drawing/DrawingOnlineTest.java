@@ -38,8 +38,8 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
 
@@ -79,7 +79,7 @@ public class DrawingOnlineTest {
     @Test
     public void testCorrectLayout() {
         int layoutId = activityRule.getActivity().getLayoutId();
-        assertEquals(layoutId, R.layout.activity_drawing_online);
+        assertThat(layoutId, is(R.layout.activity_drawing_online));
     }
 
     @Test
@@ -96,15 +96,15 @@ public class DrawingOnlineTest {
     public void testPaintViewGettersSetters() {
         paintView.setCircle(10, 15);
         paintView.setCircleRadius(12);
-        assertTrue(paintView.getCircleX() == 10);
-        assertTrue(paintView.getCircleY() == 15);
-        assertTrue(paintView.getCircleRadius() == 12);
+        assertThat(paintView.getCircleX(), is(10));
+        assertThat(paintView.getCircleY(), is(15));
+        assertThat(paintView.getCircleRadius(), is(12));
     }
 
     public void testSetCircleWorks() {
         paintView.setCircle(30, -10);
-        assertEquals(30, paintView.getCircleX());
-        assertEquals(1, paintView.getCircleY());
+        assertThat(paintView.getCircleX(), is(30));
+        assertThat(paintView.getCircleY(), is(1));
     }
 
     @Test
@@ -144,10 +144,10 @@ public class DrawingOnlineTest {
         Bitmap bitmap = Bitmap.createBitmap(source, 2, 2, Bitmap.Config.ARGB_8888)
                 .copy(Bitmap.Config.ARGB_8888, true);
         new BucketTool(bitmap, Color.BLACK, Color.YELLOW).floodFill(0, 0);
-        assertEquals(Color.YELLOW, bitmap.getPixel(0, 0));
-        assertEquals(Color.YELLOW, bitmap.getPixel(1, 0));
-        assertEquals(Color.YELLOW, bitmap.getPixel(0, 1));
-        assertEquals(Color.WHITE, bitmap.getPixel(1, 1));
+        assertThat(bitmap.getPixel(0, 0), is(Color.YELLOW));
+        assertThat(bitmap.getPixel(1, 0), is(Color.YELLOW));
+        assertThat(bitmap.getPixel(0, 1), is(Color.YELLOW));
+        assertThat(bitmap.getPixel(1, 1), is(Color.WHITE));
     }
 
     /**
@@ -179,7 +179,7 @@ public class DrawingOnlineTest {
     public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 2; ++j) {
-                assertEquals(bitmap.getPixel(i, j), newBitmap.getPixel(i, j));
+                assertThat(bitmap.getPixel(i, j), is(newBitmap.getPixel(i, j)));
             }
         }
     }

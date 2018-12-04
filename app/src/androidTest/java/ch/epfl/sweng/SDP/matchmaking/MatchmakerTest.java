@@ -10,7 +10,10 @@ import org.junit.Test;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -48,7 +51,7 @@ public class MatchmakerTest {
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
         when(mockAccount.getCurrentLeague()).thenReturn(FAKE_LEAGUE);
         Task<String> task = Matchmaker.getInstance(mockAccount).joinRoom(0);
-        assertNotNull(task);
+        assertThat(task, is(not(nullValue())));
     }
 
     @Test

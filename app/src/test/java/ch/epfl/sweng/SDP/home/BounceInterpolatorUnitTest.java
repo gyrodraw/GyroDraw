@@ -8,7 +8,7 @@ public class BounceInterpolatorUnitTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void amplitudeShouldBeDifferentFromZeroOnConstruction() {
-        BounceInterpolator wrongInterpolator = new BounceInterpolator(0, 10);
+        new BounceInterpolator(0, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)

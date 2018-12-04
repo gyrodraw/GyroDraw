@@ -8,17 +8,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class SortUtils {
+/**
+ * Utility class containing methods for sorting.
+ */
+public final class SortUtils {
 
-    private SortUtils() {}
+    private SortUtils() {
+    }
 
     /**
-     * Sort a map by value.
-     * @see <a href="https://stackoverflow.com/questions/109383/sort-a-mapkey-value-by-values"></a>
+     * Sorts a {@link Map} by value.
+     *
      * @param map Map to be sorted
      * @param <K> Key type
      * @param <V> Value Type
      * @return The sorted map
+     * @see <a href="https://stackoverflow.com/questions/109383/sort-a-mapkey-value-by-values">StackOverflow answer</a>
      */
     public static <K, V> List<K> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());

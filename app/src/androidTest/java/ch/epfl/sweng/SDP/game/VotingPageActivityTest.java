@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.SystemClock;
@@ -70,6 +71,13 @@ public class VotingPageActivityTest {
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         starsAnimation = mActivityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
+    }
+
+
+    @Test
+    public void testSharingImage() {
+        Bitmap bitmap = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.league_1);
+        mActivityRule.getActivity().shareImage(bitmap);
     }
 
     @Test

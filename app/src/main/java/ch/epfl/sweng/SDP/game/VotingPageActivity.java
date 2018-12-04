@@ -91,8 +91,8 @@ public class VotingPageActivity extends BaseActivity {
     private static boolean enableAnimations = true;
 
     // MARK: Sharing
-
-    private void shareImage(Bitmap image) {
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public void shareImage(Bitmap image) {
         // Check if Facebook app is installed.
         if (ShareDialog.canShow(SharePhotoContent.class)) {
             SharePhoto photo = new SharePhoto.Builder()
@@ -109,7 +109,6 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void uploadImageToFireBase(Bitmap image) {
-
         Account account = Account.getInstance(getApplicationContext());
         String imageName =  "DRAWING_" + account.getTotalMatches() + "_" + account.getUsername() + ".jpg";
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
@@ -119,8 +118,8 @@ public class VotingPageActivity extends BaseActivity {
                 getUrl(ref);
             }
         });
-
     }
+
     private void getUrl(StorageReference ref) {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -416,7 +415,6 @@ public class VotingPageActivity extends BaseActivity {
                             LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
                             Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-                            getImageUrl(localImage);
                           //  ImageStorageManager.saveImage(localImage, "picasso", getApplicationContext());
                             storeBitmap(localImage, currentId);
                         } else {

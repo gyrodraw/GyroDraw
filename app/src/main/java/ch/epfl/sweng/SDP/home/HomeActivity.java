@@ -184,8 +184,6 @@ public class HomeActivity extends BaseActivity {
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
 
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.league_1);
-
         setLeague();
     }
 

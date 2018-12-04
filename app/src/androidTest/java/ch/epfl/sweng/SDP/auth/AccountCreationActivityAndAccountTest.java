@@ -1,26 +1,28 @@
 package ch.epfl.sweng.SDP.auth;
 
+import android.content.Intent;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
+
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressKey;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.Espresso.onView;
+
 import android.support.test.espresso.idling.CountingIdlingResource;
+
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import android.view.KeyEvent;
+import android.widget.Button;
+import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -28,23 +30,38 @@ import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.After;
+
 import static org.junit.Assert.assertNotEquals;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountCreationActivityAndAccountTest {
 
     private static final String USER_ID = "123456789";
     private static final String TEST_EMAIL = "testEmail";
+    private static final String EMAIL_TAG = "email";
     private static final String USERNAME = "username";
     private static final String LEAGUE = "league1";
     private static final String USERS_TAG = "users.";
@@ -53,7 +70,16 @@ public class AccountCreationActivityAndAccountTest {
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
-            new ActivityTestRule<>(AccountCreationActivity.class);
+            new ActivityTestRule<AccountCreationActivity>(AccountCreationActivity.class){
+
+                @Override
+                protected Intent getActivityIntent() {
+                    Intent intent = new Intent();
+                    intent.putExtra(EMAIL_TAG, TEST_EMAIL);
+
+                    return intent;
+                }
+            };
 
     private Account account;
 
@@ -74,8 +100,8 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testSetGetEmail() {
-        account.setEmail("email");
-        assertThat(account.getEmail(), is("email"));
+        account.setEmail(EMAIL_TAG);
+        assertThat(account.getEmail(), is(EMAIL_TAG));
     }
 
     @Test
@@ -181,25 +207,27 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testNewFriend() {
-        Database.getReference(USERS_TAG
-                + USER_ID + TEST_FRIEND_TAG)
-                .setValue(FriendsRequestState.SENT.ordinal());
-        setListenerAndAssertToFirebaseForFriendsTest(true);
-        account.addFriend(TEST_FRIEND);
+        friendsTestHelper(FriendsRequestState.SENT.ordinal());
     }
 
     @Test
     public void testConfirmFriend() {
+        friendsTestHelper(FriendsRequestState.RECEIVED.ordinal());
+    }
+
+    private void friendsTestHelper(int state) {
         Database.getReference(USERS_TAG
                 + USER_ID + TEST_FRIEND_TAG)
-                .setValue(FriendsRequestState.RECEIVED.ordinal());
-        setListenerAndAssertToFirebaseForFriendsTest(true);
+                .setValue(state);
+        setListenerAndAssertToFirebaseForFriendsTest(true,
+                USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);
     }
 
     @Test
     public void testRemoveFriend() {
-        setListenerAndAssertToFirebaseForFriendsTest(false);
+        setListenerAndAssertToFirebaseForFriendsTest(false,
+                USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.removeFriend(TEST_FRIEND);
     }
 
@@ -316,13 +344,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testCreateAccountWithNullName() {
-        onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
-        onView(ViewMatchers.withId(R.id.usernameTaken))
-                .check(matches(withText("Username must not be empty")));
-    }
-
-    @Test
     public void testUsernameInputInputsCorrectly() {
         onView(withId(R.id.usernameInput))
                 .perform(typeText("Max Muster"), closeSoftKeyboard())
@@ -337,19 +358,77 @@ public class AccountCreationActivityAndAccountTest {
         assertNotEquals(null, account);
     }
 
-    private void setListenerAndAssertToFirebaseForFriendsTest(final boolean state) {
+    @Test
+    public void testCreateAccountWithTooShortUsername() {
+        testIllegalUsernameGivesCorrectError("MAX", R.string.usernameTooShort, "");
+    }
+
+    @Test
+    public void testCreateAccountWithTooLongUsername() {
+        testIllegalUsernameGivesCorrectError("SUPERDUPERLONGUSERNAMEWHICHISSUPPOSEDTOFAIL",
+                R.string.usernameTooLong, "");
+    }
+
+    @Test
+    public void testCreateAccountWithDoubleSpace() {
+        testIllegalUsernameGivesCorrectError("MAX   MUSTER",
+                R.string.usernameIllegalChar, " double spaces");
+    }
+
+    @Test
+    public void testCreateAccountWithBackslash() {
+        testIllegalUsernameGivesCorrectError("MAX"+'\\'+"MUSTER",
+                R.string.usernameIllegalChar, " \\");
+    }
+
+    @Test
+    public void testCreateAccountWithPercent() {
+        testIllegalUsernameGivesCorrectError("MAX"+'%'+"MUSTER",
+                R.string.usernameIllegalChar, " %");
+    }
+
+    @Test
+    public void testCreateAccountWithDoubleQuotes() {
+        testIllegalUsernameGivesCorrectError("MAX\"MUSTER",
+                R.string.usernameIllegalChar, " \"");
+    }
+
+    @Test
+    public void testCreateAccountWithQuotes() {
+        testIllegalUsernameGivesCorrectError("MAX\'MUSTER",
+                R.string.usernameIllegalChar, " '");
+    }
+
+    @Test
+    public void testCreateAccountWithEmptyUsername() {
+        onView(withId(R.id.usernameInput)).perform(typeText("T"));
+        onView(withId(R.id.usernameInput)).perform(pressKey(KeyEvent.KEYCODE_DEL),
+                closeSoftKeyboard());
+        TextView feedback = activityRule.getActivity().findViewById(R.id.usernameTaken);
+        assertThat(feedback.getText().toString(),
+                is(equalTo(activityRule.getActivity().getResources()
+                        .getString(R.string.usernameMustNotBeEmpty))));
+    }
+
+    @Test
+    public void testCreateNewAccountSucceeds() {
+        Account.deleteAccount();
+        setListenerAndAssertToFirebaseForFriendsTest(true, USERS_TAG + USER_ID);
+        onView(withId(R.id.usernameInput))
+                .perform(typeText("TESTINGUSERNAME"), closeSoftKeyboard());
+        onView(ViewMatchers.withId(R.id.createAccount)).perform(click());
+    }
+
+    private void setListenerAndAssertToFirebaseForFriendsTest(
+            final boolean state, String path) {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
         final ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                countingResource.decrement();
                 assertThat(dataSnapshot.exists(), is(state));
-                Database.getReference(USERS_TAG
-                        + USER_ID
-                        + TEST_FRIEND_TAG)
-                        .removeEventListener(this);
+                countingResource.decrement();
             }
 
             @Override
@@ -358,8 +437,17 @@ public class AccountCreationActivityAndAccountTest {
             }
         };
 
-        Database.getReference(USERS_TAG
-                + USER_ID + TEST_FRIEND_TAG)
-                .addValueEventListener(valueEventListener);
+        Database.getReference(path)
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    private void testIllegalUsernameGivesCorrectError(String username, int errorId, String append) {
+        onView(withId(R.id.usernameInput)).perform(typeText(username), closeSoftKeyboard());
+        TextView feedback = activityRule.getActivity().findViewById(R.id.usernameTaken);
+        assertThat(feedback.getText().toString(),
+                is(equalTo(activityRule.getActivity().getResources().getString(errorId)
+                        + append)));
+        Button createAccount = activityRule.getActivity().findViewById(R.id.createAccount);
+        assertThat(createAccount.isEnabled(), is(false));
     }
 }

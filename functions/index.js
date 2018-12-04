@@ -101,49 +101,6 @@ function functionTimer (seconds, state, roomID, call) {
   });
 }
 
-exports.joinGame = functions.https.onRequest((req, res) => {
-  // Grab the text parameter.
-  var userId = req.query.userId;
-  console.log("userid: " + userId);
-
-  // Grab the id of the player
-  // Check if room is already available and join available room
-  return admin.database().ref('rooms').once("value").then(x => {
-    var rooms = x.val();
-    console.log(rooms);
-    for (var room in rooms) {
-      try{
-        if(typeof rooms[room].users !== 'undefined') {
-          console.log(Object.keys(rooms[room].users).length);
-          if (Object.keys(rooms[room].users).length < 5 && rooms[room].playing === false) {
-            if (Object.keys(rooms[room].users).length ===  4) {
-              // set playing to true
-              admin.database().ref('rooms').child(room).child('playing').set(true)
-            }
-            // Push new user
-            return  admin.database().ref('rooms').child(room).child('users').child(userId).set({
-              id: userId
-            }).then(() => {
-              // return http error true
-              return res.status(200).end();
-            });
-          }
-        }
-      }catch(e){
-        console.log('rooms[room].users is undefined');
-      }
-    }
-    var o = {  };
-    o[userId] =  { id : userId };
-    return  admin.database().ref('rooms').push().set({
-      playing: false,
-      users: o
-    }).then( () => {
-      return res.status(200).end();
-    });
-  });
-});
-
 exports.joinGame2 = functions.https.onCall((data, context) => {
   // Grab the text parameter.
   const id = data.id;
@@ -318,6 +275,19 @@ function createNode(roomID, node) {
   return;
 }
 
+function updateUser(userID, child, position) {
+  return admin.database().ref("users/").once('value', (snapshot) => {
+    if(snapshot.hasChild(userID)) {
+      admin.database().ref("users/" + userID + "/stars").transaction((currentValue) => {
+          return currentValue + child.val();
+      });
+      admin.database().ref("users/" + userID + "/trophies").transaction((currentValue) => {
+          return currentValue + getRankFromPosition(position);
+      });
+    }
+  });
+}
+
 exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").onWrite((change, context) => {
   const roomID = context.params.roomID;
   state = change.after.val();
@@ -345,6 +315,9 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
 
     case StateEnum.WaitingUpload:
       // Set timeout to pass to next activity
+      setTimeout(() => {
+        admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
+      } , 10000);
       break;
 
     case StateEnum.VotingPage:
@@ -352,6 +325,10 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
 
     case StateEnum.EndVoting:
+      // removed for now in order to test online more easily
+      /*setTimeout(() => {
+        removeRoom();
+      }, 10000);*/
       break;
     default:
       break;
@@ -362,8 +339,8 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
 
 exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finished").onWrite((change, context) => {
   const roomID = context.params.roomID;
-  return admin.database().ref(parentRoomID + roomID + "/finished").once('value', (snapshot) => {
-    if(checkNodeTrue(snapshot) === true && roomID !== "0123457890") {
+  return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
+    if(checkNodeTrue(snapshot.child("finished")) === true && roomID !== "0123457890" && snapshot.child("state").val() === StateEnum.EndVoting) {
       removeRoom(roomID);
     }
   });
@@ -371,8 +348,8 @@ exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finis
 
 exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
   const roomID = context.params.roomID;
-  return admin.database().ref(parentRoomID + roomID + "/uploadDrawing").once('value', (snapshot) => {
-    if(checkNodeTrueTesting(snapshot, 5) === true) {
+  return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
+    if(checkNodeTrue(snapshot.child("uploadDrawing")) === true && snapshot.child("state").val() === StateEnum.WaitingUpload) {
       admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }
   })

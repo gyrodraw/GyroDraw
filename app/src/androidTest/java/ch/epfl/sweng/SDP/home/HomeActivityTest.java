@@ -17,6 +17,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 

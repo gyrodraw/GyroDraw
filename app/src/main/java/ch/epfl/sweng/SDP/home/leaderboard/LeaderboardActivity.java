@@ -1,13 +1,10 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.leaderboard;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,9 +28,10 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.home.leaderboard.Player;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;
 
 /**
@@ -126,115 +123,6 @@ public class LeaderboardActivity extends BaseActivity {
 
         friendsFilterCheckbox.setOnClickListener(clickListener);
         friendsFilterText.setOnClickListener(clickListener);
-    }
-
-    /**
-     * Helper class to manage and display data from Firebase.
-     */
-    private class Player implements Comparable {
-
-        private final String userId;
-        private final String username;
-        private final Long trophies;
-        private final String league;
-        private int rank;
-        private final boolean isCurrentUser;
-
-        private Player(String userId, String username, Long trophies, String league,
-                       boolean isCurrentUser) {
-            this.userId = userId;
-            this.username = username;
-            this.trophies = trophies;
-            this.league = league;
-            this.isCurrentUser = isCurrentUser;
-        }
-
-        /**
-         * Allows one to call sort on a collection of Players. Sorts collection in descending
-         * order.
-         *
-         * @param object Player to compare
-         * @return 1 if this is larger, -1 if this is smaller, 0 else
-         */
-        @Override
-        public int compareTo(Object object) {
-            int compareTrophies = -this.trophies.compareTo(((Player) object).trophies);
-            if (compareTrophies == 0) {
-                return this.username.compareTo(((Player) object).username);
-            }
-            return compareTrophies;
-        }
-
-        private boolean playerNameContainsString(String query) {
-            return username.toUpperCase().contains(query.toUpperCase());
-        }
-
-        /**
-         * Converts this player into a LinearLayout that will be displayed on the leaderboard.
-         *
-         * @param context of the app
-         * @param index   of the player
-         * @return LinearLayout that will be displayed
-         */
-        @SuppressLint("NewApi")
-        private LinearLayout toLayout(final Context context, int index) {
-            TextView usernameView = new TextView(context);
-            Resources res = getResources();
-            styleView(usernameView, rank + ". " + username, res.getColor(
-                    isCurrentUser ? R.color.colorPrimaryDark : R.color.colorDrawYellow),
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
-            usernameView.setPadding(0, 10, 0, 10);
-
-            TextView trophiesView = new TextView(context);
-            styleView(trophiesView, trophies.toString(),
-                    res.getColor(R.color.colorPrimaryDark),
-                    new LinearLayout.LayoutParams(0,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 2));
-
-            trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-
-            ImageView leagueView = new ImageView(context);
-            leagueView.setLayoutParams(new LinearLayout.LayoutParams(0,
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1));
-            leagueView.setImageResource(getLeagueImageId(league));
-
-            final FriendsButton friendsButton =
-                    new FriendsButton(context, this, index, isCurrentUser);
-
-            LinearLayout entry = addViews(new LinearLayout(context),
-                    usernameView, trophiesView, leagueView, friendsButton);
-
-            entry.setBackgroundColor(res.getColor(
-                    isCurrentUser ? R.color.colorDrawYellow : R.color.colorLightGrey));
-            entry.setPadding(30, 10, 30, 10);
-
-            return entry;
-        }
-
-        private LinearLayout addViews(LinearLayout layout, TextView usernameView,
-                                      TextView trophiesView, ImageView leagueView,
-                                      ImageView addFriends) {
-            layout.addView(usernameView);
-            layout.addView(trophiesView);
-            layout.addView(leagueView);
-            layout.addView(addFriends);
-
-            return layout;
-        }
-
-        private void styleView(TextView view, String text, int color,
-                               LinearLayout.LayoutParams layoutParams) {
-            view.setText(text);
-            view.setTextSize(20);
-            view.setMaxLines(1);
-            view.setTextColor(color);
-            view.setTypeface(typeMuro);
-            view.setLayoutParams(layoutParams);
-        }
-
-        void setRank(int rank) {
-            this.rank = rank;
-        }
     }
 
     /**
@@ -413,128 +301,6 @@ public class LeaderboardActivity extends BaseActivity {
                         .toLayout(getApplicationContext(), i), layoutParams);
                 ++i;
             }
-        }
-    }
-
-    /**
-     * Button to show if a user is a friend of current user and to manage friends requests.
-     */
-    private class FriendsButton extends AppCompatImageView {
-
-        private final Context context;
-        private final Player player;
-        private final int index;
-        private final boolean isCurrentUser;
-
-        private FriendsButton(Context context, Player player, int index, boolean isCurrentUser) {
-            super(context);
-            this.context = context;
-            this.player = player;
-            this.index = index;
-            this.isCurrentUser = isCurrentUser;
-            this.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isFriendWithCurrentUser(
-                            changeFriendsButtonImageOnClick());
-                }
-            });
-            this.isFriendWithCurrentUser(initializeFriendsButton());
-            initLayout();
-        }
-
-        private void initLayout() {
-            LinearLayout.LayoutParams friendsParams =
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            setLayoutParams(friendsParams);
-
-            // Give Button unique Tag to test them later
-            setTag("friendsButton" + index);
-
-            // Set friendsButton invisible to yourself
-            if (isCurrentUser) {
-                setVisibility(View.INVISIBLE);
-            }
-        }
-
-        /**
-         * Gets data if users are friends, else null. Then applies listener.
-         *
-         * @param listener how to handle response
-         */
-        private void isFriendWithCurrentUser(ValueEventListener listener) {
-            Database.constructBuilder().addChildren(
-                    format("users.%s.friends.%s",
-                            Account.getInstance(context).getUserId(),
-                            player.userId)).build()
-                    .addListenerForSingleValueEvent(listener);
-        }
-
-        /**
-         * Checks if users are already friends and sets image accordingly.
-         *
-         * @return listener
-         */
-        private ValueEventListener initializeFriendsButton() {
-            return new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        int status = dataSnapshot.getValue(int.class);
-                        if (status == SENT) {
-                            setImageResource(R.drawable.pending_friend);
-                        } else if (status == FRIENDS) {
-                            setImageResource(R.drawable.remove_friend);
-                        } else {
-                            setImageResource(R.drawable.add_friend);
-                        }
-                    } else {
-                        setImageResource(R.drawable.add_friend);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, FIREBASE_ERROR);
-                }
-            };
-        }
-
-        /**
-         * Friends button got clicked, now add/remove friend and modify image.
-         *
-         * @return listener
-         */
-        private ValueEventListener changeFriendsButtonImageOnClick() {
-            return new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        int status = dataSnapshot.getValue(int.class);
-                        switch (FriendsRequestState.fromInteger(status)) {
-                            case RECEIVED:
-                                Account.getInstance(context).addFriend(player.userId);
-                                setImageResource(R.drawable.remove_friend);
-                                break;
-                            case FRIENDS:
-                            case SENT:
-                                Account.getInstance(context).removeFriend(player.userId);
-                                setImageResource(R.drawable.add_friend);
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        Account.getInstance(context).addFriend(player.userId);
-                        setImageResource(R.drawable.pending_friend);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, FIREBASE_ERROR);
-                }
-            };
         }
     }
 }

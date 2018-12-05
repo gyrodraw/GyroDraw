@@ -3,28 +3,38 @@ package ch.epfl.sweng.SDP.auth;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.support.test.rule.ActivityTestRule;
+import android.os.SystemClock;
+import android.support.test.espresso.matcher.ViewMatchers;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
+import android.support.test.rule.ActivityTestRule;
+import android.widget.TextView;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
-import com.google.firebase.database.DataSnapshot;
 
-import org.hamcrest.CoreMatchers;
+import static junit.framework.TestCase.assertTrue;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
-
-import java.util.HashMap;
-
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -37,34 +47,39 @@ public class LoginActivityTest {
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
+    // Add a monitor for the HomeActivity
+    private final Instrumentation.ActivityMonitor homeMonitor = getInstrumentation()
+            .addMonitor(HomeActivity.class.getName(), null, false);
+
     private IdpResponse mockIdpResponse;
-    private LoginActivity loginActivity;
+    private Intent mockIntent;
+    private Activity loginActivity;
 
     /**
      * Initializes the mock objects.
      */
     @Before
     public void init() {
-        mockIdpResponse = Mockito.mock(IdpResponse.class);
         loginActivity = activityRule.getActivity();
+        mockIdpResponse = Mockito.mock(IdpResponse.class);
+        mockIntent = Mockito.mock(Intent.class);
+        Mockito.when(mockIdpResponse.getEmail()).thenReturn("testEmail");
+        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
+                .thenReturn(mockIdpResponse);
     }
 
     @Test
     public void testFailedLoginNullResponse() {
-        Intent mockIntent = Mockito.mock(Intent.class);
         Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
                 .thenReturn(null);
-        loginActivity.onActivityResult(42, 0, mockIntent);
+        activityRule.getActivity().onActivityResult(42, 0, mockIntent);
         assertThat(loginActivity.isFinishing(), is(true));
     }
 
     @Test
     public void testSuccessfulLoginNewUser() {
-        Intent mockIntent = Mockito.mock(Intent.class);
-        Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
-                .thenReturn(mockIdpResponse);
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
-        loginActivity.onActivityResult(42, -1, mockIntent);
+        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
@@ -72,12 +87,55 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void testCloneAccountFromFirebase() {
-        DataSnapshot mockSnapshot = Mockito.mock(DataSnapshot.class);
-        HashMap<String, HashMap<String, Object>> userEntry = new HashMap<>();
-        Mockito.when(mockSnapshot.getValue())
-                .thenReturn(userEntry);
-        assertThat(mockSnapshot.getValue(), CoreMatchers.<Object>is(userEntry));
+    public void testSuccessfulLoginExistingUser() {
+        Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
+        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
+        SystemClock.sleep(3000);
+        assertTrue(loginActivity.isFinishing());
+        Activity homeActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(homeMonitor, 5000);
+        Assert.assertNotNull(homeActivity);
+    }
+
+    @Test
+    public void testSuccessfulLoginWithoutAccount() {
+        Mockito.when(mockIdpResponse.getEmail()).thenReturn("weirdEmail");
+        Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
+        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
+        Activity accountCreationActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(monitor, 5000);
+        Assert.assertNotNull(accountCreationActivity);
+    }
+
+    @Test
+    public void testFailedLoginNoNetwork() {
+        failedSignInHelper(R.string.no_internet, ErrorCodes.NO_NETWORK);
+    }
+
+    @Test
+    public void testFailedLoginUnknownError() {
+        failedSignInHelper(R.string.unknown_error, 1234567891);
+    }
+
+    private void failedSignInHelper(int expectedErrorMessageId, final int errorCode) {
+        executeOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activityRule.getActivity().handleFailedSignIn(errorCode);
+            }
+        });
+
+        TextView feedbackView = loginActivity.findViewById(R.id.error_message);
+        ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
+               loginActivity.getResources().getString(expectedErrorMessageId))));
+    }
+
+    private void executeOnUiThread(Runnable runnable) {
+        try {
+            runOnUiThread(runnable);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Test

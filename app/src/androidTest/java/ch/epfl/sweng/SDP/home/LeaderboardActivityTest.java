@@ -14,9 +14,6 @@ import android.support.test.espresso.intent.Intents;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
-import android.support.test.espresso.matcher.ViewMatchers;
-
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
@@ -35,6 +32,7 @@ import com.google.firebase.FirebaseApp;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -128,7 +126,7 @@ public class LeaderboardActivityTest {
      */
     public static void testExitButtonBody() {
         Intents.init();
-        onView(ViewMatchers.withId(R.id.exitButton)).perform(click());
+        onView(withId(R.id.exitButton)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
     }

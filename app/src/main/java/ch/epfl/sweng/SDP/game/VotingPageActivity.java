@@ -3,8 +3,10 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
@@ -48,7 +50,7 @@ public class VotingPageActivity extends BaseActivity {
 
     private static boolean enableAnimations = true;
 
-    static final String TAG = "VotingPageActivity";
+    private static final String TAG = "VotingPageActivity";
 
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -97,6 +99,7 @@ public class VotingPageActivity extends BaseActivity {
      * Saves an image to the disk.
      * @param view  the button invoked this method.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveImage(View view) {
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 getApplicationContext(), null, 1);

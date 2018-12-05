@@ -65,7 +65,7 @@ public class ImageSharer {
     }
 
     /**
-     * Share an image to facebook by opening a share dialog.
+     * Shares an image to facebook by opening a share dialog.
      * @param image the image to share.
      */
     public void shareImageToFacebook(Bitmap image) {
@@ -79,7 +79,7 @@ public class ImageSharer {
                     .build();
             ShareDialog.show(activity,content);
         } else {
-            // Facebook app not install, use web instead.
+            // Facebook app not installed, use web instead.
             uploadImageToFireBase(image);
         }
     }

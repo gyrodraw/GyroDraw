@@ -51,7 +51,7 @@ public class ImageStorageManager {
         }
 
         // Save image in file directory
-        try (FileOutputStream out = new FileOutputStream(file);) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
             image.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
         } catch (Exception e) {

@@ -14,13 +14,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -68,11 +72,16 @@ public class ShopActivity extends BaseActivity {
     public void fillShop() {
         shop = new Shop();
         List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
+        List<String> myColors = new ArrayList<>();
+
+        for (ShopItem item : myItems) {
+            myColors.add(item.getColorItem().toString());
+        }
 
         for (ColorsShop color : ColorsShop.values()) {
             ShopItem item = new ShopItem(color, color.getPrice());
 
-            if (myItems.contains(item)) {
+            if (myColors.contains(item.getColorItem().toString())) {
                 item = new ShopItem(color, color.getPrice(), true);
             }
 

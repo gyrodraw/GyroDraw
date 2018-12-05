@@ -89,15 +89,15 @@ public class DrawingOfflineNoItemsTest {
         int initWidth = paintView.getDrawWidth();
         SeekBar brushWidthBar = activityRule.getActivity().findViewById(R.id.brushWidthBar);
 
-        brushWidthBar.setProgress(0, false);
+        brushWidthBar.setProgress(0);
         SystemClock.sleep(2000);
         assertThat(paintView.getDrawWidth(), is(11));
 
-        brushWidthBar.setProgress(100, false);
+        brushWidthBar.setProgress(100);
         SystemClock.sleep(2000);
         assertThat(paintView.getDrawWidth(), is(410));
 
-        brushWidthBar.setProgress(50, false);
+        brushWidthBar.setProgress(50);
         SystemClock.sleep(2000);
         assertThat(paintView.getDrawWidth(), is(initWidth));
     }

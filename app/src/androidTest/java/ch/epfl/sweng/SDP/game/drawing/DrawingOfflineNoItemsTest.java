@@ -1,18 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.graphics.Color;
-
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.Espresso.onView;
-
 import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
-import android.view.KeyEvent;
 import android.widget.SeekBar;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,6 +14,11 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DrawingOfflineNoItemsTest {
 

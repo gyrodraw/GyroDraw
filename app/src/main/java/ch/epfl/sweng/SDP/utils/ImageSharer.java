@@ -77,7 +77,9 @@ public class ImageSharer {
             SharePhotoContent content = new SharePhotoContent.Builder()
                     .addPhoto(photo)
                     .build();
-            ShareDialog.show(activity,content);
+            if (activity != null) {
+                ShareDialog.show(activity, content);
+            }
         } else {
             // Facebook app not installed, use web instead.
             uploadImageToFireBase(image);
@@ -117,7 +119,9 @@ public class ImageSharer {
     private void shareDrawingToFacebook(Uri uri) {
         ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
                 .build();
-        ShareDialog.show(activity,linkContent);
+        if (activity != null) {
+            ShareDialog.show(activity, linkContent);
+        }
     }
 
 }

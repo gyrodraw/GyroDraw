@@ -92,9 +92,10 @@ public class VotingPageActivityTest {
     public void testSharingImage() {
         Bitmap bitmap = BitmapFactory.decodeResource(
                 mActivityRule.getActivity().getResources(), R.drawable.league_1);
-        ImageSharer sharer = ImageSharer.getInstance(mActivityRule.getActivity()
-                .getApplicationContext(),mActivityRule.getActivity());
-        sharer.shareImageToFacebook(bitmap);
+        ImageSharer.getInstance(mActivityRule.getActivity()
+                .getApplicationContext(), mActivityRule.getActivity());
+        ImageSharer.getInstance().setActivity(mActivityRule.getActivity());
+        ImageSharer.getInstance().shareImageToFacebook(bitmap);
     }
 
     @Test

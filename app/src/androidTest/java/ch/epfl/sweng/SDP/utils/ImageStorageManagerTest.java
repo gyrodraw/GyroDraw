@@ -37,7 +37,6 @@ public class ImageStorageManagerTest {
                 + "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
         File myDir = new File(root);
         assertThat(myDir.exists(), is(true));
-
     }
 
 }

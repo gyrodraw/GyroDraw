@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +41,9 @@ public class ImageStorageManager {
         }
 
          MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
+
+        Toast toast = Toast.makeText(context, "Successfully saved image to /Camera/Gyrodraw", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 }

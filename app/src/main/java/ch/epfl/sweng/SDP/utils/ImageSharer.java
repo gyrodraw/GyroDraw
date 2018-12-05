@@ -117,5 +117,4 @@ public class ImageSharer {
         ShareDialog.show(activity,linkContent);
     }
 
-
 }

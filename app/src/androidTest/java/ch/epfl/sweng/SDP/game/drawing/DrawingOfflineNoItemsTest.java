@@ -8,6 +8,7 @@ import static android.support.test.espresso.Espresso.onView;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
+import android.widget.SeekBar;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -88,6 +89,7 @@ public class DrawingOfflineNoItemsTest {
     @Test
     public void testChangeBrushWidth() {
         int initWidth = paintView.getDrawWidth();
+        SeekBar brushWidthBar = activityRule.getActivity().findViewById(R.id.brushWidthBar);
         activityRule.getActivity().onKeyDown(
                 KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
         assertThat(paintView.getDrawWidth(), is(initWidth-10));

@@ -14,6 +14,7 @@ import java.io.File;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class ImageStorageManagerTest {
@@ -32,7 +33,7 @@ public class ImageStorageManagerTest {
 
         String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
         File myDir = new File(root);
-        assertTrue(myDir.exists());
+        assertThat(myDir.exists(), is(true));
 
     }
 

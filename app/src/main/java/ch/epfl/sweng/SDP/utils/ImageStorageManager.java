@@ -10,6 +10,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 
+/**
+ * This class is responsible for saving images to the device hard drive.
+ */
 public class ImageStorageManager {
 
     ImageStorageManager() {
@@ -25,7 +28,8 @@ public class ImageStorageManager {
     public static void saveImage(Bitmap image, String image_name, Context context) {
 
         // Get image dirctory
-        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw";
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw";
         File myDir = new File(root);
         myDir.mkdirs();
         String fname = "Image-" + image_name + ".png";
@@ -37,11 +41,9 @@ public class ImageStorageManager {
         }
 
         // Save image in file directory
-        try {
-            FileOutputStream out = new FileOutputStream(file);
+        try (FileOutputStream out = new FileOutputStream(file);) {
             image.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
-            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -36,7 +36,7 @@ public final class FbStorage {
      */
     public static StorageTask<TaskSnapshot> sendBitmapToFirebaseStorage(
             final Bitmap bitmap, final StorageReference imageRef,
-            OnSuccessListener<UploadTask.TaskSnapshot> onSucessListener) {
+            OnSuccessListener<UploadTask.TaskSnapshot> successListener) {
         checkPrecondition(bitmap != null, "bitmap is null");
         checkPrecondition(imageRef != null, "imageRef is null");
 
@@ -60,8 +60,8 @@ public final class FbStorage {
             }
         });
 
-        if (onSucessListener != null) {
-            task.addOnSuccessListener(onSucessListener);
+        if (successListener != null) {
+            task.addOnSuccessListener(successListener);
         }
 
         return task;

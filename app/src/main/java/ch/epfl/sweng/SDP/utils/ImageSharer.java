@@ -20,6 +20,9 @@ import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 
+/**
+ * This class is responsible for sharing images to Facebook.
+ */
 public class ImageSharer {
 
     private static ImageSharer instance = null;
@@ -62,7 +65,7 @@ public class ImageSharer {
     }
 
     /**
-     * Share an image to to facebook.
+     * Share an image to facebook by opening a share dialog.
      * @param image the image to share.
      */
     public void shareImageToFacebook(Bitmap image) {
@@ -101,7 +104,7 @@ public class ImageSharer {
             public void onSuccess(final Uri uri) {
                 // Share image to facebook after getting url
                 shareDrawingToFacebook(uri);
-                Log.d("SUCESS", "Successfully uploaded a task");
+                Log.d("SUCCESS", "Successfully uploaded a task");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

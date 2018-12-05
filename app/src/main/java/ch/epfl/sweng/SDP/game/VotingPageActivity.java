@@ -46,6 +46,10 @@ import com.google.firebase.storage.UploadTask;
  */
 public class VotingPageActivity extends BaseActivity {
 
+    private static boolean enableAnimations = true;
+
+    static final String TAG = "VotingPageActivity";
+
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
@@ -77,8 +81,6 @@ public class VotingPageActivity extends BaseActivity {
     private String roomID = "undefined";
     private boolean sharingMode = false;
 
-    private static boolean enableAnimations = true;
-
     /**
      * Share an image to facebook.
      * @param view the button invoked this method.
@@ -87,8 +89,8 @@ public class VotingPageActivity extends BaseActivity {
         sharingMode = true;
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 getApplicationContext(), null, 1);
-        Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-        ImageSharer.getInstance(getApplicationContext(),this).shareImageToFacebook(localImage);
+        ImageSharer.getInstance(getApplicationContext(),this).
+                shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
     }
 
     /**
@@ -239,7 +241,7 @@ public class VotingPageActivity extends BaseActivity {
             return;
         }
 
-        Log.d("VotingPage","Pausing");
+        Log.d(TAG,"Pausing activity");
 
         if (roomID != null && !roomID.equals("0123457890")) {
             Matchmaker.getInstance(Account.getInstance(this))
@@ -269,7 +271,7 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
-        Log.d("VotingPage","Starting home activity");
+        Log.d(TAG,"Starting home activity");
 
         ImageSharer.getInstance().setActivity(null);
         launchActivity(HomeActivity.class);

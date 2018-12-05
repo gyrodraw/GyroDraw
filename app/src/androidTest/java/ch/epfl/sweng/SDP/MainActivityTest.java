@@ -7,7 +7,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.google.firebase.database.DataSnapshot;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,10 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -39,7 +42,7 @@ public class MainActivityTest {
         onView(withId(R.id.login_button)).perform(click());
         Activity loginActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(loginActivity);
+        assertThat(loginActivity, is(not(nullValue())));
     }
 
     @Test

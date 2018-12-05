@@ -1,33 +1,36 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.os.SystemClock;
+
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
 import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.util.Map;
-
-import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
 import ch.epfl.sweng.SDP.game.drawing.items.SlowdownItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class DrawingOfflineWithItemsTest {
 
@@ -113,11 +116,10 @@ public class DrawingOfflineWithItemsTest {
     public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() {
         paintView.setCircle(202, 202);
         activateItem(BumpingItem.createBumpingItem(200, 200, 10));
-        double angle = Math.atan2(1, 1);
-        int newX = 200 + (int) (Math.cos(angle) * (10 + paintView.getCircleRadius() + 5));
-        int newY = 200 + (int) (Math.sin(angle) * (10 + paintView.getCircleRadius() + 5));
-        assertThat(paintView.getCircleX(), is(newX));
-        assertThat(paintView.getCircleY(), is(newY));
+        int dx = paintView.getCircleX() - 200;
+        int dy = paintView.getCircleY() - 200;
+        double radius = Math.sqrt(dx * dx + dy * dy) + paintView.getCircleRadius();
+        assertThat((int)radius, is(greaterThanOrEqualTo(RandomItemGenerator.ITEM_RADIUS)));
     }
 
     @Test

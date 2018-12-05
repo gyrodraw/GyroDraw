@@ -1,19 +1,16 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.FbStorage;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -22,6 +19,13 @@ import com.google.firebase.storage.UploadTask.TaskSnapshot;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+
+/**
+ * Class representing the view used for drawing.
+ */
 public class PaintView extends View {
 
     private static final int DRAW_WIDTH = 30;
@@ -55,7 +59,7 @@ public class PaintView extends View {
      * Constructor for the view.
      *
      * @param context Context of class
-     * @param attrs Attributes of class
+     * @param attrs   Attributes of class
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -82,16 +86,18 @@ public class PaintView extends View {
     }
 
     /**
-     * This method adds the colors that a player owns into the color picker.
+     * Adds the colors that a player owns into the color picker.
+     *
      * @param colors List containing the colors that a player owns
      */
     public void setColors(List<Integer> colors) {
-        for(int col : colors) {
+        for (int col : colors) {
             this.colors.add(getPaintWithColor(getResources().getColor(col)));
         }
         this.colors.add(getPaintWithColor(Color.WHITE));
     }
 
+    @VisibleForTesting
     public Bitmap getBitmap() {
         return bitmap;
     }
@@ -130,16 +136,19 @@ public class PaintView extends View {
         speed *= factor;
     }
 
+    @VisibleForTesting
     public double getSpeed() {
         return speed;
     }
 
+    @VisibleForTesting
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
     }
 
     /**
      * Sets the x and y coordinates of the painting circle.
+     *
      * @param x coordinate
      * @param y coordinate
      */
@@ -155,6 +164,7 @@ public class PaintView extends View {
      *
      * @return the value of the current color
      */
+    @VisibleForTesting
     public int getColor() {
         return colors.get(color).getColor();
     }
@@ -208,7 +218,7 @@ public class PaintView extends View {
      * Keeps coordinates within screen boundaries.
      *
      * @param coordinate coordinate to sanitize
-     * @param maxBound maximum bound
+     * @param maxBound   maximum bound
      * @return sanitized coordinate
      */
     private int sanitizeCoordinate(int coordinate, int maxBound) {

@@ -18,20 +18,20 @@ public class Shop {
         itemList = new ArrayList<>();
     }
 
-    public void removeItem(ShopItem shopItem) {
+    void removeItem(ShopItem shopItem) {
         itemList.remove(shopItem);
     }
 
-    public void addItem(ShopItem shopItem) {
+    void addItem(ShopItem shopItem) {
         itemList.add(shopItem);
     }
 
-    public List<ShopItem> getItemList() {
+    List<ShopItem> getItemList() {
         return new LinkedList<>(itemList);
     }
 
     /**
-     * Convert an hashmap into a list of shop items.
+     * Converts an {@link HashMap} into a list of shop items.
      *
      * @param map Map of the colors and prices
      * @return List of ShopItems

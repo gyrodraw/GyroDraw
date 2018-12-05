@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -26,11 +25,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class containing the methods used for the login.
+ * This activity is launched but not actually displayed.
+ */
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
     private static final String EMAIL = "email";
-    private static final int RC_SIGN_IN = 42;
+    private static final int REQUEST_CODE_SIGN_IN = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,6 @@ public class LoginActivity extends BaseActivity {
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
     }
 
-    /**
-     * Creates signInIntent.
-     */
     private void createSignInIntent() {
         final List<IdpConfig> providers = Collections.singletonList(
                 new GoogleBuilder().build());
@@ -60,14 +60,14 @@ public class LoginActivity extends BaseActivity {
                         .setTheme(R.style.LoginTheme)
                         .setLogo(R.drawable.common_google_signin_btn_icon_dark) // custom logo here
                         .build(),
-                RC_SIGN_IN);
+                REQUEST_CODE_SIGN_IN);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == REQUEST_CODE_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
@@ -89,8 +89,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     /**
-     * Handle successful signIn.
-     * @param response contains the response.
+     * Handles a successful sign in.
+     *
+     * @param response the response to process
      */
     private void handleSuccessfulSignIn(IdpResponse response) {
         assert response != null;
@@ -135,7 +136,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     /**
-     * Handle failed signIn.
+     * Handles a failed signIn.
+     *
      * @param errorCode specifies the error that occurred
      */
     @VisibleForTesting

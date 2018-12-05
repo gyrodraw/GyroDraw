@@ -3,21 +3,26 @@ package ch.epfl.sweng.SDP.auth;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Class representing the account creation page.
+ */
 public class AccountCreationActivity extends BaseActivity {
 
     private EditText usernameInput;
@@ -42,20 +47,23 @@ public class AccountCreationActivity extends BaseActivity {
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
+
+        ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(
+                new UsernameInputWatcher((TextView) findViewById(R.id.usernameTaken),
+                        (Button) findViewById(R.id.createAccount), getResources()));
     }
 
     /**
-     * Gets called when user entered username and clicked on create account.
+     * Gets called when user entered username and clicked on the create account button.
      */
-    public void createAccClicked(View view) {
+    public void createAccountClicked(View view) {
         final String username = usernameInput.getText().toString().toUpperCase();
-        if (username.isEmpty()) {
-            usernameTaken.setText(getString(R.string.usernameMustNotBeEmpty));
-        } else {
+
+        if (username != null && !username.isEmpty()) {
             Database.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
 
+                        @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 usernameTaken.setText(getString(R.string.usernameTaken));
@@ -63,8 +71,8 @@ public class AccountCreationActivity extends BaseActivity {
                                 Account.createAccount(getApplicationContext(),
                                         new ConstantsWrapper(), username, userEmail);
                                 Account.getInstance(getApplicationContext()).registerAccount();
-                                launchActivity(HomeActivity.class);
                                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                launchActivity(HomeActivity.class);
                                 finish();
                             }
                         }

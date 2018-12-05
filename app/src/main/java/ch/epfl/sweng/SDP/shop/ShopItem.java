@@ -46,7 +46,6 @@ public class ShopItem {
         owned = false;
     }
 
-
     /**
      * Constructor of a ShopItem.
      *

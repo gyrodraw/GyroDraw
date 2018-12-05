@@ -28,9 +28,8 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
  */
 public class PaintView extends View {
 
-    private static final int DRAW_WIDTH = 30;
     private static final int QUALITY = 20;
-    private static final double INIT_SPEED = 5;
+    private static final float INIT_SPEED = 5;
 
     private boolean canDraw = true;
     private boolean isDrawing = false;
@@ -53,7 +52,8 @@ public class PaintView extends View {
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
-    private double speed;
+    private float speed;
+    private int drawWidth = 30;
 
     /**
      * Constructor for the view.
@@ -69,9 +69,9 @@ public class PaintView extends View {
 
         paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(DRAW_WIDTH / 2);
+        paintC.setStrokeWidth(drawWidth / 2);
 
-        circleRadius = DRAW_WIDTH;
+        circleRadius = drawWidth;
         speed = INIT_SPEED;
     }
 
@@ -80,7 +80,7 @@ public class PaintView extends View {
         newPaint.setColor(color);
         newPaint.setStyle(Paint.Style.STROKE);
         newPaint.setStrokeJoin(Paint.Join.ROUND);
-        newPaint.setStrokeWidth(DRAW_WIDTH);
+        newPaint.setStrokeWidth(drawWidth);
         newPaint.setStrokeCap(Paint.Cap.ROUND);
         return newPaint;
     }
@@ -128,7 +128,7 @@ public class PaintView extends View {
         return circleRadius;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 
@@ -147,14 +147,34 @@ public class PaintView extends View {
     }
 
     /**
+     * Sets a new width to the brush and to all current paths.
+     *
+     * @param newWidth the new width of the brush
+     */
+    protected void setDrawWidth(int newWidth) {
+        if (isDrawing) {
+            drawEnd();
+            drawStart();
+        }
+        drawWidth = newWidth;
+        for (Paint paint : colors) {
+            paint.setStrokeWidth(drawWidth);
+        }
+    }
+
+    protected int getDrawWidth() {
+        return drawWidth;
+    }
+
+    /**
      * Sets the x and y coordinates of the painting circle.
      *
-     * @param x coordinate
-     * @param y coordinate
+     * @param posX coordinate
+     * @param posY coordinate
      */
-    public void updateCoordinates(float x, float y) {
-        circleX -= x * speed;
-        circleY += y * speed;
+    public void updateCoordinates(float posX, float posY) {
+        circleX -= posX * speed;
+        circleY += posY * speed;
 
         setCircle(circleX, circleY);
     }
@@ -249,6 +269,9 @@ public class PaintView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(bitmap, 0, 0, null);
         if (isDrawing) {
+            for (Paint paint : colors) {
+                paint.setStrokeWidth(drawWidth);
+            }
             canvas.drawPath(path, colors.get(color));
         }
         paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX, circleY) + Color.BLACK));
@@ -290,14 +313,14 @@ public class PaintView extends View {
 
     private void drawStart() {
         isDrawing = true;
-        circleRadius = 3 * DRAW_WIDTH / 4;
+        circleRadius = drawWidth / 2;
         path.reset();
         path.moveTo(circleX, circleY);
     }
 
     private void drawEnd() {
         isDrawing = false;
-        circleRadius = DRAW_WIDTH;
+        circleRadius = drawWidth;
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors.get(color));
         path.reset();

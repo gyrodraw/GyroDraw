@@ -17,8 +17,8 @@
             android:id="@+id/pencilButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             android:rotation="180"
@@ -28,8 +28,8 @@
             android:id="@+id/eraserButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/eraser" />
@@ -38,8 +38,8 @@
             android:id="@+id/bucketButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="toolClickHandler"
             app:srcCompat="@drawable/bucket" />
@@ -58,8 +58,8 @@
             android:id="@+id/exit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="center"
             android:includeFontPadding="false"
@@ -87,6 +87,14 @@
 
     </RelativeLayout>
 
+    <SeekBar
+        android:id="@+id/brushWidthBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:minHeight="30dp"
+        android:progress="50" />
+
     <LinearLayout
         android:id="@+id/colorLayout"
         android:layout_width="match_parent"
@@ -99,8 +107,8 @@
             android:id="@+id/blackButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:onClick="colorClickHandler"
             app:srcCompat="@drawable/color_circle_selected" />

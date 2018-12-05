@@ -33,8 +33,8 @@ public class ImageStorageManagerTest {
                 .getActivity().getApplicationContext());
 
         String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString() +
-                "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
+                Environment.DIRECTORY_DCIM).toString()
+                + "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
         File myDir = new File(root);
         assertThat(myDir.exists(), is(true));
 

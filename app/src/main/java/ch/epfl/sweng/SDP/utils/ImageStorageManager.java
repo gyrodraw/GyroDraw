@@ -3,12 +3,17 @@ package ch.epfl.sweng.SDP.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * This class is responsible for saving images to the device hard drive.
@@ -25,6 +30,7 @@ public class ImageStorageManager {
      * @param image_name the filename of the image.
      * @param context the context.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Bitmap image, String image_name, Context context) {
 
         // Get image dirctory
@@ -37,7 +43,11 @@ public class ImageStorageManager {
         Log.d("ImageStorageManager",  "Saving image: " + root + fname);
 
         if (file.exists()) {
-            file.delete();
+            try {
+                Files.delete(Paths.get(file.getPath()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // Save image in file directory

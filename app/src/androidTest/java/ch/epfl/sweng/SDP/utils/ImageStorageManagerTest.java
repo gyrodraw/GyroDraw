@@ -11,11 +11,12 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import java.io.File;
 
+import static org.hamcrest.Matchers.is;
+
+import static org.junit.Assert.*;
+
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 public class ImageStorageManagerTest {
 
@@ -28,10 +29,12 @@ public class ImageStorageManagerTest {
         String imgName = "TEST";
         Bitmap bm = BitmapFactory.decodeResource(activityRule.getActivity()
                 .getResources(), R.drawable.league_1);
-        ImageStorageManager.saveImage(bm, imgName, activityRule.
-                getActivity().getApplicationContext());
+        ImageStorageManager.saveImage(bm, imgName, activityRule
+                .getActivity().getApplicationContext());
 
-        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM).toString() +
+                "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
         File myDir = new File(root);
         assertThat(myDir.exists(), is(true));
 

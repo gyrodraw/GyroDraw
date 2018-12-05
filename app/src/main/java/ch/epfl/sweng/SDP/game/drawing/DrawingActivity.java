@@ -109,10 +109,14 @@ public abstract class DrawingActivity extends BaseActivity {
         }
 
         @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {}
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            // Must be implemented, but does nothing here.
+        }
 
         @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {}
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // Must be implemented, but does nothing here.
+        }
     };
 
     private void adjustDrawingAndCircleWidth(int newVal) {

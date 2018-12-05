@@ -165,16 +165,6 @@ public class LoadingScreenActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            hasLeft = true;
-            launchActivity(HomeActivity.class);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     @VisibleForTesting
     public static void disableLoadingAnimations() {
         enableWaitingAnimation = false;

@@ -44,6 +44,7 @@ public class LeaderboardActivity extends BaseActivity {
 
     private static final String TAG = "LeaderboardActivity";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
+    private static final int MAX_PLAYERS_DISPLAYED = 10;
     private static final int SENT = FriendsRequestState.SENT.ordinal();
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
     private static final String USERS_TAG = "users";
@@ -117,7 +118,7 @@ public class LeaderboardActivity extends BaseActivity {
                     leaderboard.update(searchField.getText().toString());
                     friendsFilterCheckbox.setChecked(true);
                 } else {
-                    leaderboard.fetchPlayersFromFirebase(searchField.getText().toString());
+                    leaderboard.update(searchField.getText().toString());
                     friendsFilterCheckbox.setChecked(false);
                 }
             }
@@ -157,7 +158,11 @@ public class LeaderboardActivity extends BaseActivity {
          */
         @Override
         public int compareTo(Object object) {
-            return -this.trophies.compareTo(((Player) object).trophies);
+            int compareTrophies = -this.trophies.compareTo(((Player) object).trophies);
+            if (compareTrophies == 0) {
+                return this.username.compareTo(((Player) object).username);
+            }
+            return compareTrophies;
         }
 
         private boolean playerNameContainsString(String query) {
@@ -165,7 +170,7 @@ public class LeaderboardActivity extends BaseActivity {
         }
 
         /**
-         * Converts this player into a LinearLayout that will be displayed in the leaderboard.
+         * Converts this player into a LinearLayout that will be displayed on the leaderboard.
          *
          * @param context of the app
          * @param index   of the player
@@ -238,14 +243,17 @@ public class LeaderboardActivity extends BaseActivity {
     private class Leaderboard {
 
         private LinkedList<Player> allPlayers;
+        private LinkedList<Player> allFriends;
         private TreeSet<Player> wantedPlayers;
         private Context context;
 
         private Leaderboard(Context context) {
             this.context = context;
             allPlayers = new LinkedList<>();
+            allFriends = new LinkedList<>();
             wantedPlayers = new TreeSet<>();
-            update("");
+            fetchPlayersFromFirebase();
+            fetchFriendsFromFirebase();
         }
 
         /**
@@ -259,24 +267,28 @@ public class LeaderboardActivity extends BaseActivity {
             if (!allPlayers.isEmpty() || filterByFriends) {
                 if (filterByFriends) {
                     leaderboardView.removeAllViews();
-                    filterByFriends(query);
+                    filterWantedPlayers(allFriends, query);
+                    addWantedPlayersToLayout();
                 } else {
-                    filterWantedPlayers(query);
+                    leaderboardView.removeAllViews();
+                    filterWantedPlayers(allPlayers, query);
                     addWantedPlayersToLayout();
                 }
-            } else {
-                fetchPlayersFromFirebase(query);
             }
         }
 
         /**
          * Copies all players that contain query into wantedPlayers.
          *
-         * @param query string to search
+         * @param players   pool of players to filter
+         * @param query     string to search
          */
-        private void filterWantedPlayers(String query) {
+        private void filterWantedPlayers(LinkedList<Player> players, String query) {
             wantedPlayers.clear();
-            for (Player tempPlayer : allPlayers) {
+            for (Player tempPlayer : players) {
+                if (wantedPlayers.size() >= MAX_PLAYERS_DISPLAYED) {
+                    return;
+                }
                 if (tempPlayer.playerNameContainsString(query)) {
                     wantedPlayers.add(tempPlayer);
                 }
@@ -284,14 +296,10 @@ public class LeaderboardActivity extends BaseActivity {
         }
 
         /**
-         * Gets called when local cache of players is empty. Adds snapshots to a list, filters it by
-         * query, sorts it by trophies and adds players to LinearLayout
-         *
-         * @param query string to search
+         * Gets all the players from Firebase and stores them in LinkedList.
          */
-        private void fetchPlayersFromFirebase(final String query) {
+        private void fetchPlayersFromFirebase() {
             allPlayers.clear();
-            wantedPlayers.clear();
             Database.getReference(USERS_TAG)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -316,8 +324,7 @@ public class LeaderboardActivity extends BaseActivity {
                                     allPlayers.add(temp);
                                 }
                             }
-                            filterWantedPlayers(query);
-                            addWantedPlayersToLayout();
+                            update("");
                         }
 
                         @Override
@@ -327,9 +334,11 @@ public class LeaderboardActivity extends BaseActivity {
                     });
         }
 
-        private void filterByFriends(final String query) {
-            allPlayers.clear();
-            wantedPlayers.clear();
+        /**
+         * Gets all friends of current user and stores them in LinkedList.
+         */
+        private void fetchFriendsFromFirebase() {
+            allFriends.clear();
             Database.getReference(USERS_TAG + "."
                     + Account.getInstance(getApplicationContext()).getUserId() + "."
                     + FRIENDS_TAG)
@@ -341,7 +350,7 @@ public class LeaderboardActivity extends BaseActivity {
                             for (DataSnapshot s : dataSnapshot.getChildren()) {
                                 if (s != null && !s.getKey().equals("123456789")
                                         && s.getValue(int.class) == FRIENDS) {
-                                    findAndAddPlayer(s.getKey(), query);
+                                    findAndAddPlayer(s.getKey());
                                 }
                             }
                         }
@@ -353,29 +362,28 @@ public class LeaderboardActivity extends BaseActivity {
                     });
         }
 
-        private void findAndAddPlayer(final String playerId, final String query) {
+        /**
+         * Searches a player in Firebase using id and converts the response into a Player.
+         * Then the new player is added to the pool of friends.
+         *
+         * @param playerId  id of friend to search
+         */
+        private void findAndAddPlayer(final String playerId) {
             Database.getReference(USERS_TAG + "." + playerId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()
-                                    && ((String) dataSnapshot.child(USERNAME_TAG)
-                                    .getValue()).contains(query)) {
-                                String username = dataSnapshot.child(USERNAME_TAG)
-                                        .getValue(String.class);
+                            if (dataSnapshot.exists()) {
                                 Player temp = new Player(playerId,
-                                        username,
+                                        dataSnapshot.child(USERNAME_TAG)
+                                                .getValue(String.class),
                                         dataSnapshot.child(TROPHIES_TAG)
                                                 .getValue(Long.class),
                                         dataSnapshot.child(LEAGUE_TAG)
                                                 .getValue(String.class),
-                                        username.equals(Account.getInstance(context)
-                                                .getUsername()));
+                                        false);
 
-                                allPlayers.add(temp);
-                                filterWantedPlayers(query);
-                                leaderboardView.removeAllViews();
-                                addWantedPlayersToLayout();
+                                allFriends.add(temp);
                             }
                         }
 
@@ -395,10 +403,10 @@ public class LeaderboardActivity extends BaseActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 20, 0, 0);
 
-            // add all (max 20) players to the leaderboard
+            // add all (max MAX_PLAYERS_DISPLAYED) players to the leaderboard
             int i = 0;
             Iterator<Player> playerIterator = wantedPlayers.iterator();
-            while (playerIterator.hasNext() && i < 20) {
+            while (playerIterator.hasNext() && i < MAX_PLAYERS_DISPLAYED) {
                 Player currentPlayer = playerIterator.next();
                 currentPlayer.setRank(i + 1);
                 leaderboardView.addView(currentPlayer
@@ -408,6 +416,9 @@ public class LeaderboardActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Button to show if a user is a friend of current user and to manage friends requests.
+     */
     private class FriendsButton extends AppCompatImageView {
 
         private final Context context;

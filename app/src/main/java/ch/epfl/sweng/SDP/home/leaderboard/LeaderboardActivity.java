@@ -15,24 +15,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
+
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
-
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
-import ch.epfl.sweng.SDP.home.leaderboard.Player;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
-
-import static java.lang.String.format;
 
 /**
  * Class representing the leaderboard.
@@ -80,7 +77,11 @@ public class LeaderboardActivity extends BaseActivity {
         leaderboard = new Leaderboard(getApplicationContext());
         setCheckBoxListener(searchField);
 
-        searchField.addTextChangedListener(new TextWatcher() {
+        searchField.addTextChangedListener(getTextWatcher());
+    }
+
+    private TextWatcher getTextWatcher() {
+        return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence query, int start, int count, int after) {
                 // Not what we need.
@@ -95,7 +96,7 @@ public class LeaderboardActivity extends BaseActivity {
             public void afterTextChanged(Editable query) {
                 leaderboard.update(query.toString());
             }
-        });
+        };
     }
 
     private void setCheckBoxListener(final EditText searchField) {
@@ -145,24 +146,21 @@ public class LeaderboardActivity extends BaseActivity {
         }
 
         /**
-         * Gets called when user entered a new search query. Processes inquiry locally if cache
-         * (allPlayers) is not empty. Else fetches data from Firebase and stores it in allPlayers.
+         * Gets called when user entered a new search query.
+         * Clears the leaderboard and adds the players containing the query in their name.
          *
          * @param query new string to search
          */
         private void update(String query) {
             query = query.toUpperCase();
-            if (!allPlayers.isEmpty() || filterByFriends) {
-                if (filterByFriends) {
-                    leaderboardView.removeAllViews();
-                    filterWantedPlayers(allFriends, query);
-                    addWantedPlayersToLayout();
-                } else {
-                    leaderboardView.removeAllViews();
-                    filterWantedPlayers(allPlayers, query);
-                    addWantedPlayersToLayout();
-                }
+            leaderboardView.removeAllViews();
+
+            if (filterByFriends) {
+                filterWantedPlayers(allFriends, query);
+            } else {
+                filterWantedPlayers(allPlayers, query);
             }
+            addWantedPlayersToLayout();
         }
 
         /**
@@ -194,23 +192,8 @@ public class LeaderboardActivity extends BaseActivity {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             allPlayers.clear();
                             wantedPlayers.clear();
-                            for (DataSnapshot s : dataSnapshot.getChildren()) {
-                                String userId = s.child(USERID_TAG).getValue(String.class);
-                                String username = s.child(USERNAME_TAG).getValue(String.class);
-                                Long trophies = s.child(TROPHIES_TAG).getValue(Long.class);
-                                String league = s.child(LEAGUE_TAG).getValue(String.class);
-                                if (!s.getKey().equals("123456789")
-                                        && userId != null
-                                        && username != null
-                                        && trophies != null
-                                        && league != null) {
-                                    Player temp = new Player(userId, username, trophies, league,
-                                            username.equals(
-                                                    Account.getInstance(context)
-                                                            .getUsername()));
-
-                                    allPlayers.add(temp);
-                                }
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                convertSnapshotToPlayerAndAddToList(snapshot, allPlayers);
                             }
                             update("");
                         }
@@ -262,16 +245,7 @@ public class LeaderboardActivity extends BaseActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                Player temp = new Player(playerId,
-                                        dataSnapshot.child(USERNAME_TAG)
-                                                .getValue(String.class),
-                                        dataSnapshot.child(TROPHIES_TAG)
-                                                .getValue(Long.class),
-                                        dataSnapshot.child(LEAGUE_TAG)
-                                                .getValue(String.class),
-                                        false);
-
-                                allFriends.add(temp);
+                                convertSnapshotToPlayerAndAddToList(dataSnapshot, allFriends);
                             }
                         }
 
@@ -280,6 +254,32 @@ public class LeaderboardActivity extends BaseActivity {
                             Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
                         }
                     });
+        }
+
+        /**
+         * Checks if the received player is not the test-user and if all values are available.
+         * Then adds the player to allPlayers.
+         *
+         * @param snapshot  to convert
+         */
+        private void convertSnapshotToPlayerAndAddToList(DataSnapshot snapshot,
+                                                         LinkedList<Player> players) {
+            String userId = snapshot.child(USERID_TAG).getValue(String.class);
+            String username = snapshot.child(USERNAME_TAG).getValue(String.class);
+            Long trophies = snapshot.child(TROPHIES_TAG).getValue(Long.class);
+            String league = snapshot.child(LEAGUE_TAG).getValue(String.class);
+            if (!snapshot.getKey().equals("123456789")
+                    && userId != null
+                    && username != null
+                    && trophies != null
+                    && league != null) {
+                Player temp = new Player(userId, username, trophies, league,
+                        username.equals(
+                                Account.getInstance(context)
+                                        .getUsername()));
+
+                players.add(temp);
+            }
         }
 
         /**
@@ -292,14 +292,14 @@ public class LeaderboardActivity extends BaseActivity {
             layoutParams.setMargins(0, 20, 0, 0);
 
             // add all (max MAX_PLAYERS_DISPLAYED) players to the leaderboard
-            int i = 0;
+            int index = 0;
             Iterator<Player> playerIterator = wantedPlayers.iterator();
-            while (playerIterator.hasNext() && i < MAX_PLAYERS_DISPLAYED) {
+            while (playerIterator.hasNext() && index < MAX_PLAYERS_DISPLAYED) {
                 Player currentPlayer = playerIterator.next();
-                currentPlayer.setRank(i + 1);
+                currentPlayer.setRank(index + 1);
                 leaderboardView.addView(currentPlayer
-                        .toLayout(getApplicationContext(), i), layoutParams);
-                ++i;
+                        .toLayout(getApplicationContext(), index), layoutParams);
+                ++index;
             }
         }
     }

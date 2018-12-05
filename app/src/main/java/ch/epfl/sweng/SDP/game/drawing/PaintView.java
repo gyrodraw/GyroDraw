@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -148,7 +147,8 @@ public class PaintView extends View {
     }
 
     /**
-     * Sets a new width to the brush.
+     * Sets a new width to the brush and to all current paths.
+     *
      * @param newWidth the new width of the brush
      */
     protected void setDrawWidth(int newWidth) {
@@ -157,7 +157,7 @@ public class PaintView extends View {
             drawStart();
         }
         drawWidth = newWidth;
-        for(Paint paint : colors) {
+        for (Paint paint : colors) {
             paint.setStrokeWidth(drawWidth);
         }
     }
@@ -269,7 +269,7 @@ public class PaintView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(bitmap, 0, 0, null);
         if (isDrawing) {
-            for(Paint paint : colors) {
+            for (Paint paint : colors) {
                 paint.setStrokeWidth(drawWidth);
             }
             canvas.drawPath(path, colors.get(color));
@@ -313,14 +313,14 @@ public class PaintView extends View {
 
     private void drawStart() {
         isDrawing = true;
-        circleRadius = drawWidth;
+        circleRadius = drawWidth / 2;
         path.reset();
         path.moveTo(circleX, circleY);
     }
 
     private void drawEnd() {
         isDrawing = false;
-        circleRadius = drawWidth + 10;
+        circleRadius = drawWidth;
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors.get(color));
         path.reset();

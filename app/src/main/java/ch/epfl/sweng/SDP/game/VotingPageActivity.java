@@ -273,7 +273,10 @@ public class VotingPageActivity extends BaseActivity {
 
         Log.d(TAG,"Starting home activity");
 
-        ImageSharer.getInstance().setActivity(null);
+        ImageSharer sharer = ImageSharer.getInstance();
+        if (sharer != null) {
+            ImageSharer.getInstance().setActivity(null);
+        }
         launchActivity(HomeActivity.class);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();

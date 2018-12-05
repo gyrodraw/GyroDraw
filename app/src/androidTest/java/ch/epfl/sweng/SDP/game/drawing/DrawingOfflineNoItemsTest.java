@@ -5,6 +5,7 @@ import android.graphics.Color;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.Espresso.onView;
 
+import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
@@ -90,19 +91,17 @@ public class DrawingOfflineNoItemsTest {
     public void testChangeBrushWidth() {
         int initWidth = paintView.getDrawWidth();
         SeekBar brushWidthBar = activityRule.getActivity().findViewById(R.id.brushWidthBar);
-        activityRule.getActivity().onKeyDown(
-                KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(initWidth-10));
-        activityRule.getActivity().onKeyDown(
-                KeyEvent.KEYCODE_VOLUME_UP, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(initWidth));
-    }
 
-    @Test
-    public void testChangeBrushWidthBelowZero() {
-        paintView.setDrawWidth(10);
-        activityRule.getActivity().onKeyDown(
-                KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(10));
+        brushWidthBar.setProgress(0, false);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(11));
+
+        brushWidthBar.setProgress(100, false);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(410));
+
+        brushWidthBar.setProgress(50, false);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(initWidth));
     }
 }

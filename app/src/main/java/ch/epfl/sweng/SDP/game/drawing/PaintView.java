@@ -54,7 +54,7 @@ public class PaintView extends View {
     private int color = 0;
     private int previousColor = 0;
     private float speed;
-    private int drawWidth = 20;
+    private int drawWidth = 30;
 
     /**
      * Constructor for the view.

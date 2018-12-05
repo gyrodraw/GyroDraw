@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TableLayout;
 
 import com.google.android.gms.common.util.ArrayUtils;
@@ -30,9 +32,14 @@ import ch.epfl.sweng.SDP.utils.ColorUtils;
 public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
+
+    private static final int MIN_WIDTH = 10;
+    private static final int CURR_WIDTH = 20;
+
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
     protected Handler handler;
+    protected SeekBar brushWidthBar;
 
     private ImageView[] colorButtons;
 
@@ -78,6 +85,8 @@ public abstract class DrawingActivity extends BaseActivity {
 
         paintViewHolder = findViewById(R.id.paintViewHolder);
         paintView = findViewById(R.id.paintView);
+        brushWidthBar = findViewById(R.id.brushWidthBar);
+
         paintView.setColors(colors);
         handler = new Handler() {
             @Override
@@ -86,6 +95,33 @@ public abstract class DrawingActivity extends BaseActivity {
                 paintView.invalidate();
             }
         };
+        brushWidthBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        brushWidthBar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        brushWidthBar.setOnSeekBarChangeListener(brushWidthBarListener);
+    }
+
+    SeekBar.OnSeekBarChangeListener brushWidthBarListener = new SeekBar.OnSeekBarChangeListener() {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            // updated continuously as the user slides the thumb
+            adjustDrawingAndCircleWidth((int) (Math.pow(CURR_WIDTH, progress / 50.)) + MIN_WIDTH);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            // Must be implemented, but does nothing here.
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // Must be implemented, but does nothing here.
+        }
+    };
+
+    private void adjustDrawingAndCircleWidth(int newVal) {
+        paintView.setDrawWidth(newVal);
+        paintView.updateCircleRadius();
     }
 
     /**
@@ -179,5 +215,4 @@ public abstract class DrawingActivity extends BaseActivity {
             default:
         }
     }
-
 }

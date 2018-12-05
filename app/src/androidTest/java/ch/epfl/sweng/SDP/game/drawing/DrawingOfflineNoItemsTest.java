@@ -1,8 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
+import android.widget.SeekBar;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -80,5 +82,23 @@ public class DrawingOfflineNoItemsTest {
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
                 is(paintView.getColor()));
+    }
+
+    @Test
+    public void testChangeBrushWidth() {
+        int initWidth = paintView.getDrawWidth();
+        SeekBar brushWidthBar = activityRule.getActivity().findViewById(R.id.brushWidthBar);
+
+        brushWidthBar.setProgress(0, false);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(11));
+
+        brushWidthBar.setProgress(100, false);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(410));
+
+        brushWidthBar.setProgress(50, false);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(initWidth));
     }
 }

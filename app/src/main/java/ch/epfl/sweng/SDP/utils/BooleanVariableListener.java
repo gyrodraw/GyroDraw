@@ -1,5 +1,10 @@
 package ch.epfl.sweng.SDP.utils;
 
+import android.support.annotation.VisibleForTesting;
+
+/**
+ * Class representing a listener for boolean variables.
+ */
 public class BooleanVariableListener {
     private boolean bool;
     private ChangeListener listener;
@@ -13,8 +18,9 @@ public class BooleanVariableListener {
     }
 
     /**
-     * Set our boolean variable and if a listener is attached
-     * call the respective onChange method.
+     * Sets our boolean variable and if a listener is attached
+     * calls the respective onChange method.
+     *
      * @param bool Value to be set.
      */
     public void setBoo(boolean bool) {
@@ -24,6 +30,7 @@ public class BooleanVariableListener {
         }
     }
 
+    @VisibleForTesting
     public ChangeListener getListener() {
         return listener;
     }

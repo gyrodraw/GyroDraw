@@ -1,14 +1,20 @@
 package ch.epfl.sweng.SDP.home;
 
+import android.view.animation.Interpolator;
+
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
-public class BounceInterpolator implements android.view.animation.Interpolator {
+/**
+ * Class modelling a bounce {@link Interpolator} for buttons' animations.
+ */
+public final class BounceInterpolator implements Interpolator {
 
     private final double amplitude;
     private final double frequency;
 
     /**
      * Bouncing animation for buttons.
+     *
      * @param amplitude of animation
      * @param frequency of animation
      */

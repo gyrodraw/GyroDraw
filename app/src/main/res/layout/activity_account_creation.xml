@@ -37,7 +37,7 @@
         android:background="@color/colorDrawYellow"
         android:text="@string/create_acc"
         android:textColor="@color/colorPrimaryDark"
-        android:onClick="createAccClicked"
+        android:onClick="createAccountClicked"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameInput" />

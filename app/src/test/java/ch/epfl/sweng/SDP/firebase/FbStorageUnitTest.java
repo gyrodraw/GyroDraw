@@ -18,10 +18,10 @@ import static org.mockito.Mockito.when;
 
 public class FbStorageUnitTest {
 
-    StorageReference mockReference;
-    UploadTask mockUploadTask;
-    StorageTask mockStorageTask;
-    Bitmap mockBitmap;
+    private StorageReference mockReference;
+    private UploadTask mockUploadTask;
+    private StorageTask mockStorageTask;
+    private Bitmap mockBitmap;
 
     @Before
     public void init() {

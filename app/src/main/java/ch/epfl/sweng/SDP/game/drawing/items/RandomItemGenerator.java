@@ -9,7 +9,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
  */
 public final class RandomItemGenerator {
 
-    private static final int ITEM_RADIUS = 50;
+    public static final int ITEM_RADIUS = 50;
 
     private RandomItemGenerator() {
     }
@@ -21,16 +21,16 @@ public final class RandomItemGenerator {
      */
     public static Item generateItem(PaintView paintView) {
         Items item = Items.getRandomItem();
-        int x = randomIntWithinBounds(paintView.getWidth());
-        int y = randomIntWithinBounds(paintView.getHeight());
+        int x = getRandomIntWithinBounds(paintView.getWidth());
+        int y = getRandomIntWithinBounds(paintView.getHeight());
         switch (item) {
             case SPEEDUP:
                 return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS);
             case SLOWDOWN:
                 return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS);
-            case SWAPAXIS:
+            case SWAP_AXIS:
                 return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS);
-            case ADDSTARS:
+            case ADD_STARS:
                 return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS);
             case BUMP:
                 return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
@@ -46,14 +46,14 @@ public final class RandomItemGenerator {
      */
     public static Item generateItemForOfflineMode(PaintView paintView) {
         Items item = Items.getRandomItemForOfflineMode();
-        int x = randomIntWithinBounds(paintView.getWidth());
-        int y = randomIntWithinBounds(paintView.getHeight());
+        int x = getRandomIntWithinBounds(paintView.getWidth());
+        int y = getRandomIntWithinBounds(paintView.getHeight());
         switch (item) {
             case SPEEDUP:
                 return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS);
             case SLOWDOWN:
                 return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS);
-            case SWAPAXIS:
+            case SWAP_AXIS:
                 return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS);
             case BUMP:
                 return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
@@ -63,15 +63,13 @@ public final class RandomItemGenerator {
     }
 
     /**
-     * Random position which is fully visible on screen.
+     * Returns a random position which is fully visible on screen.
      *
      * @param max upper bound of screen
-     * @return random position
+     * @return a random position
      */
-    private static int randomIntWithinBounds(int max) {
+    private static int getRandomIntWithinBounds(int max) {
         Random random = new Random();
         return 2 * ITEM_RADIUS + random.nextInt(max - 4 * ITEM_RADIUS);
     }
-
-
 }

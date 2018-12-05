@@ -43,7 +43,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -224,7 +225,7 @@ public class VotingPageActivityTest {
     public void testDecodeSampledBitmapFromResource() {
         Bitmap bitmap = BitmapManipulator.decodeSampledBitmapFromResource(
                 mActivityRule.getActivity().getResources(), R.drawable.default_image, 2, 2);
-        assertNotNull(bitmap);
+        assertThat(bitmap, is(not(nullValue())));
     }
 
     @Test
@@ -238,6 +239,6 @@ public class VotingPageActivityTest {
                 1, byteArrayOutputStream);
         byte[] data = byteArrayOutputStream.toByteArray();
         Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
-        assertNotNull(newBitmap);
+        assertThat(newBitmap, is(not(nullValue())));
     }
 }

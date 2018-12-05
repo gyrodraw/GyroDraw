@@ -5,6 +5,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -12,10 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
 
 /**
  * Helper class to manage and display data from Firebase.
@@ -51,7 +51,7 @@ class Leaderboard {
         fetchFriendsFromFirebase();
     }
 
-    void xOrFilterByFriends() {
+    void xorFilterByFriends() {
         filterByFriends ^= true;
     }
 

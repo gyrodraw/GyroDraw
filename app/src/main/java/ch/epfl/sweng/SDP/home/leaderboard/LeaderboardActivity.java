@@ -1,13 +1,10 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,21 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.TreeSet;
 
 /**
  * Class representing the leaderboard.
@@ -97,7 +84,7 @@ public class LeaderboardActivity extends BaseActivity {
                     return;
                 }
                 lastClickTime = SystemClock.elapsedRealtime();
-                leaderboard.xOrFilterByFriends();
+                leaderboard.xorFilterByFriends();
                 if (leaderboard.getFilterByFriends()) {
                     leaderboard.update(searchField.getText().toString());
                     friendsFilterCheckbox.setChecked(true);

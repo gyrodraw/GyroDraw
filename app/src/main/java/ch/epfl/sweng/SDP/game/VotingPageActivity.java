@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.game;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -253,7 +254,11 @@ public class VotingPageActivity extends BaseActivity {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
-        ImageSharer.getInstance().setActivity(null);
+
+        ImageSharer sharer = ImageSharer.getInstance();
+        if (sharer != null) {
+            sharer.setActivity(null);
+        }
         removeAllListeners();
         finish();
     }

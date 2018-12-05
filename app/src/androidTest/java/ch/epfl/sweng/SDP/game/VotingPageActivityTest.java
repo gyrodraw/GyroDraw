@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -32,7 +33,10 @@ import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.ImageSharer;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
@@ -86,7 +90,8 @@ public class VotingPageActivityTest {
     @Test
     public void testSharingImage() {
         Bitmap bitmap = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.league_1);
-        mActivityRule.getActivity().shareImage(bitmap);
+        ImageSharer sharer = ImageSharer.getInstance(mActivityRule.getActivity().getApplicationContext(),mActivityRule.getActivity());
+        sharer.shareImageToFacebook(bitmap);
     }
 
     @Test

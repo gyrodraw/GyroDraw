@@ -34,7 +34,7 @@ public abstract class DrawingActivity extends BaseActivity {
     protected static final String TAG = "DrawingActivity";
 
     private static final int MIN_WIDTH = 10;
-    private static final int CURR_WIDTH = 18;
+    private static final int CURR_WIDTH = 20;
 
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
@@ -121,7 +121,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
     private void adjustDrawingAndCircleWidth(int newVal) {
         paintView.setDrawWidth(newVal);
-        paintView.setCircleRadius(newVal);
+        paintView.updateCircleRadius();
     }
 
     /**

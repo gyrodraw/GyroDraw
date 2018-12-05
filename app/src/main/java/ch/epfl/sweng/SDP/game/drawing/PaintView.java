@@ -30,6 +30,7 @@ public class PaintView extends View {
 
     private static final int QUALITY = 20;
     private static final float INIT_SPEED = 5;
+    private static final int CIRCLE_STROKE = 15;
 
     private boolean canDraw = true;
     private boolean isDrawing = false;
@@ -69,9 +70,9 @@ public class PaintView extends View {
 
         paintC = new Paint(Color.BLACK);
         paintC.setStyle(Paint.Style.STROKE);
-        paintC.setStrokeWidth(drawWidth / 2);
+        paintC.setStrokeWidth(CIRCLE_STROKE);
 
-        circleRadius = drawWidth;
+        circleRadius = (CIRCLE_STROKE + drawWidth) / 2;
         speed = INIT_SPEED;
     }
 
@@ -144,6 +145,13 @@ public class PaintView extends View {
     @VisibleForTesting
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
+    }
+
+    /**
+     * Updates the circle radius according to the draw width.
+     */
+    public void updateCircleRadius() {
+        circleRadius = (CIRCLE_STROKE + drawWidth) / 2;
     }
 
     /**
@@ -320,7 +328,7 @@ public class PaintView extends View {
 
     private void drawEnd() {
         isDrawing = false;
-        circleRadius = drawWidth;
+        circleRadius = (CIRCLE_STROKE + drawWidth) / 2;
         path.lineTo(circleX, circleY);
         canvas.drawPath(path, colors.get(color));
         path.reset();

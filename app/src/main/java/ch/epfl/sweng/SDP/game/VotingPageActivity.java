@@ -92,6 +92,10 @@ public class VotingPageActivity extends BaseActivity {
 
     private static boolean enableAnimations = true;
 
+    /**
+     * Share an image to facebook.
+     * @param view the button invoked this method.
+     */
     public void shareImage(View view) {
         sharingMode = true;
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
@@ -100,6 +104,10 @@ public class VotingPageActivity extends BaseActivity {
         ImageSharer.getInstance(getApplicationContext(),this).shareImageToFacebook(localImage);
     }
 
+    /**
+     * Saves an image to the disk.
+     * @param view  the button invoked this method.
+     */
     public void saveImage(View view) {
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 getApplicationContext(), null, 1);

@@ -53,14 +53,18 @@ public class ImageSharer {
     }
 
     /**
-     * Use this method to set the activity. This method should also be used to prevent reference cycles
-     * by setting the activity to null when it's not used anymore.
-     * @param activity
+     * Use this method to set the activity. This method should also be used to prevent
+     * reference cycle by setting the activity to null when it's not used anymore.
+     * @param activity the activity
      */
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
+    /**
+     * Share an image to to facebook.
+     * @param image the image to share.
+     */
     public void shareImageToFacebook(Bitmap image) {
         // Check if Facebook app is installed.
         if (ShareDialog.canShow(SharePhotoContent.class)) {
@@ -79,9 +83,11 @@ public class ImageSharer {
 
     private void uploadImageToFireBase(Bitmap image) {
         Account account = Account.getInstance(context);
-        String imageName =  "DRAWING_" + account.getTotalMatches() + "_" + account.getUsername() + ".jpg";
+        String imageName = "DRAWING_" + account.getTotalMatches()
+                + "_" + account.getUsername() + ".jpg";
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
-        FbStorage.sendBitmapToFirebaseStorage(image, ref, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        FbStorage.sendBitmapToFirebaseStorage(image, ref,
+                new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 getUrl(ref);

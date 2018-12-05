@@ -35,7 +35,8 @@ public final class FbStorage {
      * @return the {@link StorageTask} in charge of the upload
      */
     public static StorageTask<TaskSnapshot> sendBitmapToFirebaseStorage(
-            final Bitmap bitmap, final StorageReference imageRef, OnSuccessListener<UploadTask.TaskSnapshot> onSucessListener) {
+            final Bitmap bitmap, final StorageReference imageRef,
+            OnSuccessListener<UploadTask.TaskSnapshot> onSucessListener) {
         checkPrecondition(bitmap != null, "bitmap is null");
         checkPrecondition(imageRef != null, "imageRef is null");
 

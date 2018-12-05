@@ -12,6 +12,10 @@ import java.io.FileOutputStream;
 
 public class ImageStorageManager {
 
+    ImageStorageManager() {
+        // Empty constructor
+    }
+
     /**
      * Saves an image to the device file system.
      * @param image the image to save.
@@ -28,7 +32,9 @@ public class ImageStorageManager {
         File file = new File(myDir, fname);
         Log.d("ImageStorageManager",  "Saving image: " + root + fname);
 
-        if (file.exists()) file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
 
         // Save image in file directory
         try {
@@ -40,7 +46,8 @@ public class ImageStorageManager {
             e.printStackTrace();
         }
 
-         MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
+        MediaScannerConnection.scanFile(context, new String[]{file.getPath()},
+                new String[]{"image/jpeg"}, null);
 
         Toast toast = Toast.makeText(context, "Successfully saved image to /Camera/Gyrodraw", Toast.LENGTH_SHORT);
         toast.show();

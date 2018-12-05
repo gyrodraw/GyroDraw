@@ -184,6 +184,11 @@ public class HomeActivity extends BaseActivity {
         setLeague();
     }
 
+    /**
+     * Checks if storage permissions are granted.
+     * If permissions are revoked it requests permission.
+     * @return a boolean indicating if permissions are granted or not.
+     */
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -192,7 +197,8 @@ public class HomeActivity extends BaseActivity {
                 return true;
             } else {
                 Log.v(TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         } else {
@@ -203,7 +209,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
             Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);

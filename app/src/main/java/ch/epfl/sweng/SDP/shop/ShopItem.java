@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.shop;
 
+import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import android.annotation.SuppressLint;
@@ -14,7 +15,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.utils.ColorUtils;
+
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -131,7 +132,7 @@ public class ShopItem {
         colorImageView.setLayoutParams(params);
         colorImageView.setPadding(0, 0, DEFAULT_PADDING, 0);
         colorImageView.setImageDrawable(res.getDrawable(R.drawable.color_circle));
-        colorImageView.setColorFilter(res.getColor(ColorUtils.getColorIdFromString(colorName)),
+        colorImageView.setColorFilter(res.getColor(getColorIdFromString(colorName)),
                 PorterDuff.Mode.SRC_ATOP);
 
         if (!owned) {

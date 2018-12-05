@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.utils.ColorUtils;
 
+import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -65,26 +65,26 @@ public class ShopTest {
 
     @Test
     public void getColorBlueFromStringTest() {
-        assertThat(ColorUtils.getColorIdFromString("BLUE"), is(R.color.colorBlue));
+        assertThat(getColorIdFromString("BLUE"), is(R.color.colorBlue));
     }
 
     @Test
     public void getColorGreenFromStringTest() {
-        assertThat(ColorUtils.getColorIdFromString("GREEN"), is(R.color.colorGreen));
+        assertThat(getColorIdFromString("GREEN"), is(R.color.colorGreen));
     }
 
     @Test
     public void getColorYellowFromStringTest() {
-        assertThat(ColorUtils.getColorIdFromString("YELLOW"), is(R.color.colorYellow));
+        assertThat(getColorIdFromString("YELLOW"), is(R.color.colorYellow));
     }
 
     @Test
     public void getColorRedFromStringTest() {
-        assertThat(ColorUtils.getColorIdFromString("RED"), is(R.color.colorRed));
+        assertThat(getColorIdFromString("RED"), is(R.color.colorRed));
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void getWrongColorFromStringTest() {
-        ColorUtils.getColorIdFromString("RAINBOW");
+        getColorIdFromString("RAINBOW");
     }
 }

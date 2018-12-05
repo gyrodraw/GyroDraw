@@ -1,16 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.graphics.Color;
-
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.Espresso.onView;
-
+import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
-import android.view.KeyEvent;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import android.widget.SeekBar;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,6 +14,11 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DrawingOfflineNoItemsTest {
 
@@ -88,19 +87,18 @@ public class DrawingOfflineNoItemsTest {
     @Test
     public void testChangeBrushWidth() {
         int initWidth = paintView.getDrawWidth();
-        activityRule.getActivity().onKeyDown(
-                KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(initWidth-10));
-        activityRule.getActivity().onKeyDown(
-                KeyEvent.KEYCODE_VOLUME_UP, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(initWidth));
-    }
+        SeekBar brushWidthBar = activityRule.getActivity().findViewById(R.id.brushWidthBar);
 
-    @Test
-    public void testChangeBrushWidthBelowZero() {
-        paintView.setDrawWidth(10);
-        activityRule.getActivity().onKeyDown(
-                KeyEvent.KEYCODE_VOLUME_DOWN, new KeyEvent(-1, 1));
-        assertThat(paintView.getDrawWidth(), is(10));
+        brushWidthBar.setProgress(0);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(11));
+
+        brushWidthBar.setProgress(100);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(410));
+
+        brushWidthBar.setProgress(50);
+        SystemClock.sleep(2000);
+        assertThat(paintView.getDrawWidth(), is(initWidth));
     }
 }

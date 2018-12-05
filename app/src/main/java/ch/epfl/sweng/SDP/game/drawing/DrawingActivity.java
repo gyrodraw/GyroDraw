@@ -24,7 +24,8 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
-import ch.epfl.sweng.SDP.utils.ColorUtils;
+
+import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 
 /**
  * Abstract class representing the drawing page of the game.
@@ -34,7 +35,7 @@ public abstract class DrawingActivity extends BaseActivity {
     protected static final String TAG = "DrawingActivity";
 
     private static final int MIN_WIDTH = 10;
-    private static final int CURR_WIDTH = 18;
+    private static final int CURR_WIDTH = 20;
 
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
@@ -74,7 +75,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
         for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
-            int color = ColorUtils.getColorIdFromString(item.getColorItem().toString());
+            int color = getColorIdFromString(item.getColorItem().toString());
             colors.add(color);
             ImageView colorView = createColorImageView(color);
             // Adds the view to the layout
@@ -121,7 +122,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
     private void adjustDrawingAndCircleWidth(int newVal) {
         paintView.setDrawWidth(newVal);
-        paintView.setCircleRadius(newVal);
+        paintView.updateCircleRadius();
     }
 
     /**

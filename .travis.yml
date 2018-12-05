@@ -1,5 +1,4 @@
 language: android
-cache: bundler
 android:
     components:
         # The BuildTools version used by your project
@@ -26,7 +25,7 @@ before_script:
   - adb shell input keyevent 82
 script:
   - chmod +x ./gradlew
-  - travis_wait 45 ./gradlew connectedCheck jacocoTestReport --info
+  - travis_wait 45 ./gradlew connectedCheck jacocoTestReport --debug
 after_script:
   # Report test coverage to Code Climate
   - export JACOCO_SOURCE_PATH=app/src/main/java/

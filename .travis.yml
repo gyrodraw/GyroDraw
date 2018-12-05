@@ -1,4 +1,5 @@
 language: android
+cache: bundler
 android:
     components:
         # The BuildTools version used by your project

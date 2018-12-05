@@ -44,20 +44,6 @@ public class ShopActivityTest {
     }
 
     @Test
-    public void testPressItemAndCancel() {
-        setStarsAndRefresh();
-
-        LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
-        int id = View.generateViewId();
-        layoutChild.setId(id);
-
-        onView(withId(id)).perform(click());
-        onView(withId(R.id.cancelButton)).perform(click());
-        onView(withId(R.id.confirmButton)).check(doesNotExist());
-    }
-
-    @Test
     public void testPressBuyItemNoStars() {
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);

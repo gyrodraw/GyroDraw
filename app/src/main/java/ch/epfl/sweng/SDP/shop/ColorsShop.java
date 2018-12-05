@@ -1,12 +1,14 @@
 package ch.epfl.sweng.SDP.shop;
 
+import ch.epfl.sweng.SDP.R;
+
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Enum representing the colors in the shop.
  */
 public enum ColorsShop {
-    BLUE(100), GREEN(150), YELLOW(200), RED(150);
+    BLUE(15), CYAN(20), GREEN(15), YELLOW(15), RED(15), BROWN(20);
 
     private int price;
 
@@ -32,15 +34,45 @@ public enum ColorsShop {
         switch (color) {
             case "BLUE":
                 return BLUE;
+            case "CYAN":
+                return CYAN;
             case "GREEN":
                 return GREEN;
             case "YELLOW":
                 return YELLOW;
             case "RED":
                 return RED;
+            case "BROWN":
+                return BROWN;
             default:
                 throw new IllegalArgumentException(color + " not found");
         }
     }
 
+    /**
+     * Converts the string value of a color into an integer resource ID.
+     *
+     * @param color String value of the colors
+     * @return The integer resource ID of the color
+     * @throws IllegalArgumentException if the given string does not correspond to a color
+     *                                  in the shop
+     */
+    public static int getColorIdFromString(String color) {
+        switch (color) {
+            case "BLUE":
+                return R.color.colorBlue;
+            case "CYAN":
+                return R.color.colorCyan;
+            case "RED":
+                return R.color.colorRed;
+            case "YELLOW":
+                return R.color.colorYellow;
+            case "GREEN":
+                return R.color.colorGreen;
+            case "BROWN":
+                return R.color.colorBrown;
+            default:
+                throw new IllegalArgumentException(color + " resource not found");
+        }
+    }
 }

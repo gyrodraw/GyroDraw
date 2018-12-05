@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.shop;
 
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -44,20 +45,6 @@ public class ShopActivityTest {
     }
 
     @Test
-    public void testPressItemAndCancel() {
-        setStarsAndRefresh();
-
-        LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
-        int id = View.generateViewId();
-        layoutChild.setId(id);
-
-        onView(withId(id)).perform(click());
-        onView(withId(R.id.cancelButton)).perform(click());
-        onView(withId(R.id.confirmButton)).check(doesNotExist());
-    }
-
-    @Test
     public void testPressBuyItemNoStars() {
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
         LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
@@ -71,10 +58,13 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
+        Database.constructBuilder(usersRef).addChildren("123456789.boughtItems.blue")
+                .build().removeValue();
+        SystemClock.sleep(2000);
         setStarsAndRefresh();
 
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
-        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(1);
+        LinearLayout layoutChild = (LinearLayout) layout.getChildAt(0);
         int id = View.generateViewId();
         layoutChild.setId(id);
 

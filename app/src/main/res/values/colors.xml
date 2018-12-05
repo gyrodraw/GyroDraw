@@ -16,9 +16,11 @@
     <color name="colorLeague3">#9FA6FF</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlue">#FF157EFB</color>
+    <color name="colorCyan">#13e7e7</color>
     <color name="colorGreen">#FF53D768</color>
     <color name="colorYellow">#FFFED130</color>
     <color name="colorRed">#FFFC3242</color>
+    <color name="colorBrown">#6b3a22</color>
     <color name="colorExitRed">#ff544b</color>
     <color name="darkAlpha">#5a000000</color>
     <color name="transparent">#00000000</color>

@@ -20,7 +20,7 @@ public class ImageStorageManager {
     public static void saveImage(Bitmap image, String image_name, Context context) {
 
         // Get image dirctory
-        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Your_Directory_Name";
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw";
         File myDir = new File(root);
         myDir.mkdirs();
         String fname = "Image-" + image_name + ".png";

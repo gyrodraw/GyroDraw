@@ -47,6 +47,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.ImageSharer;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 
 import com.facebook.FacebookSdk;
@@ -82,61 +83,25 @@ public class VotingPageActivity extends BaseActivity {
     private RankingFragment fragment;
 
     private String roomID = "undefined";
-    private Uri userDrawingUri = null;
+    private boolean sharingMode = false;
 
     private static boolean enableAnimations = true;
 
-    // MARK: Sharing
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public void shareImage(Bitmap image) {
-        // Check if Facebook app is installed.
-        if (ShareDialog.canShow(SharePhotoContent.class)) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(image)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-            ShareDialog.show(this,content);
-        } else {
-            // Facebook app not install, use web instead.
-            uploadImageToFireBase(image);
-        }
+    public void shareImage(View view) {
+        sharingMode = true;
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                getApplicationContext(), null, 1);
+        Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
+        ImageSharer.getInstance(getApplicationContext(),this).shareImageToFacebook(localImage);
     }
 
-    private void uploadImageToFireBase(Bitmap image) {
+    public void saveImage(View view) {
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                getApplicationContext(), null, 1);
+        Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
         Account account = Account.getInstance(getApplicationContext());
-        String imageName =  "DRAWING_" + account.getTotalMatches() + "_" + account.getUsername() + ".jpg";
-        final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
-        FbStorage.sendBitmapToFirebaseStorage(image, ref, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                getUrl(ref);
-            }
-        });
-    }
-
-    private void getUrl(StorageReference ref) {
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                userDrawingUri = uri;
-                // Share image to facebook after getting url
-                shareDrawingToFacebook(uri);
-                Log.d("SUCESS", "Successfully uploaded a task");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.d("ERROR", "Error uploading task");
-            }
-        });
-    }
-
-    private void shareDrawingToFacebook(Uri uri) {
-        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
-                .build();
-        ShareDialog.show(this,linkContent);
+        String imageName = account.getUsername() + account.getTotalMatches();
+        ImageStorageManager.saveImage(localImage, imageName, getApplicationContext());
     }
 
     public int[] getRatings() {
@@ -270,6 +235,13 @@ public class VotingPageActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
+        if (sharingMode == true) {
+            sharingMode = false;
+            return;
+        }
+
+        Log.d("VotingPage","Pausing");
+
         /*if (rankingRef != null) {
             // Remove the ranking reference in the database
             rankingRef.removeValue(); has to be decommented when a method for creating the entries
@@ -281,6 +253,7 @@ public class VotingPageActivity extends BaseActivity {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }
+        ImageSharer.getInstance().setActivity(null);
         removeAllListeners();
         finish();
     }
@@ -300,6 +273,10 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
+        Log.d("VotingPage","Starting home activity");
+
+
+        ImageSharer.getInstance().setActivity(null);
         launchActivity(HomeActivity.class);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
@@ -385,13 +362,10 @@ public class VotingPageActivity extends BaseActivity {
                     if (currentId != null) {
                         if (currentId
                                 .equals(Account.getInstance(getApplicationContext()).getUserId())) {
-
-                            //getDownloadUrl(storage.getReference().child(currentId + ".jpg"));
                             // Get the image from the local database instead
                             LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
                             Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-                          //  ImageStorageManager.saveImage(localImage, "picasso", getApplicationContext());
                             storeBitmap(localImage, currentId);
                         } else {
 

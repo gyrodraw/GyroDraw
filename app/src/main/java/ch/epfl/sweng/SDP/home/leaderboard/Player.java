@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -92,7 +93,7 @@ class Player implements Comparable {
                 new FriendsButton(context, this, index, isCurrentUser);
 
         LinearLayout entry = addViews(new LinearLayout(context),
-                usernameView, trophiesView, leagueView, friendsButton);
+                new View[]{usernameView, trophiesView, leagueView, friendsButton});
 
         entry.setBackgroundColor(res.getColor(
                 isCurrentUser ? R.color.colorDrawYellow : R.color.colorLightGrey));
@@ -101,14 +102,10 @@ class Player implements Comparable {
         return entry;
     }
 
-    private LinearLayout addViews(LinearLayout layout, TextView usernameView,
-                                  TextView trophiesView, ImageView leagueView,
-                                  ImageView addFriends) {
-        layout.addView(usernameView);
-        layout.addView(trophiesView);
-        layout.addView(leagueView);
-        layout.addView(addFriends);
-
+    private LinearLayout addViews(LinearLayout layout, View[] views) {
+        for (int i = 0; i < views.length; ++i) {
+            layout.addView(views[i]);
+        }
         return layout;
     }
 

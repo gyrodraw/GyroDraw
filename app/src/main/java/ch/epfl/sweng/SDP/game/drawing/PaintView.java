@@ -151,7 +151,7 @@ public class PaintView extends View {
      *
      * @param newWidth the new width of the brush
      */
-    protected void setDrawWidth(int newWidth) {
+    void setDrawWidth(int newWidth) {
         if (isDrawing) {
             drawEnd();
             drawStart();
@@ -162,7 +162,7 @@ public class PaintView extends View {
         }
     }
 
-    protected int getDrawWidth() {
+    int getDrawWidth() {
         return drawWidth;
     }
 

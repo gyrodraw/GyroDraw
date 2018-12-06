@@ -2,12 +2,14 @@ package ch.epfl.sweng.SDP.utils;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
+import android.support.v4.app.ActivityCompat;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -31,6 +33,13 @@ public class ImageStorageManagerTest {
             GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
     @Rule public GrantPermissionRule readExternalStoragePermission =
             GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+    @Test
+    public void isPermissionsGranted() {
+        boolean granted = ActivityCompat.checkSelfPermission(InstrumentationRegistry.getContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED;
+        assertThat(granted, is(true));
+    }
 
     @Test
     public void saveImage() {

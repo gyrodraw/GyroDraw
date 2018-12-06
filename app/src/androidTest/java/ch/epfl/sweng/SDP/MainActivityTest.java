@@ -3,33 +3,35 @@ package ch.epfl.sweng.SDP;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.google.firebase.database.DataSnapshot;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.internal.verification.checkers.AtLeastXNumberOfInvocationsChecker;
-
-import java.util.HashMap;
 
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.HashMap;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -79,14 +81,14 @@ public class MainActivityTest {
     public void initializeAccountHashMap(HashMap<String, Object> values) {
         values.put("username", "TESTUSERNAME");
         values.put("userId", "no_user");
-        values.put("trophies", new Long(10));
-        values.put("stars", new Long(20));
-        values.put("matchesWon", new Long(30));
-        values.put("totalMatches", new Long(40));
-        values.put("averageRating", new Double(3.5));
+        values.put("trophies", 10L);
+        values.put("stars", 20L);
+        values.put("matchesWon", 30L);
+        values.put("totalMatches", 40L);
+        values.put("averageRating", 3.5);
         values.put("email", "testEmail");
         values.put("currentLeague", "leagueOne");
-        values.put("maxTrophies", new Long(100));
+        values.put("maxTrophies", 100L);
     }
 
     public void assertThatAccountWasInitializedCorrectly(Account newAccount) {

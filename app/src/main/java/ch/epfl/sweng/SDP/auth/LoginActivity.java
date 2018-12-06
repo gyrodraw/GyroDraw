@@ -70,17 +70,16 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
+            if (response == null) {
+                launchActivity(MainActivity.class);
+                finish();
+                return;
+            }
+
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                assert response != null;
                 handleSuccessfulSignIn(response);
             } else {
-                // User pressed the back button
-                if (response == null) {
-                    launchActivity(MainActivity.class);
-                    finish();
-                    return;
-                }
                 // Sign in failed
                 handleFailedSignIn(response.getError().getErrorCode());
                 Log.e(TAG, "Sign-in error: ", response.getError());

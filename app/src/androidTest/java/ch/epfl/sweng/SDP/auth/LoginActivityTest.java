@@ -55,7 +55,7 @@ public class LoginActivityTest {
 
     private IdpResponse mockIdpResponse;
     private Intent mockIntent;
-    private Activity loginActivity;
+    private LoginActivity loginActivity;
 
     /**
      * Initializes the mock objects.
@@ -81,7 +81,7 @@ public class LoginActivityTest {
     @Test
     public void testSuccessfulLoginNewUser() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
-        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
+        loginActivity.onActivityResult(42, -1, mockIntent);
         assertTrue(loginActivity.isFinishing());
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
@@ -91,22 +91,22 @@ public class LoginActivityTest {
     @Test
     public void testSuccessfulLoginExistingUser() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
-        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
+        loginActivity.onActivityResult(42, -1, mockIntent);
         SystemClock.sleep(3000);
-        assertTrue(loginActivity.isFinishing());
+        assertThat(loginActivity.isFinishing(), is(true));
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(homeMonitor, 5000);
-        Assert.assertNotNull(homeActivity);
+        assertThat(homeActivity, is(not(nullValue())));
     }
 
     @Test
     public void testSuccessfulLoginWithoutAccount() {
         Mockito.when(mockIdpResponse.getEmail()).thenReturn("weirdEmail");
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
-        activityRule.getActivity().onActivityResult(42, -1, mockIntent);
+        loginActivity.onActivityResult(42, -1, mockIntent);
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
-        Assert.assertNotNull(accountCreationActivity);
+        assertThat(accountCreationActivity, is(not(nullValue())));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class LoginActivityTest {
 
     @Test
     public void testPressingBackButtonDoesNothing() {
-        activityRule.getActivity().onBackPressed();
-        assertThat(activityRule.getActivity().isFinishing(), is(false));
+        loginActivity.onBackPressed();
+        assertThat(loginActivity.isFinishing(), is(false));
     }
 }

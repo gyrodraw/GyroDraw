@@ -81,14 +81,14 @@ public class MainActivityTest {
     public void initializeAccountHashMap(HashMap<String, Object> values) {
         values.put("username", "TESTUSERNAME");
         values.put("userId", "no_user");
-        values.put("trophies", new Long(10));
-        values.put("stars", new Long(20));
-        values.put("matchesWon", new Long(30));
-        values.put("totalMatches", new Long(40));
-        values.put("averageRating", new Double(3.5));
+        values.put("trophies", 10L);
+        values.put("stars", 20L);
+        values.put("matchesWon", 30L);
+        values.put("totalMatches", 40L);
+        values.put("averageRating", 3.5);
         values.put("email", "testEmail");
         values.put("currentLeague", "leagueOne");
-        values.put("maxTrophies", new Long(100));
+        values.put("maxTrophies", 100L);
     }
 
     public void assertThatAccountWasInitializedCorrectly(Account newAccount) {

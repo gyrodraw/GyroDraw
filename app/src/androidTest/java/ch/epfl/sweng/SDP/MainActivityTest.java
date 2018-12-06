@@ -3,33 +3,35 @@ package ch.epfl.sweng.SDP;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.google.firebase.database.DataSnapshot;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.internal.verification.checkers.AtLeastXNumberOfInvocationsChecker;
-
-import java.util.HashMap;
 
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.HashMap;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)

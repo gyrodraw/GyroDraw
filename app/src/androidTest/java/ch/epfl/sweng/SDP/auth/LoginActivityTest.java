@@ -74,7 +74,7 @@ public class LoginActivityTest {
     public void testFailedLoginNullResponse() {
         Mockito.when(mockIntent.getParcelableExtra(ExtraConstants.IDP_RESPONSE))
                 .thenReturn(null);
-        activityRule.getActivity().onActivityResult(42, 0, mockIntent);
+        loginActivity.onActivityResult(42, 0, mockIntent);
         assertThat(loginActivity.isFinishing(), is(true));
     }
 

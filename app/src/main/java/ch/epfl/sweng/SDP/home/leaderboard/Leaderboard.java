@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.utils.TestUsers;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -133,7 +134,7 @@ class Leaderboard {
                         allPlayers.clear();
                         wantedPlayers.clear();
                         for (DataSnapshot s : dataSnapshot.getChildren()) {
-                            if (s != null && !s.getKey().equals("123456789")
+                            if (s != null && !TestUsers.isTestUser(s.getKey())
                                     && s.getValue(int.class) == FRIENDS) {
                                 findAndAddPlayer(s.getKey());
                             }
@@ -182,7 +183,7 @@ class Leaderboard {
         String username = snapshot.child(USERNAME_TAG).getValue(String.class);
         Long trophies = snapshot.child(TROPHIES_TAG).getValue(Long.class);
         String league = snapshot.child(LEAGUE_TAG).getValue(String.class);
-        if (!snapshot.getKey().equals("123456789")
+        if (!TestUsers.isTestUser(snapshot.getKey())
                 && userId != null
                 && username != null
                 && trophies != null

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import ch.epfl.sweng.SDP.Activity;
+
 /**
  * This class is responsible for saving images to the device hard drive.
  */
@@ -28,30 +30,28 @@ public class ImageStorageManager {
      * Saves an image to the device file system.
      * @param image the image to save.
      * @param image_name the filename of the image.
+     * @param activity the activity.
      * @param context the context.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void saveImage(Bitmap image, String image_name, Context context) {
+    public static void saveImage(Bitmap image, String image_name, final Activity activity, final Context context) {
 
         // Get image dirctory
         String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw";
+                Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";
         File myDir = new File(root);
         myDir.mkdirs();
         String fname = "Image-" + image_name + ".png";
         File file = new File(myDir, fname);
-        Log.d("ImageStorageManager",  "Saving image: " + root + fname);
+
+        Log.d("ImageStorageManager",  "Saving image: " + file.getPath());
 
         if (file.exists()) {
-            try {
-                Files.delete(Paths.get(file.getPath()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            file.delete();
         }
 
         // Save image in file directory
-        try (FileOutputStream out = new FileOutputStream(file)) {
+        try  (FileOutputStream out = new FileOutputStream(file)) {
             image.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
         } catch (Exception e) {
@@ -59,11 +59,17 @@ public class ImageStorageManager {
         }
 
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()},
-                new String[]{"image/jpeg"}, null);
+                new String[]{"image/png"}, null);
 
-        Toast toast = Toast.makeText(context,
-                "Successfully saved image to /Camera/Gyrodraw", Toast.LENGTH_SHORT);
-        toast.show();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast toast = Toast.makeText(context,
+                            "Successfully saved image to /Camera/Gyrodraw", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+        }
     }
 
 }

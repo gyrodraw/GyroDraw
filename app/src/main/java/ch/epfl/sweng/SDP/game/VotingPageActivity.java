@@ -106,7 +106,7 @@ public class VotingPageActivity extends BaseActivity {
         Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
         Account account = Account.getInstance(getApplicationContext());
         String imageName = account.getUsername() + account.getTotalMatches();
-        ImageStorageManager.saveImage(localImage, imageName, getApplicationContext());
+        ImageStorageManager.saveImage(localImage, imageName, this,getApplicationContext());
     }
 
     @VisibleForTesting

@@ -1,11 +1,18 @@
 package ch.epfl.sweng.SDP.utils;
 
+import android.Manifest;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
@@ -20,21 +27,21 @@ import org.junit.Test;
 
 public class ImageStorageManagerTest {
 
-    @Rule
-    public final ActivityTestRule<HomeActivity> activityRule =
-            new ActivityTestRule<>(HomeActivity.class);
+    @Rule public GrantPermissionRule writeExternalStoragePermission =
+            GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    @Rule public GrantPermissionRule readExternalStoragePermission =
+            GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
     @Test
     public void saveImage() {
         String imgName = "TEST";
-        Bitmap bm = BitmapFactory.decodeResource(activityRule.getActivity()
-                .getResources(), R.drawable.league_1);
-        ImageStorageManager.saveImage(bm, imgName, activityRule
-                .getActivity().getApplicationContext());
+        Bitmap bm = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        ImageStorageManager.saveImage(bm, imgName, null, InstrumentationRegistry.getContext());
 
         String root = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM).toString()
-                + "/Camera/Your_Directory_Name/Image-" + imgName + ".png";
+                + "/Camera/Gyrodraw/Image-" + imgName + ".png";
+        System.out.println(root);
         File myDir = new File(root);
         assertThat(myDir.exists(), is(true));
     }

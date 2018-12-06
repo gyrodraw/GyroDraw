@@ -29,6 +29,30 @@ import org.junit.Test;
 
 public class ImageStorageManagerTest {
 
+    @Rule public GrantPermissionRule writeExternalStoragePermission =
+            GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    @Rule public GrantPermissionRule readExternalStoragePermission =
+            GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
+    @Test
+    public void isPermissionsGranted() {
+        boolean granted = ActivityCompat.checkSelfPermission(InstrumentationRegistry.getContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED;
+        assertThat(granted, is(true));
+    }
+
+    @Test
+    public void saveImage() {
+        String imgName = "TEST";
+        Bitmap bm = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        ImageStorageManager.saveImage(bm, imgName, null, InstrumentationRegistry.getContext());
+
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM).toString()
+                + "/Camera/Gyrodraw/Image-" + imgName + ".png";
+        System.out.println(root);
+        File myDir = new File(root);
+        assertThat(myDir.exists(), is(true));
+    }
 
 }

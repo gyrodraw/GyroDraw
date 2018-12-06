@@ -83,32 +83,6 @@ public class VotingPageActivityTest {
                 }
             };
 
-    @Rule public GrantPermissionRule writeExternalStoragePermission =
-            GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    @Rule public GrantPermissionRule readExternalStoragePermission =
-            GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
-
-    @Test
-    public void isPermissionsGranted() {
-        boolean granted = ActivityCompat.checkSelfPermission(mActivityRule.getActivity().getApplicationContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        Assert.assertThat(granted, is(true));
-    }
-
-    @Test
-    public void saveImage() {
-        String imgName = "TEST";
-        Bitmap bm = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        ImageStorageManager.saveImage(bm, imgName, mActivityRule.getActivity(), mActivityRule.getActivity().getApplicationContext());
-
-        String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString()
-                + "/Camera/Gyrodraw/Image-" + imgName + ".png";
-        System.out.println(root);
-        File myDir = new File(root);
-        Assert.assertThat(myDir.exists(), is(true));
-    }
-
     @Before
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);

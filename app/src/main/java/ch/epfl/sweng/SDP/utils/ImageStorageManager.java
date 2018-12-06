@@ -29,20 +29,15 @@ public class ImageStorageManager {
     /**
      * Saves an image to the device file system.
      * @param image the image to save.
-     * @param image_name the filename of the image.
+     * @param imageName the filename of the image.
      * @param activity the activity.
      * @param context the context.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void saveImage(Bitmap image, String image_name, final Activity activity, final Context context) {
+    public static void saveImage(Bitmap image, String imageName, final Activity activity, final Context context) {
 
         // Get image dirctory
-        String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";
-        File myDir = new File(root);
-        myDir.mkdirs();
-        String fname = "Image-" + image_name + ".png";
-        File file = new File(myDir, fname);
+        File file = getFile(imageName);
 
         Log.d("ImageStorageManager",  "Saving image: " + file.getPath());
 
@@ -70,6 +65,15 @@ public class ImageStorageManager {
                 }
             });
         }
+    }
+
+    private static File getFile(String imageName) {
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";
+        File myDir = new File(root);
+        myDir.mkdirs();
+        String fname = "Image-" + imageName + ".png";
+        return new File(myDir, fname);
     }
 
 }

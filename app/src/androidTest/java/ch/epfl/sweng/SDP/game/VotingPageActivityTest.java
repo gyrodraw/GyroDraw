@@ -1,16 +1,21 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.RatingBar;
 
@@ -19,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -34,6 +41,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.ImageSharer;
+import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -74,6 +82,32 @@ public class VotingPageActivityTest {
                     return intent;
                 }
             };
+
+    @Rule public GrantPermissionRule writeExternalStoragePermission =
+            GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    @Rule public GrantPermissionRule readExternalStoragePermission =
+            GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+    @Test
+    public void isPermissionsGranted() {
+        boolean granted = ActivityCompat.checkSelfPermission(mActivityRule.getActivity().getApplicationContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+        Assert.assertThat(granted, is(true));
+    }
+
+    @Test
+    public void saveImage() {
+        String imgName = "TEST";
+        Bitmap bm = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        ImageStorageManager.saveImage(bm, imgName, mActivityRule.getActivity(), mActivityRule.getActivity().getApplicationContext());
+
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM).toString()
+                + "/Camera/Gyrodraw/Image-" + imgName + ".png";
+        System.out.println(root);
+        File myDir = new File(root);
+        Assert.assertThat(myDir.exists(), is(true));
+    }
 
     @Before
     public void init() {

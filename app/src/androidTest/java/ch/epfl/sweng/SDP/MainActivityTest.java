@@ -37,6 +37,11 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
+    private static final String TEST_USERNAME = "TESTUSERNAME";
+    private static final String TEST_EMAIL = "testEmail";
+    private static final String TEST_USER_ID = "no_user";
+    private static final String TEST_LEAGUE = "leagueOne";
+
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class);
@@ -59,7 +64,7 @@ public class MainActivityTest {
         initializeAccountHashMap(values);
 
         HashMap<String, HashMap<String, Object>> account = new HashMap<>();
-        account.put("no_user", values);
+        account.put(TEST_USER_ID, values);
 
         DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
         when(snapshot.getValue()).thenReturn(account);
@@ -71,36 +76,46 @@ public class MainActivityTest {
         LocalDbHandlerForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
                 context, null, 1);
         Account.createAccount(context, new ConstantsWrapper(),
-                "TESTUSERNAME", "testEmail");
+                TEST_USERNAME, TEST_EMAIL);
         localDbHandlerForAccount.retrieveAccount(Account.getInstance(context));
         Account newAccount = Account.getInstance(context);
 
         assertThatAccountWasInitializedCorrectly(newAccount);
     }
 
+    /**
+     * Populates the given HashMap with test values.
+     *
+     * @param values    HashMap to be populated
+     */
     public void initializeAccountHashMap(HashMap<String, Object> values) {
-        values.put("username", "TESTUSERNAME");
-        values.put("userId", "no_user");
+        values.put("username", TEST_USERNAME);
+        values.put("userId", TEST_USER_ID);
         values.put("trophies", 10L);
         values.put("stars", 20L);
         values.put("matchesWon", 30L);
         values.put("totalMatches", 40L);
         values.put("averageRating", 3.5);
-        values.put("email", "testEmail");
-        values.put("currentLeague", "leagueOne");
+        values.put("email", TEST_EMAIL);
+        values.put("currentLeague", TEST_LEAGUE);
         values.put("maxTrophies", 100L);
     }
 
+    /**
+     * Tests that the given account has been saved correctly.
+     *
+     * @param newAccount    to be checked
+     */
     public void assertThatAccountWasInitializedCorrectly(Account newAccount) {
-        assertThat(newAccount.getUserId(), is(equalTo("no_user")));
-        assertThat(newAccount.getUsername(), is(equalTo("TESTUSERNAME")));
+        assertThat(newAccount.getUserId(), is(equalTo(TEST_USER_ID)));
+        assertThat(newAccount.getUsername(), is(equalTo(TEST_USERNAME)));
         assertThat(newAccount.getTrophies(), is(10));
         assertThat(newAccount.getStars(), is(20));
         assertThat(newAccount.getMatchesWon(), is(30));
         assertThat(newAccount.getTotalMatches(), is(40));
         assertThat(newAccount.getAverageRating(), is(3.5));
-        assertThat(newAccount.getEmail(), is(equalTo("testEmail")));
-        assertThat(newAccount.getCurrentLeague(), is(equalTo("leagueOne")));
+        assertThat(newAccount.getEmail(), is(equalTo(TEST_EMAIL)));
+        assertThat(newAccount.getCurrentLeague(), is(equalTo(TEST_LEAGUE)));
         assertThat(newAccount.getMaxTrophies(), is(100));
     }
 

@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import ch.epfl.sweng.SDP.Activity;
 
 /**
- * This class is responsible for saving images to the device hard drive.
+ * This class is responsible for saving images to the device storage.
  */
 public class ImageStorageManager {
 
@@ -36,22 +36,13 @@ public class ImageStorageManager {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Bitmap image, String imageName, final Activity activity, final Context context) {
 
-        // Get image dirctory
         File file = getFile(imageName);
-
-        Log.d("ImageStorageManager",  "Saving image: " + file.getPath());
 
         if (file.exists()) {
             file.delete();
         }
 
-        // Save image in file directory
-        try  (FileOutputStream out = new FileOutputStream(file)) {
-            image.compress(Bitmap.CompressFormat.PNG, 90, out);
-            out.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        writeFileToStorage(image,file);
 
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()},
                 new String[]{"image/png"}, null);
@@ -64,6 +55,17 @@ public class ImageStorageManager {
                     toast.show();
                 }
             });
+        }
+    }
+
+    private static void writeFileToStorage(Bitmap image, File file) {
+        Log.d("ImageStorageManager",  "Saving image: " + file.getPath());
+        // Save image in file directory
+        try  (FileOutputStream out = new FileOutputStream(file)) {
+            image.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

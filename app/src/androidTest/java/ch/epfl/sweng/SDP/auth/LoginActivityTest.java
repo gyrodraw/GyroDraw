@@ -39,6 +39,8 @@ import org.mockito.Mockito;
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
 
+    private final static int RANDOM_UNKNOWN_ERROR_CODE = 1201234908;
+
     @Rule
     public final ActivityTestRule<LoginActivity> activityRule =
             new ActivityTestRule<>(LoginActivity.class);
@@ -114,7 +116,7 @@ public class LoginActivityTest {
 
     @Test
     public void testFailedLoginUnknownError() {
-        failedSignInHelper(R.string.unknown_error, 1234567891);
+        failedSignInHelper(R.string.unknown_error, RANDOM_UNKNOWN_ERROR_CODE);
     }
 
     private void failedSignInHelper(int expectedErrorMessageId, final int errorCode) {

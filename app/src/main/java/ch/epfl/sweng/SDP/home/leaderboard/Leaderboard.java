@@ -194,7 +194,7 @@ class Leaderboard {
                 && username != null
                 && trophies != null
                 && league != null) {
-            Player temp = new Player(userId, username, trophies, league,
+            Player temp = new Player(context, userId, username, trophies, league,
                     username.equals(
                             Account.getInstance(context)
                                     .getUsername()));
@@ -219,7 +219,7 @@ class Leaderboard {
             Player currentPlayer = playerIterator.next();
             currentPlayer.setRank(index + 1);
             leaderboardView.addView(currentPlayer
-                    .toLayout(context, index), layoutParams);
+                    .toLayout(index), layoutParams);
             ++index;
         }
     }

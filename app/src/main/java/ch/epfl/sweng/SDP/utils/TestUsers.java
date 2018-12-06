@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.utils;
 
 public class TestUsers {
 
-    private static final String[] testUsers = new String[]{
+    private static final String[] allTestUsers = new String[]{
             "123456789", "no_user", "userA", "userAA"
     };
 
@@ -22,8 +22,8 @@ public class TestUsers {
             throw new IllegalArgumentException("UserId must not be null or empty");
         }
 
-        for (int i = 0; i < testUsers.length; ++i) {
-            if (testUsers[i].equals(userId)) {
+        for (int i = 0; i < allTestUsers.length; ++i) {
+            if (allTestUsers[i].equals(userId)) {
                 return true;
             }
         }

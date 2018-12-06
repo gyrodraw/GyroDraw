@@ -2,18 +2,19 @@ package ch.epfl.sweng.SDP.home.leaderboard;
 
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
+
+import static android.support.test.espresso.Espresso.onView;
+
 import android.support.test.espresso.action.ViewActions;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.Espresso.onView;
 
 import android.support.test.espresso.intent.Intents;
 
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
@@ -28,7 +29,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 
 import com.google.firebase.FirebaseApp;
 
@@ -54,12 +54,15 @@ public class LeaderboardActivityTest {
 
     private Account account;
 
+    /**
+     * Sets all necessary values in account for testing purposes.
+     */
     @Before
-    public void init() {
+    public void initialize() {
         account = Account.getInstance(activityRule.getActivity());
-        account.setUserId(USER_ID);
-        account.setUsername(USERNAME);
         account.setEmail(TEST_EMAIL);
+        account.setUsername(USERNAME);
+        account.setUserId(USER_ID);
     }
 
     @Test
@@ -107,8 +110,6 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsAreSearchable() {
         friendsTest(FriendsRequestState.FRIENDS.ordinal(), 1);
-        friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
-        friendsTest(FriendsRequestState.SENT.ordinal(), 0);
     }
 
     @Test

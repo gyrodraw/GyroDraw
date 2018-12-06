@@ -7,13 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
-import ch.epfl.sweng.SDP.R;
 
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import static java.lang.String.format;
@@ -88,14 +88,8 @@ class FriendsButton extends AppCompatImageView {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    int status = dataSnapshot.getValue(int.class);
-                    if (status == SENT) {
-                        setImageResource(R.drawable.pending_friend);
-                    } else if (status == FRIENDS) {
-                        setImageResource(R.drawable.remove_friend);
-                    } else {
-                        setImageResource(R.drawable.add_friend);
-                    }
+                    initializeImageCorrespondingToFriendsState(
+                            dataSnapshot.getValue(int.class));
                 } else {
                     setImageResource(R.drawable.add_friend);
                 }
@@ -109,6 +103,20 @@ class FriendsButton extends AppCompatImageView {
     }
 
     /**
+     * Sets the image depending on the friends state.
+     * @param state current state of friendship
+     */
+    private void initializeImageCorrespondingToFriendsState(int state) {
+        if (state == SENT) {
+            setImageResource(R.drawable.pending_friend);
+        } else if (state == FRIENDS) {
+            setImageResource(R.drawable.remove_friend);
+        } else {
+            setImageResource(R.drawable.add_friend);
+        }
+    }
+
+    /**
      * Friends button got clicked, now add/remove friend and modify image.
      *
      * @return listener
@@ -118,20 +126,7 @@ class FriendsButton extends AppCompatImageView {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    int status = dataSnapshot.getValue(int.class);
-                    switch (FriendsRequestState.fromInteger(status)) {
-                        case RECEIVED:
-                            Account.getInstance(context).addFriend(player.getUserId());
-                            setImageResource(R.drawable.remove_friend);
-                            break;
-                        case FRIENDS:
-                        case SENT:
-                            Account.getInstance(context).removeFriend(player.getUserId());
-                            setImageResource(R.drawable.add_friend);
-                            break;
-                        default:
-                            break;
-                    }
+                    setImageAndUpdateFriendsState(dataSnapshot.getValue(int.class));
                 } else {
                     Account.getInstance(context).addFriend(player.getUserId());
                     setImageResource(R.drawable.pending_friend);
@@ -143,5 +138,27 @@ class FriendsButton extends AppCompatImageView {
                 Log.d(TAG, FIREBASE_ERROR);
             }
         };
+    }
+
+    /**
+     * Helper function for changeFriendsButtonImageOnClick.
+     * Updates the friends state depending on status.
+     *
+     * @param state    current state of friendship
+     */
+    private void setImageAndUpdateFriendsState(int state) {
+        switch (FriendsRequestState.fromInteger(state)) {
+            case RECEIVED:
+                Account.getInstance(context).addFriend(player.getUserId());
+                setImageResource(R.drawable.remove_friend);
+                break;
+            case FRIENDS:
+            case SENT:
+                Account.getInstance(context).removeFriend(player.getUserId());
+                setImageResource(R.drawable.add_friend);
+                break;
+            default:
+                break;
+        }
     }
 }

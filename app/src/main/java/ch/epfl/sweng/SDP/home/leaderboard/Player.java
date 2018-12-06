@@ -20,6 +20,7 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
  */
 class Player implements Comparable {
 
+    private final Context context;
     private final String userId;
     private final String username;
     private final Long trophies;
@@ -27,8 +28,9 @@ class Player implements Comparable {
     private int rank;
     private final boolean isCurrentUser;
 
-    Player(String userId, String username, Long trophies, String league,
+    Player(Context context, String userId, String username, Long trophies, String league,
                    boolean isCurrentUser) {
+        this.context = context;
         this.userId = userId;
         this.username = username;
         this.trophies = trophies;
@@ -63,21 +65,20 @@ class Player implements Comparable {
     /**
      * Converts this player into a LinearLayout that will be displayed on the leaderboard.
      *
-     * @param context of the app
      * @param index   of the player
      * @return LinearLayout that will be displayed
      */
     @SuppressLint("NewApi")
-    LinearLayout toLayout(final Context context, int index) {
+    LinearLayout toLayout(int index) {
         TextView usernameView = new TextView(context);
         Resources res = context.getResources();
-        styleView(context, usernameView, rank + ". " + username, res.getColor(
+        styleView(usernameView, rank + ". " + username, res.getColor(
                 isCurrentUser ? R.color.colorPrimaryDark : R.color.colorDrawYellow),
                 new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
         usernameView.setPadding(0, 10, 0, 10);
 
         TextView trophiesView = new TextView(context);
-        styleView(context, trophiesView, trophies.toString(),
+        styleView(trophiesView, trophies.toString(),
                 res.getColor(R.color.colorPrimaryDark),
                 new LinearLayout.LayoutParams(0,
                         LinearLayout.LayoutParams.WRAP_CONTENT, 2));
@@ -109,7 +110,7 @@ class Player implements Comparable {
         return layout;
     }
 
-    private void styleView(Context context, TextView view, String text, int color,
+    private void styleView(TextView view, String text, int color,
                            LinearLayout.LayoutParams layoutParams) {
         view.setText(text);
         view.setTextSize(20);

@@ -39,7 +39,7 @@ import org.mockito.Mockito;
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
 
-    private final static int RANDOM_UNKNOWN_ERROR_CODE = 1201234908;
+    private static final int RANDOM_UNKNOWN_ERROR_CODE = 1201234908;
 
     @Rule
     public final ActivityTestRule<LoginActivity> activityRule =
@@ -129,7 +129,7 @@ public class LoginActivityTest {
 
         TextView feedbackView = loginActivity.findViewById(R.id.error_message);
         ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
-               loginActivity.getResources().getString(expectedErrorMessageId))));
+                loginActivity.getResources().getString(expectedErrorMessageId))));
     }
 
     private void executeOnUiThread(Runnable runnable) {
@@ -143,5 +143,6 @@ public class LoginActivityTest {
     @Test
     public void testPressingBackButtonDoesNothing() {
         activityRule.getActivity().onBackPressed();
+        assertThat(activityRule.getActivity().isFinishing(), is(false));
     }
 }

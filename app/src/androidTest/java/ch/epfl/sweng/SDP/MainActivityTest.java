@@ -88,7 +88,7 @@ public class MainActivityTest {
      *
      * @param values    HashMap to be populated
      */
-    public void initializeAccountHashMap(HashMap<String, Object> values) {
+    private void initializeAccountHashMap(HashMap<String, Object> values) {
         values.put("username", TEST_USERNAME);
         values.put("userId", TEST_USER_ID);
         values.put("trophies", 10L);
@@ -106,7 +106,7 @@ public class MainActivityTest {
      *
      * @param newAccount    to be checked
      */
-    public void assertThatAccountWasInitializedCorrectly(Account newAccount) {
+    private void assertThatAccountWasInitializedCorrectly(Account newAccount) {
         assertThat(newAccount.getUserId(), is(equalTo(TEST_USER_ID)));
         assertThat(newAccount.getUsername(), is(equalTo(TEST_USERNAME)));
         assertThat(newAccount.getTrophies(), is(10));

@@ -143,5 +143,6 @@ public class LoginActivityTest {
     @Test
     public void testPressingBackButtonDoesNothing() {
         activityRule.getActivity().onBackPressed();
+        assertThat(activityRule.getActivity().isFinishing(), is(false));
     }
 }

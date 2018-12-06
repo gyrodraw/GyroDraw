@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home.leaderboard;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.LinearLayout;
 
@@ -48,8 +49,8 @@ class Leaderboard {
         allFriends = new LinkedList<>();
         wantedPlayers = new TreeSet<>();
         filterByFriends = false;
-        fetchPlayersFromFirebase();
-        fetchFriendsFromFirebase();
+
+        initLeaderboard();
     }
 
     void xorFilterByFriends() {
@@ -58,6 +59,11 @@ class Leaderboard {
 
     boolean getFilterByFriends() {
         return filterByFriends;
+    }
+
+    void initLeaderboard() {
+        fetchPlayersFromFirebase();
+        fetchFriendsFromFirebase();
     }
 
     /**

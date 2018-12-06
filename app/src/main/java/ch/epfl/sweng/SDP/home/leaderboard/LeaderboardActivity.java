@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.home.leaderboard;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -97,5 +98,12 @@ public class LeaderboardActivity extends BaseActivity {
 
         friendsFilterCheckbox.setOnClickListener(clickListener);
         friendsFilterText.setOnClickListener(clickListener);
+    }
+
+    /**
+     * Populates the leaderboard's cache with values form firebase.
+     */
+    void initLeaderboard() {
+        leaderboard.initLeaderboard();
     }
 }

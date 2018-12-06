@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.leaderboard;
 
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
@@ -26,6 +26,8 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 
 import com.google.firebase.FirebaseApp;
@@ -105,6 +107,18 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsAreSearchable() {
         friendsTest(FriendsRequestState.FRIENDS.ordinal(), 1);
+        friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
+        friendsTest(FriendsRequestState.SENT.ordinal(), 0);
+    }
+
+    @Test
+    public void testRequestedFriendsDontAppearInLeaderboard() {
+        friendsTest(FriendsRequestState.SENT.ordinal(), 0);
+    }
+
+    @Test
+    public void testReceivedFriendsDontAppearInLeaderboard() {
+        friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
     }
 
     private void friendsTest(int state, int expected) {
@@ -112,12 +126,13 @@ public class LeaderboardActivityTest {
                 + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
                 .setValue(state);
         SystemClock.sleep(2000);
+        activityRule.getActivity().initLeaderboard();
         onView(withId(R.id.friendsFilter)).perform(click());
         SystemClock.sleep(2000);
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(2000);
-        assertThat(expected, is(((LinearLayout) activityRule.getActivity()
-                .findViewById(R.id.leaderboard)).getChildCount()));
+        assertThat(((LinearLayout) activityRule.getActivity()
+                .findViewById(R.id.leaderboard)).getChildCount(), is(expected));
         account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 

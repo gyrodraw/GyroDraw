@@ -11,7 +11,7 @@ public class ColorShopTest {
 
     @Test
     public void testGetPrice() {
-        assertThat(color.getPrice(), is(100));
+        assertThat(color.getPrice(), is(15));
     }
 
     @Test

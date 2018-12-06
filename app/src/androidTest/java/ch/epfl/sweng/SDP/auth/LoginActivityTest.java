@@ -39,7 +39,7 @@ import org.mockito.Mockito;
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
 
-    private final static int RANDOM_UNKNOWN_ERROR_CODE = 1201234908;
+    private static final int RANDOM_UNKNOWN_ERROR_CODE = 1201234908;
 
     @Rule
     public final ActivityTestRule<LoginActivity> activityRule =

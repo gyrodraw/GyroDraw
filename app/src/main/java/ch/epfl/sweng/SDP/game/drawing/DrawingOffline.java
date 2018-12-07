@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -36,6 +37,9 @@ public class DrawingOffline extends GyroDrawingActivity {
         isToggled = false;
         mysteryButton = findViewById(R.id.mysteryModeButton);
         setExitButtonListener();
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        setTypeFace(typeMuro, findViewById(R.id.exit));
     }
 
     private void setExitButtonListener() {

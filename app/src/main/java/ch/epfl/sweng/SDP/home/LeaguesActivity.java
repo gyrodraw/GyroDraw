@@ -37,7 +37,8 @@ public class LeaguesActivity extends BaseActivity {
                 findViewById(R.id.league2Text), findViewById(R.id.league3Text));
 
         setTypeFace(typeMuro, findViewById(R.id.league1Difficulty),
-                findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty));
+                findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty),
+                findViewById(R.id.exitButton));
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.leaguesBackgroundAnimation));

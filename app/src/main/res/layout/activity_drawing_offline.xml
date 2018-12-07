@@ -62,7 +62,6 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:includeFontPadding="false"
             android:text="@string/cross"
             android:textColor="@color/colorDrawYellow"
             android:textSize="30sp"

@@ -7,26 +7,28 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TextView;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
+
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 
 /**
  * Activity allowing the purchase of items such as colors.
@@ -39,6 +41,7 @@ public class ShopActivity extends BaseActivity {
     private LinearLayout shopItems;
     private Shop shop;
     private Typeface typeMuro;
+    private ScrollView scrollShop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class ShopActivity extends BaseActivity {
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         buyDialog = new Dialog(this);
         shopItems = findViewById(R.id.shopItems);
+        scrollShop = findViewById(R.id.scrollShop);
         TextView exitButton = findViewById(R.id.exitButton);
 
         exitButton.setTypeface(typeMuro);
@@ -122,17 +126,18 @@ public class ShopActivity extends BaseActivity {
             shopItems.addView(itemLayout, layoutParams);
 
             if (!item.getOwned() && item.getPriceItem() <= stars) {
-                itemLayout.setOnTouchListener(new View.OnTouchListener() {
+                itemLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onTouch(View view, MotionEvent event) {
+                    public void onClick(View view) {
+                        bounceButton(view, ShopActivity.this);
                         touchItem(index, item);
-                        return true;
                     }
                 });
             }
 
             itemLayout.setTag(item.getColorItem());
         }
+
     }
 
     @SuppressLint("DefaultLocale")

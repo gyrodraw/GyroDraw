@@ -119,7 +119,7 @@ public class ShopItem {
      * @param context the context of the shop
      */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
-    public void setLayout(int stars, ShopActivity context) {
+    void setLayout(int stars, ShopActivity context) {
         Resources res = context.getResources();
         String colorName = color.toString();
         Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");

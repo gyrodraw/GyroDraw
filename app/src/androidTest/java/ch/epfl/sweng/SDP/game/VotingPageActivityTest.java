@@ -39,6 +39,7 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.ImageSharer;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
@@ -48,6 +49,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
@@ -98,12 +100,45 @@ public class VotingPageActivityTest {
 
     @Test
     public void testSharingImage() {
-        Bitmap bitmap = BitmapFactory.decodeResource(
-                mActivityRule.getActivity().getResources(), R.drawable.league_1);
-        ImageSharer.getInstance(mActivityRule.getActivity()
-                .getApplicationContext(), mActivityRule.getActivity());
-        ImageSharer.getInstance().setActivity(mActivityRule.getActivity());
-        ImageSharer.getInstance().shareImageToFacebook(bitmap);
+        // Open fragment
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        // Share image
+        Bitmap bitmap = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.league_1);
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                mActivityRule.getActivity().getApplicationContext(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap,2);
+        onView(withId(R.id.share)).perform(click());
+        assertThat(myFragment.isVisible(), is(true));
+    }
+
+    @Test
+    public void testSaveImage() {
+        // Open fragment
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+gi
+        // Save image
+        Bitmap bitmap = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.league_1);
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                mActivityRule.getActivity().getApplicationContext(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap,2);
+        onView(withId(R.id.save)).perform(click());
+        assertThat(myFragment.isVisible(), is(true));
+
     }
 
     @Test

@@ -29,6 +29,7 @@ public class SpeedupItem extends Item {
 
     @Override
     public void activate(final PaintView paintView) {
+        vibrate(paintView);
         paintView.multSpeed(SPEEDUP_FACTOR);
         new CountDownTimer(ITEM_DURATION, ITEM_DURATION) {
 

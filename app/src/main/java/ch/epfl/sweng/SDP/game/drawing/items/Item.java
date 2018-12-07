@@ -1,5 +1,9 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.VisibleForTesting;
 
 import ch.epfl.sweng.SDP.R;
@@ -80,5 +84,21 @@ public abstract class Item {
      */
     public int getColorId() {
         return R.color.colorExitRed;
+    }
+
+    /**
+     * Creates a short vibration feedback.
+     * @param paintView used to get the context from
+     */
+    protected void vibrate(PaintView paintView) {
+        Vibrator v = (Vibrator) paintView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(
+                    100, 1));
+        } else {
+            //deprecated in API 26
+            v.vibrate(100);
+        }
     }
 }

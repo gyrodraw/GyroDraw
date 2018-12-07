@@ -30,6 +30,7 @@ public class SlowdownItem extends Item {
 
     @Override
     public void activate(final PaintView paintView) {
+        vibrate(paintView);
         paintView.multSpeed(SLOWDOWN_FACTOR);
         new CountDownTimer(ITEM_DURATION, ITEM_DURATION) {
 

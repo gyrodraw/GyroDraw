@@ -27,6 +27,7 @@ public class SwapAxisItem extends Item {
 
     @Override
     public void activate(final PaintView paintView) {
+        vibrate(paintView);
         paintView.multSpeed(-1);
         new CountDownTimer(ITEM_DURATION, ITEM_DURATION) {
 

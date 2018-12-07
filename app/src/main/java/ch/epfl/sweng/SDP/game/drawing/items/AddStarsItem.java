@@ -29,6 +29,7 @@ public class AddStarsItem extends Item {
 
     @Override
     public void activate(final PaintView paintView) {
+        vibrate(paintView);
         Account.getInstance(paintView.getContext()).changeStars(ADD_STARS);
     }
 

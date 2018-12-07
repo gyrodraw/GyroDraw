@@ -18,7 +18,9 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 
 import com.bumptech.glide.Glide;
 
@@ -44,9 +46,10 @@ public class ShopActivity extends BaseActivity {
         this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         setContentView(R.layout.activity_shop);
 
+        ImageView backgroundAnimation = findViewById(R.id.shopBackgroundAnimation);
+
         if (enableAnimations) {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.shopBackgroundAnimation));
+            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
         }
 
         typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
@@ -63,6 +66,15 @@ public class ShopActivity extends BaseActivity {
         fillShop();
         addColorsToShop();
         LayoutUtils.setSlideRightExitListener(exitButton, this);
+
+        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeLeft() {
+                launchActivity(HomeActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+            }
+        });
     }
 
     /**

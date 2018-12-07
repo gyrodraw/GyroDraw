@@ -29,13 +29,14 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
+import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
+import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
@@ -43,6 +44,7 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
@@ -118,9 +120,10 @@ public class HomeActivity extends BaseActivity {
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
 
+        ImageView backgroundAnimation = findViewById(R.id.homeBackgroundAnimation);
+
         if (enableBackgroundAnimation) {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
+            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
         }
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
@@ -165,6 +168,13 @@ public class HomeActivity extends BaseActivity {
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
+
+        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeRight() {
+                launchActivity(ShopActivity.class);
+            }
+        });
 
         setLeague();
     }
@@ -250,8 +260,14 @@ public class HomeActivity extends BaseActivity {
                         pressButton(view, animMode, context);
                         break;
                     case MotionEvent.ACTION_UP:
+                        if (id == R.id.drawButton) {
+                            ((ImageView) view)
+                                    .setImageResource(R.drawable.draw_button);
+                        }
                         bounceButton(view, amplitude, frequency, animMode, context);
-                        listenerEventSelector(view, id);
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            listenerEventSelector(view, id);
+                        }
                         break;
                     default:
                 }

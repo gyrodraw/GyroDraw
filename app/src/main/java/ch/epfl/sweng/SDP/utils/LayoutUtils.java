@@ -85,6 +85,24 @@ public final class LayoutUtils {
         view.startAnimation(press);
     }
 
+    /**
+     * Determines if the given point is inside a view.
+     *
+     * @param x    the x coordinate of the point
+     * @param y    the y coordinate of the point
+     * @param view the object to compare
+     * @return true if the point is within the view bounds, false otherwise
+     */
+    public static boolean isPointInsideView(float x, float y, View view) {
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        int viewX = location[0];
+        int viewY = location[1];
+
+        return (x > viewX && x < (viewX + view.getWidth())) &&
+                (y > viewY && y < (viewY + view.getHeight()));
+    }
+
     private static void setExitListener(final View exitButton, final Activity activity,
                                         final int inTranstionId, final int outTransitionId) {
         exitButton.setOnTouchListener(new View.OnTouchListener() {

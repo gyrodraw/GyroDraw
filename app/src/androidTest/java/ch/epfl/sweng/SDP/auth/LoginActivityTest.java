@@ -28,7 +28,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -127,7 +126,7 @@ public class LoginActivityTest {
             }
         });
 
-        TextView feedbackView = loginActivity.findViewById(R.id.error_message);
+        TextView feedbackView = loginActivity.findViewById(R.id.errorMessageLogin);
         ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
                 loginActivity.getResources().getString(expectedErrorMessageId))));
     }

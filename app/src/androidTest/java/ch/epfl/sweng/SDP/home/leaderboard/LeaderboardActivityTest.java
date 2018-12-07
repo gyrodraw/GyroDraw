@@ -134,7 +134,6 @@ public class LeaderboardActivityTest {
         SystemClock.sleep(2000);
         assertThat(((LinearLayout) activityRule.getActivity()
                 .findViewById(R.id.leaderboard)).getChildCount(), is(expected));
-        account.removeFriend("HFNDgmFKQPX92nmfmi2qAUfTzxJ3");
     }
 
     /**

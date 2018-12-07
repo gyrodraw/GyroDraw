@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import android.support.annotation.VisibleForTesting;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
@@ -63,6 +65,7 @@ public abstract class Item {
      * Activates the items' ability.
      * @param paintView to apply the ability on
      */
+    @VisibleForTesting
     public abstract void activate(final PaintView paintView);
 
     /**

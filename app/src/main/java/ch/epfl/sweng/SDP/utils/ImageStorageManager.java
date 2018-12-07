@@ -1,11 +1,13 @@
 package ch.epfl.sweng.SDP.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -58,6 +60,11 @@ public class ImageStorageManager {
         }
     }
 
+    /**
+     * Write an image to the storage.
+     * @param image the image to store.
+     * @param file the file path.
+     */
     private static void writeFileToStorage(Bitmap image, File file) {
         Log.d("ImageStorageManager",  "Saving image: " + file.getPath());
         // Save image in file directory
@@ -69,6 +76,11 @@ public class ImageStorageManager {
         }
     }
 
+    /**
+     * Retrieves a file object from a string describing the directory.
+     * @param imageName the name of the image.
+     * @return a file object to the directory.
+     */
     private static File getFile(String imageName) {
         String root = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";

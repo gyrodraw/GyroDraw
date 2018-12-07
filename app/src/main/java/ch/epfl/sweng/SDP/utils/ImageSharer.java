@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.facebook.share.model.ShareLinkContent;
@@ -36,7 +37,7 @@ public class ImageSharer {
     }
 
     /**
-     * Get this ImageSharer instance.
+     * Get this ImageSharer instance. Use this method to initialize the singleton.
      *
      * @param context context calling this method
      * @return ImageSharer instance
@@ -86,6 +87,10 @@ public class ImageSharer {
         }
     }
 
+    /**
+     * Upload the image to firebase
+     * @param image the image to upload
+     */
     private void uploadImageToFireBase(Bitmap image) {
         Account account = Account.getInstance(context);
         String imageName = "DRAWING_" + account.getTotalMatches()
@@ -100,6 +105,10 @@ public class ImageSharer {
         });
     }
 
+    /**
+     * Retrieve the image url of the storage reference.
+     * @param ref the storage reference.
+     */
     private void getUrl(StorageReference ref) {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -116,6 +125,9 @@ public class ImageSharer {
         });
     }
 
+    /**
+     * Opens an activity to share the image to Facebook.
+     */
     private void shareDrawingToFacebook(Uri uri) {
         ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
                 .build();

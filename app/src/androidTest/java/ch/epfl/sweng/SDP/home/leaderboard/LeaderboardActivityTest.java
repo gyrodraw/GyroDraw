@@ -114,11 +114,6 @@ public class LeaderboardActivityTest {
     }
 
     @Test
-    public void testSentRequestsDontAppearInFriends() {
-        friendsTest(FriendsRequestState.SENT.ordinal(), 0);
-    }
-
-    @Test
     public void testReceivedRequestsDontAppearInFriends() {
         friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
     }

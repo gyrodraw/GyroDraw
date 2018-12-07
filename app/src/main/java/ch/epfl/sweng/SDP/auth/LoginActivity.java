@@ -1,18 +1,19 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
@@ -26,8 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class containing the methods used for the login.
- * This activity is launched but not actually displayed.
+ * Class containing the methods used for the login. This activity is launched but not actually
+ * displayed.
  */
 public class LoginActivity extends BaseActivity {
 
@@ -35,14 +36,19 @@ public class LoginActivity extends BaseActivity {
     private static final String EMAIL = "email";
     private static final int REQUEST_CODE_SIGN_IN = 42;
 
+    private TextView errorMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_login);
 
-
         createSignInIntent();
+
+        errorMessage = findViewById(R.id.errorMessageLogin);
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        errorMessage.setTypeface(typeMuro);
 
         Glide.with(this).load(R.drawable.waiting_animation_dots)
                 .into((ImageView) findViewById(R.id.waitingAnimationDots));
@@ -111,10 +117,10 @@ public class LoginActivity extends BaseActivity {
                             if (snapshot.exists()) {
                                 // User already has an account on Firebase
                                 Log.d(TAG, "User already has an account on Firebase");
+
                                 cloneAccountFromFirebase(snapshot);
-                                launchActivity(HomeActivity.class);
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                finish();
+
+                                handleUserStatus(errorMessage);
                             } else {
                                 // User signed in but not did not create an account
                                 Log.d(TAG, "User signed in but not did not create an account");
@@ -141,17 +147,15 @@ public class LoginActivity extends BaseActivity {
      */
     @VisibleForTesting
     public void handleFailedSignIn(int errorCode) {
-        TextView errorMessage = findViewById(R.id.error_message);
-
         // No network
         if (errorCode == ErrorCodes.NO_NETWORK) {
             errorMessage.setText(getString(R.string.no_internet));
-            errorMessage.setVisibility(View.VISIBLE);
+            errorMessage.setVisibility(VISIBLE);
             return;
         }
 
         // Unknown error
         errorMessage.setText(getString(R.string.unknown_error));
-        errorMessage.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility(VISIBLE);
     }
 }

@@ -8,7 +8,7 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
  * Enum representing the colors in the shop.
  */
 public enum ColorsShop {
-    BLUE(15), CYAN(20), GREEN(15), YELLOW(15), RED(15), BROWN(20);
+    BLUE(15), CYAN(20), GREEN(15), YELLOW(15), PINK(20), ORANGE(20), RED(15), BROWN(20);
 
     private int price;
 
@@ -40,6 +40,10 @@ public enum ColorsShop {
                 return GREEN;
             case "YELLOW":
                 return YELLOW;
+            case "ORANGE":
+                return ORANGE;
+            case "PINK":
+                return PINK;
             case "RED":
                 return RED;
             case "BROWN":
@@ -63,12 +67,16 @@ public enum ColorsShop {
                 return R.color.colorBlue;
             case "CYAN":
                 return R.color.colorCyan;
-            case "RED":
-                return R.color.colorRed;
-            case "YELLOW":
-                return R.color.colorYellow;
             case "GREEN":
                 return R.color.colorGreen;
+            case "YELLOW":
+                return R.color.colorYellow;
+            case "ORANGE":
+                return R.color.colorOrange;
+            case "PINK":
+                return R.color.colorPink;
+            case "RED":
+                return R.color.colorRed;
             case "BROWN":
                 return R.color.colorBrown;
             default:

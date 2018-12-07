@@ -28,6 +28,24 @@
         app:srcCompat="@drawable/background_animation"
         tools:ignore="ContentDescription" />
 
+    <TextView
+      android:id="@+id/errorMessageLoadingScreen"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="40dp"
+      android:layout_marginBottom="201dp"
+      android:gravity="top|center_horizontal"
+      android:text="@string/error_message"
+      android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+      android:textColor="@color/colorLightGrey"
+      android:visibility="invisible"
+      app:layout_constraintBottom_toTopOf="@+id/waitingAnimationDots"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.502"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="error_message"/>
+
     <ImageView
         android:id="@+id/waitingAnimationDots"
         android:layout_width="100dp"

@@ -3,14 +3,11 @@ package ch.epfl.sweng.SDP.auth;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -59,7 +56,7 @@ public class AccountCreationActivity extends BaseActivity {
     public void createAccountClicked(View view) {
         final String username = usernameInput.getText().toString().toUpperCase();
 
-        if (username != null && !username.isEmpty()) {
+        if (!username.isEmpty()) {
             Database.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 

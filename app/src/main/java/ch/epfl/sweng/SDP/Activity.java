@@ -1,5 +1,9 @@
 package ch.epfl.sweng.SDP;
 
+import static android.view.View.VISIBLE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static java.lang.String.format;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,17 +13,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-
-import java.util.HashMap;
-
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
+import ch.epfl.sweng.SDP.utils.OnlineStatus;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import java.util.HashMap;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -82,7 +86,7 @@ public abstract class Activity extends AppCompatActivity {
      * Sets the visibility of the views corresponding to the given ids to the given value.
      *
      * @param visibility the value to set the visibility at
-     * @param ids        the ids of the views whose visibility is to be set
+     * @param ids the ids of the views whose visibility is to be set
      */
     public void setVisibility(int visibility, int... ids) {
         for (int id : ids) {
@@ -94,7 +98,7 @@ public abstract class Activity extends AppCompatActivity {
      * Sets the visibility of the given views to the given value.
      *
      * @param visibility the value to set the visibility at
-     * @param views      the views whose visibility is to be set
+     * @param views the views whose visibility is to be set
      */
     public void setVisibility(int visibility, View... views) {
         for (View view : views) {
@@ -106,7 +110,7 @@ public abstract class Activity extends AppCompatActivity {
      * Sets typeface to the given text views.
      *
      * @param typeface the typeface to be set
-     * @param views    the text views whose typeface is to be set
+     * @param views the text views whose typeface is to be set
      */
     public void setTypeFace(Typeface typeface, View... views) {
         for (View view : views) {
@@ -117,16 +121,16 @@ public abstract class Activity extends AppCompatActivity {
     /**
      * This methods creates a TextView according to the given parameters.
      *
-     * @param text         String displayed in textview
-     * @param color        Color of the textview
-     * @param size         Size of the textview
-     * @param typeface     Typeface of the textview
+     * @param text String displayed in textview
+     * @param color Color of the textview
+     * @param size Size of the textview
+     * @param typeface Typeface of the textview
      * @param layoutParams Layout parameters of the textview
      * @return The newly created textview
      */
     @SuppressLint("NewApi")
     public TextView createTextView(String text, int color, int size, Typeface typeface,
-                                   LinearLayout.LayoutParams layoutParams) {
+            LinearLayout.LayoutParams layoutParams) {
         TextView textView = new TextView(this);
         styleView(textView, text, color,
                 size, typeface, layoutParams);
@@ -137,8 +141,9 @@ public abstract class Activity extends AppCompatActivity {
 
     /**
      * Adds views to a layout.
+     *
      * @param layout Layout where the views will be added
-     * @param views  Views to be added
+     * @param views Views to be added
      * @return The layout with the views added
      */
     public LinearLayout addViews(LinearLayout layout, View... views) {
@@ -150,7 +155,7 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     private void styleView(TextView view, String text, int color, int size, Typeface typeface,
-                           LinearLayout.LayoutParams layoutParams) {
+            LinearLayout.LayoutParams layoutParams) {
         view.setText(text);
         view.setTextSize(size);
         view.setTextColor(color);
@@ -159,8 +164,8 @@ public abstract class Activity extends AppCompatActivity {
     }
 
     /**
-     * Clones the {@link Account}, corresponding to the user logged in,
-     * from Firebase, and stores it in the local database.
+     * Clones the {@link Account}, corresponding to the user logged in, from Firebase, and stores it
+     * in the local database.
      *
      * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase Database
      */
@@ -169,7 +174,7 @@ public abstract class Activity extends AppCompatActivity {
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
 
         if (userEntry != null) {
-            String currentUserId = (String)userEntry.keySet().toArray()[0];
+            String currentUserId = (String) userEntry.keySet().toArray()[0];
             HashMap<String, Object> user = userEntry
                     .get(currentUserId);
             if (user != null) {
@@ -190,5 +195,42 @@ public abstract class Activity extends AppCompatActivity {
                 handler.saveAccount(Account.getInstance(getApplicationContext()));
             }
         }
+    }
+
+    /**
+     * Checks if the user is already online on another device. If it is the case, an error message
+     * is displayed while waiting for the other device to go offline. If it is not the case, the
+     * {@link MainActivity} is launched.
+     *
+     * @param errorMessage the {@link TextView} corresponding to the error message
+     */
+    protected void handleUserStatus(final TextView errorMessage) {
+        Database.getReference(format("users.%s.online",
+                Account.getInstance(getApplicationContext())
+                        .getUserId())).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(
+                            @NonNull DataSnapshot dataSnapshot) {
+                        OnlineStatus isOnline = OnlineStatus.fromInteger(
+                                dataSnapshot.getValue(int.class));
+                        if (isOnline == ONLINE) {
+                            errorMessage.setText(
+                                    getString(R.string.already_logged_in));
+                            errorMessage.setVisibility(VISIBLE);
+                        } else {
+                            launchActivity(HomeActivity.class);
+                            overridePendingTransition(R.anim.fade_in,
+                                    R.anim.fade_out);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(
+                            @NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
     }
 }

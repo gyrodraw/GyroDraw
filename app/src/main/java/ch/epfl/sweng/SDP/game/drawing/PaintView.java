@@ -208,6 +208,13 @@ public class PaintView extends View {
      * @param color the index of the color
      */
     public void setColor(int color) {
+        if (isDrawing) {
+            path.lineTo(circleX, circleY);
+            canvas.drawPath(path, colors.get(color));
+            path.reset();
+            path.moveTo(circleX, circleY);
+        }
+
         if (this.color != colors.size() - 1) {
             this.color = color;
         }
@@ -299,7 +306,7 @@ public class PaintView extends View {
                 case MotionEvent.ACTION_DOWN:
                     if (!bucketMode) {
                         drawStart();
-                    } else if (SystemClock.elapsedRealtime() - lastClickTime >= 1000) {
+                    } else if (SystemClock.elapsedRealtime() - lastClickTime >= 500) {
                         lastClickTime = SystemClock.elapsedRealtime();
                         path.moveTo(circleX, circleY);
                         // Apply the flood fill algorithm

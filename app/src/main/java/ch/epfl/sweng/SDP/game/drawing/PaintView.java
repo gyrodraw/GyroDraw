@@ -210,7 +210,7 @@ public class PaintView extends View {
     public void setColor(int color) {
         if (isDrawing) {
             path.lineTo(circleX, circleY);
-            canvas.drawPath(path, colors.get(color));
+            canvas.drawPath(path, colors.get(this.color));
             path.reset();
             path.moveTo(circleX, circleY);
         }

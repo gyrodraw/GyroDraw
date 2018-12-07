@@ -114,9 +114,11 @@ public final class LayoutUtils {
                         break;
                     case MotionEvent.ACTION_UP:
                         bounceButton(view, activity);
-                        activity.launchActivity(HomeActivity.class);
-                        activity.overridePendingTransition(inTranstionId, outTransitionId);
-                        activity.finish();
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            activity.launchActivity(HomeActivity.class);
+                            activity.overridePendingTransition(inTranstionId, outTransitionId);
+                            activity.finish();
+                        }
                         break;
                     default:
                 }

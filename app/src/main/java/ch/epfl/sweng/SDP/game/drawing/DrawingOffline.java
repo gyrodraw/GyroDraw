@@ -19,6 +19,8 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
+
 /**
  * Class representing the offline practice mode. The user has the choice of
  * activating or not the mystery mode and the related item generation via a toggle button.
@@ -56,10 +58,12 @@ public class DrawingOffline extends GyroDrawingActivity {
                     case MotionEvent.ACTION_UP:
                         LayoutUtils.bounceButton(view, activity);
                         saveImageInDb();
-                        activity.launchActivity(HomeActivity.class);
-                        activity.overridePendingTransition(R.anim.slide_in_left,
-                                R.anim.slide_out_right);
-                        activity.finish();
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            activity.launchActivity(HomeActivity.class);
+                            activity.overridePendingTransition(R.anim.slide_in_left,
+                                    R.anim.slide_out_right);
+                            activity.finish();
+                        }
                         break;
                     default:
                 }

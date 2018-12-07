@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
+import android.content.Context;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 
@@ -53,13 +54,15 @@ public class LeaderboardActivityTest {
             new ActivityTestRule<>(LeaderboardActivity.class);
 
     private Account account;
+    private Context context;
 
     /**
      * Sets all necessary values in account for testing purposes.
      */
     @Before
     public void initialize() {
-        account = Account.getInstance(activityRule.getActivity());
+        context = activityRule.getActivity().getApplicationContext();
+        account = Account.getInstance(context);
         account.setEmail(TEST_EMAIL);
         account.setUsername(USERNAME);
         account.setUserId(USER_ID);
@@ -79,8 +82,7 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testFriendsButtonsClickable() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
-        SystemClock.sleep(1000);
+        SystemClock.sleep(2000);
         onView(withTagValue(is((Object) "friendsButton0"))).perform(click());
         SystemClock.sleep(1000);
         onView(withTagValue(is((Object) "friendsButton0"))).perform(click());
@@ -100,7 +102,6 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testLeaderboardIsSearchable() {
-        FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
         onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(1000);
         assertThat(((LinearLayout) activityRule.getActivity().findViewById(R.id.leaderboard))

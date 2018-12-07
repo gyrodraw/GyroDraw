@@ -29,7 +29,7 @@ public class ImageSharer {
     private static ImageSharer instance = null;
 
     private Activity activity;
-    Context context;
+    private Context context;
 
     ImageSharer(Context context, Activity activity) {
         this.context = context;

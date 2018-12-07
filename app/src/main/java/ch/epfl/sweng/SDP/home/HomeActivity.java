@@ -250,8 +250,8 @@ public class HomeActivity extends BaseActivity {
                         pressButton(view, animMode, context);
                         break;
                     case MotionEvent.ACTION_UP:
-                        listenerEventSelector(view, id);
                         bounceButton(view, amplitude, frequency, animMode, context);
+                        listenerEventSelector(view, id);
                         break;
                     default:
                 }
@@ -320,6 +320,10 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
+        // Prevents that the user launches two online games at the same time.
+        findViewById(R.id.drawButton).setEnabled(false);
+        findViewById(R.id.mysteryButton).setEnabled(false);
+
         if (CheckConnection.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
@@ -383,8 +387,11 @@ public class HomeActivity extends BaseActivity {
         gamesWonNumber.setText(String.valueOf(userAccount.getMatchesWon()));
         TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
         gamesLostNumber.setText(String.valueOf(userAccount.getTotalMatches()));
+
+        double roundedAverage = Math.round(userAccount.getAverageRating() * 10) / 10.;
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
-        averageStarsNumber.setText(String.valueOf(userAccount.getAverageRating()));
+        averageStarsNumber.setText(String.valueOf(roundedAverage));
+
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
         maxTrophiesNumber.setText(String.valueOf(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);

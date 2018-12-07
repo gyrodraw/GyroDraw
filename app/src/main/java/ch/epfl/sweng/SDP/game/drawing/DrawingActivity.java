@@ -34,7 +34,7 @@ public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
 
-    static final int MIN_WIDTH = 5;
+    static final int MIN_WIDTH = 10;
     static final int CURR_WIDTH = 20;
 
     protected RelativeLayout paintViewHolder;
@@ -133,8 +133,7 @@ public abstract class DrawingActivity extends BaseActivity {
         ImageView image = new ImageView(this);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
-                LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-                .MATCH_PARENT, 1f);
+                LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         // Convert dp into px
         int px = (int) TypedValue.applyDimension(

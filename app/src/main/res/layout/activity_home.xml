@@ -146,19 +146,6 @@
         app:layout_constraintTop_toBottomOf="@+id/leagueImage" />
 
     <ImageView
-
-        android:id="@+id/drawButton"
-        android:layout_width="450dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/mysteryButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/draw_button"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
         android:id="@+id/practiceButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -168,6 +155,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/home_practice_button"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/drawButton"
+        android:layout_width="450dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/mysteryButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/draw_button"
         tools:ignore="ContentDescription" />
 
     <ImageView

@@ -95,23 +95,28 @@
         android:minHeight="30dp"
         android:progress="50" />
 
-    <LinearLayout
-        android:id="@+id/colorLayout"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/blackButton"
+        <LinearLayout
+            android:id="@+id/colorLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
-            android:onClick="colorClickHandler"
-            app:srcCompat="@drawable/color_circle_selected" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/blackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="colorClickHandler"
+                app:srcCompat="@drawable/color_circle_selected" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

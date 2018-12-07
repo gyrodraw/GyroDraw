@@ -57,7 +57,7 @@ public class PaintView extends View {
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
-    private int drawWidth = MIN_WIDTH + CURR_WIDTH;
+    private int drawWidth = CURR_WIDTH + MIN_WIDTH;
     private float speed;
     private long lastClickTime = 0;
 
@@ -315,7 +315,7 @@ public class PaintView extends View {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (!bucketMode) {
+                    if (!bucketMode && isDrawing) {
                         drawEnd();
                     }
                     break;

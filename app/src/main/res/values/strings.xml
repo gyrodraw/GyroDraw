@@ -63,4 +63,5 @@
     <string name="usernameTooShort">Username is too short</string>
     <string name="usernameTooLong">Username is too long</string>
     <string name="usernameIllegalChar">Username must not contain</string>
+  <string name="already_logged_in">You have already logged in on another device! Waiting...</string>
 </resources>

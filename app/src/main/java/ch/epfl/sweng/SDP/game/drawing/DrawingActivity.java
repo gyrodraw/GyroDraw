@@ -34,8 +34,8 @@ public abstract class DrawingActivity extends BaseActivity {
 
     protected static final String TAG = "DrawingActivity";
 
-    private static final int MIN_WIDTH = 10;
-    private static final int CURR_WIDTH = 20;
+    static final int MIN_WIDTH = 5;
+    static final int CURR_WIDTH = 20;
 
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
@@ -56,8 +56,7 @@ public abstract class DrawingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.overridePendingTransition(R.anim.slide_in_right,
-                R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -92,7 +91,6 @@ public abstract class DrawingActivity extends BaseActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
-
                 paintView.invalidate();
             }
         };

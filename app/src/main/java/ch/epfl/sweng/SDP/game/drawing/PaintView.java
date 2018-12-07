@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.SystemClock;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,6 +23,9 @@ import java.util.List;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 
 /**
  * Class representing the view used for drawing.
@@ -53,8 +57,9 @@ public class PaintView extends View {
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
+    private int drawWidth = MIN_WIDTH + CURR_WIDTH;
     private float speed;
-    private int drawWidth = 30;
+    private long lastClickTime = 0;
 
     /**
      * Constructor for the view.
@@ -294,7 +299,8 @@ public class PaintView extends View {
                 case MotionEvent.ACTION_DOWN:
                     if (!bucketMode) {
                         drawStart();
-                    } else {
+                    } else if (SystemClock.elapsedRealtime() - lastClickTime >= 1000) {
+                        lastClickTime = SystemClock.elapsedRealtime();
                         path.moveTo(circleX, circleY);
                         // Apply the flood fill algorithm
                         new BucketTool(bitmap, bitmap.getPixel(circleX, circleY),
@@ -302,7 +308,9 @@ public class PaintView extends View {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    drawEnd();
+                    if (!bucketMode) {
+                        drawEnd();
+                    }
                     break;
                 default:
             }

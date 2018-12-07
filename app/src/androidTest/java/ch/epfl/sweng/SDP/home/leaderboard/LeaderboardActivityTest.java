@@ -22,6 +22,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,6 +43,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -82,10 +86,13 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testFriendsButtonsClickable() {
+        String buttonTag = "friendsButton0";
         SystemClock.sleep(2000);
-        onView(withTagValue(is((Object) "friendsButton0"))).perform(click());
+        onView(withTagValue(is((Object) buttonTag))).check(matches(isClickable()));
+        onView(withTagValue(is((Object) buttonTag))).perform(click());
         SystemClock.sleep(1000);
-        onView(withTagValue(is((Object) "friendsButton0"))).perform(click());
+        onView(withTagValue(is((Object) buttonTag))).check(matches(isClickable()));
+        onView(withTagValue(is((Object) buttonTag))).perform(click());
     }
 
     @Test
@@ -111,15 +118,7 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsAreSearchable() {
         friendsTest(FriendsRequestState.FRIENDS.ordinal(), 1);
-    }
-
-    @Test
-    public void testRequestedFriendsDontAppearInLeaderboard() {
         friendsTest(FriendsRequestState.SENT.ordinal(), 0);
-    }
-
-    @Test
-    public void testReceivedFriendsDontAppearInLeaderboard() {
         friendsTest(FriendsRequestState.RECEIVED.ordinal(), 0);
     }
 

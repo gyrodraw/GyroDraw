@@ -62,6 +62,7 @@ public class ImageStorageManager {
 
     /**
      * Write an image to the storage.
+     *
      * @param image the image to store.
      * @param file the file path.
      */
@@ -78,6 +79,7 @@ public class ImageStorageManager {
 
     /**
      * Retrieves a file object from a string describing the directory.
+     *
      * @param imageName the name of the image.
      * @return a file object to the directory.
      */

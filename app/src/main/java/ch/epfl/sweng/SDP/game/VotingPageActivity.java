@@ -143,7 +143,6 @@ public class VotingPageActivity extends BaseActivity {
         setVisibility(View.GONE, ratingBar, playerNameView,
                 drawingView, timer, starsAnimation);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         playerNameView.setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
 

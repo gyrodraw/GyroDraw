@@ -39,8 +39,6 @@ public class DrawingOffline extends GyroDrawingActivity {
         isToggled = false;
         mysteryButton = findViewById(R.id.mysteryModeButton);
         setExitButtonListener();
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         setTypeFace(typeMuro, findViewById(R.id.exit));
     }
 

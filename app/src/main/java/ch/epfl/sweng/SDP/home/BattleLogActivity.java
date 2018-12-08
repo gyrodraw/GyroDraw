@@ -33,8 +33,6 @@ public class BattleLogActivity extends BaseActivity {
 
         battleLogView = findViewById(R.id.battleLog);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 

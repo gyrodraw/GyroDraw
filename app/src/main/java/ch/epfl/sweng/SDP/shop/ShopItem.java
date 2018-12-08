@@ -15,6 +15,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -122,7 +123,7 @@ public class ShopItem {
     void setLayout(int stars, ShopActivity context) {
         Resources res = context.getResources();
         String colorName = color.toString();
-        Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = TypefaceLibrary.getTypeMuro();
 
         // Create the color image
         ImageView colorImageView = new ImageView(context);

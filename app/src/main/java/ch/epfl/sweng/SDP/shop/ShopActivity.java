@@ -3,7 +3,6 @@ package ch.epfl.sweng.SDP.shop;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,8 +38,6 @@ public class ShopActivity extends BaseActivity {
     private Dialog buyDialog;
     private LinearLayout shopItems;
     private Shop shop;
-    private Typeface typeMuro;
-    private ScrollView scrollShop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +51,8 @@ public class ShopActivity extends BaseActivity {
             Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
         }
 
-        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         buyDialog = new Dialog(this);
         shopItems = findViewById(R.id.shopItems);
-        scrollShop = findViewById(R.id.scrollShop);
         TextView exitButton = findViewById(R.id.exitButton);
 
         exitButton.setTypeface(typeMuro);

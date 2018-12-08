@@ -220,8 +220,6 @@ public class WaitingPageActivity extends BaseActivity {
         initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
                 WordNumber.TWO);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
         setTypeFace(typeMuro, findViewById(R.id.playersReadyText),
                 findViewById(R.id.playersCounterText), findViewById(R.id.buttonWord1),
                 findViewById(R.id.buttonWord2), findViewById(R.id.voteText),

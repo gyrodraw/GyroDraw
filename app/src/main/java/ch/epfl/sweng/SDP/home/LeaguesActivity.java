@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,9 +27,6 @@ public class LeaguesActivity extends BaseActivity {
                 scrollView.fullScroll(View.FOCUS_DOWN);
             }
         });
-
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         setTypeFace(typeOptimus, findViewById(R.id.league1Name), findViewById(R.id.league2Name),
                 findViewById(R.id.league3Name), findViewById(R.id.league1Text),

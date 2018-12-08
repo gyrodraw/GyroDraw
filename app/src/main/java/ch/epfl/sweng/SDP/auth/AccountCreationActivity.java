@@ -40,10 +40,8 @@ public class AccountCreationActivity extends BaseActivity {
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.createAccount)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.usernameInput)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.usernameTaken)).setTypeface(typeMuro);
+        setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
+                findViewById(R.id.usernameTaken));
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));

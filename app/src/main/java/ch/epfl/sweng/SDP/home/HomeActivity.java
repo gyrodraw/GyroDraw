@@ -54,7 +54,6 @@ import static java.lang.String.format;
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
-    private static final String MURO_PATH = "fonts/Muro.otf";
 
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
@@ -144,14 +143,11 @@ public class HomeActivity extends BaseActivity {
         final ImageView starsButton = findViewById(R.id.starsButton);
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+        TextView leagueText = findViewById(R.id.leagueText);
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
         starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));
-
-        TextView leagueText = findViewById(R.id.leagueText);
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
@@ -367,8 +363,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setMuroFont() {
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
-
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
         profileTextView.setTypeface(typeMuro);
         TextView gamesWonText = profileWindow.findViewById(R.id.gamesWonText);
@@ -424,8 +418,6 @@ public class HomeActivity extends BaseActivity {
         assert name != null : "name is null";
 
         friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
 
         TextView requestSender = friendRequestWindow.findViewById(R.id.requestSender);
         requestSender.setTypeface(typeMuro);

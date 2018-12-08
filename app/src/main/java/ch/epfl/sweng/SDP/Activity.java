@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,8 +11,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.HashMap;
@@ -20,12 +19,24 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
  * activities.
  */
 public abstract class Activity extends AppCompatActivity {
+
+    protected static Typeface typeMuro;
+    protected static Typeface typeOptimus;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TypefaceLibrary.setContext(this);
+        typeMuro = TypefaceLibrary.getTypeMuro();
+        typeOptimus = TypefaceLibrary.getTypeOptimus();
+    }
 
     @Override
     protected void onResume() {

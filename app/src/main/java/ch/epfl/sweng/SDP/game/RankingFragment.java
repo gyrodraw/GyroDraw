@@ -33,6 +33,7 @@ import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.RankingUtils;
 import ch.epfl.sweng.SDP.utils.SortUtils;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
@@ -68,15 +69,12 @@ public class RankingFragment extends ListFragment {
 
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
         finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
-        Typeface typeMuro = Typeface.createFromAsset(getActivity().getAssets(),
-                                                            "fonts/Muro.otf");
-        Typeface typeOptimus = Typeface.createFromAsset(getActivity().getAssets(),
-                                                        "fonts/Optimus.otf");
 
-        ((TextView) getActivity().findViewById(R.id.rankingTitle)).setTypeface(typeOptimus);
+        ((TextView) getActivity().findViewById(R.id.rankingTitle))
+                .setTypeface(TypefaceLibrary.getTypeOptimus());
 
         Button button = getActivity().findViewById(R.id.homeButton);
-        button.setTypeface(typeMuro);
+        button.setTypeface(TypefaceLibrary.getTypeMuro());
 
         account = Account.getInstance(getActivity().getApplicationContext());
 
@@ -87,12 +85,12 @@ public class RankingFragment extends ListFragment {
      * Sets the attributes of this class.
      * @param roomId the id of the room.
      * @param drawings the users drawings.
-     * @param playernames the usernames of the players.
+     * @param playerNames the usernames of the players.
      */
-    public void putExtra(String roomId, Bitmap[] drawings, String[] playernames) {
+    public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames) {
         this.roomId = roomId;
         this.drawings = drawings;
-        this.playerNames = playernames;
+        this.playerNames = playerNames;
     }
 
     private int getIndexForUserName(String username) {
@@ -119,7 +117,7 @@ public class RankingFragment extends ListFragment {
 
                 // Sort the rankings (stars)
                 Integer[] rankings = (finalRanking.values().toArray(
-                        new Integer[finalRanking.values().size()]));
+                        new Integer[0]));
                 Arrays.sort(rankings, Collections.reverseOrder());
 
                 int rankForUser = 0;
@@ -191,7 +189,7 @@ public class RankingFragment extends ListFragment {
         private final String[] trophies;
         private final Bitmap[] drawings;
         private final Integer[] positions;
-        
+
         private RankingAdapter(Context context, String[] players, Integer[] rankings,
                                Integer[] trophies, Bitmap[] drawings, Integer[] positions) {
             super(context, 0, players);
@@ -235,10 +233,7 @@ public class RankingFragment extends ListFragment {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.ranking_item, parent, false);
 
-            AssetManager assets = getActivity().getAssets();
-            Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");
-
-            setTypeFace(typeMuro, convertView.findViewById(R.id.playerName),
+            setTypeFace(TypefaceLibrary.getTypeMuro(), convertView.findViewById(R.id.playerName),
                                 convertView.findViewById(R.id.starsWon),
                                 convertView.findViewById(R.id.trophiesWon));
 

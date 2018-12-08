@@ -33,6 +33,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;
@@ -53,7 +54,6 @@ public class LeaderboardActivity extends BaseActivity {
     private static final String FRIENDS_TAG = "friends";
     private static final String LEAGUE_TAG = "currentLeague";
 
-    private Typeface typeMuro;
     private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
     private Boolean filterByFriends;
@@ -67,8 +67,6 @@ public class LeaderboardActivity extends BaseActivity {
 
         filterByFriends = false;
         leaderboardView = findViewById(R.id.leaderboard);
-
-        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));

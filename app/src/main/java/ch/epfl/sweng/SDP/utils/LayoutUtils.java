@@ -22,14 +22,13 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
  */
 public final class LayoutUtils {
 
-    private static final int MAIN_FREQUENCY = 10;
-    private static final double MAIN_AMPLITUDE = 0.1;
-
     public static final League[] LEAGUES = new League[]{
             createLeague1(),
             createLeague2(),
             createLeague3()
     };
+    private static final int MAIN_FREQUENCY = 10;
+    private static final double MAIN_AMPLITUDE = 0.1;
 
     private LayoutUtils() {
     }

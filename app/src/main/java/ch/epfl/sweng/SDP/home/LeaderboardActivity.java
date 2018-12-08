@@ -132,8 +132,8 @@ public class LeaderboardActivity extends BaseActivity {
         private final String username;
         private final Long trophies;
         private final String league;
-        private int rank;
         private final boolean isCurrentUser;
+        private int rank;
 
         private Player(String userId, String username, Long trophies, String league,
                        boolean isCurrentUser) {

@@ -10,7 +10,8 @@ public class TypefaceLibrary {
     private static Typeface typeMuro;
     private static Typeface typeOptimus;
 
-    private TypefaceLibrary() {}
+    private TypefaceLibrary() {
+    }
 
     /**
      * Instantiates the typefaces given the context.

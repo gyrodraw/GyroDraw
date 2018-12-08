@@ -51,25 +51,6 @@ public class LoadingScreenActivity extends BaseActivity {
 
     private String word1 = null;
     private String word2 = null;
-
-    private BooleanVariableListener.ChangeListener listenerRoomReady =
-            new BooleanVariableListener.ChangeListener() {
-                @Override
-                public void onChange() {
-                    if (areWordsReady.getBoo() && isRoomReady.getBoo()) {
-                        // Start new activity
-                        wordsVotesRef.removeEventListener(listenerWords);
-                        Intent intent = new Intent(getApplicationContext(),
-                                WaitingPageActivity.class);
-                        intent.putExtra("word1", word1);
-                        intent.putExtra("word2", word2);
-                        intent.putExtra("roomID", roomID);
-                        intent.putExtra("mode", gameMode);
-                        startActivity(intent);
-                    }
-                }
-            };
-
     private final ValueEventListener listenerWords = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -89,6 +70,33 @@ public class LoadingScreenActivity extends BaseActivity {
             throw databaseError.toException();
         }
     };
+    private BooleanVariableListener.ChangeListener listenerRoomReady =
+            new BooleanVariableListener.ChangeListener() {
+                @Override
+                public void onChange() {
+                    if (areWordsReady.getBoo() && isRoomReady.getBoo()) {
+                        // Start new activity
+                        wordsVotesRef.removeEventListener(listenerWords);
+                        Intent intent = new Intent(getApplicationContext(),
+                                WaitingPageActivity.class);
+                        intent.putExtra("word1", word1);
+                        intent.putExtra("word2", word2);
+                        intent.putExtra("roomID", roomID);
+                        intent.putExtra("mode", gameMode);
+                        startActivity(intent);
+                    }
+                }
+            };
+
+    @VisibleForTesting
+    public static void disableLoadingAnimations() {
+        enableWaitingAnimation = false;
+    }
+
+    @VisibleForTesting
+    public static void setOnTest() {
+        isTesting = true;
+    }
 
     @VisibleForTesting
     protected boolean areWordsReady(ArrayList<String> words) {
@@ -161,16 +169,6 @@ public class LoadingScreenActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    @VisibleForTesting
-    public static void disableLoadingAnimations() {
-        enableWaitingAnimation = false;
-    }
-
-    @VisibleForTesting
-    public static void setOnTest() {
-        isTesting = true;
     }
 
     @Override

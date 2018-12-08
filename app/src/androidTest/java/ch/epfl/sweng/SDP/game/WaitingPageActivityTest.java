@@ -45,10 +45,6 @@ import static org.mockito.Mockito.when;
 public class WaitingPageActivityTest {
 
     private static final String ROOM_ID_TEST = "0123457890";
-
-    private DataSnapshot dataSnapshotMock;
-    private DatabaseError databaseErrorMock;
-
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
             new ActivityTestRule<WaitingPageActivity>(WaitingPageActivity.class) {
@@ -68,12 +64,8 @@ public class WaitingPageActivityTest {
                     return intent;
                 }
             };
-
-    @Before
-    public void init() {
-        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
-        databaseErrorMock = Mockito.mock(DatabaseError.class);
-    }
+    private DataSnapshot dataSnapshotMock;
+    private DatabaseError databaseErrorMock;
 
     /**
      * Perform action of waiting for a specific time.
@@ -96,6 +88,17 @@ public class WaitingPageActivityTest {
                 uiController.loopMainThreadForAtLeast(millis);
             }
         };
+    }
+
+    @Ignore
+    public static void waitForVisibility(final View view, final int visibility) {
+        IdlingRegistry.getInstance().register(new ViewVisibilityIdlingResource(view, visibility));
+    }
+
+    @Before
+    public void init() {
+        dataSnapshotMock = Mockito.mock(DataSnapshot.class);
+        databaseErrorMock = Mockito.mock(DatabaseError.class);
     }
 
     @Test
@@ -267,11 +270,6 @@ public class WaitingPageActivityTest {
         waitForVisibility(mActivityRule.getActivity().findViewById(id),
                 View.VISIBLE);
         onView(withId(id)).perform(click());
-    }
-
-    @Ignore
-    public static void waitForVisibility(final View view, final int visibility) {
-        IdlingRegistry.getInstance().register(new ViewVisibilityIdlingResource(view, visibility));
     }
 
     @Test(expected = DatabaseException.class)

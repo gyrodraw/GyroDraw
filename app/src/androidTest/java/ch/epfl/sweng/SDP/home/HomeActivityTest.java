@@ -55,7 +55,9 @@ public class HomeActivityTest {
                     setOnTest();
                 }
             };
-
+    // Add a monitor for the home activity
+    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Before
     public void init() {
@@ -176,10 +178,6 @@ public class HomeActivityTest {
         onView(withId(view)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(doesNotExist());
     }
-
-    // Add a monitor for the home activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Test
     public void testClickingOnBackButtonDoesNothing() {

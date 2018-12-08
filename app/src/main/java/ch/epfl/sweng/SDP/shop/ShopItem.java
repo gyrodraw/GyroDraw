@@ -70,16 +70,13 @@ public class ShopItem {
         return color;
     }
 
+    @VisibleForTesting
+    void setColorItem(ColorsShop color) {
+        this.color = color;
+    }
+
     public int getPriceItem() {
         return price;
-    }
-
-    public boolean getOwned() {
-        return owned;
-    }
-
-    public LinearLayout getLayout() {
-        return layout;
     }
 
     @VisibleForTesting
@@ -87,13 +84,16 @@ public class ShopItem {
         this.price = price;
     }
 
-    @VisibleForTesting
-    void setColorItem(ColorsShop color) {
-        this.color = color;
+    public boolean getOwned() {
+        return owned;
     }
 
     void setOwned(boolean owned) {
         this.owned = owned;
+    }
+
+    public LinearLayout getLayout() {
+        return layout;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ShopItem {
     /**
      * Create the layout of this item.
      *
-     * @param stars the current amount of stars
+     * @param stars   the current amount of stars
      * @param context the context of the shop
      */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})

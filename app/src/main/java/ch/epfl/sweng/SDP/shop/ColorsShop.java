@@ -17,10 +17,6 @@ public enum ColorsShop {
         this.price = price;
     }
 
-    public int getPrice() {
-        return this.price;
-    }
-
     /**
      * Converts the given string to the related color.
      *
@@ -86,5 +82,9 @@ public enum ColorsShop {
             default:
                 throw new IllegalArgumentException(color + " resource not found");
         }
+    }
+
+    public int getPrice() {
+        return this.price;
     }
 }

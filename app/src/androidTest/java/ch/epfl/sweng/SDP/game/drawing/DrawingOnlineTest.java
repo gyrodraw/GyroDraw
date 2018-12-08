@@ -64,6 +64,75 @@ public class DrawingOnlineTest {
     private DataSnapshot dataSnapshotMock;
 
     /**
+     * Create a new non empty bitmap.
+     *
+     * @return the new bitmap
+     */
+    public static Bitmap initializedBitmap() {
+        Paint paint = initializedPaint();
+
+        Path path = new Path();
+        path.lineTo(1, 1);
+
+        Bitmap bitmap = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
+        Canvas canvas = initializedCanvas(bitmap, paint, path);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+
+        return bitmap;
+    }
+
+    /**
+     * Assert if the two bitmaps have the same pixels.
+     *
+     * @param bitmap    the first bitmap
+     * @param newBitmap the second bitmap
+     */
+    public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                assertThat(bitmap.getPixel(i, j), is(newBitmap.getPixel(i, j)));
+            }
+        }
+    }
+
+    /**
+     * Compress a bitmap to the given quality.
+     *
+     * @param bitmap  the given bitmap
+     * @param quality the given quality
+     * @return the compressed bitmap
+     */
+    public static Bitmap compressBitmap(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        try {
+            byteArrayOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    }
+
+    private static Paint initializedPaint() {
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+        return paint;
+    }
+
+    private static Canvas initializedCanvas(Bitmap bitmap, Paint paint, Path path) {
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawPath(path, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return canvas;
+    }
+
+    /**
      * Initialise mock elements and get UI elements.
      */
     @Before
@@ -148,74 +217,5 @@ public class DrawingOnlineTest {
         assertThat(bitmap.getPixel(1, 0), is(Color.YELLOW));
         assertThat(bitmap.getPixel(0, 1), is(Color.YELLOW));
         assertThat(bitmap.getPixel(1, 1), is(Color.WHITE));
-    }
-
-    /**
-     * Create a new non empty bitmap.
-     *
-     * @return the new bitmap
-     */
-    public static Bitmap initializedBitmap() {
-        Paint paint = initializedPaint();
-
-        Path path = new Path();
-        path.lineTo(1, 1);
-
-        Bitmap bitmap = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
-        Canvas canvas = initializedCanvas(bitmap, paint, path);
-        canvas.drawColor(Color.WHITE);
-        canvas.drawPath(path, paint);
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-
-        return bitmap;
-    }
-
-    /**
-     * Assert if the two bitmaps have the same pixels.
-     *
-     * @param bitmap    the first bitmap
-     * @param newBitmap the second bitmap
-     */
-    public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
-        for (int i = 0; i < 2; ++i) {
-            for (int j = 0; j < 2; ++j) {
-                assertThat(bitmap.getPixel(i, j), is(newBitmap.getPixel(i, j)));
-            }
-        }
-    }
-
-    /**
-     * Compress a bitmap to the given quality.
-     *
-     * @param bitmap  the given bitmap
-     * @param quality the given quality
-     * @return the compressed bitmap
-     */
-    public static Bitmap compressBitmap(Bitmap bitmap, int quality) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        try {
-            byteArrayOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-    }
-
-    private static Paint initializedPaint() {
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(10);
-        return paint;
-    }
-
-    private static Canvas initializedCanvas(Bitmap bitmap, Paint paint, Path path) {
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(Color.WHITE);
-        canvas.drawPath(path, paint);
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        return canvas;
     }
 }

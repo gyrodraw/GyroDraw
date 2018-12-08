@@ -39,6 +39,11 @@ public class ShopActivity extends BaseActivity {
     private LinearLayout shopItems;
     private Shop shop;
 
+    @VisibleForTesting
+    public static void disableAnimations() {
+        enableAnimations = false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -198,10 +203,5 @@ public class ShopActivity extends BaseActivity {
     @VisibleForTesting
     public Shop getShop() {
         return shop;
-    }
-
-    @VisibleForTesting
-    public static void disableAnimations() {
-        enableAnimations = false;
     }
 }

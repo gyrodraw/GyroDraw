@@ -42,33 +42,6 @@ public class WaitingPageActivity extends BaseActivity {
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private static boolean enableSquareAnimation = true;
-
-    private enum WordNumber {
-        ONE, TWO
-    }
-
-    private String roomID = null;
-
-    private int gameMode;
-
-    private boolean isDrawingActivityLaunched = false;
-
-    private boolean hasVoted = false;
-    private boolean isWord1Voted = false;
-
-    private DatabaseReference stateRef;
-    private DatabaseReference timerRef;
-
-    private DatabaseReference word1Ref;
-    private int word1Votes = 0;
-
-    private DatabaseReference word2Ref;
-    private int word2Votes = 0;
-
-    private String word1 = null;
-    private String word2 = null;
-    private String winningWord = null;
-
     @VisibleForTesting
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -86,7 +59,35 @@ public class WaitingPageActivity extends BaseActivity {
             throw databaseError.toException();
         }
     };
+    @VisibleForTesting
+    protected final ValueEventListener listenerCountUsers = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            long usersCount = dataSnapshot.getChildrenCount();
+            ((TextView) findViewById(R.id.playersCounterText)).setText(
+                    format("%s/5", String.valueOf(usersCount)));
 
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
+    private String roomID = null;
+    private int gameMode;
+    private boolean isDrawingActivityLaunched = false;
+    private boolean hasVoted = false;
+    private boolean isWord1Voted = false;
+    private DatabaseReference stateRef;
+    private DatabaseReference timerRef;
+    private DatabaseReference word1Ref;
+    private int word1Votes = 0;
+    private DatabaseReference word2Ref;
+    private int word2Votes = 0;
+    private String word1 = null;
+    private String word2 = null;
+    private String winningWord = null;
     @VisibleForTesting
     protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
@@ -168,22 +169,26 @@ public class WaitingPageActivity extends BaseActivity {
         }
     };
 
+    /**
+     * Gets the words that received the larger amount of votes.
+     *
+     * @param word1Votes Votes for the word 1
+     * @param word2Votes Votes for the word 2
+     * @param words      Array containing the words
+     * @return Returns the winning word.
+     */
+    public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
+        String winningWord = words[1];
+        if (word1Votes >= word2Votes) {
+            winningWord = words[0];
+        }
+        return winningWord;
+    }
+
     @VisibleForTesting
-    protected final ValueEventListener listenerCountUsers = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            long usersCount = dataSnapshot.getChildrenCount();
-            ((TextView) findViewById(R.id.playersCounterText)).setText(
-                    format("%s/5", String.valueOf(usersCount)));
-
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
-
+    public static void disableAnimations() {
+        enableSquareAnimation = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,22 +254,6 @@ public class WaitingPageActivity extends BaseActivity {
 
         // Display the word on the button
         button.setText(childString);
-    }
-
-    /**
-     * Gets the words that received the larger amount of votes.
-     *
-     * @param word1Votes Votes for the word 1
-     * @param word2Votes Votes for the word 2
-     * @param words      Array containing the words
-     * @return Returns the winning word.
-     */
-    public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
-        String winningWord = words[1];
-        if (word1Votes >= word2Votes) {
-            winningWord = words[0];
-        }
-        return winningWord;
     }
 
     /**
@@ -396,11 +385,6 @@ public class WaitingPageActivity extends BaseActivity {
         word2Ref.removeEventListener(listenerWord2);
     }
 
-    @VisibleForTesting
-    public static void disableAnimations() {
-        enableSquareAnimation = false;
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -434,6 +418,10 @@ public class WaitingPageActivity extends BaseActivity {
                 listenerTimer.onDataChange(dataSnapshot);
             }
         });
+    }
+
+    private enum WordNumber {
+        ONE, TWO
     }
 
 }

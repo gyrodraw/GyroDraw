@@ -83,7 +83,7 @@ public class ShopTest {
         assertThat(getColorIdFromString("RED"), is(R.color.colorRed));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getWrongColorFromStringTest() {
         getColorIdFromString("RAINBOW");
     }

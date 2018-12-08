@@ -34,8 +34,34 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
      * Helper class to save game results in local database.
      */
     public LocalDbHandlerForGameResults(Context context, SQLiteDatabase.CursorFactory factory,
-            int dbVersion) {
+                                        int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
+    }
+
+    private static String fromListToString(List<String> list) {
+        StringBuilder concatList = new StringBuilder();
+
+        for (String username : list) {
+            concatList.append(username).append('\n');
+        }
+
+        return concatList.toString();
+    }
+
+    private static List<String> fromStringToList(String string) {
+        List<String> list = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+
+        for (char c : string.toCharArray()) {
+            if (c != '\n') {
+                builder.append(c);
+            } else {
+                list.add(builder.toString());
+                builder = new StringBuilder();
+            }
+        }
+
+        return list;
     }
 
     /**
@@ -58,7 +84,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db database to look in
+     * @param db         database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -144,31 +170,5 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return recentResults;
-    }
-
-    private static String fromListToString(List<String> list) {
-        StringBuilder concatList = new StringBuilder();
-
-        for (String username : list) {
-            concatList.append(username).append('\n');
-        }
-
-        return concatList.toString();
-    }
-
-    private static List<String> fromStringToList(String string) {
-        List<String> list = new ArrayList<>();
-        StringBuilder builder = new StringBuilder();
-
-        for (char c : string.toCharArray()) {
-            if (c != '\n') {
-                builder.append(c);
-            } else {
-                list.add(builder.toString());
-                builder = new StringBuilder();
-            }
-        }
-
-        return list;
     }
 }

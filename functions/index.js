@@ -8,6 +8,7 @@ const maxPlayers = 5;
 const mockMaxPlayers = 3;
 const maxWords = 6;
 const numberRoomsPerLeague = 100;
+const minRank = -10;
 
 // Waiting times
 const WAITING_TIME_CHOOSE_WORDS = 10;
@@ -154,6 +155,16 @@ exports.joinGame = functions.https.onCall((data, context) => {
   });
 });
 
+function getLeagueFromTrophies(trophies) {
+  if(trophies < 100 && trophies >= 0) {
+    return "league1";
+  } else if (trophies >= 100 && trophies < 200) {
+    return "league2"; 
+  } else {
+    return "league3";
+  }
+}
+
 function isRoomInLeagueRange(roomID, league) {
   return parseInt(roomID, 10) >= league * numberRoomsPerLeague &&
           parseInt(roomID, 10) < (league + 1) * numberRoomsPerLeague;
@@ -296,16 +307,48 @@ function createNode(roomID, node, value) {
   });
 }
 
-function updateUser(userID, child, position) {
+function updateUser(userID) {
   return admin.database().ref("users/").once('value', (snapshot) => {
     if(snapshot.hasChild(userID)) {
-      admin.database().ref("users/" + userID + "/stars").transaction((currentValue) => {
-          return currentValue + child.val();
-      });
-      admin.database().ref("users/" + userID + "/trophies").transaction((currentValue) => {
-          return currentValue + getRankFromPosition(position);
+      let newTrophies;
+      let totalMatches;
+
+      return admin.database().ref("users/" + userID + "/trophies").transaction((currentValue) => {
+        newTrophies = currentValue + minRank;
+        return newTrophies;
+      })
+      .then(() => {
+        return admin.database().ref("users/" + userID + "/currentLeague").transaction((currentValueInner) => {
+          return getLeagueFromTrophies(newTrophies);
+        });
+      })
+      .then(() => {
+        return admin.database().ref("users/" + userID + "/totalMatches").transaction((currentValue) => {
+          totalMatches = currentValue + 1;
+          return totalMatches;
+        });
+      })
+      .then(() => {
+        return admin.database().ref("users/" + userID + "/averageRating").transaction((currentValueInner) => {
+          return parseFloat(((currentValueInner*(totalMatches-1))/totalMatches).toPrecision(3));
+        });
       });
     }
+  });
+}
+
+function updateDisconnectedUsers(snapshotRanking, roomID) {
+  let dict = {};
+  return admin.database().ref(parentRoomID + roomID + "/users").once('value', (snapshot) => {
+    return snapshot.forEach((child) => {
+      dict[child.val()] = child.key;
+    });
+  }).then(() => {
+      return snapshotRanking.forEach((child) => {
+        if(child.val() === -1) {
+          updateUser(dict[child.key]);
+        }
+    });
   });
 }
 
@@ -357,6 +400,9 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       return startTimerWithCallback2(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
 
     case StateEnum.EndVoting:
+      admin.database().ref(parentRoomID + roomID + "/ranking").once('value', (snapshot) => {
+        return updateDisconnectedUsers(snapshot, roomID);
+      });
       // removed for now in order to test online more easily
       /*setTimeout(() => {
         removeRoom();

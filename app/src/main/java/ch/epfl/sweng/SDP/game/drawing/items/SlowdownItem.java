@@ -12,20 +12,20 @@ public class SlowdownItem extends Item {
 
     private static final double SLOWDOWN_FACTOR = 0.5;
 
-    private SlowdownItem(int x, int y, int radius) {
-        super(x, y, radius);
+    private SlowdownItem(int posX, int posY, int radius) {
+        super(posX, posY, radius);
     }
 
     /**
      * Creates a {@link SlowdownItem}.
      *
-     * @param x      x position
-     * @param y      y position
-     * @param radius radius of the item
-     * @return the desired item
+     * @param posX      x position
+     * @param posY      y position
+     * @param radius    radius of the item
+     * @return          the desired item
      */
-    public static SlowdownItem createSlowdownItem(int x, int y, int radius) {
-        return new SlowdownItem(x, y, radius);
+    public static SlowdownItem createSlowdownItem(int posX, int posY, int radius) {
+        return new SlowdownItem(posX, posY, radius);
     }
 
     @Override

@@ -11,20 +11,20 @@ public class AddStarsItem extends Item {
 
     private static final int ADD_STARS = 3;
 
-    private AddStarsItem(int x, int y, int radius) {
-        super(x, y, radius);
+    private AddStarsItem(int posX, int posY, int radius) {
+        super(posX, posY, radius);
     }
 
     /**
      * Creates a {@link AddStarsItem}.
      *
-     * @param x      x position
-     * @param y      y position
-     * @param radius radius of the item
-     * @return the desired item
+     * @param posX      x position
+     * @param posY      y position
+     * @param radius    radius of the item
+     * @return          the desired item
      */
-    public static AddStarsItem createAddStarsItem(int x, int y, int radius) {
-        return new AddStarsItem(x, y, radius);
+    public static AddStarsItem createAddStarsItem(int posX, int posY, int radius) {
+        return new AddStarsItem(posX, posY, radius);
     }
 
     @Override

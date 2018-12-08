@@ -11,20 +11,20 @@ public class SpeedupItem extends Item {
 
     private static final double SPEEDUP_FACTOR = 2;
 
-    private SpeedupItem(int x, int y, int radius) {
-        super(x, y, radius);
+    private SpeedupItem(int posX, int posY, int radius) {
+        super(posX, posY, radius);
     }
 
     /**
      * Creates a {@link SpeedupItem}.
      *
-     * @param x      x position
-     * @param y      y position
-     * @param radius radius of the item
-     * @return the desired item
+     * @param posX      x position
+     * @param posY      y position
+     * @param radius    radius of the item
+     * @return          the desired item
      */
-    public static SpeedupItem createSpeedupItem(int x, int y, int radius) {
-        return new SpeedupItem(x, y, radius);
+    public static SpeedupItem createSpeedupItem(int posX, int posY, int radius) {
+        return new SpeedupItem(posX, posY, radius);
     }
 
     @Override

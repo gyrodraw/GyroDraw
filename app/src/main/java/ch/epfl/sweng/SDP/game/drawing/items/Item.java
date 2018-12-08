@@ -18,24 +18,24 @@ public abstract class Item {
 
     protected static final int ITEM_DURATION = 10000;
 
-    private int x;
-    private int y;
+    private int posX;
+    private int posY;
     private int radius;
 
-    protected Item(int x, int y, int radius) {
-        checkPrecondition(x >= 0 && y >= 0 && radius >= 0,
+    protected Item(int posX, int posY, int radius) {
+        checkPrecondition(posX >= 0 && posY >= 0 && radius >= 0,
                 "Coordinates and radius must not be negative");
-        this.x = x;
-        this.y = y;
+        this.posX = posX;
+        this.posY = posY;
         this.radius = radius;
     }
 
     public int getX() {
-        return x;
+        return posX;
     }
 
     public int getY() {
-        return y;
+        return posY;
     }
 
     public int getRadius() {
@@ -55,13 +55,13 @@ public abstract class Item {
 
     /**
      * Calculates if there is a collision between the item and the given parameters.
-     * @param x         x coordinate to check
-     * @param y         y coordinate to check
+     * @param posX      x coordinate to check
+     * @param posY      y coordinate to check
      * @param radius    radius of circle
      * @return          true if there is collision, else false
      */
-    protected boolean collision(int x, int y, int radius) {
-        return Math.hypot(this.x - x, this.y - y)
+    protected boolean collision(int posX, int posY, int radius) {
+        return Math.hypot(this.posX - posX, this.posY - posY)
                 < this.radius + radius;
     }
 

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.FirebaseApp;
@@ -71,8 +72,13 @@ public class MainActivity extends Activity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        launchActivity(LoginActivity.class);
-                        finish();
+                        if(NetworkStateReceiver.isOnline(getApplicationContext())) {
+                            launchActivity(LoginActivity.class);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No internet connection",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

@@ -1,6 +1,10 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -21,6 +25,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +37,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -38,6 +46,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -81,11 +91,15 @@ public class LeaderboardActivityTest {
     public void testFriendsButtonsClickable() {
         String buttonTag = "friendsButton0";
         SystemClock.sleep(2000);
-        onView(withTagValue(is((Object) buttonTag))).check(matches(isClickable()));
+        ImageView imageView = (ImageView) (getViewsByTag(
+                (LinearLayout) activityRule.getActivity().findViewById(R.id.leaderboard),
+                buttonTag)).get(0);
+        Drawable image = imageView.getDrawable();
         onView(withTagValue(is((Object) buttonTag))).perform(click());
+        assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(false));
         SystemClock.sleep(1000);
-        onView(withTagValue(is((Object) buttonTag))).check(matches(isClickable()));
         onView(withTagValue(is((Object) buttonTag))).perform(click());
+        assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(true));
     }
 
     @Test
@@ -140,5 +154,70 @@ public class LeaderboardActivityTest {
         onView(withId(R.id.exitButton)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
+    }
+
+    /**
+     * Searches a LinearLayout for all childs with the given tag value,
+     *
+     * @param root  LinearLayout to search in
+     * @param tag   Tag value to search
+     * @return      List of all childs with given tag
+     */
+    private static ArrayList<View> getViewsByTag(LinearLayout root, String tag){
+        ArrayList<View> views = new ArrayList<>();
+        final int childCount = root.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = root.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                views.addAll(getViewsByTag((LinearLayout) child, tag));
+            }
+
+            final Object tagObj = child.getTag();
+            if (tagObj != null && tagObj.equals(tag)) {
+                views.add(child);
+            }
+
+        }
+        return views;
+    }
+
+    /**
+     * Compares two drawables to check if they are identical.
+     * Code from https://spotandroid.com/2017/02/15/android-tricks-how-to-compare-two-drawables/
+     *
+     * @param drawableA first drawable
+     * @param drawableB second drawable
+     * @return          true if they're identical, else false
+     */
+    private static boolean areDrawablesIdentical(Drawable drawableA, Drawable drawableB) {
+        Drawable.ConstantState stateA = drawableA.getConstantState();
+        Drawable.ConstantState stateB = drawableB.getConstantState();
+        // If the constant state is identical, they are using the same drawable resource.
+        // However, the opposite is not necessarily true.
+        return (stateA != null && stateB != null && stateA.equals(stateB))
+                || getBitmap(drawableA).sameAs(getBitmap(drawableB));
+    }
+
+    private static Bitmap getBitmap(Drawable drawable) {
+        Bitmap result;
+        if (drawable instanceof BitmapDrawable) {
+            result = ((BitmapDrawable) drawable).getBitmap();
+        } else {
+            int width = drawable.getIntrinsicWidth();
+            int height = drawable.getIntrinsicHeight();
+            // Some drawables have no intrinsic width - e.g. solid colours.
+            if (width <= 0) {
+                width = 1;
+            }
+            if (height <= 0) {
+                height = 1;
+            }
+
+            result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        }
+        return result;
     }
 }

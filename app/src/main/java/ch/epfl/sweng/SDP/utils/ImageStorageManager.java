@@ -62,7 +62,8 @@ public class ImageStorageManager {
      * @param image the image to store.
      * @param file the file path.
      */
-    private static void writeFileToStorage(Bitmap image, File file) {
+    @VisibleForTesting
+    public static void writeFileToStorage(Bitmap image, File file) {
         Log.d("ImageStorageManager",  "Saving image: " + file.getPath());
         // Save image in file directory
         try  (FileOutputStream out = new FileOutputStream(file)) {

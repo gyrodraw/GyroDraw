@@ -156,7 +156,7 @@ public class DrawingOnline extends GyroDrawingActivity {
 
         // Does not leave the room if the activity is stopped because
         // voting activity is launched.
-        if (!isVotingActivityLaunched) {
+        if (!isVotingActivityLaunched && NetworkStateReceiver.isOnline(this)) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
         }
 

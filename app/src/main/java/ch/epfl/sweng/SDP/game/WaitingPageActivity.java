@@ -429,7 +429,7 @@ public class WaitingPageActivity extends BaseActivity {
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.
-        if (!isDrawingActivityLaunched) {
+        if (!isDrawingActivityLaunched && NetworkStateReceiver.isOnline(this)) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;

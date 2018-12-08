@@ -233,7 +233,8 @@ public class VotingPageActivity extends BaseActivity {
         super.onPause();
         unregisterReceiver(networkStateReceiver);
 
-        if (roomID != null && !roomID.equals("0123457890")) {
+        if (roomID != null && !roomID.equals("0123457890")
+                && NetworkStateReceiver.isOnline(this)) {
             Matchmaker.getInstance(Account.getInstance(this))
                     .leaveRoom(roomID);
         }

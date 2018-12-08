@@ -41,7 +41,6 @@ public class LoginActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_login);
 
-
         createSignInIntent();
 
         Glide.with(this).load(R.drawable.waiting_animation_dots)

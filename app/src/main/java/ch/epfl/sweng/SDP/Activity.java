@@ -172,7 +172,7 @@ public abstract class Activity extends AppCompatActivity {
             String currentUserId = (String)userEntry.keySet().toArray()[0];
             HashMap<String, Object> user = userEntry
                     .get(currentUserId);
-            Account.deleteAccount();
+
             if (user != null) {
                 Account.createAccount(getApplicationContext(),
                         new ConstantsWrapper(), (String) user.get("username"),

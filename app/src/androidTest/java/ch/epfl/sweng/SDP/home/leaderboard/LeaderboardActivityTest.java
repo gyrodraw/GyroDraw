@@ -37,7 +37,8 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -46,8 +47,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -158,7 +157,7 @@ public class LeaderboardActivityTest {
     }
 
     /**
-     * Searches a LinearLayout for all childs with the given tag value,
+     * Searches a LinearLayout for all childs with the given tag value.
      *
      * @param root  LinearLayout to search in
      * @param tag   Tag value to search
@@ -166,6 +165,7 @@ public class LeaderboardActivityTest {
      */
     private static ArrayList<View> getViewsByTag(LinearLayout root, String tag){
         ArrayList<View> views = new ArrayList<>();
+
         final int childCount = root.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = root.getChildAt(i);
@@ -174,10 +174,9 @@ public class LeaderboardActivityTest {
             }
 
             final Object tagObj = child.getTag();
-            if (tagObj != null && tagObj.equals(tag)) {
+            if (tagObj.equals(tag)) {
                 views.add(child);
             }
-
         }
         return views;
     }
@@ -204,15 +203,9 @@ public class LeaderboardActivityTest {
         if (drawable instanceof BitmapDrawable) {
             result = ((BitmapDrawable) drawable).getBitmap();
         } else {
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
             // Some drawables have no intrinsic width - e.g. solid colours.
-            if (width <= 0) {
-                width = 1;
-            }
-            if (height <= 0) {
-                height = 1;
-            }
+            int width = Math.max(1, drawable.getIntrinsicWidth());
+            int height = Math.max(1, drawable.getIntrinsicHeight());
 
             result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(result);

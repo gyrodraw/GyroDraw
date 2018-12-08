@@ -4,3 +4,5 @@ engines:
     checks:
       com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck:
         enabled: false
+  sonar-java:
+    enabled: true

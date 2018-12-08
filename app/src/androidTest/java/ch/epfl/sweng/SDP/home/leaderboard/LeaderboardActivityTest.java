@@ -174,7 +174,7 @@ public class LeaderboardActivityTest {
             }
 
             final Object tagObj = child.getTag();
-            if (tagObj.equals(tag)) {
+            if (tagObj != null && tagObj.equals(tag)) {
                 views.add(child);
             }
         }

@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;

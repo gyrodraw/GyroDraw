@@ -1,28 +1,31 @@
 package ch.epfl.sweng.SDP.auth;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
-
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.League;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Singleton class that represents an account.

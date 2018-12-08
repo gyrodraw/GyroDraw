@@ -8,11 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
@@ -22,8 +18,15 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.Collections;
 import java.util.List;
+
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 /**
  * Class containing the methods used for the login.

@@ -3,7 +3,6 @@ package ch.epfl.sweng.SDP.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -33,7 +32,6 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static java.lang.String.format;

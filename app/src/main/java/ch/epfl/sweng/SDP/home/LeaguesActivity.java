@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+
+import com.bumptech.glide.Glide;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
 
 /**
  * Class representing the leagues' list which can be opened from the {@link HomeActivity}.

@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.ViewManager;

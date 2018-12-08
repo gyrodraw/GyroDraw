@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -15,7 +14,7 @@ import ch.epfl.sweng.SDP.R;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 
 /**
- * Helper class to manage and display data from Firebase.
+ * Helper class to manage and display user data from Firebase.
  * Needs to be package-private.
  */
 class Player implements Comparable {
@@ -68,7 +67,6 @@ class Player implements Comparable {
      * @param index   of the player
      * @return LinearLayout that will be displayed
      */
-    @SuppressLint("NewApi")
     LinearLayout toLayout(int index) {
         TextView usernameView = new TextView(context);
         Resources res = context.getResources();
@@ -104,8 +102,8 @@ class Player implements Comparable {
     }
 
     private LinearLayout addViews(LinearLayout layout, View[] views) {
-        for (int i = 0; i < views.length; ++i) {
-            layout.addView(views[i]);
+        for (View view : views) {
+            layout.addView(view);
         }
         return layout;
     }

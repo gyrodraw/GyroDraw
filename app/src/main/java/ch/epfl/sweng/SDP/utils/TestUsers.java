@@ -1,9 +1,15 @@
 package ch.epfl.sweng.SDP.utils;
 
-public class TestUsers {
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
+/**
+ * Contains the IDs of all users on Firebase that were created for testing purposes.
+ * Implements a method for checking ig a given user is a real or a test user.
+ */
+public final class TestUsers {
 
     private static final String[] allTestUsers = new String[]{
-            "123456789", "no_user", "userA", "userAA"
+            "123456789", "no_user", "userA", "userAA", "EPFLien"
     };
 
     private TestUsers() {
@@ -18,12 +24,11 @@ public class TestUsers {
      * @throws          IllegalArgumentException if userId is null or empty
      */
     public static boolean isTestUser(String userId) {
-        if (userId == null || userId.isEmpty()) {
-            throw new IllegalArgumentException("UserId must not be null or empty");
-        }
+        checkPrecondition(userId != null, "UserId must not be null");
+        checkPrecondition(!userId.isEmpty(), "UserId must not be empty");
 
-        for (int i = 0; i < allTestUsers.length; ++i) {
-            if (allTestUsers[i].equals(userId)) {
+        for (String testUserId : allTestUsers) {
+            if (testUserId.equals(userId)) {
                 return true;
             }
         }

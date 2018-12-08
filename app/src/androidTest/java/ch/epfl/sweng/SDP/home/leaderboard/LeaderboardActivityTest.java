@@ -88,7 +88,7 @@ public class LeaderboardActivityTest {
     }
 
     @Test
-    public void testFriendsButtonsClickable() {
+    public void testFriendsButtonChangesDrawableCorrectly() {
         String buttonTag = "friendsButton0";
         SystemClock.sleep(2000);
         ImageView imageView = (ImageView) (getViewsByTag(

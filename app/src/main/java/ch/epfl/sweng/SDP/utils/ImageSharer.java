@@ -31,20 +31,20 @@ public class ImageSharer {
     private Activity activity;
     private Context context;
 
-    ImageSharer(Context context, Activity activity) {
-        this.context = context;
+    ImageSharer(Activity activity) {
         this.activity = activity;
+        this.context = activity.getApplicationContext();
     }
 
     /**
      * Get this ImageSharer instance. Use this method to initialize the singleton.
      *
-     * @param context context calling this method
-     * @return ImageSharer instance
+     * @param   activity activity calling this method
+     * @return  ImageSharer instance
      */
-    public static ImageSharer getInstance(Context context, Activity activity) {
+    public static ImageSharer getInstance(Activity activity) {
         if (instance == null) {
-              instance = new ImageSharer(context,activity);
+              instance = new ImageSharer(activity);
         }
         return instance;
     }
@@ -59,6 +59,7 @@ public class ImageSharer {
     /**
      * Use this method to set the activity. This method should also be used to prevent
      * reference cycle by setting the activity to null when it's not used anymore.
+     *
      * @param activity the activity
      */
     public void setActivity(Activity activity) {
@@ -67,20 +68,13 @@ public class ImageSharer {
 
     /**
      * Shares an image to facebook by opening a share dialog.
-     * @param image the image to share.
+     *
+     * @param image the image to share
      */
     public void shareImageToFacebook(Bitmap image) {
         // Check if Facebook app is installed.
         if (ShareDialog.canShow(SharePhotoContent.class)) {
-            SharePhoto photo = new SharePhoto.Builder()
-                    .setBitmap(image)
-                    .build();
-            SharePhotoContent content = new SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-            if (activity != null) {
-                ShareDialog.show(activity, content);
-            }
+            shareImageToFacebookApp(image);
         } else {
             // Facebook app not installed, use web instead.
             uploadImageToFireBase(image);
@@ -88,7 +82,29 @@ public class ImageSharer {
     }
 
     /**
-     * Upload the image to firebase
+     * Shares an image to facebook app.
+     *
+     * @param   image the image to share
+     * @return  true if ShareDialog was created, else false
+     */
+    @VisibleForTesting
+    public boolean shareImageToFacebookApp(Bitmap image) {
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(image)
+                .build();
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhoto(photo)
+                .build();
+        if (activity != null) {
+            ShareDialog.show(activity, content);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Uploads the image to firebase storage.
+     *
      * @param image the image to upload
      */
     private void uploadImageToFireBase(Bitmap image) {
@@ -106,7 +122,8 @@ public class ImageSharer {
     }
 
     /**
-     * Retrieve the image url of the storage reference.
+     * Retrieves the image url of the storage reference.
+     *
      * @param ref the storage reference.
      */
     private void getUrl(StorageReference ref) {

@@ -91,7 +91,7 @@ public class VotingPageActivity extends BaseActivity {
         sharingMode = true;
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 getApplicationContext(), null, 1);
-        ImageSharer.getInstance(getApplicationContext(),this)
+        ImageSharer.getInstance(this)
                 .shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
     }
 

@@ -51,6 +51,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -130,15 +131,14 @@ public class VotingPageActivityTest {
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));
-gi
+
         // Save image
-        Bitmap bitmap = BitmapFactory.decodeResource(mActivityRule.getActivity().getResources(), R.drawable.league_1);
+        Bitmap bitmap = initializedBitmap();
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 mActivityRule.getActivity().getApplicationContext(), null, 1);
         localDbHandler.addBitmapToDb(bitmap,2);
         onView(withId(R.id.save)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
-
     }
 
     @Test
@@ -286,5 +286,11 @@ gi
         byte[] data = byteArrayOutputStream.toByteArray();
         Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
         assertThat(newBitmap, is(not(nullValue())));
+    }
+
+    @Test
+    public void testImageSharerShareToApp() {
+        ImageSharer imageSharer = ImageSharer.getInstance(mActivityRule.getActivity());
+        assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(true));
     }
 }

@@ -300,7 +300,6 @@ public class VotingPageActivityTest {
 
     @Test
     public void testToastAfterSuccessfulDownload() {
-        ImageStorageManager.
         ImageStorageManager.successfullyDownloadedImageToast(mActivityRule.getActivity());
         onView(withText(mActivityRule.getActivity().getString(R.string.successfulImageDownload)))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()

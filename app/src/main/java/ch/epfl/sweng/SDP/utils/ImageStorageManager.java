@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.R;
 
 /**
  * This class is responsible for saving images to the device storage.
@@ -51,13 +52,7 @@ public class ImageStorageManager {
                 new String[]{"image/png"}, null);
 
         if (activity != null) {
-            activity.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast toast = Toast.makeText(context,
-                            "Successfully saved image to /Camera/Gyrodraw", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            });
+            successfullyDownloadedImageToast(activity);
         }
     }
 
@@ -92,6 +87,22 @@ public class ImageStorageManager {
         myDir.mkdirs();
         String fname = "Image-" + imageName + ".png";
         return new File(myDir, fname);
+    }
+
+    /**
+     * Creates a toast to show that image was successfully downloaded.
+     *
+     * @param activity  to show the toast on
+     */
+    @VisibleForTesting
+    public static void successfullyDownloadedImageToast(final Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast toast = Toast.makeText(activity.getApplicationContext(),
+                        activity.getString(R.string.successfulImageDownload), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
 }

@@ -64,4 +64,5 @@
     <string name="usernameTooShort">Username is too short</string>
     <string name="usernameTooLong">Username is too long</string>
     <string name="usernameIllegalChar">Username must not contain</string>
+    <string name="successfulImageDownload">Successfully saved image to /Camera/Gyrodraw</string>
 </resources>

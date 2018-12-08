@@ -46,10 +46,14 @@ import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -292,5 +296,13 @@ public class VotingPageActivityTest {
     public void testImageSharerShareToApp() {
         ImageSharer imageSharer = ImageSharer.getInstance(mActivityRule.getActivity());
         assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(true));
+    }
+
+    @Test
+    public void testToastAfterSuccessfulDownload() {
+        ImageStorageManager.successfullyDownloadedImageToast(mActivityRule.getActivity());
+        onView(withText(mActivityRule.getActivity().getString(R.string.successfulImageDownload)))
+                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                        .getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 }

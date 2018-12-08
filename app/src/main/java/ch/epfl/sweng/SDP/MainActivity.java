@@ -34,7 +34,6 @@ public class MainActivity extends Activity {
         FirebaseApp.initializeApp(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        // Go to the home if the user has already logged in and created an account
         if (auth.getCurrentUser() != null) {
             Database.getReference("users").orderByChild("email")
                     .equalTo(auth.getCurrentUser().getEmail())
@@ -42,6 +41,7 @@ public class MainActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
+                                // Go to the home if the user has already logged in and created an account
                                 cloneAccountFromFirebase(dataSnapshot);
 
                                 TextView errorMessage = findViewById(

@@ -3,9 +3,12 @@ package ch.epfl.sweng.SDP.game;
 import static java.lang.String.format;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
@@ -24,10 +27,15 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiverListener;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -39,6 +47,8 @@ public class WaitingPageActivity extends BaseActivity {
     private static final String TAG = "WaitingPageActivity";
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private NetworkStateReceiver networkStateReceiver;
 
     private static boolean enableSquareAnimation = true;
 
@@ -190,6 +200,13 @@ public class WaitingPageActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
 
+        NetworkStateReceiverListener networkStateReceiverListener =
+                new NetworkStateListenerWrapper(this);
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(networkStateReceiverListener);
+        registerReceiver(networkStateReceiver,
+                new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
         Intent intent = getIntent();
         roomID = intent.getStringExtra("roomID");
         word1 = intent.getStringExtra("word1");
@@ -210,6 +227,9 @@ public class WaitingPageActivity extends BaseActivity {
 
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
+
+        DatabaseReference userRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users." + Account.getInstance(this).getUserId());
+        userRef.onDisconnect().removeValue();
 
         DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." +
                 roomID + ".users");
@@ -405,6 +425,7 @@ public class WaitingPageActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(networkStateReceiver);
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.

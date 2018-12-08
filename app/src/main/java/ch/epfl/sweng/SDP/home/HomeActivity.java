@@ -29,7 +29,7 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.utils.CheckConnection;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
@@ -320,7 +320,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
-        if (CheckConnection.isOnline(this)) {
+        if (NetworkStateReceiver.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
             intent.putExtra("mode", gameMode);

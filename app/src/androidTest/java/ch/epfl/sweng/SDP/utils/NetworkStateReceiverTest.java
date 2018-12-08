@@ -7,10 +7,10 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class CheckConnectionTest {
+public class NetworkStateReceiverTest {
 
     @Test
     public void testInternetConnection() {
-        assertThat(CheckConnection.isOnline(InstrumentationRegistry.getContext()), is(true));
+        assertThat(NetworkStateReceiver.isOnline(InstrumentationRegistry.getContext()), is(true));
     }
 }

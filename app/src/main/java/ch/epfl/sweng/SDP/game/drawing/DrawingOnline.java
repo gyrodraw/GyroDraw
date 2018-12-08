@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,9 @@ import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.utils.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiverListener;
 
 import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
 import static java.lang.String.format;
@@ -34,6 +38,8 @@ import static java.lang.String.format;
 public class DrawingOnline extends GyroDrawingActivity {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private NetworkStateReceiver networkStateReceiver;
 
     private String winningWord;
 
@@ -116,6 +122,13 @@ public class DrawingOnline extends GyroDrawingActivity {
         super.onCreate(savedInstanceState);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
+        NetworkStateReceiverListener networkStateReceiverListener =
+                new NetworkStateListenerWrapper(this);
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(networkStateReceiverListener);
+        registerReceiver(networkStateReceiver,
+                new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
         Intent intent = getIntent();
 
         roomId = intent.getStringExtra("RoomID");
@@ -131,11 +144,14 @@ public class DrawingOnline extends GyroDrawingActivity {
         timerRef.addValueEventListener(listenerTimer);
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
+
+        Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".onlineStatus." + Account.getInstance(this).getUsername()).setValue(1);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(networkStateReceiver);
 
         // Does not leave the room if the activity is stopped because
         // voting activity is launched.

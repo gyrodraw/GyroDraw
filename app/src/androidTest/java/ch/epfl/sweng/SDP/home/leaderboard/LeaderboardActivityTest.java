@@ -96,6 +96,7 @@ public class LeaderboardActivityTest {
                 buttonTag)).get(0);
         Drawable image = imageView.getDrawable();
         onView(withTagValue(is((Object) buttonTag))).perform(click());
+        SystemClock.sleep(1000);
         assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(false));
         SystemClock.sleep(1000);
         onView(withTagValue(is((Object) buttonTag))).perform(click());

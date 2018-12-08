@@ -7,6 +7,7 @@ import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import ch.epfl.sweng.SDP.Activity;
  */
 public class ImageStorageManager {
 
-    ImageStorageManager() {
+    private ImageStorageManager() {
         // Empty constructor
     }
 
@@ -83,7 +84,8 @@ public class ImageStorageManager {
      * @param imageName the name of the image.
      * @return a file object to the directory.
      */
-    private static File getFile(String imageName) {
+    @VisibleForTesting
+    public static File getFile(String imageName) {
         String root = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";
         File myDir = new File(root);

@@ -20,8 +20,11 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import java.io.File;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 import org.junit.Rule;
@@ -35,15 +38,14 @@ public class ImageStorageManagerTest {
             GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
     @Test
-    public void isPermissionsGranted() {
+    public void testIsPermissionsGranted() {
         boolean granted = ActivityCompat.checkSelfPermission(InstrumentationRegistry.getContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED;
         assertThat(granted, is(true));
     }
 
-
     @Test
-    public void saveImage() {
+    public void testSaveImage() {
         String imgName = "TEST";
         Bitmap bm = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         ImageStorageManager.saveImage(bm, imgName, null, InstrumentationRegistry.getContext());
@@ -56,5 +58,13 @@ public class ImageStorageManagerTest {
        // assertThat(myDir.exists(), is(true));
     }
 
+    @Test
+    public void testGetFile() {
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";
+        String fileName = root + "Image-testFile.png";
 
+        String path = ImageStorageManager.getFile("testFile").getPath();
+        assertThat(path, is(equalTo(fileName)));
+    }
 }

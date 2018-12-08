@@ -145,7 +145,8 @@ public class DrawingOnline extends GyroDrawingActivity {
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".onlineStatus." + Account.getInstance(this).getUsername()).setValue(1);
+        Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".onlineStatus."
+                + Account.getInstance(this).getUsername()).setValue(1);
     }
 
     @Override

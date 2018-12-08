@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -31,6 +35,9 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.NetworkStateReceiverListener;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -41,12 +48,16 @@ public class VotingPageActivity extends BaseActivity {
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
+    private NetworkStateReceiver networkStateReceiver;
+
     private final String username = Account.getInstance(this).getUsername();
 
     private DatabaseReference rankingRef;
     private DatabaseReference stateRef;
     private DatabaseReference timerRef;
     private DatabaseReference usersRef;
+
+    private HashMap<String, Integer> rankingTable = new HashMap<>();
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
@@ -122,6 +133,13 @@ public class VotingPageActivity extends BaseActivity {
         setContentView(R.layout.activity_voting_page);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        NetworkStateReceiverListener networkStateReceiverListener =
+                new NetworkStateListenerWrapper(this);
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(networkStateReceiverListener);
+        registerReceiver(networkStateReceiver,
+                new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
 
@@ -144,11 +162,25 @@ public class VotingPageActivity extends BaseActivity {
                 drawingView, timer, starsAnimation);
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        playerNameView.setTypeface(typeMuro);
-        timer.setTypeface(typeMuro);
+        setTypeFace(typeMuro, playerNameView, timer, findViewById(R.id.disconnectedText));
 
         // Get the ranking reference
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if(ds.getValue(Integer.class) != null) {
+                        rankingTable.put(ds.getKey(), ds.getValue(Integer.class));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
 
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
@@ -191,11 +223,15 @@ public class VotingPageActivity extends BaseActivity {
                 throw databaseError.toException();
             }
         });
+
+        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
+                + Account.getInstance(this).getUsername()).setValue(1);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(networkStateReceiver);
 
         if (roomID != null && !roomID.equals("0123457890")) {
             Matchmaker.getInstance(Account.getInstance(this))
@@ -237,8 +273,13 @@ public class VotingPageActivity extends BaseActivity {
         changeDrawing(drawings[changeDrawingCounter], playerName);
 
         addStarAnimationListener();
-
-        enableRatingBar(playerName);
+        if(rankingTable.get(playerName) >= 0) {
+            findViewById(R.id.disconnectedText).setVisibility(View.GONE);
+            enableRatingBar(playerName);
+        } else {
+            ratingBar.setRating(0f);
+            findViewById(R.id.disconnectedText).setVisibility(View.VISIBLE);
+        }
     }
 
     private void enableRatingBar(String playerName) {

@@ -8,6 +8,7 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
 import static java.lang.String.format;
 
@@ -29,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.OnlineStatusService;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -127,9 +128,8 @@ public class HomeActivity extends BaseActivity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
-        // Start the service taking care of updating Firebase Database with the user status
-        Intent intent = new Intent(this, OnlineStatusService.class);
-        startService(intent);
+        // Update the user online status on Firebase and set the onDisconnect listener
+        updateUserStatusOnFirebase();
 
         // Add listener to check for new friends requests
         addListenerForFriendsRequests();
@@ -174,6 +174,28 @@ public class HomeActivity extends BaseActivity {
         setLeague();
     }
 
+    private void updateUserStatusOnFirebase() {
+        FirebaseDatabase.getInstance().getReference(".info/connected")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(boolean.class);
+                        if (connected) {
+                            changeOnlineStatus(getApplicationContext(), ONLINE);
+                            Database.getReference(format("users.%s.online",
+                                    Account.getInstance(getApplicationContext()).getUserId()))
+                                    .onDisconnect()
+                                    .setValue(OFFLINE.ordinal());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        throw error.toException();
+                    }
+                });
+    }
+
     private void addListenerForFriendsRequests() {
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
                 .addValueEventListener(listenerFriendsRequest);
@@ -190,7 +212,6 @@ public class HomeActivity extends BaseActivity {
      */
     private void signOut() {
         final Toast toastSignOut = makeAndShowToast("Signing out...");
-        changeOnlineStatus(this, OFFLINE);
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -199,7 +220,8 @@ public class HomeActivity extends BaseActivity {
                             Account.deleteAccount();
                             toastSignOut.cancel();
                             launchActivity(MainActivity.class);
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            overridePendingTransition(R.anim.fade_in,
+                                    R.anim.fade_out);
                             finish();
                         } else {
                             Log.e(TAG, "Sign out failed!");

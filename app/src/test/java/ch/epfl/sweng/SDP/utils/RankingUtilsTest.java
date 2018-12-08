@@ -23,6 +23,31 @@ public class RankingUtilsTest {
         assertThat(trophies, is(result));
     }
 
+    @Test
+    public void testGenerateTrophiesFromRankingWithNegatives() {
+        Integer[] ranking = new Integer[] {5, -1, -1, -1, -1};
+
+        Integer[] trophies = RankingUtils.generateTrophiesFromRanking(ranking);
+        Integer[] result = new Integer[] {10, -10, -10, -10, -10};
+        assertThat(trophies, is(result));
+
+        ranking = new Integer[] {-1, -1, -1, -1, -1};
+
+        trophies = RankingUtils.generateTrophiesFromRanking(ranking);
+        result = new Integer[] {-10, -10, -10, -10, -10};
+
+        assertThat(trophies, is(result));
+    }
+
+    @Test
+    public void testGeneratePositionsFromRankingWithNegatives() {
+        Integer[] ranking = new Integer[] {5, 2, 2, 2, -1};
+
+        Integer[] trophies = RankingUtils.generatePositionsFromRanking(ranking);
+        Integer[] result = new Integer[] {1, 2, 2, 2, 5};
+        assertThat(trophies, is(result));
+    }
+
 
     @Test
     public void testGeneratePositionsFromRanking() {

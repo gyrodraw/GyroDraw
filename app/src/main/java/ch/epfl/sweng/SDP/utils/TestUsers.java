@@ -4,7 +4,7 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Contains the IDs of all users on Firebase that were created for testing purposes.
- * Implements a method for checking ig a given user is a real or a test user.
+ * Implements a method for checking if a given user is a real or a test user.
  */
 public final class TestUsers {
 

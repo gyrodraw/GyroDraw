@@ -41,7 +41,7 @@
             android:name=".game.VotingPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.LeaderboardActivity"
+            android:name=".home.leaderboard.LeaderboardActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.BattleLogActivity"

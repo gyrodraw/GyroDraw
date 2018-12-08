@@ -134,7 +134,7 @@ public class RankingFragment extends ListFragment {
                 int trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
 
                 Boolean won = usernames.get(0).equals(account.getUsername());
-                updateUserStats(rankForUser, trophiesForUser, won);
+                updateUserStats(Math.max(rankForUser, 0), trophiesForUser, won);
                 createAndStoreGameResult(usernames, usernames.indexOf(account.getUsername()),
                                             rankForUser, trophiesForUser);
 

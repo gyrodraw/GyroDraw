@@ -45,6 +45,10 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
+    private DataSnapshot dataSnapshotMock;
+    private DatabaseError databaseErrorMock;
+    private StarAnimationView starsAnimation;
+
     @Rule
     public final ActivityTestRule<VotingPageActivity> mActivityRule =
             new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
@@ -65,9 +69,6 @@ public class VotingPageActivityTest {
                     return intent;
                 }
             };
-    private DataSnapshot dataSnapshotMock;
-    private DatabaseError databaseErrorMock;
-    private StarAnimationView starsAnimation;
 
     @Before
     public void init() {

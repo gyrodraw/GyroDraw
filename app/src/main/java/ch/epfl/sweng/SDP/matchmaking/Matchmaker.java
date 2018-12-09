@@ -26,14 +26,6 @@ public class Matchmaker implements MatchmakingInterface {
     private DatabaseReference roomsRef;
     private Account account;
 
-    private Matchmaker(Account account) {
-        if (instance != null) {
-            throw new IllegalStateException("Already instantiated");
-        }
-        this.roomsRef = Database.getReference("realRooms");
-        this.account = account;
-    }
-
     /**
      * Gets (eventually creates) the instance.
      *
@@ -45,6 +37,14 @@ public class Matchmaker implements MatchmakingInterface {
         }
 
         return instance;
+    }
+
+    private Matchmaker(Account account) {
+        if (instance != null) {
+            throw new IllegalStateException("Already instantiated");
+        }
+        this.roomsRef = Database.getReference("realRooms");
+        this.account = account;
     }
 
     /**

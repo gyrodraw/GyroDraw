@@ -18,6 +18,18 @@ public class Shop {
         itemList = new ArrayList<>();
     }
 
+    void removeItem(ShopItem shopItem) {
+        itemList.remove(shopItem);
+    }
+
+    void addItem(ShopItem shopItem) {
+        itemList.add(shopItem);
+    }
+
+    List<ShopItem> getItemList() {
+        return new LinkedList<>(itemList);
+    }
+
     /**
      * Converts an {@link HashMap} into a list of shop items.
      *
@@ -36,17 +48,5 @@ public class Shop {
         }
 
         return listItem;
-    }
-
-    void removeItem(ShopItem shopItem) {
-        itemList.remove(shopItem);
-    }
-
-    void addItem(ShopItem shopItem) {
-        itemList.add(shopItem);
-    }
-
-    List<ShopItem> getItemList() {
-        return new LinkedList<>(itemList);
     }
 }

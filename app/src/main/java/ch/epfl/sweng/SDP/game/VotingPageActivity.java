@@ -36,9 +36,10 @@ import ch.epfl.sweng.SDP.utils.BitmapManipulator;
  */
 public class VotingPageActivity extends BaseActivity {
 
+    private static boolean enableAnimations = true;
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    private static boolean enableAnimations = true;
+
     private final String username = Account.getInstance(this).getUsername();
 
     private DatabaseReference rankingRef;
@@ -61,28 +62,11 @@ public class VotingPageActivity extends BaseActivity {
     private TextView timer;
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
-    @VisibleForTesting
-    protected final ValueEventListener listenerCounter = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Integer value = dataSnapshot.getValue(Integer.class);
-            if (value != null) {
-                timer.setText(value % 6 == 0 && value != 0 ? "6" : String.valueOf(value % 6));
 
-                if (value != 30 && (value % 6) == 0 && value != 0) {
-                    // Switch every 6 seconds
-                    changeImage();
-                }
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
-    };
     private RankingFragment fragment;
+
     private String roomID = "undefined";
+
     @VisibleForTesting
     protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
@@ -110,14 +94,26 @@ public class VotingPageActivity extends BaseActivity {
         }
     };
 
-    /**
-     * Disables the background and stars animation. Call this method in every VotingPageActivity
-     * test
-     */
     @VisibleForTesting
-    public static void disableAnimations() {
-        enableAnimations = false;
-    }
+    protected final ValueEventListener listenerCounter = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer value = dataSnapshot.getValue(Integer.class);
+            if (value != null) {
+                timer.setText(value % 6 == 0 && value != 0 ? "6" : String.valueOf(value % 6));
+
+                if (value != 30 && (value % 6) == 0 && value != 0) {
+                    // Switch every 6 seconds
+                    changeImage();
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            throw databaseError.toException();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -412,12 +408,13 @@ public class VotingPageActivity extends BaseActivity {
 
         fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        fragment.putExtra(roomID, drawings, playersNames);
+        fragment.putExtra(roomID,drawings,playersNames);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)
                 .addToBackStack(null).commit();
     }
+
 
     /**
      * Displays the drawing of the winner.
@@ -433,6 +430,15 @@ public class VotingPageActivity extends BaseActivity {
     private void removeAllListeners() {
         stateRef.removeEventListener(listenerState);
         timerRef.removeEventListener(listenerCounter);
+    }
+
+    /**
+     * Disables the background and stars animation. Call this method in every VotingPageActivity
+     * test
+     */
+    @VisibleForTesting
+    public static void disableAnimations() {
+        enableAnimations = false;
     }
 
     @VisibleForTesting

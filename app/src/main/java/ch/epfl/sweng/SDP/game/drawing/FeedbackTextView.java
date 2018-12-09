@@ -34,9 +34,9 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
     /**
      * Creates a text feedback to inform the player which item has been picked up.
      *
-     * @param item            that was activated
+     * @param item that was activated
      * @param paintViewHolder the holder of the view
-     * @param context         the context where we want to put the TextView
+     * @param context the context where we want to put the TextView
      * @return feedback text
      */
     static TextView itemTextFeedback(Item item, final RelativeLayout paintViewHolder,

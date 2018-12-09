@@ -35,15 +35,20 @@ public class PaintView extends View {
     private static final int QUALITY = 20;
     private static final float INIT_SPEED = 5;
     private static final int CIRCLE_STROKE = 15;
-    private final Context context;
+
     private boolean canDraw = true;
     private boolean isDrawing = false;
     private boolean bucketMode = false;
+
     private List<Paint> colors = new LinkedList<>();
     private Path path = new Path();
     private Paint paintC;
+
     private Bitmap bitmap;
     private Canvas canvas;
+
+    private final Context context;
+
     private int circleX = 0;
     private int circleY = 0;
 
@@ -129,9 +134,8 @@ public class PaintView extends View {
         return circleRadius;
     }
 
-    @VisibleForTesting
-    public void setCircleRadius(int circleRadius) {
-        this.circleRadius = circleRadius;
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
     public void multSpeed(double factor) {
@@ -143,8 +147,9 @@ public class PaintView extends View {
         return speed;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
+    @VisibleForTesting
+    public void setCircleRadius(int circleRadius) {
+        this.circleRadius = circleRadius;
     }
 
     /**
@@ -152,10 +157,6 @@ public class PaintView extends View {
      */
     public void updateCircleRadius() {
         circleRadius = (CIRCLE_STROKE + drawWidth) / 2;
-    }
-
-    protected int getDrawWidth() {
-        return drawWidth;
     }
 
     /**
@@ -172,6 +173,10 @@ public class PaintView extends View {
         for (Paint paint : colors) {
             paint.setStrokeWidth(drawWidth);
         }
+    }
+
+    protected int getDrawWidth() {
+        return drawWidth;
     }
 
     /**

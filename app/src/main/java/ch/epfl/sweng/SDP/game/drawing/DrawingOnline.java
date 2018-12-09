@@ -33,6 +33,15 @@ import static java.lang.String.format;
 public class DrawingOnline extends GyroDrawingActivity {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+
+    private String winningWord;
+
+    private String roomId;
+
+    private DatabaseReference timerRef;
+    private DatabaseReference stateRef;
+    private boolean isVotingActivityLaunched = false;
+
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -48,11 +57,7 @@ public class DrawingOnline extends GyroDrawingActivity {
             // Does nothing for the moment
         }
     };
-    private String winningWord;
-    private String roomId;
-    private DatabaseReference timerRef;
-    private DatabaseReference stateRef;
-    private boolean isVotingActivityLaunched = false;
+
     protected final ValueEventListener listenerState = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

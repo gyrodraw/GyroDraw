@@ -61,7 +61,7 @@ public class AccountCreationActivityAndAccountTest {
 
     @Rule
     public final ActivityTestRule<AccountCreationActivity> activityRule =
-            new ActivityTestRule<AccountCreationActivity>(AccountCreationActivity.class) {
+            new ActivityTestRule<AccountCreationActivity>(AccountCreationActivity.class){
 
                 @Override
                 protected Intent getActivityIntent() {
@@ -368,13 +368,13 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testCreateAccountWithBackslash() {
-        testIllegalUsernameGivesCorrectError("MAX" + '\\' + "MUSTER",
+        testIllegalUsernameGivesCorrectError("MAX"+'\\'+"MUSTER",
                 R.string.usernameIllegalChar, " \\");
     }
 
     @Test
     public void testCreateAccountWithPercent() {
-        testIllegalUsernameGivesCorrectError("MAX" + '%' + "MUSTER",
+        testIllegalUsernameGivesCorrectError("MAX"+'%'+"MUSTER",
                 R.string.usernameIllegalChar, " %");
     }
 

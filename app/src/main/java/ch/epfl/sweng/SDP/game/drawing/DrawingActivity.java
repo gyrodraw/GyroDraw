@@ -40,28 +40,13 @@ public abstract class DrawingActivity extends BaseActivity {
     protected PaintView paintView;
     protected Handler handler;
     protected SeekBar brushWidthBar;
-    SeekBar.OnSeekBarChangeListener brushWidthBarListener = new SeekBar.OnSeekBarChangeListener() {
 
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            // updated continuously as the user slides the thumb
-            adjustDrawingAndCircleWidth((int) (Math.pow(CURR_WIDTH, progress / 50.)) + MIN_WIDTH);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            // Must be implemented, but does nothing here.
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            // Must be implemented, but does nothing here.
-        }
-    };
     private ImageView[] colorButtons;
+
     private ImageView pencilButton;
     private ImageView eraserButton;
     private ImageView bucketButton;
+
     private int px;
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
@@ -118,6 +103,25 @@ public abstract class DrawingActivity extends BaseActivity {
         brushWidthBar.setOnSeekBarChangeListener(brushWidthBarListener);
     }
 
+    SeekBar.OnSeekBarChangeListener brushWidthBarListener = new SeekBar.OnSeekBarChangeListener() {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            // updated continuously as the user slides the thumb
+            adjustDrawingAndCircleWidth((int) (Math.pow(CURR_WIDTH, progress / 50.)) + MIN_WIDTH);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            // Must be implemented, but does nothing here.
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // Must be implemented, but does nothing here.
+        }
+    };
+
     private void adjustDrawingAndCircleWidth(int newVal) {
         paintView.setDrawWidth(newVal);
         paintView.updateCircleRadius();
@@ -135,7 +139,7 @@ public abstract class DrawingActivity extends BaseActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        params.setMargins(px / 2, 0, px / 2, px);
+        params.setMargins( px / 2, 0, px / 2, px);
         image.setLayoutParams(params);
         image.setAdjustViewBounds(true);
         image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);

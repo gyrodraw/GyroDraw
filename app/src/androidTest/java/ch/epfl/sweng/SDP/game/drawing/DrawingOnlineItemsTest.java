@@ -32,13 +32,15 @@ public class DrawingOnlineItemsTest {
     private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";
     private static final String EMAIL = "testUser@gyrodraw.ch";
-    @Rule
-    public final ActivityTestRule<DrawingOnlineItems> activityRule =
-            new ActivityTestRule<>(DrawingOnlineItems.class);
+
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
     private DrawingOnlineItems activity;
     private Account account;
+
+    @Rule
+    public final ActivityTestRule<DrawingOnlineItems> activityRule =
+            new ActivityTestRule<>(DrawingOnlineItems.class);
 
     /**
      * Initializes variables.

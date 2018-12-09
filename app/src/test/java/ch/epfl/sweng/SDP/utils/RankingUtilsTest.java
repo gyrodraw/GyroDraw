@@ -9,16 +9,16 @@ public class RankingUtilsTest {
 
     @Test
     public void testGenerateTrophiesFromRanking() {
-        Integer[] ranking = new Integer[]{5, 5, 4, 2, 0};
+        Integer[] ranking = new Integer[] {5, 5, 4, 2, 0};
 
         Integer[] trophies = RankingUtils.generateTrophiesFromRanking(ranking);
-        Integer[] result = new Integer[]{10, 10, 0, -5, -10};
+        Integer[] result = new Integer[] {10, 10, 0, -5, -10};
         assertThat(trophies, is(result));
 
-        ranking = new Integer[]{5, 5, 5, 5, 5};
+        ranking = new Integer[] {5, 5, 5, 5, 5};
 
         trophies = RankingUtils.generateTrophiesFromRanking(ranking);
-        result = new Integer[]{10, 10, 10, 10, 10};
+        result = new Integer[] {10, 10, 10, 10, 10};
 
         assertThat(trophies, is(result));
     }
@@ -26,17 +26,17 @@ public class RankingUtilsTest {
 
     @Test
     public void testGeneratePositionsFromRanking() {
-        Integer[] ranking = new Integer[]{5, 5, 4, 2, 0};
+        Integer[] ranking = new Integer[] {5, 5, 4, 2, 0};
 
         Integer[] trophies = RankingUtils.generatePositionsFromRanking(ranking);
-        Integer[] result = new Integer[]{1, 1, 3, 4, 5};
+        Integer[] result = new Integer[] {1, 1, 3, 4, 5};
         assertThat(trophies, is(result));
     }
 
     @Test
     public void testAddSignToNumbers() {
-        Integer[] input = new Integer[]{10, 10, 0, -5, -10};
-        String[] expectedOutput = new String[]{"+10", "+10", "0", "-5", "-10"};
+        Integer[] input = new Integer[] {10, 10, 0, -5, -10};
+        String[] expectedOutput = new String[] {"+10", "+10", "0", "-5", "-10"};
 
         assertThat(RankingUtils.addSignToNumber(input), is(expectedOutput));
     }

@@ -69,12 +69,12 @@ public class BumpingItem extends Item {
         return " ";
     }
 
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
     @VisibleForTesting
     public ImageView getImageView() {
         return imageView;
-    }
-
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
     }
 }

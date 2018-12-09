@@ -24,10 +24,11 @@ import static org.hamcrest.Matchers.is;
 
 public class DrawingOfflineNoItemsTest {
 
+    private PaintView paintView;
+
     @Rule
     public final ActivityTestRule<DrawingOffline> activityRule =
             new ActivityTestRule<>(DrawingOffline.class);
-    private PaintView paintView;
 
     /**
      * Initialise mock elements and get UI elements.

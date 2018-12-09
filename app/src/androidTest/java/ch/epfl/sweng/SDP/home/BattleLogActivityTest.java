@@ -30,27 +30,19 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 @RunWith(AndroidJUnit4.class)
 public class BattleLogActivityTest {
 
+    private static List<String> rankedUsernames = getUsernameList();
+
     private static final int RANK = 2;
     private static final int STARS = 15;
     private static final int TROPHIES = -5;
-    private static List<String> rankedUsernames = getUsernameList();
-    @Rule
-    public final ActivityTestRule<BattleLogActivity> activityRule =
-            new ActivityTestRule<>(BattleLogActivity.class);
     private final Bitmap DRAWING = initializedBitmap();
+
     private GameResult gameResult;
     private LocalDbHandlerForGameResults localDbHandler;
 
-    private static List<String> getUsernameList() {
-        List<String> rankedUsername = new ArrayList<>();
-        rankedUsername.add("User1");
-        rankedUsername.add("User2");
-        rankedUsername.add("User3");
-        rankedUsername.add("User4");
-        rankedUsername.add("User5");
-
-        return rankedUsername;
-    }
+    @Rule
+    public final ActivityTestRule<BattleLogActivity> activityRule =
+            new ActivityTestRule<>(BattleLogActivity.class);
 
     /**
      * Initialize the game result and the local database handler.
@@ -110,5 +102,16 @@ public class BattleLogActivityTest {
                 assertThat(drawing.getPixel(i, j), is(0xFFFFFFFF));
             }
         }
+    }
+
+    private static List<String> getUsernameList() {
+        List<String> rankedUsername = new ArrayList<>();
+        rankedUsername.add("User1");
+        rankedUsername.add("User2");
+        rankedUsername.add("User3");
+        rankedUsername.add("User4");
+        rankedUsername.add("User5");
+
+        return rankedUsername;
     }
 }

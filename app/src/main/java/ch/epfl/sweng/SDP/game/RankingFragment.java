@@ -82,9 +82,8 @@ public class RankingFragment extends ListFragment {
 
     /**
      * Sets the attributes of this class.
-     *
-     * @param roomId      the id of the room.
-     * @param drawings    the users drawings.
+     * @param roomId the id of the room.
+     * @param drawings the users drawings.
      * @param playerNames the usernames of the players.
      */
     public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames) {
@@ -121,7 +120,7 @@ public class RankingFragment extends ListFragment {
                 Arrays.sort(rankings, Collections.reverseOrder());
 
                 int rankForUser = 0;
-                if (dataSnapshot.child(account.getUsername()).getValue(int.class) != null) {
+                if(dataSnapshot.child(account.getUsername()).getValue(int.class) != null) {
                     rankForUser = dataSnapshot.child(account.getUsername()).getValue(int.class);
                 }
 
@@ -134,7 +133,7 @@ public class RankingFragment extends ListFragment {
                 Boolean won = usernames.get(0).equals(account.getUsername());
                 updateUserStats(rankForUser, trophiesForUser, won);
                 createAndStoreGameResult(usernames, usernames.indexOf(account.getUsername()),
-                        rankForUser, trophiesForUser);
+                                            rankForUser, trophiesForUser);
 
                 String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                 ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
@@ -219,8 +218,8 @@ public class RankingFragment extends ListFragment {
             convertView.setBackgroundColor(darkColor);
         }
 
-        private void setTypeFace(Typeface typeface, View... views) {
-            for (View view : views) {
+        private void setTypeFace(Typeface typeface, View ...views) {
+            for(View view : views) {
                 ((TextView) view).setTypeface(typeface);
             }
         }
@@ -234,8 +233,8 @@ public class RankingFragment extends ListFragment {
                     .inflate(R.layout.ranking_item, parent, false);
 
             setTypeFace(TypefaceLibrary.getTypeMuro(), convertView.findViewById(R.id.playerName),
-                    convertView.findViewById(R.id.starsWon),
-                    convertView.findViewById(R.id.trophiesWon));
+                                convertView.findViewById(R.id.starsWon),
+                                convertView.findViewById(R.id.trophiesWon));
 
             // Update image
             ImageView imageview = convertView.findViewById(R.id.drawing);

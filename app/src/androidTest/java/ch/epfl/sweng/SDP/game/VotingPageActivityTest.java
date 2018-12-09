@@ -288,7 +288,8 @@ public class VotingPageActivityTest {
         bitmap.compress(Bitmap.CompressFormat.JPEG,
                 1, byteArrayOutputStream);
         byte[] data = byteArrayOutputStream.toByteArray();
-        Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
+        Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(
+                data, 0, data.length, 2, 2);
         assertThat(newBitmap, is(not(nullValue())));
     }
 

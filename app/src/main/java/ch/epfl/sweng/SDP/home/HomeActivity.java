@@ -86,24 +86,7 @@ public class HomeActivity extends BaseActivity {
                             FriendsRequestState.fromInteger(stateValue);
 
                     if (state == FriendsRequestState.RECEIVED) {
-                        final String id = child.getKey();
-                        Database.getReference(format("users.%s.username", id))
-                                .addListenerForSingleValueEvent(
-                                        new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(
-                                                    @NonNull DataSnapshot dataSnapshot) {
-                                                String name = dataSnapshot
-                                                        .getValue(String.class);
-                                                showFriendRequestPopup(name, id);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(
-                                                    @NonNull DatabaseError databaseError) {
-                                                throw databaseError.toException();
-                                            }
-                                        });
+                        getFriendsUsernameAndShowPopUp(child.getKey());
                     }
                 }
             }
@@ -187,6 +170,7 @@ public class HomeActivity extends BaseActivity {
     /**
      * Checks if storage permissions are granted.
      * If permissions are revoked it requests permission.
+     *
      * @return a boolean indicating if permissions are granted or not.
      */
     private boolean isStoragePermissionGranted() {
@@ -432,6 +416,37 @@ public class HomeActivity extends BaseActivity {
         profileWindow.show();
     }
 
+    /**
+     * Gets the username corresponding to the given id and shows the friends request popup.
+     *
+     * @param id    id from user that has sent a request
+     */
+    @VisibleForTesting
+    public void getFriendsUsernameAndShowPopUp(final String id) {
+        Database.getReference(format("users.%s.username", id))
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(
+                                    @NonNull DataSnapshot dataSnapshot) {
+                                String name = dataSnapshot
+                                        .getValue(String.class);
+                                showFriendRequestPopup(name, id);
+                            }
+
+                            @Override
+                            public void onCancelled(
+                                    @NonNull DatabaseError databaseError) {
+                                throw databaseError.toException();
+                            }
+                        });
+    }
+
+    /**
+     * Displays the friends request popup.
+     * @param name  name of the user that sent the request
+     * @param id    id of the user that sent the request
+     */
     @VisibleForTesting
     public void showFriendRequestPopup(String name, String id) {
         assert name != null : "name is null";

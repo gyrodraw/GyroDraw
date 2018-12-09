@@ -20,6 +20,8 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import java.io.File;
 
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
+import static ch.epfl.sweng.SDP.utils.ImageStorageManager.writeFileToStorage;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -45,26 +47,13 @@ public class ImageStorageManagerTest {
     }
 
     @Test
-    public void testSaveImage() {
-        String imgName = "TEST";
-        Bitmap bm = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        ImageStorageManager.saveImage(bm, imgName, null, InstrumentationRegistry.getContext());
-
-        String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString()
-                + "/Camera/Gyrodraw/Image-" + imgName + ".png";
-        System.out.println(root);
-        File myDir = new File(root);
-       // assertThat(myDir.exists(), is(true));
-    }
-
-    @Test
     public void testGetFile() {
         String root = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM).toString()+ "/Camera/Gyrodraw/";
         String fileName = root + "Image-testFile.png";
 
-        String path = ImageStorageManager.getFile("testFile").getPath();
-        assertThat(path, is(equalTo(fileName)));
+        File file = ImageStorageManager.getFile("testFile");
+        writeFileToStorage(initializedBitmap(), file);
+        assertThat(file.getPath(), is(equalTo(fileName)));
     }
 }

@@ -53,9 +53,9 @@ public class Account {
     private LocalDbHandlerForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-            String email, String currentLeague,
-            int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
-            int maxTrophies, List<ShopItem> itemsBought) {
+                    String email, String currentLeague,
+                    int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
+                    int maxTrophies, List<ShopItem> itemsBought) {
 
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
@@ -83,16 +83,16 @@ public class Account {
     /**
      * Creates an account instance. Trophies, stars and statistics are initialized to 0.
      *
-     * @param context the context in which the method is called
+     * @param context          the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     * instance
-     * @param username the string defining the preferred username
-     * @param email the string defining the user email
+     *                         instance
+     * @param username         the string defining the preferred username
+     * @param email            the string defining the user email
      * @throws IllegalArgumentException if one of the parameters is null
-     * @throws IllegalStateException if the account was already instantiated
+     * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-            String username, String email) {
+                                     String username, String email) {
         createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0,
                 0, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
@@ -100,26 +100,26 @@ public class Account {
     /**
      * Creates an account instance given the specified parameters.
      *
-     * @param context the context in which the method is called
+     * @param context          the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     * instance
-     * @param username the string defining the preferred username
-     * @param email the string defining the user's email
-     * @param currentLeague the string defining the user's current league
-     * @param trophies the string defining the user's trophies
-     * @param stars the string defining the user's stars
-     * @param matchesWon the string defining the user's matches won
-     * @param totalMatches the string defining the user's total matches played
-     * @param averageRating the string defining the user's average rating
-     * @param maxTrophies the string defining the user's max trophies achieved
+     *                         instance
+     * @param username         the string defining the preferred username
+     * @param email            the string defining the user's email
+     * @param currentLeague    the string defining the user's current league
+     * @param trophies         the string defining the user's trophies
+     * @param stars            the string defining the user's stars
+     * @param matchesWon       the string defining the user's matches won
+     * @param totalMatches     the string defining the user's total matches played
+     * @param averageRating    the string defining the user's average rating
+     * @param maxTrophies      the string defining the user's max trophies achieved
      * @throws IllegalArgumentException if one of the parameters is null or invalid
-     * @throws IllegalStateException if the account was already instantiated
+     * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-            String username, String email, String currentLeague,
-            int trophies, int stars, int matchesWon, int totalMatches,
-            double averageRating, int maxTrophies,
-            List<ShopItem> itemsBought) {
+                                     String username, String email, String currentLeague,
+                                     int trophies, int stars, int matchesWon, int totalMatches,
+                                     double averageRating, int maxTrophies,
+                                     List<ShopItem> itemsBought) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
         checkPrecondition(username != null, "username is null");
@@ -311,7 +311,7 @@ public class Account {
      *
      * @param amount the amount to add
      * @throws IllegalArgumentException in case the balance becomes negative
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void changeStars(final int amount) throws DatabaseException {
         int newStars = amount + stars;
@@ -353,7 +353,7 @@ public class Account {
      * passed as parameter should be the total rating obtained after a match.
      *
      * @throws IllegalArgumentException in case a rating <= 0 or > 20 is given
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
         checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
@@ -372,7 +372,7 @@ public class Account {
      *
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws IllegalArgumentException in case the given usernameId is null
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
@@ -403,8 +403,8 @@ public class Account {
     /**
      * Updates current users and friends friendship-state.
      *
-     * @param friendId id of friend
-     * @param stateUser state that current user will save
+     * @param friendId    id of friend
+     * @param stateUser   state that current user will save
      * @param stateFriend state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
@@ -426,7 +426,7 @@ public class Account {
      *
      * @param usernameId String specifying FirebaseUser.UID of friend
      * @throws IllegalArgumentException in case the given usernameId is null
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void removeFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
@@ -460,7 +460,7 @@ public class Account {
         return new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
-                    @NonNull DatabaseReference databaseReference) {
+                                   @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
             }
         };

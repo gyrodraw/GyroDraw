@@ -139,7 +139,7 @@ public abstract class DrawingActivity extends BaseActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        params.setMargins( px / 2, 0, px / 2, px);
+        params.setMargins(px / 2, 0, px / 2, px);
         image.setLayoutParams(params);
         image.setAdjustViewBounds(true);
         image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);

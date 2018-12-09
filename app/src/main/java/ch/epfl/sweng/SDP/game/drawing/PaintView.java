@@ -134,10 +134,6 @@ public class PaintView extends View {
         return circleRadius;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
     public void multSpeed(double factor) {
         speed *= factor;
     }
@@ -370,7 +366,6 @@ public class PaintView extends View {
             drawEnd();
         }
         canDraw = false;
-
         // Use userId as the name for the image
         String imageName = Account.getInstance(context).getUserId() + ".jpg";
         StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);

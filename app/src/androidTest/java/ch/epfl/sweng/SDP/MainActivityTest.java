@@ -57,7 +57,7 @@ public class MainActivityTest {
 
     @Test
     public void testCloneAccountFromFirebase() {
-        HashMap<String,Object> values = new HashMap<>();
+        HashMap<String, Object> values = new HashMap<>();
         initializeAccountHashMap(values);
 
         HashMap<String, HashMap<String, Object>> account = new HashMap<>();
@@ -83,7 +83,7 @@ public class MainActivityTest {
     /**
      * Populates the given HashMap with test values.
      *
-     * @param values    HashMap to be populated
+     * @param values HashMap to be populated
      */
     private void initializeAccountHashMap(HashMap<String, Object> values) {
         values.put("username", TEST_USERNAME);
@@ -101,7 +101,7 @@ public class MainActivityTest {
     /**
      * Tests that the given account has been saved correctly.
      *
-     * @param newAccount    to be checked
+     * @param newAccount to be checked
      */
     private void assertThatAccountWasInitializedCorrectly(Account newAccount) {
         assertThat(newAccount.getUserId(), is(equalTo(TEST_USER_ID)));

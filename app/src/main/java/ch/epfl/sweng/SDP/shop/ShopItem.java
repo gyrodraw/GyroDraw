@@ -117,7 +117,7 @@ public class ShopItem {
     /**
      * Create the layout of this item.
      *
-     * @param stars the current amount of stars
+     * @param stars   the current amount of stars
      * @param context the context of the shop
      */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})

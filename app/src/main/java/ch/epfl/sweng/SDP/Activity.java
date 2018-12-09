@@ -148,6 +148,7 @@ public abstract class Activity extends AppCompatActivity {
 
     /**
      * Adds views to a layout.
+     *
      * @param layout Layout where the views will be added
      * @param views  Views to be added
      * @return The layout with the views added
@@ -180,7 +181,7 @@ public abstract class Activity extends AppCompatActivity {
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
 
         if (userEntry != null) {
-            String currentUserId = (String)userEntry.keySet().toArray()[0];
+            String currentUserId = (String) userEntry.keySet().toArray()[0];
             HashMap<String, Object> user = userEntry
                     .get(currentUserId);
             if (user != null) {

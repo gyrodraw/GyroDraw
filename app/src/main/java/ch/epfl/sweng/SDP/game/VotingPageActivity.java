@@ -408,7 +408,7 @@ public class VotingPageActivity extends BaseActivity {
 
         fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        fragment.putExtra(roomID,drawings,playersNames);
+        fragment.putExtra(roomID, drawings, playersNames);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)

@@ -46,7 +46,6 @@ public class ShopActivity extends BaseActivity {
         setContentView(R.layout.activity_shop);
 
         ImageView backgroundAnimation = findViewById(R.id.shopBackgroundAnimation);
-
         if (enableAnimations) {
             Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
         }
@@ -54,11 +53,10 @@ public class ShopActivity extends BaseActivity {
         buyDialog = new Dialog(this);
         shopItems = findViewById(R.id.shopItems);
         TextView exitButton = findViewById(R.id.exitButton);
+        TextView starsText = findViewById(R.id.yourStars);
 
-        exitButton.setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(), "%d",
+        setTypeFace(typeMuro, exitButton, findViewById(R.id.shopMessages), starsText);
+        starsText.setText(String.format(Locale.getDefault(), "%d",
                 Account.getInstance(this).getStars()));
 
         fillShop();

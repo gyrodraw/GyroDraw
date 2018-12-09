@@ -117,7 +117,7 @@ public class DrawingOfflineWithItemsTest {
         int dx = paintView.getCircleX() - 200;
         int dy = paintView.getCircleY() - 200;
         double radius = Math.sqrt(dx * dx + dy * dy) + paintView.getCircleRadius();
-        assertThat((int)radius, is(greaterThanOrEqualTo(RandomItemGenerator.ITEM_RADIUS)));
+        assertThat((int) radius, is(greaterThanOrEqualTo(RandomItemGenerator.ITEM_RADIUS)));
     }
 
     @Test

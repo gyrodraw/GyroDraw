@@ -25,7 +25,7 @@ before_script:
   - adb shell input keyevent 82
 script:
   - chmod +x ./gradlew
-  - travis_wait 45 ./gradlew build connectedCheck jacocoTestReport
+  - ./gradlew build connectedCheck jacocoTestReport
 after_script:
   # Report test coverage to Code Climate
   - export JACOCO_SOURCE_PATH=app/src/main/java/

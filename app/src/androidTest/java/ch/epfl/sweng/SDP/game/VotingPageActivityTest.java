@@ -293,9 +293,9 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void testImageSharerShareToApp() {
+    public void testImageSharerShareToAppFails() {
         ImageSharer imageSharer = ImageSharer.getInstance(mActivityRule.getActivity());
-        assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(true));
+        assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(false));
     }
 
     @Test

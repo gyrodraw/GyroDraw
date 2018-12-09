@@ -27,13 +27,14 @@ import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
  */
 public abstract class Activity extends AppCompatActivity {
 
-    protected static Typeface typeMuro;
-    protected static Typeface typeOptimus;
+    protected Typeface typeMuro;
+    protected Typeface typeOptimus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TypefaceLibrary.setContext(this);
+
         typeMuro = TypefaceLibrary.getTypeMuro();
         typeOptimus = TypefaceLibrary.getTypeOptimus();
     }

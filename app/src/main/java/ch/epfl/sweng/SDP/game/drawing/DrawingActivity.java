@@ -15,15 +15,15 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+import ch.epfl.sweng.SDP.R;
+
 import com.google.android.gms.common.util.ArrayUtils;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 

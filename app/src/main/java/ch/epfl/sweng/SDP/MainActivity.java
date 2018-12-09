@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
         Glide.with(this).load(R.drawable.waiting_animation_dots)
                 .into((ImageView) findViewById(R.id.waitingAnimationDots));

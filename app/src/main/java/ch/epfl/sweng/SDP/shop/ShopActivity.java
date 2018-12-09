@@ -15,16 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
+
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 /**
  * Activity allowing the purchase of items such as colors.

@@ -167,11 +167,11 @@ public abstract class Activity extends AppCompatActivity {
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
                 (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (userEntry != null && currentUser != null) {
+        if (userEntry != null) {
+            String currentUserId = (String)userEntry.keySet().toArray()[0];
             HashMap<String, Object> user = userEntry
-                    .get(currentUser.getUid());
+                    .get(currentUserId);
             if (user != null) {
                 Account.createAccount(getApplicationContext(),
                         new ConstantsWrapper(), (String) user.get("username"),

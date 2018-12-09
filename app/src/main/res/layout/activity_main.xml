@@ -31,8 +31,8 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:contentDescription="@string/app_logo"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundAnimation"
         app:layout_constraintEnd_toEndOf="parent"

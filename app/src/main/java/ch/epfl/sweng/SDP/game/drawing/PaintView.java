@@ -51,7 +51,6 @@ public class PaintView extends View {
 
     private int circleX = 0;
     private int circleY = 0;
-
     private int width;
     private int height;
     private int circleRadius;
@@ -184,7 +183,6 @@ public class PaintView extends View {
     public void updateCoordinates(float posX, float posY) {
         circleX -= posX * speed;
         circleY += posY * speed;
-
         setCircle(circleX, circleY);
     }
 

@@ -142,7 +142,7 @@ public class HomeActivity extends BaseActivity {
         final ImageView starsButton = findViewById(R.id.starsButton);
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
-        TextView leagueText = findViewById(R.id.leagueText);
+        final TextView leagueText = findViewById(R.id.leagueText);
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));

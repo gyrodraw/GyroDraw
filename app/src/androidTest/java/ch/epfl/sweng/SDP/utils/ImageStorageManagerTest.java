@@ -41,7 +41,8 @@ public class ImageStorageManagerTest {
 
     @Test
     public void testIsPermissionsGranted() {
-        boolean granted = ActivityCompat.checkSelfPermission(InstrumentationRegistry.getContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        boolean granted = ActivityCompat.checkSelfPermission(InstrumentationRegistry.getContext(),
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED;
         assertThat(granted, is(true));
     }

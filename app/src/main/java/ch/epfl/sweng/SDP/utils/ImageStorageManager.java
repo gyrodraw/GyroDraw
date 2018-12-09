@@ -38,12 +38,17 @@ public class ImageStorageManager {
      * @param context the context.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void saveImage(Bitmap image, String imageName, final Activity activity, final Context context) {
+    public static void saveImage(Bitmap image, String imageName,
+                                 final Activity activity, final Context context) {
 
         File file = getFile(imageName);
 
         if (file.exists()) {
-            file.delete();
+            try {
+                Files.delete(file.toPath());
+            } catch(IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
 
         writeFileToStorage(image,file);

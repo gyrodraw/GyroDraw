@@ -95,7 +95,7 @@ public class LeaderboardActivityTest {
         friendsButton.initializeImageCorrespondingToFriendsState(
                 FriendsRequestState.RECEIVED.ordinal());
         assertDrawablesAreIdentical(friendsButton.getDrawable(),
-                context.getDrawable(R.drawable.add_friend));
+                context.getDrawable(R.drawable.add_friend), true);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class LeaderboardActivityTest {
         friendsButton.setImageAndUpdateFriendsState(
                 FriendsRequestState.RECEIVED.ordinal());
         assertDrawablesAreIdentical(friendsButton.getDrawable(),
-                context.getDrawable(R.drawable.remove_friend));
+                context.getDrawable(R.drawable.remove_friend), true);
     }
 
     @Test
@@ -119,10 +119,10 @@ public class LeaderboardActivityTest {
         Drawable image = imageView.getDrawable();
         onView(withTagValue(is((Object) buttonTag))).perform(click());
         SystemClock.sleep(1000);
-        assertDrawablesAreIdentical(imageView.getDrawable(), image);
+        assertDrawablesAreIdentical(imageView.getDrawable(), image, false);
         SystemClock.sleep(1000);
         onView(withTagValue(is((Object) buttonTag))).perform(click());
-        assertDrawablesAreIdentical(imageView.getDrawable(), image);
+        assertDrawablesAreIdentical(imageView.getDrawable(), image, true);
     }
 
     @Test
@@ -211,13 +211,14 @@ public class LeaderboardActivityTest {
      * @param drawableA first drawable
      * @param drawableB second drawable
      */
-    private static void assertDrawablesAreIdentical(Drawable drawableA, Drawable drawableB) {
+    private static void assertDrawablesAreIdentical(Drawable drawableA, Drawable drawableB,
+                                                    boolean expected) {
         Drawable.ConstantState stateA = drawableA.getConstantState();
         Drawable.ConstantState stateB = drawableB.getConstantState();
         // If the constant state is identical, they are using the same drawable resource.
         // However, the opposite is not necessarily true.
         assertThat(stateA != null && stateB != null && stateA.equals(stateB)
-                || getBitmap(drawableA).sameAs(getBitmap(drawableB)), is(true));
+                || getBitmap(drawableA).sameAs(getBitmap(drawableB)), is(expected));
     }
 
     private static Bitmap getBitmap(Drawable drawable) {

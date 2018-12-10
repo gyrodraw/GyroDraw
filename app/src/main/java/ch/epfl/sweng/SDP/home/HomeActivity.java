@@ -62,6 +62,8 @@ public class HomeActivity extends BaseActivity {
 
     private static boolean enableBackgroundAnimation = true;
 
+    private static boolean isDisconnecting = false;
+
     private Dialog profileWindow;
     private Dialog friendRequestWindow;
 
@@ -180,8 +182,10 @@ public class HomeActivity extends BaseActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean connected = snapshot.getValue(boolean.class);
-                        if (connected) {
+                        if (connected && !isDisconnecting) {
                             changeOnlineStatus(getApplicationContext(), ONLINE);
+
+                            // On user disconnection, update Firebase with OFFLINE
                             Database.getReference(format("users.%s.online",
                                     Account.getInstance(getApplicationContext()).getUserId()))
                                     .onDisconnect()
@@ -217,12 +221,22 @@ public class HomeActivity extends BaseActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Account.deleteAccount();
-                            toastSignOut.cancel();
-                            launchActivity(MainActivity.class);
-                            overridePendingTransition(R.anim.fade_in,
-                                    R.anim.fade_out);
-                            finish();
+                            isDisconnecting = true;
+
+                            // Update Firebase, delete the account instance and launch MainActivity
+                            changeOnlineStatus(getApplicationContext(), OFFLINE).addOnCompleteListener(
+                                    new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Account.deleteAccount();
+                                            toastSignOut.cancel();
+                                            isDisconnecting = false;
+                                            launchActivity(MainActivity.class);
+                                            overridePendingTransition(R.anim.fade_in,
+                                                    R.anim.fade_out);
+                                            finish();
+                                        }
+                                    });
                         } else {
                             Log.e(TAG, "Sign out failed!");
                         }

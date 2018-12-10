@@ -44,7 +44,6 @@ public class LoginActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_login);
 
-
         createSignInIntent();
 
         Glide.with(this).load(R.drawable.waiting_animation_dots)
@@ -61,7 +60,7 @@ public class LoginActivity extends BaseActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setTheme(R.style.LoginTheme)
-                        .setLogo(R.drawable.common_google_signin_btn_icon_dark) // custom logo here
+                        .setLogo(R.mipmap.ic_launcher_round) // custom logo here
                         .build(),
                 REQUEST_CODE_SIGN_IN);
     }

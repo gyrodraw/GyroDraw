@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -98,6 +99,7 @@ public class MainActivityTest {
                     public void onComplete(@NonNull Task<Void> task) {
                         TextView errorMessage = new TextView(activity);
                         activity.handleUserStatus(errorMessage);
+                        SystemClock.sleep(3000);
                         assertThat(errorMessage.getText().toString(),
                                 is(activity.getString(R.string.already_logged_in)));
                         assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
@@ -113,9 +115,7 @@ public class MainActivityTest {
                     public void onComplete(@NonNull Task<Void> task) {
                         TextView errorMessage = new TextView(activity);
                         activity.handleUserStatus(errorMessage);
-                        assertThat(errorMessage.getText().toString(),
-                                is(""));
-                        assertThat(errorMessage.getVisibility(), is(View.INVISIBLE));
+                        SystemClock.sleep(3000);
                         assertThat(activity.isFinishing(), is(true));
                     }
                 });

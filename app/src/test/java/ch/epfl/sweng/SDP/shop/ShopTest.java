@@ -64,8 +64,18 @@ public class ShopTest {
     }
 
     @Test
+    public void getColorPurpleFromStringTest() {
+        assertThat(getColorIdFromString("PURPLE"), is(R.color.colorPurple));
+    }
+
+    @Test
     public void getColorBlueFromStringTest() {
         assertThat(getColorIdFromString("BLUE"), is(R.color.colorBlue));
+    }
+
+    @Test
+    public void getColorCyanFromStringTest() {
+        assertThat(getColorIdFromString("CYAN"), is(R.color.colorCyan));
     }
 
     @Test
@@ -79,8 +89,23 @@ public class ShopTest {
     }
 
     @Test
+    public void getColorOrangeFromStringTest() {
+        assertThat(getColorIdFromString("ORANGE"), is(R.color.colorOrange));
+    }
+
+    @Test
+    public void getColorPinkFromStringTest() {
+        assertThat(getColorIdFromString("PINK"), is(R.color.colorPink));
+    }
+
+    @Test
     public void getColorRedFromStringTest() {
         assertThat(getColorIdFromString("RED"), is(R.color.colorRed));
+    }
+
+    @Test
+    public void getColorBrownFromStringTest() {
+        assertThat(getColorIdFromString("BROWN"), is(R.color.colorBrown));
     }
 
     @Test(expected = IllegalArgumentException.class)

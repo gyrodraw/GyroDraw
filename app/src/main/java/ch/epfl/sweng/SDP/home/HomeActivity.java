@@ -332,6 +332,7 @@ public class HomeActivity extends BaseActivity {
 
     private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
         // Prevents that the user launches two online games at the same time.
+        findViewById(R.id.practiceButton).setEnabled(false);
         findViewById(R.id.drawButton).setEnabled(false);
         findViewById(R.id.mysteryButton).setEnabled(false);
 

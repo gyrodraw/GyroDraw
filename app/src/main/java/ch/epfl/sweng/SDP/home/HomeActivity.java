@@ -10,6 +10,7 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
 import static java.lang.String.format;
 
 import android.app.Dialog;
@@ -181,13 +182,12 @@ public class HomeActivity extends BaseActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean connected = snapshot.getValue(boolean.class);
                         if (connected) {
-                            changeOnlineStatus(getApplicationContext(), ONLINE);
+                            String userId = Account.getInstance(getApplicationContext())
+                                    .getUserId();
+                            changeOnlineStatus(userId, ONLINE);
 
-                            // On user disconnection, update Firebase with OFFLINE
-                            Database.getReference(format("users.%s.online",
-                                    Account.getInstance(getApplicationContext()).getUserId()))
-                                    .onDisconnect()
-                                    .setValue(OFFLINE.ordinal());
+                            // On user disconnection, update Firebase
+                            changeToOfflineOnDisconnect(userId);
                         }
                     }
 
@@ -220,7 +220,9 @@ public class HomeActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // Update Firebase, delete the account instance and launch MainActivity
-                            changeOnlineStatus(getApplicationContext(), OFFLINE)
+                            changeOnlineStatus(
+                                    Account.getInstance(getApplicationContext()).getUserId(),
+                                    OFFLINE)
                                     .addOnCompleteListener(
                                             new OnCompleteListener<Void>() {
                                                 @Override

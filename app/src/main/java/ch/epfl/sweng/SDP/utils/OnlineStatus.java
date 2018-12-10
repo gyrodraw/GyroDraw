@@ -3,8 +3,6 @@ package ch.epfl.sweng.SDP.utils;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
 
-import android.content.Context;
-import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.android.gms.tasks.Task;
 
@@ -35,18 +33,32 @@ public enum OnlineStatus {
     /**
      * Changes the user online status to the given {@link OnlineStatus} value.
      *
-     * @param context the context calling the method
+     * @param userId the userId of the user
      * @param status the desired status for the user
      * @return a {@link Task} wrapping the operation
-     * @throws IllegalArgumentException if the context is null or the given status is wrong/unknown
+     * @throws IllegalArgumentException if the userId string is null or the given status is
+     * wrong/unknown
      */
-    public static Task<Void> changeOnlineStatus(Context context, OnlineStatus status) {
-        checkPrecondition(context != null, "context is null");
+    public static Task<Void> changeOnlineStatus(String userId, OnlineStatus status) {
+        checkPrecondition(userId != null, "userId is null");
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
         return Database
-                .getReference(format("users.%s.online", Account.getInstance(context).getUserId()))
+                .getReference(format("users.%s.online", userId))
                 .setValue(status.ordinal());
+    }
+
+    /**
+     * Changes the user status to offline upon disconnection (app closed).
+     *
+     * @param userId the userId of the user
+     * @throws IllegalArgumentException if the userId string is null
+     */
+    public static void changeToOfflineOnDisconnect(String userId) {
+        checkPrecondition(userId != null, "userId is null");
+        Database.getReference(format("users.%s.online", userId))
+                .onDisconnect()
+                .setValue(OFFLINE.ordinal());
     }
 }

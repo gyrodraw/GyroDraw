@@ -22,6 +22,7 @@ import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
@@ -205,9 +206,11 @@ public abstract class Activity extends AppCompatActivity {
      * @param errorMessage the {@link TextView} corresponding to the error message
      */
     protected void handleUserStatus(final TextView errorMessage) {
-        Database.getReference(format("users.%s.online",
+        final DatabaseReference statusRef = Database.getReference(format("users.%s.online",
                 Account.getInstance(getApplicationContext())
-                        .getUserId())).addValueEventListener(
+                        .getUserId()));
+
+        statusRef.addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(
@@ -219,6 +222,7 @@ public abstract class Activity extends AppCompatActivity {
                                     getString(R.string.already_logged_in));
                             errorMessage.setVisibility(VISIBLE);
                         } else {
+                            statusRef.removeEventListener(this);
                             launchActivity(HomeActivity.class);
                             overridePendingTransition(R.anim.fade_in,
                                     R.anim.fade_out);

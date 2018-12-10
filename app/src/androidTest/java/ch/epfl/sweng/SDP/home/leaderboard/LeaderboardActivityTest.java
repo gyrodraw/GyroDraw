@@ -9,6 +9,7 @@ import android.os.SystemClock;
 
 import static android.support.test.espresso.Espresso.onView;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.ViewActions;
 
 import static android.support.test.espresso.action.ViewActions.click;
@@ -87,6 +88,29 @@ public class LeaderboardActivityTest {
     }
 
     @Test
+    public void testFriendsButtonReceivedIsInitializedCorrectly() {
+        Player player = new Player(context, USER_ID, USERNAME,
+                0L, "leagueOne", false);
+        FriendsButton friendsButton = new FriendsButton(
+                context, player, 1, false);
+        friendsButton.initializeImageCorrespondingToFriendsState(
+                FriendsRequestState.RECEIVED.ordinal());
+        areDrawablesIdentical(friendsButton.getDrawable(),
+                context.getDrawable(R.drawable.add_friend));
+    }
+
+    @Test
+    public void testFriendsButtonReceivedIsUpdatedCorrectly() {
+        FriendsButton friendsButton = new FriendsButton(
+                context, new Player(context, USER_ID, USERNAME,
+                0L, "leagueThree", false), 2, false);
+        friendsButton.setImageAndUpdateFriendsState(
+                FriendsRequestState.RECEIVED.ordinal());
+        areDrawablesIdentical(friendsButton.getDrawable(),
+                context.getDrawable(R.drawable.remove_friend));
+    }
+
+    @Test
     public void testFriendsButtonChangesDrawableCorrectly() {
         String buttonTag = "friendsButton0";
         SystemClock.sleep(2000);
@@ -96,10 +120,10 @@ public class LeaderboardActivityTest {
         Drawable image = imageView.getDrawable();
         onView(withTagValue(is((Object) buttonTag))).perform(click());
         SystemClock.sleep(1000);
-        assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(false));
+        areDrawablesIdentical(imageView.getDrawable(), image);
         SystemClock.sleep(1000);
         onView(withTagValue(is((Object) buttonTag))).perform(click());
-        assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(true));
+        areDrawablesIdentical(imageView.getDrawable(), image);
     }
 
     @Test
@@ -187,15 +211,14 @@ public class LeaderboardActivityTest {
      *
      * @param drawableA first drawable
      * @param drawableB second drawable
-     * @return          true if they're identical, else false
      */
-    private static boolean areDrawablesIdentical(Drawable drawableA, Drawable drawableB) {
+    private static void areDrawablesIdentical(Drawable drawableA, Drawable drawableB) {
         Drawable.ConstantState stateA = drawableA.getConstantState();
         Drawable.ConstantState stateB = drawableB.getConstantState();
         // If the constant state is identical, they are using the same drawable resource.
         // However, the opposite is not necessarily true.
-        return (stateA != null && stateB != null && stateA.equals(stateB))
-                || getBitmap(drawableA).sameAs(getBitmap(drawableB));
+        assertThat (stateA != null && stateB != null && stateA.equals(stateB)
+                || getBitmap(drawableA).sameAs(getBitmap(drawableB)), is(true));
     }
 
     private static Bitmap getBitmap(Drawable drawable) {

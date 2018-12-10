@@ -9,7 +9,6 @@ import android.os.SystemClock;
 
 import static android.support.test.espresso.Espresso.onView;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.ViewActions;
 
 import static android.support.test.espresso.action.ViewActions.click;

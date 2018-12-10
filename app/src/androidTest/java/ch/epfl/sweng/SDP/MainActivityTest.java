@@ -5,6 +5,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -16,7 +17,6 @@ import static org.mockito.Mockito.when;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -25,9 +25,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.utils.OnlineStatus;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import java.util.HashMap;
 import org.junit.Before;
@@ -93,32 +90,28 @@ public class MainActivityTest {
 
     @Test
     public void testHandleUserStatusOnline() {
-        changeOnlineStatus(activity, OnlineStatus.ONLINE).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        TextView errorMessage = new TextView(activity);
-                        activity.handleUserStatus(errorMessage);
-                        SystemClock.sleep(3000);
-                        assertThat(errorMessage.getText().toString(),
-                                is(activity.getString(R.string.already_logged_in)));
-                        assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
-                    }
-                });
+        changeOnlineStatus(TEST_USER_ID, ONLINE);
+        SystemClock.sleep(3000);
+
+        TextView errorMessage = new TextView(activity);
+        activity.handleUserStatus(errorMessage);
+        SystemClock.sleep(3000);
+
+        assertThat(errorMessage.getText().toString(),
+                is(activity.getString(R.string.already_logged_in)));
+        assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
     }
 
     @Test
     public void testHandleUserStatusOffline() {
-        changeOnlineStatus(activity, OFFLINE).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        TextView errorMessage = new TextView(activity);
-                        activity.handleUserStatus(errorMessage);
-                        SystemClock.sleep(3000);
-                        assertThat(activity.isFinishing(), is(true));
-                    }
-                });
+        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        SystemClock.sleep(3000);
+
+        TextView errorMessage = new TextView(activity);
+        activity.handleUserStatus(errorMessage);
+        SystemClock.sleep(3000);
+
+        assertThat(activity.isFinishing(), is(true));
     }
 
     /**

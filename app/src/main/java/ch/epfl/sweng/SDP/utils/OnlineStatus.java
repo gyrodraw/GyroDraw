@@ -6,6 +6,7 @@ import static java.lang.String.format;
 import android.content.Context;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import com.google.android.gms.tasks.Task;
 
 /**
  * Enum representing whether the user is online or offline.
@@ -36,14 +37,16 @@ public enum OnlineStatus {
      *
      * @param context the context calling the method
      * @param status the desired status for the user
+     * @return a {@link Task} wrapping the operation
      * @throws IllegalArgumentException if the context is null or the given status is wrong/unknown
      */
-    public static void changeOnlineStatus(Context context, OnlineStatus status) {
+    public static Task<Void> changeOnlineStatus(Context context, OnlineStatus status) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
-        Database.getReference(format("users.%s.online", Account.getInstance(context).getUserId()))
+        return Database
+                .getReference(format("users.%s.online", Account.getInstance(context).getUserId()))
                 .setValue(status.ordinal());
     }
 }

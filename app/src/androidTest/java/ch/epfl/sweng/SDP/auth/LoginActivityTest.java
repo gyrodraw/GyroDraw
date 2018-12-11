@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.auth;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -81,6 +83,8 @@ public class LoginActivityTest {
 
     @Test
     public void testSuccessfulLoginExistingUser() {
+        changeOnlineStatus(Account.getInstance(loginActivity).getUserId(), OFFLINE);
+        Account.deleteAccount();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
         loginActivity.onActivityResult(42, -1, mockIntent);
         SystemClock.sleep(3000);

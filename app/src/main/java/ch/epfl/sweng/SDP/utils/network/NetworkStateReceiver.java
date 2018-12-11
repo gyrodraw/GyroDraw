@@ -22,6 +22,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         connected = null;
     }
 
+    @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null || intent.getExtras() == null) {
             return;

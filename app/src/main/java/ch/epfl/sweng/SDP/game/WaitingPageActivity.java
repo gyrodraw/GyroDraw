@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -440,6 +441,16 @@ public class WaitingPageActivity extends BaseActivity {
             @Override
             public void run() {
                 listenerTimer.onDataChange(dataSnapshot);
+            }
+        });
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public void callOnReceiveNetwork(final Context context, final Intent intent) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                networkStateReceiver.onReceive(context, intent);
             }
         });
     }

@@ -2,7 +2,8 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
+import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.UiController;
@@ -25,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
@@ -51,6 +53,9 @@ public class WaitingPageActivityTest {
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
+    private Intent intentMock;
+    private ConnectivityManager cmMock;
+    private Context spy;
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
@@ -76,6 +81,9 @@ public class WaitingPageActivityTest {
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
+        intentMock = Mockito.mock(Intent.class);
+        cmMock = Mockito.mock(ConnectivityManager.class);
+        spy = Mockito.spy(mActivityRule.getActivity());
     }
 
     /**
@@ -322,13 +330,20 @@ public class WaitingPageActivityTest {
     }
 
     @Test
-    public void testDisableInternetConnection() {
-        WifiManager wifiManager = (WifiManager)mActivityRule.getActivity()
-                                    .getSystemService(Context.WIFI_SERVICE);
-        wifiManager.setWifiEnabled(false);
-        SystemClock.sleep(2000);
+    public void testOnReceiveNetworkDisabled() {
+        when(cmMock.getActiveNetwork()).thenReturn(null);
+        when(((ConnectivityManager)spy.getSystemService(Context.CONNECTIVITY_SERVICE))).thenReturn(cmMock);
+
+        when(intentMock.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)).thenReturn(true);
+        when(intentMock.getExtras()).thenReturn(new Bundle());
+
+        mActivityRule.getActivity().callOnReceiveNetwork(spy, intentMock);
+        SystemClock.sleep(1500);
+
+        Account.deleteAccount();
+
         onView(withId(R.id.okDisconnectedButton)).check(matches(isDisplayed()));
-        wifiManager.setWifiEnabled(true);
-        SystemClock.sleep(3000);
+
     }
+
 }

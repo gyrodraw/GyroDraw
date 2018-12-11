@@ -96,14 +96,14 @@ public abstract class Item {
      * @param paintView used to get the context from
      */
     protected void vibrate(PaintView paintView) {
-        Vibrator v = (Vibrator) paintView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) paintView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(
+            vibrator.vibrate(VibrationEffect.createOneShot(
                     100, 1));
         } else {
             //deprecated in API 26
-            v.vibrate(100);
+            vibrator.vibrate(100);
         }
     }
 }

@@ -43,6 +43,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -101,12 +102,13 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsButtonReceivedIsUpdatedCorrectly() {
         FriendsButton friendsButton = new FriendsButton(
-                context, new Player(context, USER_ID, USERNAME,
+                context, new Player(context, USER_ID + "1", USERNAME,
                 0L, "leagueThree", false), 2, false);
         friendsButton.setImageAndUpdateFriendsState(
                 FriendsRequestState.RECEIVED.ordinal());
         assertDrawablesAreIdentical(friendsButton.getDrawable(),
                 context.getDrawable(R.drawable.remove_friend), true);
+        account.removeFriend(USER_ID + "1");
     }
 
     @Test

@@ -24,7 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
@@ -33,11 +32,10 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
-import ch.epfl.sweng.SDP.utils.NetworkStateListenerWrapper;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiverListener;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.

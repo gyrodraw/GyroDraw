@@ -29,7 +29,7 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;

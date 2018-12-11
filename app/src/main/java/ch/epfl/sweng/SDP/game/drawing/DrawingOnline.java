@@ -24,10 +24,9 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import ch.epfl.sweng.SDP.utils.NetworkStateListenerWrapper;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiverListener;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
 import static java.lang.String.format;

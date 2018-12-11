@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 /**
  * Class representing the first page shown to the user upon first app launch.

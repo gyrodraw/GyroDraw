@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
@@ -27,15 +25,14 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import ch.epfl.sweng.SDP.utils.NetworkStateListenerWrapper;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiver;
-import ch.epfl.sweng.SDP.utils.NetworkStateReceiverListener;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**

@@ -225,9 +225,6 @@ public class WaitingPageActivity extends BaseActivity {
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        DatabaseReference userRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users." + Account.getInstance(this).getUserId());
-        userRef.onDisconnect().removeValue();
-
         DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." +
                 roomID + ".users");
         usersCountRef.addValueEventListener(listenerCountUsers);

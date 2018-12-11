@@ -1,24 +1,22 @@
 package ch.epfl.sweng.SDP.auth;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 /**
  * Class representing the account creation page.
@@ -40,10 +38,8 @@ public class AccountCreationActivity extends BaseActivity {
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.createAccount)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.usernameInput)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.usernameTaken)).setTypeface(typeMuro);
+        setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
+                findViewById(R.id.usernameTaken));
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));

@@ -6,23 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-
-import static android.support.test.espresso.Espresso.onView;
-
 import android.support.test.espresso.action.ViewActions;
-
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-
 import android.support.test.espresso.intent.Intents;
-
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
-
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -31,22 +16,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-import java.util.ArrayList;
-
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -183,11 +177,11 @@ public class LeaderboardActivityTest {
     /**
      * Searches a LinearLayout for all childs with the given tag value.
      *
-     * @param root  LinearLayout to search in
-     * @param tag   Tag value to search
-     * @return      List of all childs with given tag
+     * @param root LinearLayout to search in
+     * @param tag  Tag value to search
+     * @return List of all childs with given tag
      */
-    private static ArrayList<View> getViewsByTag(LinearLayout root, String tag){
+    private static ArrayList<View> getViewsByTag(LinearLayout root, String tag) {
         ArrayList<View> views = new ArrayList<>();
 
         final int childCount = root.getChildCount();

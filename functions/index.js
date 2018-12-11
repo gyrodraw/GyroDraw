@@ -14,9 +14,10 @@ const minRank = -10;
 const WAITING_TIME_CHOOSE_WORDS = 10;
 const WAITING_TIME_DRAWING = 10;
 const WAITING_TIME_VOTING = 30;
+
 const parentRoomID = "realRooms/";
 
-var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown":1, "DrawingPage": 2, "WaitingUpload": 3, "VotingPage": 4, "EndVoting" : 5});
+var StateEnum = Object.freeze({"Idle": 0, "ChoosingWordsCountdown": 1, "DrawingPage": 2, "WaitingUpload": 3, "VotingPage": 4, "EndVoting": 5, "ShowRanking": 6});
 var PlayingEnum = Object.freeze({"Idle": 0, "PlayingButJoinable": 1, "Playing": 2});
 var state = 0;
 
@@ -270,7 +271,7 @@ function startTimer(time, roomID, prevState, newState) {
       .catch(error => console.error(error));
 }
 
-function startTimerWithCallback(time, roomID, prevState, newState) {
+function startTimerWithNodeCreation(time, roomID, prevState, newState) {
   return functionTimer(time, prevState, roomID, elapsedTime => {
           return admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(elapsedTime);
       })
@@ -282,7 +283,7 @@ function startTimerWithCallback(time, roomID, prevState, newState) {
       .catch(error => console.error(error));
 }
 
-function startTimerWithCallback2(time, roomID, prevState, newState) {
+function startTimerWithOnlineCheck(time, roomID, prevState, newState) {
   return functionTimer(time, prevState, roomID, elapsedTime => {
           return admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(elapsedTime);
       })
@@ -378,7 +379,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
     case StateEnum.ChoosingWordsCountdown:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       playingRef.set(PlayingEnum.PlayingButJoinable);
-      return startTimerWithCallback(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage);
+      return startTimerWithNodeCreation(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage);
 
     case StateEnum.DrawingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_DRAWING);
@@ -386,7 +387,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       createNode(roomID, "finished", 0);
       createNode(roomID, "uploadDrawing", 0);
       playingRef.set(PlayingEnum.Playing);
-      return startTimerWithCallback2(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload);
+      return startTimerWithOnlineCheck(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload);
 
     case StateEnum.WaitingUpload:
       // Set timeout to pass to next activity
@@ -397,16 +398,27 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
 
     case StateEnum.VotingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_VOTING);
-      return startTimerWithCallback2(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
+      return startTimerWithOnlineCheck(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting);
 
     case StateEnum.EndVoting:
+
+      // Check if some user disconnected during voting phase
+      setTimeout(() => {
+        checkOnlineNode(roomID);
+        admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.ShowRanking);
+      }, 1500);
+      break;
+
+    case StateEnum.ShowRanking:
       admin.database().ref(parentRoomID + roomID + "/ranking").once('value', (snapshot) => {
         return updateDisconnectedUsers(snapshot, roomID);
       });
+
       // removed for now in order to test online more easily
       /*setTimeout(() => {
         removeRoom();
-      }, 10000);*/
+      }, 5000);*/
+
       break;
     default:
       break;

@@ -15,10 +15,13 @@
     <color name="colorLeague2">#726BF8</color>
     <color name="colorLeague3">#9FA6FF</color>
     <color name="colorWhite">#FFFFFFFF</color>
+    <color name="colorPurple">#6d15fb</color>
     <color name="colorBlue">#FF157EFB</color>
     <color name="colorCyan">#13e7e7</color>
     <color name="colorGreen">#FF53D768</color>
     <color name="colorYellow">#FFFED130</color>
+    <color name="colorPink">#ffa8af</color>
+    <color name="colorOrange">#fc8d32</color>
     <color name="colorRed">#FFFC3242</color>
     <color name="colorBrown">#6b3a22</color>
     <color name="colorExitRed">#ff544b</color>

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 /**
  * Helper class that defines the style of the text feedback.
@@ -25,7 +26,7 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
         setTextSize(1);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         setLayoutParams(layoutParams);
-        Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
+        Typeface typeMuro = TypefaceLibrary.getTypeMuro();
         setTypeface(typeMuro, Typeface.ITALIC);
         setText(text);
     }
@@ -33,9 +34,9 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
     /**
      * Creates a text feedback to inform the player which item has been picked up.
      *
-     * @param item that was activated
+     * @param item            that was activated
      * @param paintViewHolder the holder of the view
-     * @param context the context where we want to put the TextView
+     * @param context         the context where we want to put the TextView
      * @return feedback text
      */
     static TextView itemTextFeedback(Item item, final RelativeLayout paintViewHolder,

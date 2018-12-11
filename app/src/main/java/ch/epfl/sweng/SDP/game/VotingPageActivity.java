@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -143,7 +142,6 @@ public class VotingPageActivity extends BaseActivity {
         setVisibility(View.GONE, ratingBar, playerNameView,
                 drawingView, timer, starsAnimation);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         playerNameView.setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
 
@@ -410,7 +408,7 @@ public class VotingPageActivity extends BaseActivity {
 
         fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        fragment.putExtra(roomID,drawings,playersNames);
+        fragment.putExtra(roomID, drawings, playersNames);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)

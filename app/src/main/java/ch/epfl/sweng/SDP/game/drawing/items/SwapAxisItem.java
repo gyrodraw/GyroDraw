@@ -29,19 +29,11 @@ public class SwapAxisItem extends Item {
     public void activate(final PaintView paintView) {
         vibrate(paintView);
         paintView.multSpeed(-1);
-        new CountDownTimer(ITEM_DURATION, ITEM_DURATION) {
-
-            public void onTick(long millisUntilFinished) {
-                // Is never called
-            }
-
-            public void onFinish() {
-                deactivate(paintView);
-            }
-        }.start();
+        launchCountDownUntilDeactivation(paintView).start();
     }
 
-    private void deactivate(PaintView paintView) {
+    @Override
+    public void deactivate(PaintView paintView) {
         paintView.multSpeed(-1);
     }
 

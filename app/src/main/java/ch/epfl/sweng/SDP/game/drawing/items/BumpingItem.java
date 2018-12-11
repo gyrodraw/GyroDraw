@@ -66,6 +66,11 @@ public class BumpingItem extends Item {
     }
 
     @Override
+    public void deactivate(PaintView paintView) {
+        // Must be implemented, but does nothing.
+    }
+
+    @Override
     public String getTextFeedback() {
         return " ";
     }

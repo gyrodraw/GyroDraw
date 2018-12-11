@@ -1,22 +1,19 @@
 package ch.epfl.sweng.SDP;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.firebase.Database;
 import com.bumptech.glide.Glide;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.firebase.Database;
 
 /**
  * Class representing the first page shown to the user upon first app launch.
@@ -28,6 +25,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
+
         Glide.with(this).load(R.drawable.waiting_animation_dots)
                 .into((ImageView) findViewById(R.id.waitingAnimationDots));
         Glide.with(this).load(R.drawable.background_animation)
@@ -49,8 +47,6 @@ public class MainActivity extends Activity {
 
                                 TextView errorMessage = findViewById(
                                         R.id.errorMessage);
-                                Typeface typeMuro = Typeface
-                                        .createFromAsset(getAssets(), "fonts/Muro.otf");
                                 errorMessage.setTypeface(typeMuro);
 
                                 handleUserStatus(errorMessage);
@@ -73,6 +69,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
+
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {
                     @Override

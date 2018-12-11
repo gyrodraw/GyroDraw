@@ -34,7 +34,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
      * Helper class to save game results in local database.
      */
     public LocalDbHandlerForGameResults(Context context, SQLiteDatabase.CursorFactory factory,
-            int dbVersion) {
+                                        int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
@@ -58,7 +58,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db database to look in
+     * @param db         database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */

@@ -13,7 +13,7 @@ public final class BitmapManipulator {
     }
 
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth,
-            int reqHeight) {
+                                             int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -39,14 +39,14 @@ public final class BitmapManipulator {
      * Decodes the {@link Bitmap} generated from the given resource optimising it for the given
      * view's dimensions.
      *
-     * @param res the application's resources
-     * @param resId the id of the resource
-     * @param reqWidth the ideal width
+     * @param res       the application's resources
+     * @param resId     the id of the resource
+     * @param reqWidth  the ideal width
      * @param reqHeight the ideal height
      * @return the sampled Bitmap
      */
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-            int reqWidth, int reqHeight) {
+                                                         int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -65,15 +65,15 @@ public final class BitmapManipulator {
      * Decodes the {@link Bitmap} generated from the given byte array optimising it for the given
      * view's dimensions.
      *
-     * @param array the byte array containing the data
-     * @param offset the offset from which the decoding should begin parsing
-     * @param length the number of bytes to parse
-     * @param reqWidth the ideal width
+     * @param array     the byte array containing the data
+     * @param offset    the offset from which the decoding should begin parsing
+     * @param length    the number of bytes to parse
+     * @param reqWidth  the ideal width
      * @param reqHeight the ideal height
      * @return the sampled Bitmap
      */
     public static Bitmap decodeSampledBitmapFromByteArray(byte[] array, int offset, int length,
-            int reqWidth, int reqHeight) {
+                                                          int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

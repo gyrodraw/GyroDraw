@@ -1,22 +1,19 @@
 package ch.epfl.sweng.SDP;
 
+import static android.view.View.VISIBLE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static java.lang.String.format;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -24,16 +21,30 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
-
-import static android.view.View.VISIBLE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-import static java.lang.String.format;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import java.util.HashMap;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
  * activities.
  */
 public abstract class Activity extends AppCompatActivity {
+
+    protected Typeface typeMuro;
+    protected Typeface typeOptimus;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TypefaceLibrary.setContext(this);
+
+        typeMuro = TypefaceLibrary.getTypeMuro();
+        typeOptimus = TypefaceLibrary.getTypeOptimus();
+    }
 
     @Override
     protected void onResume() {

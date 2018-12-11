@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
  * Class containing the methods used for the login. This activity is launched but not actually
  * displayed.
@@ -64,7 +65,7 @@ public class LoginActivity extends BaseActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setTheme(R.style.LoginTheme)
-                        .setLogo(R.drawable.common_google_signin_btn_icon_dark) // custom logo here
+                        .setLogo(R.mipmap.ic_launcher_round) // custom logo here
                         .build(),
                 REQUEST_CODE_SIGN_IN);
     }

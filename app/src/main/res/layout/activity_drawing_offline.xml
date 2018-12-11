@@ -62,7 +62,6 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:includeFontPadding="false"
             android:text="@string/cross"
             android:textColor="@color/colorDrawYellow"
             android:textSize="30sp"
@@ -95,23 +94,31 @@
         android:minHeight="30dp"
         android:progress="50" />
 
-    <LinearLayout
-        android:id="@+id/colorLayout"
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:id="@+id/colorScrollView"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/blackButton"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/colorLayout"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:onClick="colorClickHandler"
-            app:srcCompat="@drawable/color_circle_selected" />
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/blackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:onClick="colorClickHandler"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/color_circle_selected" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 </LinearLayout>

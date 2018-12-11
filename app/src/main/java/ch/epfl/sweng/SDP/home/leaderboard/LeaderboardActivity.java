@@ -1,9 +1,7 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,19 +11,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-
-import com.bumptech.glide.Glide;
 
 /**
  * Class representing the leaderboard.
  */
 public class LeaderboardActivity extends BaseActivity {
 
-    private Typeface typeMuro;
-    private LinearLayout leaderboardView;
     private Leaderboard leaderboard;
     private long lastClickTime = 0;
 
@@ -34,10 +30,6 @@ public class LeaderboardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_leaderboard);
-
-        leaderboardView = findViewById(R.id.leaderboard);
-
-        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
@@ -48,6 +40,7 @@ public class LeaderboardActivity extends BaseActivity {
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 
+        LinearLayout leaderboardView = findViewById(R.id.leaderboard);
         leaderboard = new Leaderboard(getApplicationContext(), leaderboardView);
         setCheckBoxListener(searchField);
 

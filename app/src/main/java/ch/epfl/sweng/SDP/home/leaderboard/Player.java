@@ -1,17 +1,16 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.R;
-
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 /**
  * Helper class to manage and display user data from Firebase.
@@ -114,8 +113,7 @@ class Player implements Comparable {
         view.setTextSize(20);
         view.setMaxLines(1);
         view.setTextColor(color);
-        Typeface typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
-        view.setTypeface(typeMuro);
+        view.setTypeface(TypefaceLibrary.getTypeMuro());
         view.setLayoutParams(layoutParams);
     }
 

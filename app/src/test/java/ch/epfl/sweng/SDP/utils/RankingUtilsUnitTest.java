@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RankingUtilsTest {
+public class RankingUtilsUnitTest {
 
     @Test
     public void testGenerateTrophiesFromRanking() {

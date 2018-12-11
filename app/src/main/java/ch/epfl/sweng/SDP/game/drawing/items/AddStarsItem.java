@@ -11,7 +11,7 @@ public class AddStarsItem extends Item {
 
     private static final int ADD_STARS = 3;
 
-    protected AddStarsItem(int posX, int posY, int radius) {
+    public AddStarsItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
     }
 

@@ -84,7 +84,7 @@ public class DrawingOnlineItemsTest {
     @Test
     public void testAddStarsItemAddsStarsToAccount() {
         int initStars = account.getStars();
-        activateItem(AddStarsItem.createAddStarsItem(20, 20, 10));
+        activateItem(new AddStarsItem(20, 20, 10));
         assertThat(account.getStars(), is(initStars + 3));
     }
 

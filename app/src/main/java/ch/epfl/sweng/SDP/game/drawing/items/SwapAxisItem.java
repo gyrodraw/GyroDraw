@@ -7,7 +7,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
  */
 public class SwapAxisItem extends Item {
 
-    protected SwapAxisItem(int posX, int posY, int radius) {
+    public SwapAxisItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
     }
 

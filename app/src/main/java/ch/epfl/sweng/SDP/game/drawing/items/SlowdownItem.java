@@ -10,7 +10,7 @@ public class SlowdownItem extends Item {
 
     private static final double SLOWDOWN_FACTOR = 0.5;
 
-    protected SlowdownItem(int posX, int posY, int radius) {
+    public SlowdownItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
     }
 

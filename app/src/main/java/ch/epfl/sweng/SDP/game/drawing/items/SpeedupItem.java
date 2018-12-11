@@ -9,7 +9,7 @@ public class SpeedupItem extends Item {
 
     private static final double SPEEDUP_FACTOR = 2;
 
-    protected SpeedupItem(int posX, int posY, int radius) {
+    public SpeedupItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
     }
 

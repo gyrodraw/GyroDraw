@@ -24,7 +24,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
@@ -122,7 +122,7 @@ public class DrawingOnline extends GyroDrawingActivity {
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         NetworkStateReceiverListener networkStateReceiverListener =
-                new NetworkStateListenerWrapper(this);
+                new NetworkStatusHandler(this);
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(networkStateReceiverListener);
         registerReceiver(networkStateReceiver,

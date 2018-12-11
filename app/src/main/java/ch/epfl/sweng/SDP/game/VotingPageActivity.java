@@ -33,7 +33,7 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
@@ -140,7 +140,7 @@ public class VotingPageActivity extends BaseActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         NetworkStateReceiverListener networkStateReceiverListener =
-                new NetworkStateListenerWrapper(this);
+                new NetworkStatusHandler(this);
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(networkStateReceiverListener);
         registerReceiver(networkStateReceiver,

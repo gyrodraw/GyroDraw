@@ -25,7 +25,7 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateListenerWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
@@ -198,7 +198,7 @@ public class WaitingPageActivity extends BaseActivity {
         setContentView(R.layout.activity_waiting_page);
 
         NetworkStateReceiverListener networkStateReceiverListener =
-                new NetworkStateListenerWrapper(this);
+                new NetworkStatusHandler(this);
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(networkStateReceiverListener);
         registerReceiver(networkStateReceiver,

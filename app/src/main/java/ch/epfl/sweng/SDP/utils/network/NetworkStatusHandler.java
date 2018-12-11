@@ -9,12 +9,12 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 
-public class NetworkStateListenerWrapper implements NetworkStateReceiverListener {
+public class NetworkStatusHandler implements NetworkStateReceiverListener {
 
     private Dialog disconnectedDialog;
     private Context context;
 
-    public NetworkStateListenerWrapper(final Context context) {
+    public NetworkStatusHandler(final Context context) {
         this.context = context;
         disconnectedDialog = new Dialog(this.context);
         disconnectedDialog.setCanceledOnTouchOutside(false);

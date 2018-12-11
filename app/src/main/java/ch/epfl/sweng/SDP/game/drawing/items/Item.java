@@ -102,7 +102,8 @@ public abstract class Item {
      * @param paintView used to get the context from
      */
     protected void vibrate(PaintView paintView) {
-        Vibrator vibrator = (Vibrator) paintView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) paintView.getContext()
+                .getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(

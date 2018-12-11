@@ -31,7 +31,7 @@ import static java.lang.String.format;
 /**
  * Class representing the drawing phase of an online game in normal mode.
  */
-public class DrawingOnline extends GyroDrawingActivity {
+public class DrawingOnlineActivity extends GyroDrawingActivity {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
@@ -67,9 +67,9 @@ public class DrawingOnline extends GyroDrawingActivity {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case WAITING_UPLOAD:
-                        DrawingOnline.this.runOnUiThread(new Runnable() {
+                        DrawingOnlineActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
-                                paintViewHolder.addView(timeIsUpTextFeedback(DrawingOnline.this));
+                                paintViewHolder.addView(timeIsUpTextFeedback(DrawingOnlineActivity.this));
                             }
                         });
                         uploadDrawing().addOnCompleteListener(

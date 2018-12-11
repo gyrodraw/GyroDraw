@@ -20,13 +20,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class DrawingOfflineNoItemsTest {
+public class DrawingOfflineActivityNoItemsTest {
 
     private PaintView paintView;
 
     @Rule
-    public final ActivityTestRule<DrawingOffline> activityRule =
-            new ActivityTestRule<>(DrawingOffline.class);
+    public final ActivityTestRule<DrawingOfflineActivity> activityRule =
+            new ActivityTestRule<>(DrawingOfflineActivity.class);
 
     /**
      * Initialise mock elements and get UI elements.

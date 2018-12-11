@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class DrawingOnlineItemsTest {
+public class DrawingOnlineItemsActivityTest {
 
     private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";
@@ -35,12 +35,12 @@ public class DrawingOnlineItemsTest {
 
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
-    private DrawingOnlineItems activity;
+    private DrawingOnlineItemsActivity activity;
     private Account account;
 
     @Rule
-    public final ActivityTestRule<DrawingOnlineItems> activityRule =
-            new ActivityTestRule<>(DrawingOnlineItems.class);
+    public final ActivityTestRule<DrawingOnlineItemsActivity> activityRule =
+            new ActivityTestRule<>(DrawingOnlineItemsActivity.class);
 
     /**
      * Initializes variables.

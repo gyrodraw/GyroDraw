@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class DrawingOfflineWithItemsTest {
+public class DrawingOfflineActivityWithItemsTest {
 
     private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";
@@ -40,12 +40,12 @@ public class DrawingOfflineWithItemsTest {
 
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
-    private DrawingOffline activity;
+    private DrawingOfflineActivity activity;
     private Account account;
 
     @Rule
-    public final ActivityTestRule<DrawingOffline> activityRule =
-            new ActivityTestRule<>(DrawingOffline.class);
+    public final ActivityTestRule<DrawingOfflineActivity> activityRule =
+            new ActivityTestRule<>(DrawingOfflineActivity.class);
 
     /**
      * Initializes variables.

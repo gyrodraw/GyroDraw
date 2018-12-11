@@ -22,7 +22,7 @@ import ch.epfl.sweng.SDP.utils.LayoutUtils;
  * Class representing the offline practice mode. The user has the choice of
  * activating or not the mystery mode and the related item generation via a toggle button.
  */
-public class DrawingOffline extends GyroDrawingActivity {
+public class DrawingOfflineActivity extends GyroDrawingActivity {
 
     private ImageView mysteryButton;
     private DrawingItems drawingItems;
@@ -40,7 +40,7 @@ public class DrawingOffline extends GyroDrawingActivity {
 
     private void setExitButtonListener() {
         TextView exitButton = findViewById(R.id.exit);
-        final DrawingOffline activity = this;
+        final DrawingOfflineActivity activity = this;
 
         exitButton.setOnTouchListener(new View.OnTouchListener() {
             @Override

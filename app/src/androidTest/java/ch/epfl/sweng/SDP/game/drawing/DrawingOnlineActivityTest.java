@@ -44,11 +44,11 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(AndroidJUnit4.class)
-public class DrawingOnlineTest {
+public class DrawingOnlineActivityTest {
 
     @Rule
-    public final ActivityTestRule<DrawingOnline> activityRule =
-            new ActivityTestRule<DrawingOnline>(DrawingOnline.class) {
+    public final ActivityTestRule<DrawingOnlineActivity> activityRule =
+            new ActivityTestRule<DrawingOnlineActivity>(DrawingOnlineActivity.class) {
 
                 @Override
                 protected Intent getActivityIntent() {

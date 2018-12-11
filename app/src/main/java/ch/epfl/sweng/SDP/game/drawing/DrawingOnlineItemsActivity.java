@@ -14,7 +14,7 @@ import ch.epfl.sweng.SDP.game.drawing.items.Item;
 /**
  * Class representing the drawing phase of an online game in special mode.
  */
-public class DrawingOnlineItems extends DrawingOnline {
+public class DrawingOnlineItemsActivity extends DrawingOnlineActivity {
 
     private DrawingItems drawingItems;
 

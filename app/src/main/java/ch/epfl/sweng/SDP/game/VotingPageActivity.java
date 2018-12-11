@@ -70,6 +70,7 @@ public class VotingPageActivity extends BaseActivity {
     private ImageView drawingView;
     private TextView playerNameView;
     private TextView timer;
+    private TextView disconnectedText;
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
@@ -90,7 +91,14 @@ public class VotingPageActivity extends BaseActivity {
                         retrieveDrawingsFromDatabaseStorage();
                         break;
                     case END_VOTING_ACTIVITY:
+                        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
+                                + Account.getInstance(getApplicationContext())
+                                .getUsername()).setValue(1);
+                        setAnimationWaitingBackground();
+                        break;
+                    case RANKING_FRAGEMNT:
                         // Start ranking activity
+                        setLayoutToVisible();
                         startRankingFragment();
                         break;
                     default:
@@ -144,23 +152,15 @@ public class VotingPageActivity extends BaseActivity {
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
         timer = findViewById(R.id.timer);
+        disconnectedText = findViewById(R.id.disconnectedText);
 
         starsAnimation = findViewById(R.id.starsAnimation);
         ratingBar = findViewById(R.id.ratingBar);
 
-        if (enableAnimations) {
-            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
-            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
-                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
-        }
-
-        // Make the layout invisible until the drawings have been downloaded
-        setVisibility(View.GONE, ratingBar, playerNameView,
-                drawingView, timer, starsAnimation);
+        setAnimationWaitingBackground();
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        setTypeFace(typeMuro, playerNameView, timer, findViewById(R.id.disconnectedText));
+        setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
@@ -292,6 +292,21 @@ public class VotingPageActivity extends BaseActivity {
         if (enableAnimations) {
             setVisibility(View.VISIBLE, starsAnimation);
         }
+    }
+
+    private void setAnimationWaitingBackground() {
+        if (enableAnimations) {
+            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
+                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
+        }
+
+        setVisibility(View.VISIBLE, findViewById(R.id.waitingAnimationDots));
+
+        // Make the layout invisible until the drawings have been downloaded
+        setVisibility(View.GONE, ratingBar, playerNameView,
+                drawingView, timer, starsAnimation, disconnectedText);
     }
 
     private void addStarAnimationListener() {

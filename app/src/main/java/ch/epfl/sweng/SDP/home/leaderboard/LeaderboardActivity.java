@@ -31,8 +31,6 @@ public class LeaderboardActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_leaderboard);
 
-        LinearLayout leaderboardView = findViewById(R.id.leaderboard);
-
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
 
@@ -42,6 +40,7 @@ public class LeaderboardActivity extends BaseActivity {
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 
+        LinearLayout leaderboardView = findViewById(R.id.leaderboard);
         leaderboard = new Leaderboard(getApplicationContext(), leaderboardView);
         setCheckBoxListener(searchField);
 

@@ -1,16 +1,16 @@
 package ch.epfl.sweng.SDP.firebase;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 /**
- * Singleton wrapper enum over {@link FirebaseDatabase}.
+ * Utility wrapper class over {@link FirebaseDatabase}.
  */
-public enum Database {
+public final class Database {
 
-    INSTANCE;
+    private Database() {}
 
     /**
      * Gets and returns the {@link DatabaseReference} associated to the given path.

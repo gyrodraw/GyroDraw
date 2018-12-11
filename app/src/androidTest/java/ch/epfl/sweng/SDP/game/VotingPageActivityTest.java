@@ -116,7 +116,8 @@ public class VotingPageActivityTest {
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));
 
-        Bitmap bitmap = BitmapFactory.decodeResource(activityRule.getActivity().getResources(), R.drawable.league_1);
+        Bitmap bitmap = BitmapFactory.decodeResource(
+                activityRule.getActivity().getResources(), R.drawable.league_1);
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
         localDbHandler.addBitmapToDb(bitmap,2);
@@ -147,7 +148,6 @@ public class VotingPageActivityTest {
 
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
-
         // To ensure that the rating value does not get above 20
         Database.getReference("realRooms.0123457890.ranking.userA").setValue(0);
 

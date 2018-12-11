@@ -1,20 +1,17 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import android.support.annotation.NonNull;
+import static java.lang.String.format;
 
+import android.support.annotation.NonNull;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-
-import static java.lang.String.format;
 
 /**
  * Singleton class that represents the matchmaker.

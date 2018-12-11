@@ -1,13 +1,12 @@
 package ch.epfl.sweng.SDP.utils;
 
-import org.junit.Test;
-
-import ch.epfl.sweng.SDP.R;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class LayoutUtilsTest {
+import ch.epfl.sweng.SDP.R;
+import org.junit.Test;
+
+public class LayoutUtilsUnitTest {
 
     @Test
     public void testGetLeagueColorId() {

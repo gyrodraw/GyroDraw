@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.BaseActivity;
@@ -46,6 +47,10 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
 import static java.lang.String.format;
 
 /**
@@ -128,6 +133,9 @@ public class HomeActivity extends BaseActivity {
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
+        // Update the user online status on Firebase and set the onDisconnect listener
+        updateUserStatusOnFirebase();
+
         // Add listener to check for new friends requests
         addListenerForFriendsRequests();
 
@@ -175,15 +183,33 @@ public class HomeActivity extends BaseActivity {
         setLeague();
     }
 
+    private void updateUserStatusOnFirebase() {
+        FirebaseDatabase.getInstance().getReference(".info/connected")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(boolean.class);
+                        if (connected) {
+                            String userId = Account.getInstance(getApplicationContext())
+                                    .getUserId();
+                            changeOnlineStatus(userId, ONLINE);
+
+                            // On user disconnection, update Firebase
+                            changeToOfflineOnDisconnect(userId);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        throw error.toException();
+                    }
+                });
+    }
+
     private void addListenerForFriendsRequests() {
         Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
                 .addValueEventListener(listenerFriendsRequest);
 
-    }
-
-    // Launches the LeaguesActivity.
-    private void showLeagues() {
-        launchActivity(LeaguesActivity.class);
     }
 
     @VisibleForTesting
@@ -195,24 +221,38 @@ public class HomeActivity extends BaseActivity {
      * Signs the current user out and starts the {@link MainActivity}.
      */
     private void signOut() {
-        final Toast toastSignOut = makeAndShowToast("Signing out...");
-
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Account.deleteAccount();
-                            toastSignOut.cancel();
-                            launchActivity(MainActivity.class);
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                            finish();
+                            // Update Firebase, delete the account instance and launch MainActivity
+                            changeOnlineStatus(
+                                    Account.getInstance(getApplicationContext()).getUserId(),
+                                    OFFLINE)
+                                    .addOnCompleteListener(
+                                            new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    successfulSignOut();
+                                                }
+                                            });
                         } else {
                             Log.e(TAG, "Sign out failed!");
                         }
                     }
                 });
         profileWindow.dismiss();
+    }
+
+    private void successfulSignOut() {
+        Toast toastSignOut = makeAndShowToast("Signing out...");
+
+        Account.deleteAccount();
+        toastSignOut.cancel();
+        launchActivity(MainActivity.class);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
     private Toast makeAndShowToast(String msg) {
@@ -310,7 +350,7 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(BattleLogActivity.class);
                 break;
             case R.id.leagueImage:
-                showLeagues();
+                launchActivity(LeaguesActivity.class);
                 break;
             case R.id.usernameButton:
                 showProfilePopup();
@@ -452,8 +492,9 @@ public class HomeActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
 
-        // Update values of the text views
         Account account = Account.getInstance(this);
+
+        // Update values of the text views
         ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
         ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
                 account.getTrophies()));

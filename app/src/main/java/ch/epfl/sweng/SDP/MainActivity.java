@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -16,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 /**
@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
+
         Glide.with(this).load(R.drawable.waiting_animation_dots)
                 .into((ImageView) findViewById(R.id.waitingAnimationDots));
         Glide.with(this).load(R.drawable.background_animation)
@@ -45,10 +46,15 @@ public class MainActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
+                                // Go to the home if the user has already logged in
+                                // and created an account
                                 cloneAccountFromFirebase(dataSnapshot);
-                                launchActivity(HomeActivity.class);
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                finish();
+
+                                TextView errorMessage = findViewById(
+                                        R.id.errorMessage);
+                                errorMessage.setTypeface(typeMuro);
+
+                                handleUserStatus(errorMessage);
                             } else {
                                 displayMainLayout();
                             }
@@ -68,6 +74,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
+
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {
                     @Override

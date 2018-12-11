@@ -6,3 +6,8 @@ engines:
         enabled: false
   sonar-java:
     enabled: true
+    checks:
+      squid:S1604:
+        enabled: false
+      squid:S1181:
+        enabled: false

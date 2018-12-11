@@ -1,18 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
-import static java.lang.String.format;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +16,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
@@ -41,14 +38,19 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
+import static java.lang.String.format;
 
 /**
  * Class representing the homepage of the app.
@@ -214,7 +216,6 @@ public class HomeActivity extends BaseActivity {
      * Signs the current user out and starts the {@link MainActivity}.
      */
     private void signOut() {
-        final Toast toastSignOut = makeAndShowToast("Signing out...");
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -228,12 +229,7 @@ public class HomeActivity extends BaseActivity {
                                             new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    Account.deleteAccount();
-                                                    toastSignOut.cancel();
-                                                    launchActivity(MainActivity.class);
-                                                    overridePendingTransition(R.anim.fade_in,
-                                                            R.anim.fade_out);
-                                                    finish();
+                                                    successfulSignOut();
                                                 }
                                             });
                         } else {
@@ -242,6 +238,16 @@ public class HomeActivity extends BaseActivity {
                     }
                 });
         profileWindow.dismiss();
+    }
+
+    private void successfulSignOut() {
+        Toast toastSignOut = makeAndShowToast("Signing out...");
+
+        Account.deleteAccount();
+        toastSignOut.cancel();
+        launchActivity(MainActivity.class);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
     private Toast makeAndShowToast(String msg) {

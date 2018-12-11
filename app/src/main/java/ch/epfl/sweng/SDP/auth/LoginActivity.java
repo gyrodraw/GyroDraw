@@ -42,18 +42,18 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_loading_screen);
 
         createSignInIntent();
 
-        errorMessage = findViewById(R.id.errorMessageLogin);
+        errorMessage = findViewById(R.id.errorMessage);
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         errorMessage.setTypeface(typeMuro);
 
         Glide.with(this).load(R.drawable.waiting_animation_dots)
                 .into((ImageView) findViewById(R.id.waitingAnimationDots));
         Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
     }
 
     private void createSignInIntent() {

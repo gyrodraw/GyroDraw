@@ -7,14 +7,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.firebase.Database;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.firebase.Database;
 
 /**
  * Class representing the first page shown to the user upon first app launch.
@@ -41,11 +43,12 @@ public class MainActivity extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                // Go to the home if the user has already logged in and created an account
+                                // Go to the home if the user has already logged in
+                                // and created an account
                                 cloneAccountFromFirebase(dataSnapshot);
 
                                 TextView errorMessage = findViewById(
-                                        R.id.errorMessageLoadingScreen);
+                                        R.id.errorMessage);
                                 Typeface typeMuro = Typeface
                                         .createFromAsset(getAssets(), "fonts/Muro.otf");
                                 errorMessage.setTypeface(typeMuro);

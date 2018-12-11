@@ -1,10 +1,11 @@
 package ch.epfl.sweng.SDP.utils;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-import static java.lang.String.format;
+import com.google.android.gms.tasks.Task;
 
 import ch.epfl.sweng.SDP.firebase.Database;
-import com.google.android.gms.tasks.Task;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import static java.lang.String.format;
 
 /**
  * Enum representing whether the user is online or offline.
@@ -37,7 +38,7 @@ public enum OnlineStatus {
      * @param status the desired status for the user
      * @return a {@link Task} wrapping the operation
      * @throws IllegalArgumentException if the userId string is null or the given status is
-     * wrong/unknown
+     *                                  wrong/unknown
      */
     public static Task<Void> changeOnlineStatus(String userId, OnlineStatus status) {
         checkPrecondition(userId != null, "userId is null");

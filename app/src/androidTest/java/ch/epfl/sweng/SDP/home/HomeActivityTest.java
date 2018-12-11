@@ -17,6 +17,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -24,6 +25,8 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -187,5 +190,12 @@ public class HomeActivityTest {
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 3000);
         assertThat(homeActivity, is(not(nullValue())));
+    }
+
+    @Test
+    public void testSwipeRightOpensShop() {
+        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeLeft());
+        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeRight());
+        intended(hasComponent(ShopActivity.class.getName()));
     }
 }

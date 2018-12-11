@@ -1,8 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
+
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -46,7 +48,6 @@ public class DrawingOnline extends GyroDrawingActivity {
 
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
-    private boolean isVotingActivityLaunched = false;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -89,7 +90,6 @@ public class DrawingOnline extends GyroDrawingActivity {
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
-                                        isVotingActivityLaunched = true;
                                         timerRef.removeEventListener(listenerTimer);
 
                                         Intent intent = new Intent(getApplicationContext(),
@@ -119,6 +119,7 @@ public class DrawingOnline extends GyroDrawingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         NetworkStateReceiverListener networkStateReceiverListener =

@@ -22,7 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.bitmapEqualsNewBitmap;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.compressBitmap;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
-import static ch.epfl.sweng.SDP.home.LeaderboardActivityTest.testExitButtonBody;
+import static ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivityTest.testExitButtonBody;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;

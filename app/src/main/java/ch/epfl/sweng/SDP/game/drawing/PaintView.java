@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.SystemClock;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,6 +23,9 @@ import java.util.List;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 
 /**
  * Class representing the view used for drawing.
@@ -47,14 +51,14 @@ public class PaintView extends View {
 
     private int circleX = 0;
     private int circleY = 0;
-
     private int width;
     private int height;
     private int circleRadius;
     private int color = 0;
     private int previousColor = 0;
+    private int drawWidth = CURR_WIDTH + MIN_WIDTH;
     private float speed;
-    private int drawWidth = 30;
+    private long lastClickTime = 0;
 
     /**
      * Constructor for the view.
@@ -129,10 +133,6 @@ public class PaintView extends View {
         return circleRadius;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
     public void multSpeed(double factor) {
         speed *= factor;
     }
@@ -159,7 +159,7 @@ public class PaintView extends View {
      *
      * @param newWidth the new width of the brush
      */
-    protected void setDrawWidth(int newWidth) {
+    void setDrawWidth(int newWidth) {
         if (isDrawing) {
             drawEnd();
             drawStart();
@@ -170,7 +170,7 @@ public class PaintView extends View {
         }
     }
 
-    protected int getDrawWidth() {
+    int getDrawWidth() {
         return drawWidth;
     }
 
@@ -183,7 +183,6 @@ public class PaintView extends View {
     public void updateCoordinates(float posX, float posY) {
         circleX -= posX * speed;
         circleY += posY * speed;
-
         setCircle(circleX, circleY);
     }
 
@@ -203,6 +202,13 @@ public class PaintView extends View {
      * @param color the index of the color
      */
     public void setColor(int color) {
+        if (isDrawing) {
+            path.lineTo(circleX, circleY);
+            canvas.drawPath(path, colors.get(this.color));
+            path.reset();
+            path.moveTo(circleX, circleY);
+        }
+
         if (this.color != colors.size() - 1) {
             this.color = color;
         }
@@ -294,7 +300,8 @@ public class PaintView extends View {
                 case MotionEvent.ACTION_DOWN:
                     if (!bucketMode) {
                         drawStart();
-                    } else {
+                    } else if (SystemClock.elapsedRealtime() - lastClickTime >= 500) {
+                        lastClickTime = SystemClock.elapsedRealtime();
                         path.moveTo(circleX, circleY);
                         // Apply the flood fill algorithm
                         new BucketTool(bitmap, bitmap.getPixel(circleX, circleY),
@@ -302,7 +309,9 @@ public class PaintView extends View {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    drawEnd();
+                    if (!bucketMode && isDrawing) {
+                        drawEnd();
+                    }
                     break;
                 default:
             }
@@ -355,7 +364,6 @@ public class PaintView extends View {
             drawEnd();
         }
         canDraw = false;
-
         // Use userId as the name for the image
         String imageName = Account.getInstance(context).getUserId() + ".jpg";
         StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);

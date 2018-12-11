@@ -32,6 +32,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
@@ -251,6 +252,11 @@ public class VotingPageActivity extends BaseActivity {
         }
 
         launchActivity(HomeActivity.class);
+
+        if (roomID != null && NetworkStateReceiver.isOnline(this)) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+        }
+
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
@@ -266,6 +272,7 @@ public class VotingPageActivity extends BaseActivity {
         changeDrawing(drawings[changeDrawingCounter], playerName);
 
         addStarAnimationListener();
+
         if(rankingTable.get(playerName) >= 0) {
             findViewById(R.id.disconnectedText).setVisibility(View.GONE);
             enableRatingBar(playerName);

@@ -126,13 +126,13 @@ public class ImageSharer {
      *
      * @param ref the storage reference.
      */
-    private void getUrl(StorageReference ref) {
+    @VisibleForTesting
+    public void getUrl(StorageReference ref) {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(final Uri uri) {
                 // Share image to facebook after getting url
                 shareDrawingToFacebook(uri);
-                Log.d("SUCCESS", "Successfully uploaded a task");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -145,7 +145,8 @@ public class ImageSharer {
     /**
      * Opens an activity to share the image to Facebook.
      */
-    private void shareDrawingToFacebook(Uri uri) {
+    @VisibleForTesting
+    public void shareDrawingToFacebook(Uri uri) {
         ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
                 .build();
         if (activity != null) {

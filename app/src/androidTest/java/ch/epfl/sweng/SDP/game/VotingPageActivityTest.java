@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
@@ -22,6 +23,8 @@ import android.widget.RatingBar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -105,8 +108,6 @@ public class VotingPageActivityTest {
 
     @Test
     public void testSharingImage() {
-        // Open fragment
-        SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
         activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
@@ -115,7 +116,6 @@ public class VotingPageActivityTest {
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));
 
-        // Share image
         Bitmap bitmap = BitmapFactory.decodeResource(activityRule.getActivity().getResources(), R.drawable.league_1);
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
@@ -296,6 +296,8 @@ public class VotingPageActivityTest {
     @Test
     public void testImageSharerShareToAppFails() {
         ImageSharer imageSharer = ImageSharer.getInstance(activityRule.getActivity());
+        imageSharer.getUrl(FirebaseStorage.getInstance().getReference().child("TestImage"));
+        imageSharer.shareDrawingToFacebook(Uri.EMPTY);
         assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(false));
     }
 

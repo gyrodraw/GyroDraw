@@ -1,9 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.app.Activity;
 import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;

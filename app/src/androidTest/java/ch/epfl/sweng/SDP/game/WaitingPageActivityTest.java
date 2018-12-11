@@ -332,7 +332,8 @@ public class WaitingPageActivityTest {
 
     @Test
     public void testDisableInternetConnection() {
-        WifiManager wifiManager = (WifiManager)mActivityRule.getActivity().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)mActivityRule.getActivity()
+                                    .getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
         SystemClock.sleep(2000);
         onView(withId(R.id.okDisconnectedButton)).check(matches(isDisplayed()));

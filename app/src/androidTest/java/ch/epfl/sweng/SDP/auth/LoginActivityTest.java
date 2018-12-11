@@ -84,6 +84,7 @@ public class LoginActivityTest {
     @Test
     public void testSuccessfulLoginExistingUser() {
         changeOnlineStatus(Account.getInstance(loginActivity).getUserId(), OFFLINE);
+        SystemClock.sleep(3000);
         Account.deleteAccount();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
         loginActivity.onActivityResult(42, -1, mockIntent);

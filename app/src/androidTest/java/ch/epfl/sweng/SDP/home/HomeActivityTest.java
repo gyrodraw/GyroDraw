@@ -2,42 +2,53 @@ package ch.epfl.sweng.SDP.home;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.Espresso.onView;
+
 import android.support.test.espresso.intent.Intents;
+
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+
 import android.support.test.espresso.matcher.ViewMatchers;
+
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
+
+
+import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
+
+import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.shop.ShopActivity;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.ShopActivity;
-
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressBack;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.setOnTest;
-import static ch.epfl.sweng.SDP.home.HomeActivity.disableBackgroundAnimation;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {

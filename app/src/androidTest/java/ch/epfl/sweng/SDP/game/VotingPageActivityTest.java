@@ -49,6 +49,8 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
+    private static final String USER_ID = "userA";
+
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
@@ -61,9 +63,9 @@ public class VotingPageActivityTest {
                     VotingPageActivity.disableAnimations();
                     Account.deleteAccount();
                     Account.createAccount(InstrumentationRegistry.getTargetContext(),
-                            new ConstantsWrapper(), "userA", "test");
+                            new ConstantsWrapper(), USER_ID, "test");
                     Account.getInstance(InstrumentationRegistry.getTargetContext())
-                            .setUserId("userA");
+                            .setUserId(USER_ID);
                 }
 
                 @Override
@@ -91,7 +93,7 @@ public class VotingPageActivityTest {
     public void ratingUsingRatingBarShouldBeSaved() {
 
         // To ensure that the rating value does not get above 20
-        Database.getReference("realRooms.0123457890.ranking.userA").setValue(0);
+        Database.getReference("realRooms.0123457890.ranking." + USER_ID).setValue(0);
 
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
@@ -161,8 +163,8 @@ public class VotingPageActivityTest {
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-        Database.getReference("realRooms.0123457890.users.userA").setValue("userA");
-        Database.getReference("realRooms.0123457890.ranking.userA").setValue(0);
+        Database.getReference("realRooms.0123457890.users." + USER_ID).setValue(USER_ID);
+        Database.getReference("realRooms.0123457890.ranking." + USER_ID).setValue(0);
         SystemClock.sleep(2000);
     }
 

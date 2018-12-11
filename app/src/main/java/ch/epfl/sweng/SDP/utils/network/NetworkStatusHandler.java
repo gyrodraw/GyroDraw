@@ -28,9 +28,10 @@ public class NetworkStatusHandler implements NetworkStateReceiverListener {
     @Override
     public void networkUnavailable() {
         disconnectedDialog.setContentView(R.layout.disconnected_pop_up);
-        disconnectedDialog.findViewById(R.id.okDisconnectedButton).setOnClickListener(new View.OnClickListener() {
+        disconnectedDialog.findViewById(R.id.okDisconnectedButton)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Account.deleteAccount();
                 context.startActivity(new Intent(context, MainActivity.class));
                 disconnectedDialog.dismiss();

@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import android.os.CountDownTimer;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
@@ -12,20 +10,8 @@ public class SlowdownItem extends Item {
 
     private static final double SLOWDOWN_FACTOR = 0.5;
 
-    private SlowdownItem(int posX, int posY, int radius) {
+    protected SlowdownItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
-    }
-
-    /**
-     * Creates a {@link SlowdownItem}.
-     *
-     * @param posX      x position
-     * @param posY      y position
-     * @param radius    radius of the item
-     * @return          the desired item
-     */
-    public static SlowdownItem createSlowdownItem(int posX, int posY, int radius) {
-        return new SlowdownItem(posX, posY, radius);
     }
 
     @Override

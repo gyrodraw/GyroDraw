@@ -25,15 +25,15 @@ public final class RandomItemGenerator {
         int y = getRandomIntWithinBounds(paintView.getHeight());
         switch (item) {
             case SPEEDUP:
-                return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS);
+                return new SpeedupItem(x, y, ITEM_RADIUS);
             case SLOWDOWN:
-                return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS);
+                return new SlowdownItem(x, y, ITEM_RADIUS);
             case SWAP_AXIS:
-                return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS);
+                return new SwapAxisItem(x, y, ITEM_RADIUS);
             case ADD_STARS:
-                return AddStarsItem.createAddStarsItem(x, y, ITEM_RADIUS);
+                return new AddStarsItem(x, y, ITEM_RADIUS);
             case BUMP:
-                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
+                return new BumpingItem(x, y, ITEM_RADIUS);
             default:
                 throw new IllegalArgumentException("Unknown item type");
         }
@@ -50,13 +50,13 @@ public final class RandomItemGenerator {
         int y = getRandomIntWithinBounds(paintView.getHeight());
         switch (item) {
             case SPEEDUP:
-                return SpeedupItem.createSpeedupItem(x, y, ITEM_RADIUS);
+                return new SpeedupItem(x, y, ITEM_RADIUS);
             case SLOWDOWN:
-                return SlowdownItem.createSlowdownItem(x, y, ITEM_RADIUS);
+                return new SlowdownItem(x, y, ITEM_RADIUS);
             case SWAP_AXIS:
-                return SwapAxisItem.createSwapAxisItem(x, y, ITEM_RADIUS);
+                return new SwapAxisItem(x, y, ITEM_RADIUS);
             case BUMP:
-                return BumpingItem.createBumpingItem(x, y, ITEM_RADIUS);
+                return new BumpingItem(x, y, ITEM_RADIUS);
             default:
                 throw new IllegalArgumentException("Unknown item type");
         }

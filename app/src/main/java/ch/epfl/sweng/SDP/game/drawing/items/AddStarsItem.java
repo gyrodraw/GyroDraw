@@ -11,20 +11,8 @@ public class AddStarsItem extends Item {
 
     private static final int ADD_STARS = 3;
 
-    private AddStarsItem(int posX, int posY, int radius) {
+    protected AddStarsItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
-    }
-
-    /**
-     * Creates a {@link AddStarsItem}.
-     *
-     * @param posX      x position
-     * @param posY      y position
-     * @param radius    radius of the item
-     * @return          the desired item
-     */
-    public static AddStarsItem createAddStarsItem(int posX, int posY, int radius) {
-        return new AddStarsItem(posX, posY, radius);
     }
 
     @Override

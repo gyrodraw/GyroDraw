@@ -16,12 +16,8 @@ public class BumpingItem extends Item {
     private ImageView imageView;
     private boolean isActivated = false;
 
-    private BumpingItem(int posX, int posY, int radius) {
+    protected BumpingItem(int posX, int posY, int radius) {
         super(posX, posY, radius);
-    }
-
-    public static BumpingItem createBumpingItem(int posX, int posY, int radius) {
-        return new BumpingItem(posX, posY, radius);
     }
 
     /**

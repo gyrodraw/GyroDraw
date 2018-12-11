@@ -37,7 +37,8 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -46,8 +47,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -88,6 +87,30 @@ public class LeaderboardActivityTest {
     }
 
     @Test
+    public void testFriendsButtonReceivedIsInitializedCorrectly() {
+        Player player = new Player(context, USER_ID, USERNAME,
+                0L, "leagueOne", false);
+        FriendsButton friendsButton = new FriendsButton(
+                context, player, 1, false);
+        friendsButton.initializeImageCorrespondingToFriendsState(
+                FriendsRequestState.RECEIVED.ordinal());
+        assertDrawablesAreIdentical(friendsButton.getDrawable(),
+                context.getDrawable(R.drawable.add_friend), true);
+    }
+
+    @Test
+    public void testFriendsButtonReceivedIsUpdatedCorrectly() {
+        FriendsButton friendsButton = new FriendsButton(
+                context, new Player(context, USER_ID + "1", USERNAME,
+                0L, "leagueThree", false), 2, false);
+        friendsButton.setImageAndUpdateFriendsState(
+                FriendsRequestState.RECEIVED.ordinal());
+        assertDrawablesAreIdentical(friendsButton.getDrawable(),
+                context.getDrawable(R.drawable.remove_friend), true);
+        account.removeFriend(USER_ID + "1");
+    }
+
+    @Test
     public void testFriendsButtonChangesDrawableCorrectly() {
         String buttonTag = "friendsButton0";
         SystemClock.sleep(2000);
@@ -97,10 +120,10 @@ public class LeaderboardActivityTest {
         Drawable image = imageView.getDrawable();
         onView(withTagValue(is((Object) buttonTag))).perform(click());
         SystemClock.sleep(1000);
-        assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(false));
+        assertDrawablesAreIdentical(imageView.getDrawable(), image, false);
         SystemClock.sleep(1000);
         onView(withTagValue(is((Object) buttonTag))).perform(click());
-        assertThat(areDrawablesIdentical(imageView.getDrawable(), image), is(true));
+        assertDrawablesAreIdentical(imageView.getDrawable(), image, true);
     }
 
     @Test
@@ -158,7 +181,7 @@ public class LeaderboardActivityTest {
     }
 
     /**
-     * Searches a LinearLayout for all childs with the given tag value,
+     * Searches a LinearLayout for all childs with the given tag value.
      *
      * @param root  LinearLayout to search in
      * @param tag   Tag value to search
@@ -166,6 +189,7 @@ public class LeaderboardActivityTest {
      */
     private static ArrayList<View> getViewsByTag(LinearLayout root, String tag){
         ArrayList<View> views = new ArrayList<>();
+
         final int childCount = root.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = root.getChildAt(i);
@@ -177,7 +201,6 @@ public class LeaderboardActivityTest {
             if (tagObj != null && tagObj.equals(tag)) {
                 views.add(child);
             }
-
         }
         return views;
     }
@@ -188,15 +211,15 @@ public class LeaderboardActivityTest {
      *
      * @param drawableA first drawable
      * @param drawableB second drawable
-     * @return          true if they're identical, else false
      */
-    private static boolean areDrawablesIdentical(Drawable drawableA, Drawable drawableB) {
+    private static void assertDrawablesAreIdentical(Drawable drawableA, Drawable drawableB,
+                                                    boolean expected) {
         Drawable.ConstantState stateA = drawableA.getConstantState();
         Drawable.ConstantState stateB = drawableB.getConstantState();
         // If the constant state is identical, they are using the same drawable resource.
         // However, the opposite is not necessarily true.
-        return (stateA != null && stateB != null && stateA.equals(stateB))
-                || getBitmap(drawableA).sameAs(getBitmap(drawableB));
+        assertThat(stateA != null && stateB != null && stateA.equals(stateB)
+                || getBitmap(drawableA).sameAs(getBitmap(drawableB)), is(expected));
     }
 
     private static Bitmap getBitmap(Drawable drawable) {
@@ -204,15 +227,9 @@ public class LeaderboardActivityTest {
         if (drawable instanceof BitmapDrawable) {
             result = ((BitmapDrawable) drawable).getBitmap();
         } else {
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
             // Some drawables have no intrinsic width - e.g. solid colours.
-            if (width <= 0) {
-                width = 1;
-            }
-            if (height <= 0) {
-                height = 1;
-            }
+            int width = Math.max(1, drawable.getIntrinsicWidth());
+            int height = Math.max(1, drawable.getIntrinsicHeight());
 
             result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(result);

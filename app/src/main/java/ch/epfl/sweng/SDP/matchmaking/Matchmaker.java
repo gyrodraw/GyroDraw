@@ -69,7 +69,7 @@ public class Matchmaker implements MatchmakingInterface {
         data.put("league", account.getCurrentLeague().replaceAll("\\D+", ""));
         data.put("mode", gameMode);
 
-        return mFunctions.getHttpsCallable("joinGame2")
+        return mFunctions.getHttpsCallable("joinGame")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, String>() {
                     @Override

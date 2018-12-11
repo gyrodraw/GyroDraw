@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home.leaderboard;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
@@ -106,7 +107,8 @@ class FriendsButton extends AppCompatImageView {
      * Sets the image depending on the friends state.
      * @param state current state of friendship
      */
-    private void initializeImageCorrespondingToFriendsState(int state) {
+    @VisibleForTesting
+    public void initializeImageCorrespondingToFriendsState(int state) {
         if (state == SENT) {
             setImageResource(R.drawable.pending_friend);
         } else if (state == FRIENDS) {
@@ -146,7 +148,8 @@ class FriendsButton extends AppCompatImageView {
      *
      * @param state    current state of friendship
      */
-    private void setImageAndUpdateFriendsState(int state) {
+    @VisibleForTesting
+    public void setImageAndUpdateFriendsState(int state) {
         switch (FriendsRequestState.fromInteger(state)) {
             case RECEIVED:
                 Account.getInstance(context).addFriend(player.getUserId());

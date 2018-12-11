@@ -42,10 +42,10 @@ public enum ColorsShop {
                 return GREEN;
             case "YELLOW":
                 return YELLOW;
-            case "ORANGE":
-                return ORANGE;
             case "PINK":
                 return PINK;
+            case "ORANGE":
+            return ORANGE;
             case "RED":
                 return RED;
             case "BROWN":
@@ -75,10 +75,10 @@ public enum ColorsShop {
                 return R.color.colorGreen;
             case "YELLOW":
                 return R.color.colorYellow;
-            case "ORANGE":
-                return R.color.colorOrange;
             case "PINK":
                 return R.color.colorPink;
+            case "ORANGE":
+            return R.color.colorOrange;
             case "RED":
                 return R.color.colorRed;
             case "BROWN":

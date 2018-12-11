@@ -6,12 +6,11 @@ import android.graphics.Typeface;
 /**
  * Utility class that stores the different typefaces.
  */
-public class TypefaceLibrary {
+public final class TypefaceLibrary {
     private static Typeface typeMuro;
     private static Typeface typeOptimus;
 
-    private TypefaceLibrary() {
-    }
+    private TypefaceLibrary() {}
 
     /**
      * Instantiates the typefaces given the context.
@@ -19,8 +18,12 @@ public class TypefaceLibrary {
      * @param context the given context
      */
     public static void setContext(Context context) {
-        typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
-        typeOptimus = Typeface.createFromAsset(context.getAssets(), "fonts/Optimus.otf");
+        if (typeMuro == null) {
+            typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
+        }
+        if (typeOptimus == null) {
+            typeOptimus = Typeface.createFromAsset(context.getAssets(), "fonts/Optimus.otf");
+        }
     }
 
     public static Typeface getTypeMuro() {

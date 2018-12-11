@@ -100,6 +100,7 @@ public class MainActivityTest {
         assertThat(errorMessage.getText().toString(),
                 is(activity.getString(R.string.already_logged_in)));
         assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
+        changeOnlineStatus(TEST_USER_ID, OFFLINE);
     }
 
     @Test

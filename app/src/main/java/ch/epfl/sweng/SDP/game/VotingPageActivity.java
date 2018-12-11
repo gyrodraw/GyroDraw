@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -35,7 +35,7 @@ import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
  */
-public class VotingPageActivity extends BaseActivity {
+public class VotingPageActivity extends NoBackPressActivity {
 
     private static boolean enableAnimations = true;
     private static final int NUMBER_OF_DRAWINGS = 5;
@@ -408,8 +408,8 @@ public class VotingPageActivity extends BaseActivity {
         setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                 R.id.playerNameView, R.id.timer);
 
-        fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
+        fragment = new RankingFragment();
         fragment.putExtra(roomID,drawings,playersNames);
 
         getSupportFragmentManager().beginTransaction()

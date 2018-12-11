@@ -25,14 +25,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
@@ -49,7 +49,7 @@ import static java.lang.String.format;
 /**
  * Class representing the homepage of the app.
  */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends NoBackPressActivity {
 
     private static final String TAG = "HomeActivity";
     private static final String MURO_PATH = "fonts/Muro.otf";
@@ -310,7 +310,7 @@ public class HomeActivity extends BaseActivity {
                 profileWindow.dismiss();
                 break;
             case R.id.practiceButton:
-                launchActivity(DrawingOffline.class);
+                launchActivity(DrawingOfflineActivity.class);
                 break;
             case R.id.mysteryButton:
                 launchOnlineGame((ImageView) view, R.drawable.home_mystery_button, 1);

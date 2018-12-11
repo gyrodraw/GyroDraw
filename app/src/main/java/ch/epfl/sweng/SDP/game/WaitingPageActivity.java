@@ -15,12 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItemsActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
@@ -34,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
  * Class representing the first phase of an online game: a waiting page in which players can vote
  * for the word to draw.
  */
-public class WaitingPageActivity extends BaseActivity {
+public class WaitingPageActivity extends NoBackPressActivity {
 
     private static final String TAG = "WaitingPageActivity";
     private static final String WORD_CHILDREN_DB_ID = "words";
@@ -234,7 +234,7 @@ public class WaitingPageActivity extends BaseActivity {
 
     private void launchDrawingActivity(int gameMode) {
         Intent intent = new Intent(getApplicationContext(),
-                gameMode == 0 ? DrawingOnline.class : DrawingOnlineItems.class);
+                gameMode == 0 ? DrawingOnlineActivity.class : DrawingOnlineItemsActivity.class);
 
         isDrawingActivityLaunched = true;
 

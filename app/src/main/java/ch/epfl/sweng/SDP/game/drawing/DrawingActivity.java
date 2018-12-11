@@ -16,7 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TableLayout;
 
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.R;
 
@@ -30,7 +30,7 @@ import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 /**
  * Abstract class representing the drawing page of the game.
  */
-public abstract class DrawingActivity extends BaseActivity {
+public abstract class DrawingActivity extends NoBackPressActivity {
 
     protected static final String TAG = "DrawingActivity";
 

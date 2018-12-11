@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
@@ -29,7 +29,7 @@ import java.util.List;
  * Class containing the methods used for the login.
  * This activity is launched but not actually displayed.
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends NoBackPressActivity {
 
     private static final String TAG = "LoginActivity";
     private static final String EMAIL = "email";

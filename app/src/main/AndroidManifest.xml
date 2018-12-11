@@ -30,7 +30,7 @@
             android:name=".game.WaitingPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOnline"
+            android:name=".game.drawing.DrawingOnlineActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".auth.AccountCreationActivity"
@@ -54,10 +54,10 @@
             android:name=".shop.ShopActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOffline"
+            android:name=".game.drawing.DrawingOfflineActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOnlineItems"
+            android:name=".game.drawing.DrawingOnlineItemsActivity"
             android:screenOrientation="portrait" />
     </application>
 </manifest>

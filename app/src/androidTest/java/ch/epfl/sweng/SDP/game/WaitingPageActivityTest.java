@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -223,7 +223,7 @@ public class WaitingPageActivityTest {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
-        intended(hasComponent(DrawingOnline.class.getName()));
+        intended(hasComponent(DrawingOnlineActivity.class.getName()));
         Intents.release();
     }
 

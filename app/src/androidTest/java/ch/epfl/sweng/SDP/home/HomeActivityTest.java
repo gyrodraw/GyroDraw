@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -96,7 +96,7 @@ public class HomeActivityTest {
     @Test
     public void testClickOnPracticeButtonOpensDrawingOffline() {
         onView(ViewMatchers.withId(R.id.practiceButton)).perform(click());
-        intended(hasComponent(DrawingOffline.class.getName()));
+        intended(hasComponent(DrawingOfflineActivity.class.getName()));
     }
 
     @Test

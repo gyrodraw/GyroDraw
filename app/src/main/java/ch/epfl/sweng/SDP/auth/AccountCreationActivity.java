@@ -3,15 +3,13 @@ package ch.epfl.sweng.SDP.auth;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -23,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 /**
  * Class representing the account creation page.
  */
-public class AccountCreationActivity extends BaseActivity {
+public class AccountCreationActivity extends NoBackPressActivity {
 
     private EditText usernameInput;
     private TextView usernameTaken;

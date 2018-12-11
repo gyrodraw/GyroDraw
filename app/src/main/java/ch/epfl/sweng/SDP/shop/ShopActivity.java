@@ -16,7 +16,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Activity allowing the purchase of items such as colors.
+ * BaseActivity allowing the purchase of items such as colors.
  */
-public class ShopActivity extends BaseActivity {
+public class ShopActivity extends NoBackPressActivity {
 
     private static boolean enableAnimations = true;
 

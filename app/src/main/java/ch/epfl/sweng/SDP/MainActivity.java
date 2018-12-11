@@ -20,7 +20,7 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 /**
  * Class representing the first page shown to the user upon first app launch.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

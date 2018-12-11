@@ -1,21 +1,20 @@
 package ch.epfl.sweng.SDP.utils;
 
+import static ch.epfl.sweng.SDP.home.League.createLeague1;
+import static ch.epfl.sweng.SDP.home.League.createLeague2;
+import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.BounceInterpolator;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.home.League;
-
-import static ch.epfl.sweng.SDP.home.League.createLeague1;
-import static ch.epfl.sweng.SDP.home.League.createLeague2;
-import static ch.epfl.sweng.SDP.home.League.createLeague3;
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Utility class containing methods for layout-related operations.
@@ -85,7 +84,7 @@ public final class LayoutUtils {
         view.startAnimation(press);
     }
 
-    private static void setExitListener(final View exitButton, final Activity activity,
+    private static void setExitListener(final View exitButton, final BaseActivity activity,
                                         final int inTranstionId, final int outTransitionId) {
         exitButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -113,7 +112,7 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setFadingExitListener(final View exitButton, final Activity activity) {
+    public static void setFadingExitListener(final View exitButton, final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.fade_in, R.anim.fade_out);
     }
 
@@ -123,7 +122,7 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setSlideRightExitListener(final View exitButton, final Activity activity) {
+    public static void setSlideRightExitListener(final View exitButton, final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
@@ -133,7 +132,7 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setSlideLeftExitListener(final View exitButton, final Activity activity) {
+    public static void setSlideLeftExitListener(final View exitButton, final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 

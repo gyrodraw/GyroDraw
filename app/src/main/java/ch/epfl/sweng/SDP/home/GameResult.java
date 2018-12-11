@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
@@ -75,7 +76,7 @@ public class GameResult {
         this.context = context;
 
         res = context.getResources();
-        typeMuro = Typeface.createFromAsset(context.getAssets(), "fonts/Muro.otf");
+        typeMuro = TypefaceLibrary.getTypeMuro();
 
         rankListParams.setMargins(0, 0, 0, 30);
         rankParams.setMargins(0, 0, 0, 10);

@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.ViewManager;
@@ -32,8 +31,6 @@ public class BattleLogActivity extends BaseActivity {
         setContentView(R.layout.activity_battle_log);
 
         battleLogView = findViewById(R.id.battleLog);
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));

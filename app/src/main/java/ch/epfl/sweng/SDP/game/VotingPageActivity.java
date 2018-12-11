@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,9 +28,6 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-
-import ch.epfl.sweng.SDP.firebase.FbStorage;
-
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
@@ -39,9 +35,6 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.ImageSharer;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
-
-import com.facebook.FacebookSdk;
-import com.google.firebase.storage.UploadTask;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -184,7 +177,6 @@ public class VotingPageActivity extends BaseActivity {
         setVisibility(View.GONE, ratingBar, playerNameView,
                 drawingView, timer, starsAnimation);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         playerNameView.setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
 
@@ -470,7 +462,7 @@ public class VotingPageActivity extends BaseActivity {
 
         fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        fragment.putExtra(roomID,drawings,playersNames);
+        fragment.putExtra(roomID, drawings, playersNames);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)

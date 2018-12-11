@@ -1,9 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
-import static java.lang.String.format;
-
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -15,6 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -24,11 +28,8 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
+import static java.lang.String.format;
 
 /**
  * Class representing the first phase of an online game: a waiting page in which players can vote
@@ -220,8 +221,6 @@ public class WaitingPageActivity extends BaseActivity {
         initRadioButton((Button) findViewById(R.id.buttonWord2), word2, word2Ref,
                 WordNumber.TWO);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
         setTypeFace(typeMuro, findViewById(R.id.playersReadyText),
                 findViewById(R.id.playersCounterText), findViewById(R.id.buttonWord1),
                 findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
@@ -303,33 +302,27 @@ public class WaitingPageActivity extends BaseActivity {
 
     // Vote for the specified word and update the database
     private void voteForWord(WordNumber wordNumber) {
+        ImageView imageWord1 = findViewById(R.id.imageWord1);
+        ImageView imageWord2 = findViewById(R.id.imageWord2);
         switch (wordNumber) {
             case ONE:
                 word1Ref.setValue(++word1Votes);
-                ((ImageView) findViewById(R.id.imageWord1))
-                        .setImageResource(R.drawable.word_image_picked);
+                imageWord1.setImageResource(R.drawable.word_image_picked);
                 break;
             case TWO:
                 word2Ref.setValue(++word2Votes);
-                ((ImageView) findViewById(R.id.imageWord2))
-                        .setImageResource(R.drawable.word_image_picked);
+                imageWord2.setImageResource(R.drawable.word_image_picked);
                 break;
             default:
         }
-        animateWord1();
-        animateWord2();
+        animateWord(imageWord1, R.anim.pick_word_1);
+        animateWord(imageWord2, R.anim.pick_word_2);
     }
 
-    private void animateWord1() {
-        final Animation pickWord1 = AnimationUtils.loadAnimation(this, R.anim.pick_word_1);
-        pickWord1.setFillAfter(true);
-        findViewById(R.id.imageWord1).startAnimation(pickWord1);
-    }
-
-    private void animateWord2() {
-        final Animation pickWord2 = AnimationUtils.loadAnimation(this, R.anim.pick_word_2);
-        pickWord2.setFillAfter(true);
-        findViewById(R.id.imageWord2).startAnimation(pickWord2);
+    private void animateWord(ImageView imageWord, int animId) {
+        final Animation pickWord = AnimationUtils.loadAnimation(this, animId);
+        pickWord.setFillAfter(true);
+        imageWord.startAnimation(pickWord);
     }
 
     private void disableButtons() {

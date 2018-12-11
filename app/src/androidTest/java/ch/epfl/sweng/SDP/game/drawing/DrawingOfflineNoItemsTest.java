@@ -17,6 +17,8 @@ import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -91,11 +93,11 @@ public class DrawingOfflineNoItemsTest {
 
         brushWidthBar.setProgress(0);
         SystemClock.sleep(2000);
-        assertThat(paintView.getDrawWidth(), is(11));
+        assertThat(paintView.getDrawWidth(), is(MIN_WIDTH + 1));
 
         brushWidthBar.setProgress(100);
         SystemClock.sleep(2000);
-        assertThat(paintView.getDrawWidth(), is(410));
+        assertThat(paintView.getDrawWidth(), is((int) Math.pow(CURR_WIDTH, 2) + MIN_WIDTH));
 
         brushWidthBar.setProgress(50);
         SystemClock.sleep(2000);

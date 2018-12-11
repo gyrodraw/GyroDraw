@@ -3,22 +3,14 @@ package ch.epfl.sweng.SDP.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,17 +31,15 @@ import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
-import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
-
-import ch.epfl.sweng.SDP.utils.ImageStorageManager;
-
+import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
+import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
@@ -57,6 +47,7 @@ import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 import static java.lang.String.format;
 
@@ -66,7 +57,6 @@ import static java.lang.String.format;
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = "HomeActivity";
-    private static final String MURO_PATH = "fonts/Muro.otf";
 
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
@@ -115,12 +105,12 @@ public class HomeActivity extends BaseActivity {
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
 
-
         isStoragePermissionGranted();
 
+        ImageView backgroundAnimation = findViewById(R.id.homeBackgroundAnimation);
+
         if (enableBackgroundAnimation) {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.homeBackgroundAnimation));
+            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
         }
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
@@ -140,14 +130,11 @@ public class HomeActivity extends BaseActivity {
         final ImageView starsButton = findViewById(R.id.starsButton);
         final TextView starsCount = findViewById(R.id.starsCount);
         final ImageView leagueImage = findViewById(R.id.leagueImage);
+        final TextView leagueText = findViewById(R.id.leagueText);
 
         usernameButton.setText(Account.getInstance(this).getUsername());
         trophiesCount.setText(String.valueOf(Account.getInstance(this).getTrophies()));
         starsCount.setText(String.valueOf(Account.getInstance(this).getStars()));
-
-        TextView leagueText = findViewById(R.id.leagueText);
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
 
         leagueText.setTypeface(typeOptimus);
         usernameButton.setTypeface(typeMuro);
@@ -164,6 +151,13 @@ public class HomeActivity extends BaseActivity {
         setListener(usernameButton, getMainAmplitude(), getMainFrequency());
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
+
+        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeRight() {
+                launchActivity(ShopActivity.class);
+            }
+        });
 
         setLeague();
     }
@@ -271,8 +265,14 @@ public class HomeActivity extends BaseActivity {
                         pressButton(view, animMode, context);
                         break;
                     case MotionEvent.ACTION_UP:
-                        listenerEventSelector(view, id);
+                        if (id == R.id.drawButton) {
+                            ((ImageView) view)
+                                    .setImageResource(R.drawable.draw_button);
+                        }
                         bounceButton(view, amplitude, frequency, animMode, context);
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            listenerEventSelector(view, id);
+                        }
                         break;
                     default:
                 }
@@ -341,6 +341,11 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
+        // Prevents that the user launches two online games at the same time.
+        findViewById(R.id.practiceButton).setEnabled(false);
+        findViewById(R.id.drawButton).setEnabled(false);
+        findViewById(R.id.mysteryButton).setEnabled(false);
+
         if (CheckConnection.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
@@ -368,8 +373,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setMuroFont() {
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
-
         TextView profileTextView = profileWindow.findViewById(R.id.profileText);
         profileTextView.setTypeface(typeMuro);
         TextView gamesWonText = profileWindow.findViewById(R.id.gamesWonText);
@@ -404,8 +407,11 @@ public class HomeActivity extends BaseActivity {
         gamesWonNumber.setText(String.valueOf(userAccount.getMatchesWon()));
         TextView gamesLostNumber = profileWindow.findViewById(R.id.gamesLostNumber);
         gamesLostNumber.setText(String.valueOf(userAccount.getTotalMatches()));
+
+        double roundedAverage = Math.round(userAccount.getAverageRating() * 10) / 10.;
         TextView averageStarsNumber = profileWindow.findViewById(R.id.averageStarsNumber);
-        averageStarsNumber.setText(String.valueOf(userAccount.getAverageRating()));
+        averageStarsNumber.setText(String.valueOf(roundedAverage));
+
         TextView maxTrophiesNumber = profileWindow.findViewById(R.id.maxTrophiesNumber);
         maxTrophiesNumber.setText(String.valueOf(userAccount.getMaxTrophies()));
         TextView crossText = profileWindow.findViewById(R.id.crossText);
@@ -453,8 +459,6 @@ public class HomeActivity extends BaseActivity {
         assert name != null : "name is null";
 
         friendRequestWindow.setContentView(R.layout.activity_friend_request_pop_up);
-
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), MURO_PATH);
 
         TextView requestSender = friendRequestWindow.findViewById(R.id.requestSender);
         requestSender.setTypeface(typeMuro);

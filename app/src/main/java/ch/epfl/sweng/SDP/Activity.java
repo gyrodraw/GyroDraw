@@ -190,8 +190,7 @@ public abstract class Activity extends AppCompatActivity {
 
         if (userEntry != null) {
             String currentUserId = (String) userEntry.keySet().toArray()[0];
-            HashMap<String, Object> user = userEntry
-                    .get(currentUserId);
+            HashMap<String, Object> user = userEntry.get(currentUserId);
             if (user != null) {
                 Account.createAccount(getApplicationContext(),
                         new ConstantsWrapper(), (String) user.get("username"),
@@ -223,11 +222,9 @@ public abstract class Activity extends AppCompatActivity {
         final DatabaseReference statusRef = Database.getReference(format("users.%s.online",
                 Account.getInstance(getApplicationContext()).getUserId()));
 
-        statusRef.addValueEventListener(
-                new ValueEventListener() {
+        statusRef.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(
-                            @NonNull DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         OnlineStatus isOnline = OnlineStatus.fromInteger(
                                 dataSnapshot.getValue(int.class));
                         if (isOnline == ONLINE) {
@@ -242,8 +239,7 @@ public abstract class Activity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(
-                            @NonNull DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                         throw databaseError.toException();
                     }
                 });

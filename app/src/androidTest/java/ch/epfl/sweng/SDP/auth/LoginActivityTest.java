@@ -123,7 +123,7 @@ public class LoginActivityTest {
             }
         });
 
-        TextView feedbackView = loginActivity.findViewById(R.id.errorMessageLogin);
+        TextView feedbackView = loginActivity.findViewById(R.id.errorMessage);
         ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
                 loginActivity.getResources().getString(expectedErrorMessageId))));
     }

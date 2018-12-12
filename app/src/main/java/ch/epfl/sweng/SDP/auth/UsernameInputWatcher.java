@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static java.lang.String.format;
+
 import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +20,7 @@ class UsernameInputWatcher implements TextWatcher {
     private final Button createAccount;
     private final Resources resources;
 
-    public UsernameInputWatcher(TextView feedback, Button createAccount, Resources resources) {
+    UsernameInputWatcher(TextView feedback, Button createAccount, Resources resources) {
         this.feedback = feedback;
         this.createAccount = createAccount;
         this.resources = resources;
@@ -49,7 +51,7 @@ class UsernameInputWatcher implements TextWatcher {
 
     private boolean check(boolean condition, int errorCode, String append) {
         if (!condition) {
-            feedback.setText(resources.getString(errorCode) + append);
+            feedback.setText(format("%s%s", resources.getString(errorCode), append));
         }
         return condition;
     }

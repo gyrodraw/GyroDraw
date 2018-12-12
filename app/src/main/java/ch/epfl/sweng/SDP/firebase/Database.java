@@ -16,8 +16,6 @@ public enum Database {
 
     INSTANCE;
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
-
     /**
      * Gets and returns the {@link DatabaseReference} associated to the given path.
      * The path can be a single keyword or multiple nested keywords and has the format
@@ -52,11 +50,6 @@ public enum Database {
      */
     public static DatabaseReferenceBuilder constructBuilder(DatabaseReference initialRef) {
         return new DatabaseReferenceBuilder(initialRef);
-    }
-
-    public static void setOnlineStatusInGame(String roomID, String username) {
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
-                                + username).setValue(1);
     }
 
     /**

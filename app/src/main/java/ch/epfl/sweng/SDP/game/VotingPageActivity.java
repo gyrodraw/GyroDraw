@@ -91,7 +91,7 @@ public class VotingPageActivity extends BaseActivity {
                         retrieveDrawingsFromDatabaseStorage();
                         break;
                     case END_VOTING_ACTIVITY:
-                        Database.setOnlineStatusInGame(roomID,
+                        ConnectivityWrapper.setOnlineStatusInGame(roomID,
                                     Account.getInstance(getApplicationContext()).getUsername());
                         setAnimationWaitingBackground();
                         break;
@@ -216,7 +216,7 @@ public class VotingPageActivity extends BaseActivity {
             }
         });
 
-        Database.setOnlineStatusInGame(roomID, Account.getInstance(this).getUsername());
+        ConnectivityWrapper.setOnlineStatusInGame(roomID, Account.getInstance(this).getUsername());
     }
 
     @Override
@@ -245,7 +245,7 @@ public class VotingPageActivity extends BaseActivity {
 
         launchActivity(HomeActivity.class);
 
-        if (roomID != null && NetworkStateReceiver.isOnline(this)) {
+        if (roomID != null && ConnectivityWrapper.isOnline(this)) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
         }
 

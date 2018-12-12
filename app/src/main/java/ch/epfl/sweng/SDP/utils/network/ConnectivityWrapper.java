@@ -3,8 +3,11 @@ package ch.epfl.sweng.SDP.utils.network;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.VisibleForTesting;
 
+import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
@@ -12,6 +15,7 @@ import ch.epfl.sweng.SDP.game.WaitingPageActivity;
  */
 public final class ConnectivityWrapper {
 
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static NetworkStateReceiver networkStateReceiver = null;
 
     private ConnectivityWrapper() {}
@@ -39,6 +43,24 @@ public final class ConnectivityWrapper {
             context.unregisterReceiver(networkStateReceiver);
             networkStateReceiver = null;
         }
+    }
+
+    public static void setOnlineStatusInGame(String roomID, String username) {
+        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
+                + username).setValue(1);
+    }
+
+    /**
+     * Checks if the device is connected to the Internet.
+     *
+     * @param context the activity that calls this method
+     * @return true if the device is connected, false otherwise
+     */
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)

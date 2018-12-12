@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,8 +30,6 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
-import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 
 import static java.lang.String.format;
 
@@ -409,7 +406,7 @@ public class WaitingPageActivity extends BaseActivity {
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.
-        if (!isDrawingActivityLaunched && NetworkStateReceiver.isOnline(this)) {
+        if (!isDrawingActivityLaunched && ConnectivityWrapper.isOnline(this)) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
@@ -437,19 +434,4 @@ public class WaitingPageActivity extends BaseActivity {
             }
         });
     }
-
-    /**
-     * Calls onReceive method which checks the actual internet connections. Only useful for tests.
-     * @param context Given context
-     * @param intent Intent containing multiple network information
-     */
-    /*@VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public void callOnReceiveNetwork(final Context context, final Intent intent) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ConnectivityWrapper.getInstanceNetwork().onReceive(context, intent);
-            }
-        });
-    }*/
 }

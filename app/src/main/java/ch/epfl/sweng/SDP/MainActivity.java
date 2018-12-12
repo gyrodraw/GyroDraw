@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 /**
@@ -39,7 +40,7 @@ public class MainActivity extends Activity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         // Go to the home if the user has already logged in and created an account
-        if (auth.getCurrentUser() != null && NetworkStateReceiver.isOnline(this)) {
+        if (auth.getCurrentUser() != null && ConnectivityWrapper.isOnline(this)) {
             Database.getReference("users").orderByChild("email")
                     .equalTo(auth.getCurrentUser().getEmail())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -79,7 +80,7 @@ public class MainActivity extends Activity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (NetworkStateReceiver.isOnline(getApplicationContext())) {
+                        if (ConnectivityWrapper.isOnline(getApplicationContext())) {
                             launchActivity(LoginActivity.class);
                             finish();
                         } else {

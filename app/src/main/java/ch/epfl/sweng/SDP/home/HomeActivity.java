@@ -36,6 +36,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
@@ -363,7 +364,7 @@ public class HomeActivity extends BaseActivity {
         findViewById(R.id.drawButton).setEnabled(false);
         findViewById(R.id.mysteryButton).setEnabled(false);
 
-        if (NetworkStateReceiver.isOnline(this)) {
+        if (ConnectivityWrapper.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
             intent.putExtra("mode", gameMode);

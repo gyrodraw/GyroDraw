@@ -72,17 +72,4 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     public Set<NetworkStateReceiverListener> getListeners() {
         return listeners;
     }
-
-    /**
-     * Checks if the device is connected to the Internet.
-     *
-     * @param context the activity that calls this method
-     * @return true if the device is connected, false otherwise
-     */
-    public static boolean isOnline(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
 }

@@ -46,8 +46,6 @@ public class WaitingPageActivity extends BaseActivity {
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
-    protected NetworkStateReceiver networkStateReceiver;
-
     private static boolean enableSquareAnimation = true;
 
     private enum WordNumber {
@@ -445,18 +443,13 @@ public class WaitingPageActivity extends BaseActivity {
      * @param context Given context
      * @param intent Intent containing multiple network information
      */
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    /*@VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnReceiveNetwork(final Context context, final Intent intent) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for(NetworkStateReceiverListener listener : networkStateReceiver.getListeners()) {
-                    networkStateReceiver.removeListener(listener);
-                }
-
-                networkStateReceiver.addListener(new NetworkStatusHandler(context));
-                networkStateReceiver.onReceive(context, intent);
+                ConnectivityWrapper.getInstanceNetwork().onReceive(context, intent);
             }
         });
-    }
+    }*/
 }

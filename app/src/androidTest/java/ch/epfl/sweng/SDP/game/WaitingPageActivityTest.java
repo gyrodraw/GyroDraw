@@ -31,7 +31,6 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -356,29 +355,6 @@ public class WaitingPageActivityTest {
 
         onView(withId(R.id.okDisconnectedButton)).check(matches(isDisplayed()));
         onView(withId(R.id.okDisconnectedButton)).perform(click());
-
-    }
-
-    @Test
-    public void testRemoveNetworkListener() {
-        NetworkStateReceiverListener listener = new NetworkStateReceiverListener() {
-            @Override
-            public void networkAvailable() {
-                // Test purpose
-            }
-
-            @Override
-            public void networkUnavailable() {
-                // Test purpose
-            }
-        };
-
-        mActivityRule.getActivity().networkStateReceiver.addListener(listener);
-        assertThat((mActivityRule.getActivity().networkStateReceiver.getListeners().size()),
-                                                                                is(2));
-        mActivityRule.getActivity().networkStateReceiver.removeListener(listener);
-        assertThat((mActivityRule.getActivity().networkStateReceiver.getListeners().size()),
-                                                                                is(1));
 
     }
 }

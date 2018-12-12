@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.VisibleForTesting;
 
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
+
 /**
  * Connectivity wrapper that registers the the network receiver and unregisters it
  */
@@ -14,10 +16,12 @@ public final class ConnectivityWrapper {
 
     private ConnectivityWrapper() {}
 
-    private static void getInstanceNetwork() {
+    private static NetworkStateReceiver getInstanceNetwork() {
         if (networkStateReceiver == null) {
             networkStateReceiver = new NetworkStateReceiver();
         }
+
+        return networkStateReceiver;
     }
 
     public static void registerNetworkReceiver(Context context) {
@@ -43,7 +47,12 @@ public final class ConnectivityWrapper {
             networkStateReceiver.removeListener(listener);
         }
 
-        networkStateReceiver.addListener(new NetworkStatusHandler(context));
-        networkStateReceiver.onReceive(context, intent);
+        ((WaitingPageActivity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                networkStateReceiver.addListener(new NetworkStatusHandler(context));
+                networkStateReceiver.onReceive(context, intent);
+            }
+        });
     }
 }

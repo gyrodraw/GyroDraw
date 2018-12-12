@@ -141,7 +141,6 @@ public class DrawingOnline extends GyroDrawingActivity {
         }
 
         removeAllListeners();
-
         finish();
     }
 

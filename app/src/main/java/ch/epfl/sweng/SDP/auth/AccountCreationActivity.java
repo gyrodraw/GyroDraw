@@ -7,16 +7,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Class representing the account creation page.
@@ -55,7 +53,7 @@ public class AccountCreationActivity extends BaseActivity {
     public void createAccountClicked(View view) {
         final String username = usernameInput.getText().toString().toUpperCase();
 
-        if (username != null && !username.isEmpty()) {
+        if (!username.isEmpty()) {
             Database.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 

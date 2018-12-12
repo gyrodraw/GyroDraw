@@ -1,5 +1,15 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -7,29 +17,17 @@ import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -40,7 +38,7 @@ public class LoginActivityTest {
     public final ActivityTestRule<LoginActivity> activityRule =
             new ActivityTestRule<>(LoginActivity.class);
 
-    // Add a monitor for the accountCreation activity
+    // Add a monitor for the AccountCreationActivity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(AccountCreationActivity.class.getName(), null, false);
 
@@ -77,7 +75,7 @@ public class LoginActivityTest {
     public void testSuccessfulLoginNewUser() {
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(true);
         loginActivity.onActivityResult(42, -1, mockIntent);
-        assertTrue(loginActivity.isFinishing());
+        assertThat(loginActivity.isFinishing(), is(true));
         Activity accountCreationActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 5000);
         assertThat(accountCreationActivity, is(not(nullValue())));
@@ -85,6 +83,9 @@ public class LoginActivityTest {
 
     @Test
     public void testSuccessfulLoginExistingUser() {
+        changeOnlineStatus(Account.getInstance(loginActivity).getUserId(), OFFLINE);
+        SystemClock.sleep(3000);
+        Account.deleteAccount();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
         loginActivity.onActivityResult(42, -1, mockIntent);
         SystemClock.sleep(3000);
@@ -122,7 +123,7 @@ public class LoginActivityTest {
             }
         });
 
-        TextView feedbackView = loginActivity.findViewById(R.id.error_message);
+        TextView feedbackView = loginActivity.findViewById(R.id.errorMessage);
         ViewMatchers.assertThat(feedbackView.getText().toString(), is(equalTo(
                 loginActivity.getResources().getString(expectedErrorMessageId))));
     }

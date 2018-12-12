@@ -81,7 +81,7 @@ public final class ConnectivityWrapper {
     }
 
     /**
-     * Test method that allows to directly call the onReceive method with the given parameters
+     * Test method that allows to directly call the onReceive method with the given parameters.
      * @param context Context of the activity
      * @param intent Connectivity intent
      */

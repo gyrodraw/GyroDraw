@@ -11,7 +11,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
- * Connectivity wrapper that registers the the network receiver and unregisters it
+ * Connectivity wrapper that registers the the network receiver and unregisters it.
  */
 public final class ConnectivityWrapper {
 
@@ -28,6 +28,11 @@ public final class ConnectivityWrapper {
         return networkStateReceiver;
     }
 
+    /**
+     * Create a network receiver and sets the corresponding listener to it.
+     *
+     * @param context Contetxt of the activity
+     */
     public static void registerNetworkReceiver(Context context) {
         getInstanceNetwork();
         NetworkStateReceiverListener networkStateReceiverListener =
@@ -38,6 +43,11 @@ public final class ConnectivityWrapper {
                 new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
+    /**
+     * Unregister the listener and deletes the instance of the receiver.
+     *
+     * @param context Context of the activity
+     */
     public static void unregisterNetworkReceiver(Context context) {
         if(networkStateReceiver != null) {
             context.unregisterReceiver(networkStateReceiver);
@@ -45,6 +55,13 @@ public final class ConnectivityWrapper {
         }
     }
 
+    /**
+     * Set the online flag to 1 when in-game. Allows to notify database that the player is still
+     * here.
+     *
+     * @param roomID Room number of the game
+     * @param username Username of the player
+     */
     public static void setOnlineStatusInGame(String roomID, String username) {
         Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
                 + username).setValue(1);
@@ -63,6 +80,11 @@ public final class ConnectivityWrapper {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * Test method that allows to directly call the onReceive method with the given parameters
+     * @param context Context of the activity
+     * @param intent Connectivity intent
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static void callOnReceiveNetwork(final Context context, final Intent intent) {
         for(NetworkStateReceiverListener listener : networkStateReceiver.getListeners()) {

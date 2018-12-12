@@ -51,6 +51,7 @@ public class VotingPageActivityTest {
 
     private static final String USER_ID = "userA";
     private static final String ROOM_ID_TEST = "0123457890";
+    private static final String TOP_ROOM_ID = "realRooms";
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
@@ -94,7 +95,8 @@ public class VotingPageActivityTest {
     public void ratingUsingRatingBarShouldBeSaved() {
 
         // To ensure that the rating value does not get above 20
-        Database.getReference("realRooms." + ROOM_ID_TEST + ".ranking." + USER_ID).setValue(0);
+        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
+                            .setValue(0);
 
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
@@ -164,8 +166,10 @@ public class VotingPageActivityTest {
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-        Database.getReference("realRooms." + ROOM_ID_TEST + ".users." + USER_ID).setValue(USER_ID);
-        Database.getReference("realRooms." + ROOM_ID_TEST + ".ranking." + USER_ID).setValue(0);
+        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
+                            .setValue(USER_ID);
+        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
+                            .setValue(0);
         SystemClock.sleep(2000);
     }
 

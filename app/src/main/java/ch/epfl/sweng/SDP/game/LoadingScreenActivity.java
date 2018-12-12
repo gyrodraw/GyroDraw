@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +30,9 @@ public class LoadingScreenActivity extends NoBackPressActivity {
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+    public static final String WORD_1 = "word1";
+    public static final String WORD_2 = "word2";
+    public static final String ROOM_ID = "roomID";
 
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;
@@ -57,10 +62,10 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                         wordsVotesRef.removeEventListener(listenerWords);
                         Intent intent = new Intent(getApplicationContext(),
                                 WaitingPageActivity.class);
-                        intent.putExtra("word1", word1);
-                        intent.putExtra("word2", word2);
-                        intent.putExtra("roomID", roomID);
-                        intent.putExtra("mode", gameMode);
+                        intent.putExtra(WORD_1, word1);
+                        intent.putExtra(WORD_2, word2);
+                        intent.putExtra(ROOM_ID, roomID);
+                        intent.putExtra(GAME_MODE, gameMode);
                         startActivity(intent);
                     }
                 }
@@ -112,7 +117,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
-        gameMode = getIntent().getIntExtra("mode", 0);
+        gameMode = getIntent().getIntExtra(GAME_MODE, 0);
 
         if (!isTesting) {
             lookingForRoom(gameMode);

@@ -57,6 +57,8 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class HomeActivity extends NoBackPressActivity {
 
+    public static final String GAME_MODE = "mode";
+
     private static final String TAG = "HomeActivity";
 
     private static final int DRAW_BUTTON_FREQUENCY = 20;
@@ -375,7 +377,7 @@ public class HomeActivity extends NoBackPressActivity {
         if (CheckConnection.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
-            intent.putExtra("mode", gameMode);
+            intent.putExtra(GAME_MODE, gameMode);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.no_internet,

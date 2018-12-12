@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static ch.epfl.sweng.SDP.auth.LoginActivity.EMAIL;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -30,7 +32,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setContentView(R.layout.activity_account_creation);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        userEmail = getIntent().getStringExtra("email");
+        userEmail = getIntent().getStringExtra(EMAIL);
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);

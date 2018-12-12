@@ -31,8 +31,9 @@ import java.util.List;
  */
 public class LoginActivity extends NoBackPressActivity {
 
+    public static final String EMAIL = "email";
+
     private static final String TAG = "LoginActivity";
-    private static final String EMAIL = "email";
     private static final int REQUEST_CODE_SIGN_IN = 42;
 
     private TextView errorMessage;

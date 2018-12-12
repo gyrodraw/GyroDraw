@@ -1,5 +1,9 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_1;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
+import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
 import static java.lang.String.format;
 
 import android.content.Intent;
@@ -38,6 +42,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     private static final String TAG = "WaitingPageActivity";
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
+    public static final String WINNING_WORD = "WinningWord";
 
     private static boolean enableSquareAnimation = true;
 
@@ -190,10 +195,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
         setContentView(R.layout.activity_waiting_page);
 
         Intent intent = getIntent();
-        roomID = intent.getStringExtra("roomID");
-        word1 = intent.getStringExtra("word1");
-        word2 = intent.getStringExtra("word2");
-        gameMode = intent.getIntExtra("mode", 0);
+        roomID = intent.getStringExtra(ROOM_ID);
+        word1 = intent.getStringExtra(WORD_1);
+        word2 = intent.getStringExtra(WORD_2);
+        gameMode = intent.getIntExtra(GAME_MODE, 0);
 
         if (enableSquareAnimation) {
             GlideUtils.startSquareWaitingAnimation(this);
@@ -233,13 +238,13 @@ public class WaitingPageActivity extends NoBackPressActivity {
 
         isDrawingActivityLaunched = true;
 
-        intent.putExtra("RoomID", roomID);
-        intent.putExtra("WinningWord", winningWord);
+        intent.putExtra(ROOM_ID, roomID);
+        intent.putExtra(WINNING_WORD, winningWord);
         startActivity(intent);
     }
 
     private void initRadioButton(Button button, String childString,
-                                 DatabaseReference dbRef, WordNumber wordNumber) {
+            DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.addValueEventListener(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
@@ -252,10 +257,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
-     * @param words      Array containing the words
+     * @param words Array containing the words
      * @return Returns the winning word.
      */
-    public static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
+    static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
         String winningWord = words[1];
         if (word1Votes >= word2Votes) {
             winningWord = words[0];

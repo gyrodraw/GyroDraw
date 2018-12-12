@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -118,7 +120,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         Intent intent = getIntent();
-        roomID = intent.getStringExtra("RoomID");
+        roomID = intent.getStringExtra(ROOM_ID);
 
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);

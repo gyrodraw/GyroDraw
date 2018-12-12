@@ -1,12 +1,23 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
+import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
+import static java.lang.String.format;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -15,17 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-
-import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
-import static java.lang.String.format;
 
 /**
  * Class representing the drawing phase of an online game in normal mode.
@@ -88,7 +88,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
 
                                         Intent intent = new Intent(getApplicationContext(),
                                                 VotingPageActivity.class);
-                                        intent.putExtra("RoomID", roomId);
+                                        intent.putExtra(ROOM_ID, roomId);
                                         startActivity(intent);
                                     }
                                 });
@@ -115,8 +115,8 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
 
-        roomId = intent.getStringExtra("RoomID");
-        winningWord = intent.getStringExtra("WinningWord");
+        roomId = intent.getStringExtra(ROOM_ID);
+        winningWord = intent.getStringExtra(WINNING_WORD);
 
         TextView wordView = findViewById(R.id.winningWord);
         wordView.setText(winningWord);

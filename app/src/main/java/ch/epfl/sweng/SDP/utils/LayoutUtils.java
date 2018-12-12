@@ -84,6 +84,24 @@ public final class LayoutUtils {
         view.startAnimation(press);
     }
 
+    /**
+     * Determines if the given point is inside a view.
+     *
+     * @param posX    the posX coordinate of the point
+     * @param posY    the posY coordinate of the point
+     * @param view the object to compare
+     * @return true if the point is within the view bounds, false otherwise
+     */
+    public static boolean isPointInsideView(float posX, float posY, View view) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int viewX = location[0];
+        int viewY = location[1];
+
+        return (posX > viewX && posX < (viewX + view.getWidth()))
+                && (posY > viewY && posY < (viewY + view.getHeight()));
+    }
+
     private static void setExitListener(final View exitButton, final BaseActivity activity,
                                         final int inTranstionId, final int outTransitionId) {
         exitButton.setOnTouchListener(new View.OnTouchListener() {
@@ -95,9 +113,11 @@ public final class LayoutUtils {
                         break;
                     case MotionEvent.ACTION_UP:
                         bounceButton(view, activity);
-                        activity.launchActivity(HomeActivity.class);
-                        activity.overridePendingTransition(inTranstionId, outTransitionId);
-                        activity.finish();
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            activity.launchActivity(HomeActivity.class);
+                            activity.overridePendingTransition(inTranstionId, outTransitionId);
+                            activity.finish();
+                        }
                         break;
                     default:
                 }

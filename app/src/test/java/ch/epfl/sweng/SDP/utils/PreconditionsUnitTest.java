@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.utils;
 
 import org.junit.Test;
 
-public class PreconditionsTest {
+public class PreconditionsUnitTest {
 
     @Test
     public void testCheckPreconditionWithoutMsgTrue() {

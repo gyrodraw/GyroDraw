@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -38,10 +37,8 @@ public class AccountCreationActivity extends NoBackPressActivity {
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-        ((TextView) findViewById(R.id.createAccount)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.usernameInput)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.usernameTaken)).setTypeface(typeMuro);
+        setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
+                findViewById(R.id.usernameTaken));
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.backgroundAnimation));
@@ -57,7 +54,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
     public void createAccountClicked(View view) {
         final String username = usernameInput.getText().toString().toUpperCase();
 
-        if (username != null && !username.isEmpty()) {
+        if (!username.isEmpty()) {
             Database.getReference("users").orderByChild("username").equalTo(username)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 

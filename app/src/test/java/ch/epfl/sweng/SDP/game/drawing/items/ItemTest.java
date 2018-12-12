@@ -1,10 +1,11 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import ch.epfl.sweng.SDP.R;
-import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class ItemTest {
 

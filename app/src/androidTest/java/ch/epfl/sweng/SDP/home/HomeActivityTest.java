@@ -1,29 +1,11 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.ShopActivity;
-
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -38,6 +20,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
+import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopActivity;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
@@ -187,5 +188,12 @@ public class HomeActivityTest {
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 3000);
         assertThat(homeActivity, is(not(nullValue())));
+    }
+
+    @Test
+    public void testSwipeRightOpensShop() {
+        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeLeft());
+        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeRight());
+        intended(hasComponent(ShopActivity.class.getName()));
     }
 }

@@ -1,31 +1,28 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.bitmapEqualsNewBitmap;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.compressBitmap;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
-import static ch.epfl.sweng.SDP.home.LeaderboardActivityTest.testExitButtonBody;
+import static ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivityTest.testExitButtonBody;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class BattleLogActivityTest {

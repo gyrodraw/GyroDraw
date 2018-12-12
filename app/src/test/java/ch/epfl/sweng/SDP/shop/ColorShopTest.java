@@ -1,9 +1,9 @@
 package ch.epfl.sweng.SDP.shop;
 
+import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.junit.Test;
 
 public class ColorShopTest {
 
@@ -32,6 +32,31 @@ public class ColorShopTest {
     @Test
     public void testGetColorGreenFromString() {
         assertThat(ColorsShop.getColorFromString("GREEN"), is(ColorsShop.GREEN));
+    }
+
+    @Test
+    public void testGetColorPurpleFromString() {
+        assertThat(ColorsShop.getColorFromString("PURPLE"), is(ColorsShop.PURPLE));
+    }
+
+    @Test
+    public void testGetColorPinkFromString() {
+        assertThat(ColorsShop.getColorFromString("PINK"), is(ColorsShop.PINK));
+    }
+
+    @Test
+    public void testGetColorOrangeFromString() {
+        assertThat(ColorsShop.getColorFromString("ORANGE"), is(ColorsShop.ORANGE));
+    }
+
+    @Test
+    public void testGetColorCyanFromString() {
+        assertThat(ColorsShop.getColorFromString("CYAN"), is(ColorsShop.CYAN));
+    }
+
+    @Test
+    public void testGetColorBrownFromString() {
+        assertThat(ColorsShop.getColorFromString("BROWN"), is(ColorsShop.BROWN));
     }
 
     @Test(expected = IllegalArgumentException.class)

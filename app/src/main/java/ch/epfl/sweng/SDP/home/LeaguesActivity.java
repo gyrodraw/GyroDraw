@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,15 +28,13 @@ public class LeaguesActivity extends NoBackPressActivity {
             }
         });
 
-        Typeface typeOptimus = Typeface.createFromAsset(getAssets(), "fonts/Optimus.otf");
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
         setTypeFace(typeOptimus, findViewById(R.id.league1Name), findViewById(R.id.league2Name),
                 findViewById(R.id.league3Name), findViewById(R.id.league1Text),
                 findViewById(R.id.league2Text), findViewById(R.id.league3Text));
 
         setTypeFace(typeMuro, findViewById(R.id.league1Difficulty),
-                findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty));
+                findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty),
+                findViewById(R.id.exitButton));
 
         Glide.with(this).load(R.drawable.background_animation)
                 .into((ImageView) findViewById(R.id.leaguesBackgroundAnimation));

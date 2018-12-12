@@ -1,27 +1,26 @@
 package ch.epfl.sweng.SDP.shop;
 
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-
+import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +35,6 @@ public class ShopActivity extends NoBackPressActivity {
     private Dialog buyDialog;
     private LinearLayout shopItems;
     private Shop shop;
-    private Typeface typeMuro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,25 +42,32 @@ public class ShopActivity extends NoBackPressActivity {
         this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         setContentView(R.layout.activity_shop);
 
+        ImageView backgroundAnimation = findViewById(R.id.shopBackgroundAnimation);
         if (enableAnimations) {
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.shopBackgroundAnimation));
+            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
         }
 
-        typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         buyDialog = new Dialog(this);
         shopItems = findViewById(R.id.shopItems);
         TextView exitButton = findViewById(R.id.exitButton);
+        TextView starsText = findViewById(R.id.yourStars);
 
-        exitButton.setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.shopMessages)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.yourStars)).setTypeface(typeMuro);
-        ((TextView) findViewById(R.id.yourStars)).setText(String.format(Locale.getDefault(), "%d",
+        setTypeFace(typeMuro, exitButton, findViewById(R.id.shopMessages), starsText);
+        starsText.setText(String.format(Locale.getDefault(), "%d",
                 Account.getInstance(this).getStars()));
 
         fillShop();
         addColorsToShop();
         LayoutUtils.setSlideRightExitListener(exitButton, this);
+
+        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeLeft() {
+                launchActivity(HomeActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+            }
+        });
     }
 
     /**
@@ -110,17 +115,18 @@ public class ShopActivity extends NoBackPressActivity {
             shopItems.addView(itemLayout, layoutParams);
 
             if (!item.getOwned() && item.getPriceItem() <= stars) {
-                itemLayout.setOnTouchListener(new View.OnTouchListener() {
+                itemLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onTouch(View view, MotionEvent event) {
+                    public void onClick(View view) {
+                        bounceButton(view, ShopActivity.this);
                         touchItem(index, item);
-                        return true;
                     }
                 });
             }
 
             itemLayout.setTag(item.getColorItem());
         }
+
     }
 
     @SuppressLint("DefaultLocale")

@@ -1,38 +1,37 @@
 package ch.epfl.sweng.SDP;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Context;
-
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-
-import com.google.firebase.database.DataSnapshot;
-
-import java.util.HashMap;
-
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.when;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.os.SystemClock;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.TextView;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import com.google.firebase.database.DataSnapshot;
+import java.util.HashMap;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -46,9 +45,16 @@ public class MainActivityTest {
     public final ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class);
 
+    private MainActivity activity;
+
     // Add a monitor for the login activity
     private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
             .addMonitor(LoginActivity.class.getName(), null, false);
+
+    @Before
+    public void init() {
+        activity = mActivityRule.getActivity();
+    }
 
     @Test
     public void testCanOpenLoginActivity() {
@@ -60,7 +66,7 @@ public class MainActivityTest {
 
     @Test
     public void testCloneAccountFromFirebase() {
-        HashMap<String,Object> values = new HashMap<>();
+        HashMap<String, Object> values = new HashMap<>();
         initializeAccountHashMap(values);
 
         HashMap<String, HashMap<String, Object>> account = new HashMap<>();
@@ -69,24 +75,50 @@ public class MainActivityTest {
         DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
         when(snapshot.getValue()).thenReturn(account);
 
-        mActivityRule.getActivity().cloneAccountFromFirebase(snapshot);
+        activity.cloneAccountFromFirebase(snapshot);
 
         Account.deleteAccount();
-        Context context = mActivityRule.getActivity().getApplicationContext();
         LocalDbHandlerForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
-                context, null, 1);
-        Account.createAccount(context, new ConstantsWrapper(),
+                activity, null, 1);
+        Account.createAccount(activity, new ConstantsWrapper(),
                 TEST_USERNAME, TEST_EMAIL);
-        localDbHandlerForAccount.retrieveAccount(Account.getInstance(context));
-        Account newAccount = Account.getInstance(context);
+        localDbHandlerForAccount.retrieveAccount(Account.getInstance(activity));
+        Account newAccount = Account.getInstance(activity);
 
         assertThatAccountWasInitializedCorrectly(newAccount);
+    }
+
+    @Test
+    public void testHandleUserStatusOnline() {
+        changeOnlineStatus(TEST_USER_ID, ONLINE);
+        SystemClock.sleep(3000);
+
+        TextView errorMessage = new TextView(activity);
+        activity.handleUserStatus(errorMessage);
+        SystemClock.sleep(3000);
+
+        assertThat(errorMessage.getText().toString(),
+                is(activity.getString(R.string.already_logged_in)));
+        assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
+        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+    }
+
+    @Test
+    public void testHandleUserStatusOffline() {
+        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        SystemClock.sleep(3000);
+
+        TextView errorMessage = new TextView(activity);
+        activity.handleUserStatus(errorMessage);
+        SystemClock.sleep(3000);
+
+        assertThat(activity.isFinishing(), is(true));
     }
 
     /**
      * Populates the given HashMap with test values.
      *
-     * @param values    HashMap to be populated
+     * @param values HashMap to be populated
      */
     private void initializeAccountHashMap(HashMap<String, Object> values) {
         values.put("username", TEST_USERNAME);
@@ -104,7 +136,7 @@ public class MainActivityTest {
     /**
      * Tests that the given account has been saved correctly.
      *
-     * @param newAccount    to be checked
+     * @param newAccount to be checked
      */
     private void assertThatAccountWasInitializedCorrectly(Account newAccount) {
         assertThat(newAccount.getUserId(), is(equalTo(TEST_USER_ID)));

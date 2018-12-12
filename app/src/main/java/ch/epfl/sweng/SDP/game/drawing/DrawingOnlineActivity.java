@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -114,8 +113,6 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
         Intent intent = getIntent();
 
         roomId = intent.getStringExtra("RoomID");

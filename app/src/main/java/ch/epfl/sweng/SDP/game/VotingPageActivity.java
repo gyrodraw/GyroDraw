@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -63,8 +62,6 @@ public class VotingPageActivity extends NoBackPressActivity {
     private TextView timer;
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
-
-    private RankingFragment fragment;
 
     private String roomID = "undefined";
 
@@ -143,7 +140,6 @@ public class VotingPageActivity extends NoBackPressActivity {
         setVisibility(View.GONE, ratingBar, playerNameView,
                 drawingView, timer, starsAnimation);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         playerNameView.setTypeface(typeMuro);
         timer.setTypeface(typeMuro);
 
@@ -409,7 +405,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                 R.id.playerNameView, R.id.timer);
 
         // Create and show the final ranking in the new fragment
-        fragment = new RankingFragment();
+        RankingFragment fragment = new RankingFragment();
         fragment.putExtra(roomID,drawings,playersNames);
 
         getSupportFragmentManager().beginTransaction()

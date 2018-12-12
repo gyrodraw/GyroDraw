@@ -1,24 +1,24 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.SeekBar;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class DrawingOfflineActivityNoItemsTest {
 
@@ -91,11 +91,11 @@ public class DrawingOfflineActivityNoItemsTest {
 
         brushWidthBar.setProgress(0);
         SystemClock.sleep(2000);
-        assertThat(paintView.getDrawWidth(), is(11));
+        assertThat(paintView.getDrawWidth(), is(MIN_WIDTH + 1));
 
         brushWidthBar.setProgress(100);
         SystemClock.sleep(2000);
-        assertThat(paintView.getDrawWidth(), is(410));
+        assertThat(paintView.getDrawWidth(), is((int) Math.pow(CURR_WIDTH, 2) + MIN_WIDTH));
 
         brushWidthBar.setProgress(50);
         SystemClock.sleep(2000);

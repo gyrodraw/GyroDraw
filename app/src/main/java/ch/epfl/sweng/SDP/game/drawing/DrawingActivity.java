@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
+
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -13,19 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TableLayout;
-
-import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
-import ch.epfl.sweng.SDP.shop.ShopItem;
 import ch.epfl.sweng.SDP.R;
-
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 import com.google.android.gms.common.util.ArrayUtils;
-
 import java.util.LinkedList;
 import java.util.List;
-
-import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 
 /**
  * Abstract class representing the drawing page of the game.
@@ -34,8 +30,8 @@ public abstract class DrawingActivity extends NoBackPressActivity {
 
     protected static final String TAG = "DrawingActivity";
 
-    private static final int MIN_WIDTH = 10;
-    private static final int CURR_WIDTH = 20;
+    static final int MIN_WIDTH = 10;
+    static final int CURR_WIDTH = 20;
 
     protected RelativeLayout paintViewHolder;
     protected PaintView paintView;
@@ -48,6 +44,8 @@ public abstract class DrawingActivity extends NoBackPressActivity {
     private ImageView eraserButton;
     private ImageView bucketButton;
 
+    private int px;
+
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public int getLayoutId() {
         return R.layout.activity_drawing_offline;
@@ -56,8 +54,7 @@ public abstract class DrawingActivity extends NoBackPressActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.overridePendingTransition(R.anim.slide_in_right,
-                R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         setContentView(getLayoutId());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -72,6 +69,9 @@ public abstract class DrawingActivity extends NoBackPressActivity {
 
         colorButtons = new ImageView[myItems.size() + 1];
         colorButtons[0] = findViewById(R.id.blackButton);
+
+        px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
+                getResources().getDisplayMetrics());
 
         for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);
@@ -92,7 +92,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
-
                 paintView.invalidate();
             }
         };
@@ -134,23 +133,16 @@ public abstract class DrawingActivity extends NoBackPressActivity {
     public ImageView createColorImageView(int color) {
         ImageView image = new ImageView(this);
 
-        TableLayout.LayoutParams params = new TableLayout.LayoutParams(LinearLayout.
-                LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-                .MATCH_PARENT, 1f);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        // Convert dp into px
-        int px = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                10,
-                getResources().getDisplayMetrics()
-        );
-
-        params.setMargins(0, px, 0, px);
+        params.setMargins(px / 2, 0, px / 2, px);
         image.setLayoutParams(params);
+        image.setAdjustViewBounds(true);
+        image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         image.setImageDrawable(getResources().getDrawable(R.drawable.color_circle));
         image.setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
-
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

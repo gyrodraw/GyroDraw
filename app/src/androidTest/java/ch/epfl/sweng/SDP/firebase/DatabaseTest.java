@@ -1,13 +1,16 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import android.support.test.InstrumentationRegistry;
-import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
+
 import org.junit.Test;
+
+import ch.epfl.sweng.SDP.firebase.Database.DatabaseReferenceBuilder;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DatabaseTest {
 

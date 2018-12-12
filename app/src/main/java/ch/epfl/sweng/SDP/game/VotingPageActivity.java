@@ -169,7 +169,7 @@ public class VotingPageActivity extends BaseActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(ds.getValue(Integer.class) != null) {
+                    if (ds.getValue(Integer.class) != null) {
                         rankingTable.put(ds.getKey(), ds.getValue(Integer.class));
                     }
                 }
@@ -273,7 +273,7 @@ public class VotingPageActivity extends BaseActivity {
 
         addStarAnimationListener();
 
-        if(rankingTable.get(playerName) >= 0) {
+        if (rankingTable.get(playerName) >= 0) {
             findViewById(R.id.disconnectedText).setVisibility(View.GONE);
             enableRatingBar(playerName);
         } else {

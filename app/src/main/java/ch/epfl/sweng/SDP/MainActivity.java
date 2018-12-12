@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(NetworkStateReceiver.isOnline(getApplicationContext())) {
+                        if (NetworkStateReceiver.isOnline(getApplicationContext())) {
                             launchActivity(LoginActivity.class);
                             finish();
                         } else {

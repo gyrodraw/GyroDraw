@@ -245,7 +245,7 @@ public class RankingFragment extends ListFragment {
             // Update image
             ImageView imageView = convertView.findViewById(R.id.drawing);
             TextView disconnectedTextView = convertView.findViewById(R.id.disconnectedRanking);
-            if(rankings[position] >= 0) {
+            if (rankings[position] >= 0) {
                 disconnectedTextView.setVisibility(View.GONE);
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(drawings[getIndexForUserName(players[position])]);

@@ -22,7 +22,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.BaseActivity;
@@ -184,29 +183,13 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void updateUserStatusOnFirebase() {
-        FirebaseDatabase.getInstance().getReference(".info/connected")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean connected = snapshot.getValue(boolean.class);
-                        if (connected) {
-                            String userId = Account.getInstance(getApplicationContext())
-                                    .getUserId();
+        String userId = Account.getInstance(getApplicationContext())
+                .getUserId();
 
-                            // TODO Should be removed (incompatibility fix)
-                            Account.deleteAccount();
-                            changeOnlineStatus(userId, ONLINE);
+        changeOnlineStatus(userId, ONLINE);
 
-                            // On user disconnection, update Firebase
-                            changeToOfflineOnDisconnect(userId);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        throw error.toException();
-                    }
-                });
+        // On user disconnection, update Firebase
+        changeToOfflineOnDisconnect(userId);
     }
 
     private void addListenerForFriendsRequests() {

@@ -18,9 +18,9 @@ import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
-import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -44,7 +44,7 @@ public class ShopActivity extends NoBackPressActivity {
 
         ImageView backgroundAnimation = findViewById(R.id.shopBackgroundAnimation);
         if (enableAnimations) {
-            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
+            GlideUtils.startBackgroundAnimation(this, backgroundAnimation.getId());
         }
 
         buyDialog = new Dialog(this);

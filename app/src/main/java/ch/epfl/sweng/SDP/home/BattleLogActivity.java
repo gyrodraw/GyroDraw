@@ -3,19 +3,15 @@ package ch.epfl.sweng.SDP.home;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.ViewManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import java.util.List;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import java.util.List;
 
 /**
  * Class representing the battle log.
@@ -32,8 +28,7 @@ public class BattleLogActivity extends NoBackPressActivity {
 
         battleLogView = findViewById(R.id.battleLog);
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
 
         TextView exitButton = findViewById(R.id.exitButton);
         TextView emptyBattleLogText = findViewById(R.id.emptyBattleLogText);

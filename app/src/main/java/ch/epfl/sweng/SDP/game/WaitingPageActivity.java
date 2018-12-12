@@ -22,8 +22,8 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItemsActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -196,10 +196,8 @@ public class WaitingPageActivity extends NoBackPressActivity {
         gameMode = intent.getIntExtra("mode", 0);
 
         if (enableSquareAnimation) {
-            Glide.with(this).load(R.drawable.waiting_animation_square)
-                    .into((ImageView) findViewById(R.id.waitingAnimationSquare));
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+            GlideUtils.startSquareWaitingAnimation(this, R.id.waitingAnimationSquare);
+            GlideUtils.startBackgroundAnimation(this, R.id.waitingBackgroundAnimation);
         }
 
         DatabaseReference wordsVotesRef = Database.getReference(

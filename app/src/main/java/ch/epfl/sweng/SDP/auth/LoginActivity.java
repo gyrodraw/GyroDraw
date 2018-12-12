@@ -7,13 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
@@ -49,10 +48,8 @@ public class LoginActivity extends NoBackPressActivity {
         errorMessage = findViewById(R.id.errorMessage);
         errorMessage.setTypeface(typeMuro);
 
-        Glide.with(this).load(R.drawable.waiting_animation_dots)
-                .into((ImageView) findViewById(R.id.waitingAnimationDots));
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        GlideUtils.startDotsWaitingAnimation(this, R.id.waitingAnimationDots);
+        GlideUtils.startBackgroundAnimation(this, R.id.waitingBackgroundAnimation);
     }
 
     private void createSignInIntent() {

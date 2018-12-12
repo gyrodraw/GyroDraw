@@ -2,12 +2,11 @@ package ch.epfl.sweng.SDP.home;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
 
 /**
  * Class representing the leagues' list which can be opened from the {@link HomeActivity}.
@@ -36,8 +35,7 @@ public class LeaguesActivity extends NoBackPressActivity {
                 findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty),
                 findViewById(R.id.exitButton));
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.leaguesBackgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this, R.id.leaguesBackgroundAnimation);
         LayoutUtils.setFadingExitListener(findViewById(R.id.exitButton), this);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }

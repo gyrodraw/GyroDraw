@@ -10,17 +10,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -30,6 +19,15 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -130,10 +128,8 @@ public class VotingPageActivity extends NoBackPressActivity {
         ratingBar = findViewById(R.id.ratingBar);
 
         if (enableAnimations) {
-            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
-            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
-                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
+            GlideUtils.startBackgroundAnimation(this, R.id.votingBackgroundAnimation);
+            GlideUtils.startDotsWaitingAnimation(this, R.id.waitingAnimationDots);
         }
 
         // Make the layout invisible until the drawings have been downloaded

@@ -5,14 +5,12 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -40,8 +38,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
                 findViewById(R.id.usernameTaken));
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
 
         ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(
                 new UsernameInputWatcher((TextView) findViewById(R.id.usernameTaken),

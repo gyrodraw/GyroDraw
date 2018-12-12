@@ -41,9 +41,9 @@ import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.CheckConnection;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
-import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -124,7 +124,7 @@ public class HomeActivity extends NoBackPressActivity {
         ImageView backgroundAnimation = findViewById(R.id.homeBackgroundAnimation);
 
         if (enableBackgroundAnimation) {
-            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
+            GlideUtils.startBackgroundAnimation(this, backgroundAnimation.getId());
         }
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);

@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.firebase.Database;
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,10 +25,8 @@ public class MainActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
-        Glide.with(this).load(R.drawable.waiting_animation_dots)
-                .into((ImageView) findViewById(R.id.waitingAnimationDots));
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        GlideUtils.startDotsWaitingAnimation(this, R.id.waitingAnimationDots);
+        GlideUtils.startBackgroundAnimation(this, R.id.waitingBackgroundAnimation);
 
         FirebaseApp.initializeApp(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -67,8 +64,7 @@ public class MainActivity extends BaseActivity {
 
     private void displayMainLayout() {
         setContentView(R.layout.activity_main);
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
 
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {

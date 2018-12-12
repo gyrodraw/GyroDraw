@@ -157,7 +157,7 @@ exports.joinGame = functions.https.onCall((data, context) => {
 });
 
 function getLeagueFromTrophies(trophies) {
-  if(trophies < 100 && trophies >= 0) {
+  if(trophies >= 0 && trophies < 100) {
     return "league1";
   } else if (trophies >= 100 && trophies < 200) {
     return "league2"; 

@@ -49,7 +49,7 @@ class UsernameInputWatcher implements TextWatcher {
 
     private boolean check(boolean condition, int errorCode, String append) {
         if (!condition) {
-            feedback.setText(getString(errorCode) + append);
+            feedback.setText(resources.getString(errorCode) + append);
         }
         return condition;
     }
@@ -74,9 +74,5 @@ class UsernameInputWatcher implements TextWatcher {
 
     private void disableButton() {
         enableButton(false, R.color.colorLightGrey);
-    }
-
-    private String getString(int id) {
-        return resources.getString(id);
     }
 }

@@ -6,26 +6,14 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
- * Class representing an item which slows down the player's cursor.
+ * Immutable class representing an item which slows down the player's cursor.
  */
 public class SlowdownItem extends Item {
 
     private static final double SLOWDOWN_FACTOR = 0.5;
 
-    private SlowdownItem(int x, int y, int radius) {
+    public SlowdownItem(int x, int y, int radius) {
         super(x, y, radius);
-    }
-
-    /**
-     * Creates a {@link SlowdownItem}.
-     *
-     * @param x      x position
-     * @param y      y position
-     * @param radius radius of the item
-     * @return the desired item
-     */
-    public static SlowdownItem createSlowdownItem(int x, int y, int radius) {
-        return new SlowdownItem(x, y, radius);
     }
 
     @Override

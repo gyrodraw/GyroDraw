@@ -1,9 +1,9 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
-
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Abstract class representing an item.
@@ -12,9 +12,9 @@ public abstract class Item {
 
     protected static final int ITEM_DURATION = 10000;
 
-    private int x;
-    private int y;
-    private int radius;
+    private final int x;
+    private final int y;
+    private final int radius;
 
     protected Item(int x, int y, int radius) {
         checkPrecondition(x >= 0 && y >= 0 && radius >= 0,
@@ -56,7 +56,7 @@ public abstract class Item {
      * @param radius radius of circle
      * @return true if there is collision, else false
      */
-    protected boolean collision(int x, int y, int radius) {
+    boolean collision(int x, int y, int radius) {
         return Math.hypot(this.x - x, this.y - y)
                 < this.radius + radius;
     }

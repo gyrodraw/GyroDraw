@@ -4,11 +4,16 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
  */
 public final class Database {
+
+    private static final DatabaseReference USERS_REFERENCE = Database.getReference("users");
 
     private Database() {}
 
@@ -26,6 +31,19 @@ public final class Database {
 
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         return builder.addChildren(path).build();
+    }
+
+    public static void getUsers(ValueEventListener valueEventListener) {
+        USERS_REFERENCE.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void getUserById(String id, ValueEventListener valueEventListener) {
+        USERS_REFERENCE.child(id).addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void getUserByUsername(String username, ValueEventListener valueEventListener) {
+        USERS_REFERENCE.orderByChild("username").equalTo(username)
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
     /**

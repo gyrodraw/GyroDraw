@@ -7,7 +7,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import java.util.HashMap;
@@ -20,7 +19,6 @@ public class Matchmaker implements MatchmakingInterface {
 
     private static Matchmaker instance = null;
 
-    private DatabaseReference roomsRef;
     private Account account;
 
     /**
@@ -40,13 +38,12 @@ public class Matchmaker implements MatchmakingInterface {
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
         }
-        this.roomsRef = Database.getReference("realRooms");
         this.account = account;
     }
 
     /**
-     * Joins a room by calling a FirebaseFunction that will handle
-     * which particular room a player should join.
+     * Joins a room by calling a FirebaseFunction that will handle which particular room a player
+     * should join.
      *
      * @return a {@link Task} wrapping the result
      */
@@ -85,20 +82,15 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        Database.constructBuilder(roomsRef)
-                .addChildren(format("%s.users.%s", roomId, account.getUserId())).build()
+        Database.getReference(format("realRooms.%s.users.%s", roomId, account.getUserId()))
                 .removeValue();
 
         if (!account.getUsername().isEmpty()) {
-            Database.constructBuilder(roomsRef)
-                    .addChildren(format("%s.ranking.%s", roomId, account.getUsername())).build()
+            Database.getReference(format("realRooms.%s.ranking.%s", roomId, account.getUsername()))
                     .removeValue();
-            Database.constructBuilder(roomsRef)
-                    .addChildren(format("%s.finished.%s", roomId, account.getUsername())).build()
+            Database.getReference(format("realRooms.%s.finished.%s", roomId, account.getUsername()))
                     .removeValue();
-            Database.constructBuilder(roomsRef)
-                    .addChildren(format("%s.uploadDrawing.%s", roomId, account.getUsername()))
-                    .build()
+            Database.getReference(format("realRooms.%s.uploadDrawing.%s", roomId, account.getUsername()))
                     .removeValue();
         }
     }

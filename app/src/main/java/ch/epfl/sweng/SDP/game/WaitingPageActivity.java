@@ -46,7 +46,7 @@ public class WaitingPageActivity extends BaseActivity {
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
-    private NetworkStateReceiver networkStateReceiver;
+    protected NetworkStateReceiver networkStateReceiver;
 
     private static boolean enableSquareAnimation = true;
 
@@ -455,9 +455,13 @@ public class WaitingPageActivity extends BaseActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                for(NetworkStateReceiverListener listener : networkStateReceiver.getListeners()) {
+                    networkStateReceiver.removeListener(listener);
+                }
+
+                networkStateReceiver.addListener(new NetworkStatusHandler(context));
                 networkStateReceiver.onReceive(context, intent);
             }
         });
     }
-
 }

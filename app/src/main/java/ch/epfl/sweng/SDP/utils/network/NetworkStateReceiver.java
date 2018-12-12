@@ -14,8 +14,8 @@ import java.util.Set;
  */
 public class NetworkStateReceiver extends BroadcastReceiver {
 
-    protected Set<NetworkStateReceiverListener> listeners;
-    protected Boolean connected;
+    private Set<NetworkStateReceiverListener> listeners;
+    private Boolean connected;
 
     public NetworkStateReceiver() {
         listeners = new HashSet<>();
@@ -67,6 +67,10 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     public void removeListener(NetworkStateReceiverListener listener) {
         listeners.remove(listener);
+    }
+
+    public Set<NetworkStateReceiverListener> getListeners() {
+        return listeners;
     }
 
     /**

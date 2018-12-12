@@ -24,11 +24,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -43,6 +45,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 
@@ -333,19 +337,47 @@ public class WaitingPageActivityTest {
     public void testOnReceiveNetworkDisabled() {
         when(cmMock.getActiveNetworkInfo()).thenReturn(null);
         when(((ConnectivityManager)spyContext.getSystemService(Context.CONNECTIVITY_SERVICE)))
-                                                                .thenReturn(cmMock);
+                .thenReturn(cmMock);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                return null;
+            }
+        }).when(spyContext).startActivity(any(Intent.class));
 
         when(intentMock.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE))
-                                                                            .thenReturn(true);
+                .thenReturn(true);
         when(intentMock.getExtras()).thenReturn(new Bundle());
 
         mActivityRule.getActivity().callOnReceiveNetwork(spyContext, intentMock);
         SystemClock.sleep(1500);
 
-        Account.deleteAccount();
-
         onView(withId(R.id.okDisconnectedButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.okDisconnectedButton)).perform(click());
 
     }
 
+    @Test
+    public void testRemoveNetworkListener() {
+        NetworkStateReceiverListener listener = new NetworkStateReceiverListener() {
+            @Override
+            public void networkAvailable() {
+                // Test purpose
+            }
+
+            @Override
+            public void networkUnavailable() {
+                // Test purpose
+            }
+        };
+
+        mActivityRule.getActivity().networkStateReceiver.addListener(listener);
+        assertThat((mActivityRule.getActivity().networkStateReceiver.getListeners().size()),
+                                                                                is(2));
+        mActivityRule.getActivity().networkStateReceiver.removeListener(listener);
+        assertThat((mActivityRule.getActivity().networkStateReceiver.getListeners().size()),
+                                                                                is(1));
+
+    }
 }

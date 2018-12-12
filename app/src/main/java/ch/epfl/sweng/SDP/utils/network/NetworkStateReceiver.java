@@ -47,7 +47,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             notifyState(listener);
         }
     }
-
+    
     private void notifyState(NetworkStateReceiverListener listener) {
         if (connected == null || listener == null) {
             return;
@@ -60,11 +60,21 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Adds a listener to the set of listeners.
+     *
+     * @param listener Listener to be added
+     */
     public void addListener(NetworkStateReceiverListener listener) {
         listeners.add(listener);
         notifyState(listener);
     }
 
+    /**
+     * Remove from the listener sets the given listener.
+     *
+     * @param listener Listener to be removed
+     */
     public void removeListener(NetworkStateReceiverListener listener) {
         listeners.remove(listener);
     }

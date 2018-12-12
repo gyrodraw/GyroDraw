@@ -8,6 +8,8 @@ public final class RankingUtils {
     private static final int MAX_RANK = 10;
     private static final int MIN_RANK = -10;
     private static final int DELTA_RANK = 5;
+    private static final int FIRST_POSITION = 1;
+    private static final int LAST_POSITION = 5;
 
     private RankingUtils() {
     }
@@ -50,7 +52,7 @@ public final class RankingUtils {
     public static Integer[] generatePositionsFromRanking(Integer[] ranking) {
         Integer[] positions = new Integer[ranking.length];
 
-        positions[0] = ranking[0] >= 0 ? 1 : 5;
+        positions[0] = ranking[0] >= 0 ? FIRST_POSITION : LAST_POSITION;
         for (int i = 1; i < positions.length; ++i) {
             if (ranking[i] >= 0) {
                 if (ranking[i - 1].intValue() == ranking[i].intValue()) {
@@ -59,7 +61,7 @@ public final class RankingUtils {
                     positions[i] = i + 1;
                 }
             } else {
-                positions[i] = 5;
+                positions[i] = LAST_POSITION;
             }
         }
 

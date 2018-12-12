@@ -55,7 +55,7 @@ public class WaitingPageActivityTest {
     private DatabaseError databaseErrorMock;
     private Intent intentMock;
     private ConnectivityManager cmMock;
-    private Context spy;
+    private Context spyContext;
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
@@ -83,7 +83,7 @@ public class WaitingPageActivityTest {
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         intentMock = Mockito.mock(Intent.class);
         cmMock = Mockito.mock(ConnectivityManager.class);
-        spy = Mockito.spy(mActivityRule.getActivity());
+        spyContext = Mockito.spy(mActivityRule.getActivity());
     }
 
     /**
@@ -331,13 +331,15 @@ public class WaitingPageActivityTest {
 
     @Test
     public void testOnReceiveNetworkDisabled() {
-        when(cmMock.getActiveNetwork()).thenReturn(null);
-        when(((ConnectivityManager)spy.getSystemService(Context.CONNECTIVITY_SERVICE))).thenReturn(cmMock);
+        when(cmMock.getActiveNetworkInfo()).thenReturn(null);
+        when(((ConnectivityManager)spyContext.getSystemService(Context.CONNECTIVITY_SERVICE)))
+                                                                .thenReturn(cmMock);
 
-        when(intentMock.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)).thenReturn(true);
+        when(intentMock.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE))
+                                                                            .thenReturn(true);
         when(intentMock.getExtras()).thenReturn(new Bundle());
 
-        mActivityRule.getActivity().callOnReceiveNetwork(spy, intentMock);
+        mActivityRule.getActivity().callOnReceiveNetwork(spyContext, intentMock);
         SystemClock.sleep(1500);
 
         Account.deleteAccount();

@@ -29,7 +29,6 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 import static java.lang.String.format;
 

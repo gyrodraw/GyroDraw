@@ -58,7 +58,7 @@ public class WaitingPageActivityTest {
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private Intent intentMock;
-    private ConnectivityManager cmMock;
+    private ConnectivityManager connectivityManagerMock;
     private Context spyContext;
 
     @Rule
@@ -86,7 +86,7 @@ public class WaitingPageActivityTest {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
         intentMock = Mockito.mock(Intent.class);
-        cmMock = Mockito.mock(ConnectivityManager.class);
+        connectivityManagerMock = Mockito.mock(ConnectivityManager.class);
         spyContext = Mockito.spy(mActivityRule.getActivity());
     }
 
@@ -335,9 +335,9 @@ public class WaitingPageActivityTest {
 
     @Test
     public void testOnReceiveNetworkDisabled() {
-        when(cmMock.getActiveNetworkInfo()).thenReturn(null);
+        when(connectivityManagerMock.getActiveNetworkInfo()).thenReturn(null);
         when(((ConnectivityManager)spyContext.getSystemService(Context.CONNECTIVITY_SERVICE)))
-                .thenReturn(cmMock);
+                .thenReturn(connectivityManagerMock);
 
         doAnswer(new Answer() {
             @Override

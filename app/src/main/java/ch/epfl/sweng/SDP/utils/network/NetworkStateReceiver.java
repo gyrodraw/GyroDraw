@@ -47,7 +47,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             notifyState(listener);
         }
     }
-    
+
     private void notifyState(NetworkStateReceiverListener listener) {
         if (connected == null || listener == null) {
             return;

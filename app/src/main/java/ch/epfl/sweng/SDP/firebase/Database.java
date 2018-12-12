@@ -7,10 +7,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
-
-import ch.epfl.sweng.SDP.auth.Account;
-
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
  */
@@ -18,11 +14,12 @@ public final class Database {
 
     private static final DatabaseReference USERS_REFERENCE = Database.getReference("users");
 
-    private Database() {}
+    private Database() {
+    }
 
     /**
-     * Gets and returns the {@link DatabaseReference} associated to the given path.
-     * The path can be a single keyword or multiple nested keywords and has the format
+     * Gets and returns the {@link DatabaseReference} associated to the given path. The path can be
+     * a single keyword or multiple nested keywords and has the format
      * "root.child1.child2...childN".
      *
      * @param path the path to follow inside the database in order to retrieve the reference
@@ -55,9 +52,7 @@ public final class Database {
     }
 
     public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
-        Database.constructBuilder().addChildren(
-                format("users.%s.friends",
-                        userId)).build()
+        Database.getReference(format("users.%s.friends", userId))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -67,69 +62,27 @@ public final class Database {
      * @param valueEventListener how to handle response
      */
     public static void getFriend(String userId, String friendId,
-                                 ValueEventListener valueEventListener) {
-        Database.constructBuilder().addChildren(
-                format("users.%s.friends.%s",
-                        userId,
-                        friendId)).build()
+            ValueEventListener valueEventListener) {
+        Database.getReference(format("users.%s.friends.%s", userId, friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
-    }
-
-    /**
-     * Returns a new {@link DatabaseReferenceBuilder}.
-     *
-     * @return a DatabaseReferenceBuilder
-     */
-    public static DatabaseReferenceBuilder constructBuilder() {
-        return new DatabaseReferenceBuilder();
-    }
-
-    /**
-     * Returns a new {@link DatabaseReferenceBuilder} starting from the given reference, used as
-     * root.
-     *
-     * @param initialRef the reference used to start building
-     * @return a DatabaseReferenceBuilder
-     */
-    public static DatabaseReferenceBuilder constructBuilder(DatabaseReference initialRef) {
-        return new DatabaseReferenceBuilder(initialRef);
     }
 
     /**
      * Utility builder for {@link DatabaseReference}.
      */
-    public static class DatabaseReferenceBuilder {
+    private static class DatabaseReferenceBuilder {
 
         private DatabaseReference ref;
 
-        /**
-         * Constructs a builder.
-         */
         private DatabaseReferenceBuilder() {
             ref = null;
         }
 
         /**
-         * Constructs a builder starting from the given reference, which will be used as the root.
-         *
-         * @param initialRef the reference used to start building
-         * @throws IllegalArgumentException if the given reference is null
-         */
-        private DatabaseReferenceBuilder(DatabaseReference initialRef) {
-            checkPrecondition(initialRef != null, "initialRef is null");
-
-            ref = initialRef;
-        }
-
-        /**
          * Adds a child to the reference under construction.
-         *
-         * @param childKey the key corresponding to the child
-         * @return the builder
-         * @throws IllegalArgumentException if the given key is null
          */
-        public DatabaseReferenceBuilder addChild(String childKey) {
-            checkPrecondition(childKey != null, "childKey is null");
+        private DatabaseReferenceBuilder addChild(String childKey) {
+            assert childKey != null : "childKey is null";
 
             if (ref == null) {
                 ref = FirebaseDatabase
@@ -143,14 +96,9 @@ public final class Database {
 
         /**
          * Adds multiple children to the reference under construction.
-         *
-         * @param path the sequence of keys, separated by dots, corresponding to the desired nesting
-         *             of children
-         * @return the builder
-         * @throws IllegalArgumentException if the given path is null
          */
-        public DatabaseReferenceBuilder addChildren(String path) {
-            checkPrecondition(path != null, "path is null");
+        private DatabaseReferenceBuilder addChildren(String path) {
+            assert path != null : "path is null";
 
             String[] keys = path.split("\\.");
             String root = keys[0];
@@ -168,10 +116,8 @@ public final class Database {
 
         /**
          * Builds and returns the reference.
-         *
-         * @return the constructed reference
          */
-        public DatabaseReference build() {
+        private DatabaseReference build() {
             return ref;
         }
     }

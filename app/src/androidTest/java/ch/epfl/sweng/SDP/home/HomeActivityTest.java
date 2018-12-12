@@ -192,8 +192,8 @@ public class HomeActivityTest {
 
     @Test
     public void testSwipeRightOpensShop() {
-        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeLeft());
-        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeRight());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
         intended(hasComponent(ShopActivity.class.getName()));
     }
 }

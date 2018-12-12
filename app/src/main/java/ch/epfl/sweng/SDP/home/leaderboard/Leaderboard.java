@@ -18,6 +18,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+import static ch.epfl.sweng.SDP.firebase.Database.getAllFriends;
+import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
+import static ch.epfl.sweng.SDP.firebase.Database.getUsers;
+
 /**
  * Helper class to manage and display data from Firebase.
  */
@@ -102,8 +106,7 @@ class Leaderboard {
      */
     private void fetchPlayersFromFirebase() {
         allPlayers.clear();
-        Database.getReference(USERS_TAG)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getUsers(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         allPlayers.clear();
@@ -126,10 +129,7 @@ class Leaderboard {
      */
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
-        Database.getReference(USERS_TAG + "."
-                + Account.getInstance(context).getUserId() + "."
-                + FRIENDS_TAG)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getAllFriends(Account.getInstance(context).getUserId(), new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         allPlayers.clear();
@@ -156,8 +156,7 @@ class Leaderboard {
      * @param playerId  id of friend to search
      */
     private void findAndAddPlayer(final String playerId) {
-        Database.getReference(USERS_TAG + "." + playerId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getUserById(playerId, new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {

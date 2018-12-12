@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import static ch.epfl.sweng.SDP.firebase.Database.getFriend;
 import static java.lang.String.format;
 
 /**
@@ -31,24 +32,28 @@ class FriendsButton extends AppCompatImageView {
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
 
     private final Context context;
+    private final Account account;
     private final Player player;
     private final int index;
     private final boolean isCurrentUser;
 
-    FriendsButton(Context context, Player player, int index, boolean isCurrentUser) {
+    FriendsButton(final Context context, final Player player, int index, boolean isCurrentUser) {
         super(context);
         this.context = context;
+        this.account = Account.getInstance(context);
         this.player = player;
         this.index = index;
         this.isCurrentUser = isCurrentUser;
         this.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFriendWithCurrentUser(
+                getFriend(account.getUserId(),
+                        player.getUserId(),
                         changeFriendsButtonImageOnClick());
             }
         });
-        this.isFriendWithCurrentUser(initializeFriendsButton());
+        getFriend(account.getUserId(), player.getUserId(),
+                initializeFriendsButton());
         initLayout();
     }
 
@@ -64,19 +69,6 @@ class FriendsButton extends AppCompatImageView {
         if (isCurrentUser) {
             setVisibility(View.INVISIBLE);
         }
-    }
-
-    /**
-     * Gets data if users are friends, else null. Then applies listener.
-     *
-     * @param listener how to handle response
-     */
-    private void isFriendWithCurrentUser(ValueEventListener listener) {
-        Database.constructBuilder().addChildren(
-                format("users.%s.friends.%s",
-                        Account.getInstance(context).getUserId(),
-                        player.getUserId())).build()
-                .addListenerForSingleValueEvent(listener);
     }
 
     /**

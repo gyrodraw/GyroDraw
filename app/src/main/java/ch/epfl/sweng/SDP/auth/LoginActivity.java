@@ -109,8 +109,7 @@ public class LoginActivity extends NoBackPressActivity {
             startActivity(intent);
             finish();
         } else {
-            Database.getReference("users").orderByChild(EMAIL).equalTo(email)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            Database.getUserByEmail(email, new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {

@@ -1,12 +1,15 @@
 package ch.epfl.sweng.SDP.firebase;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import static java.lang.String.format;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.nio.file.attribute.UserDefinedFileAttributeView;
+
+import ch.epfl.sweng.SDP.auth.Account;
 
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
@@ -43,6 +46,32 @@ public final class Database {
 
     public static void getUserByUsername(String username, ValueEventListener valueEventListener) {
         USERS_REFERENCE.orderByChild("username").equalTo(username)
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void getUserByEmail(String email, ValueEventListener valueEventListener) {
+        USERS_REFERENCE.orderByChild("email").equalTo(email)
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
+        Database.constructBuilder().addChildren(
+                format("users.%s.friends",
+                        userId)).build()
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    /**
+     * Gets data if users are friends, else null. Then applies listener.
+     *
+     * @param valueEventListener how to handle response
+     */
+    public static void getFriend(String userId, String friendId,
+                                 ValueEventListener valueEventListener) {
+        Database.constructBuilder().addChildren(
+                format("users.%s.friends.%s",
+                        userId,
+                        friendId)).build()
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 

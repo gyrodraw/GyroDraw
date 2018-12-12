@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.home;
 
+import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
@@ -78,9 +79,7 @@ public class HomeActivity extends NoBackPressActivity {
 
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
-                        Database.getReference(format("users.%s.username", id))
-                                .addListenerForSingleValueEvent(
-                                        new ValueEventListener() {
+                        getUserById(id, new ValueEventListener() {
                                             @Override
                                             public void onDataChange(
                                                     @NonNull DataSnapshot dataSnapshot) {

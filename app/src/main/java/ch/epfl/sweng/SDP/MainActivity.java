@@ -25,8 +25,8 @@ public class MainActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
-        GlideUtils.startDotsWaitingAnimation(this, R.id.waitingAnimationDots);
-        GlideUtils.startBackgroundAnimation(this, R.id.waitingBackgroundAnimation);
+        GlideUtils.startDotsWaitingAnimation(this);
+        GlideUtils.startBackgroundAnimation(this);
 
         FirebaseApp.initializeApp(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
 
     private void displayMainLayout() {
         setContentView(R.layout.activity_main);
-        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
+        GlideUtils.startBackgroundAnimation(this);
 
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {

@@ -35,7 +35,7 @@ public class LeaguesActivity extends NoBackPressActivity {
                 findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty),
                 findViewById(R.id.exitButton));
 
-        GlideUtils.startBackgroundAnimation(this, R.id.leaguesBackgroundAnimation);
+        GlideUtils.startBackgroundAnimation(this);
         LayoutUtils.setFadingExitListener(findViewById(R.id.exitButton), this);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }

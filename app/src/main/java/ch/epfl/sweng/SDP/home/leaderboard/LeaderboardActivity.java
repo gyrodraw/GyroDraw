@@ -28,7 +28,7 @@ public class LeaderboardActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_leaderboard);
 
-        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
+        GlideUtils.startBackgroundAnimation(this);
 
         final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);

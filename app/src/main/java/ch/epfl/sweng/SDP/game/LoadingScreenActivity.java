@@ -123,8 +123,8 @@ public class LoadingScreenActivity extends NoBackPressActivity {
         areWordsReady.setListener(listenerRoomReady);
 
         if (enableWaitingAnimation) {
-            GlideUtils.startDotsWaitingAnimation(this, R.id.waitingAnimationDots);
-            GlideUtils.startBackgroundAnimation(this, R.id.waitingBackgroundAnimation);
+            GlideUtils.startDotsWaitingAnimation(this);
+            GlideUtils.startBackgroundAnimation(this);
         }
 
     }

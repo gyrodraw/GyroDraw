@@ -121,10 +121,8 @@ public class HomeActivity extends NoBackPressActivity {
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
 
-        ImageView backgroundAnimation = findViewById(R.id.homeBackgroundAnimation);
-
         if (enableBackgroundAnimation) {
-            GlideUtils.startBackgroundAnimation(this, backgroundAnimation.getId());
+            GlideUtils.startBackgroundAnimation(this);
         }
 
         LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
@@ -170,7 +168,7 @@ public class HomeActivity extends NoBackPressActivity {
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
 
-        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+        findViewById(R.id.backgroundAnimation).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeRight() {
                 launchActivity(ShopActivity.class);

@@ -38,7 +38,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
                 findViewById(R.id.usernameTaken));
 
-        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
+        GlideUtils.startBackgroundAnimation(this);
 
         ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(
                 new UsernameInputWatcher((TextView) findViewById(R.id.usernameTaken),

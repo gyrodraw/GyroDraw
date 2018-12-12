@@ -196,8 +196,8 @@ public class WaitingPageActivity extends NoBackPressActivity {
         gameMode = intent.getIntExtra("mode", 0);
 
         if (enableSquareAnimation) {
-            GlideUtils.startSquareWaitingAnimation(this, R.id.waitingAnimationSquare);
-            GlideUtils.startBackgroundAnimation(this, R.id.waitingBackgroundAnimation);
+            GlideUtils.startSquareWaitingAnimation(this);
+            GlideUtils.startBackgroundAnimation(this);
         }
 
         DatabaseReference wordsVotesRef = Database.getReference(

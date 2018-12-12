@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -42,9 +41,8 @@ public class ShopActivity extends NoBackPressActivity {
         this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         setContentView(R.layout.activity_shop);
 
-        ImageView backgroundAnimation = findViewById(R.id.shopBackgroundAnimation);
         if (enableAnimations) {
-            GlideUtils.startBackgroundAnimation(this, backgroundAnimation.getId());
+            GlideUtils.startBackgroundAnimation(this);
         }
 
         buyDialog = new Dialog(this);
@@ -60,7 +58,7 @@ public class ShopActivity extends NoBackPressActivity {
         addColorsToShop();
         LayoutUtils.setSlideRightExitListener(exitButton, this);
 
-        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+        findViewById(R.id.backgroundAnimation).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeLeft() {
                 launchActivity(HomeActivity.class);

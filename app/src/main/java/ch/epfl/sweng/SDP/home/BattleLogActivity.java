@@ -28,7 +28,7 @@ public class BattleLogActivity extends NoBackPressActivity {
 
         battleLogView = findViewById(R.id.battleLog);
 
-        GlideUtils.startBackgroundAnimation(this, R.id.backgroundAnimation);
+        GlideUtils.startBackgroundAnimation(this);
 
         TextView exitButton = findViewById(R.id.exitButton);
         TextView emptyBattleLogText = findViewById(R.id.emptyBattleLogText);

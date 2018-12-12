@@ -128,8 +128,8 @@ public class VotingPageActivity extends NoBackPressActivity {
         ratingBar = findViewById(R.id.ratingBar);
 
         if (enableAnimations) {
-            GlideUtils.startBackgroundAnimation(this, R.id.votingBackgroundAnimation);
-            GlideUtils.startDotsWaitingAnimation(this, R.id.waitingAnimationDots);
+            GlideUtils.startBackgroundAnimation(this);
+            GlideUtils.startDotsWaitingAnimation(this);
         }
 
         // Make the layout invisible until the drawings have been downloaded

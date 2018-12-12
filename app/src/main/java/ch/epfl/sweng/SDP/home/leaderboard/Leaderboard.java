@@ -25,7 +25,6 @@ class Leaderboard {
 
     private static final String TAG = "Leaderboard";
     private static final String FIREBASE_ERROR = "There was a problem with Firebase";
-    private static final int MAX_PLAYERS_DISPLAYED = 10;
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
     private static final String USERS_TAG = "users";
     private static final String USERNAME_TAG = "username";
@@ -92,9 +91,6 @@ class Leaderboard {
     private void filterWantedPlayers(LinkedList<Player> players, String query) {
         wantedPlayers.clear();
         for (Player tempPlayer : players) {
-            if (wantedPlayers.size() >= MAX_PLAYERS_DISPLAYED) {
-                return;
-            }
             if (tempPlayer.playerNameContainsString(query)) {
                 wantedPlayers.add(tempPlayer);
             }
@@ -214,7 +210,7 @@ class Leaderboard {
         // add all (max MAX_PLAYERS_DISPLAYED) players to the leaderboard
         int index = 0;
         Iterator<Player> playerIterator = wantedPlayers.iterator();
-        while (playerIterator.hasNext() && index < MAX_PLAYERS_DISPLAYED) {
+        while (playerIterator.hasNext()) {
             Player currentPlayer = playerIterator.next();
             currentPlayer.setRank(index + 1);
             leaderboardView.addView(currentPlayer

@@ -55,8 +55,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         final String username = usernameInput.getText().toString().toUpperCase();
 
         if (!username.isEmpty()) {
-            Database.getReference("users").orderByChild("username").equalTo(username)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            Database.getUserByUsername(username, new ValueEventListener() {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

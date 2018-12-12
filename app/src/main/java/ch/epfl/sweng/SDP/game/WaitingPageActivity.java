@@ -445,6 +445,11 @@ public class WaitingPageActivity extends BaseActivity {
         });
     }
 
+    /**
+     * Calls onReceive method which checks the actual internet connections. Only useful for tests.
+     * @param context Given context
+     * @param intent Intent containing multiple network information
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnReceiveNetwork(final Context context, final Intent intent) {
         this.runOnUiThread(new Runnable() {

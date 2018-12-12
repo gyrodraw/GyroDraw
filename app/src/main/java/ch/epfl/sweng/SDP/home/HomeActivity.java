@@ -192,6 +192,9 @@ public class HomeActivity extends BaseActivity {
                         if (connected) {
                             String userId = Account.getInstance(getApplicationContext())
                                     .getUserId();
+
+                            // TODO Should be removed (incompatibility fix)
+                            Account.deleteAccount();
                             changeOnlineStatus(userId, ONLINE);
 
                             // On user disconnection, update Firebase

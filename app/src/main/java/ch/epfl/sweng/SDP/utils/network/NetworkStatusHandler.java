@@ -9,6 +9,10 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 
+/**
+ * Class that implements the interface for our network listener. It defines the methods
+ * to be called when internet connection changes.
+ */
 public class NetworkStatusHandler implements NetworkStateReceiverListener {
 
     private Dialog disconnectedDialog;

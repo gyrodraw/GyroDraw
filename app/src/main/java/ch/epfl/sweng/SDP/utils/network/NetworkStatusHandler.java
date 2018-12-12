@@ -18,6 +18,10 @@ public class NetworkStatusHandler implements NetworkStateReceiverListener {
     private Dialog disconnectedDialog;
     private Context context;
 
+    /**
+     * Initialize the dialog that pops up when disconnected.
+     * @param context Context of the activity
+     */
     public NetworkStatusHandler(final Context context) {
         this.context = context;
         disconnectedDialog = new Dialog(this.context);

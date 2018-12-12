@@ -1,7 +1,11 @@
 package ch.epfl.sweng.SDP.firebase;
 
+import android.content.Context;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import ch.epfl.sweng.SDP.auth.Account;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
@@ -11,6 +15,8 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 public enum Database {
 
     INSTANCE;
+
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     /**
      * Gets and returns the {@link DatabaseReference} associated to the given path.
@@ -46,6 +52,11 @@ public enum Database {
      */
     public static DatabaseReferenceBuilder constructBuilder(DatabaseReference initialRef) {
         return new DatabaseReferenceBuilder(initialRef);
+    }
+
+    public static void setOnlineStatusInGame(String roomID, String username) {
+        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
+                                + username).setValue(1);
     }
 
     /**

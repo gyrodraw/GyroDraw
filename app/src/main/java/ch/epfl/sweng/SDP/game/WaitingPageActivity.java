@@ -2,7 +2,6 @@ package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -30,6 +29,7 @@ import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItems;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
@@ -198,12 +198,7 @@ public class WaitingPageActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
 
-        NetworkStateReceiverListener networkStateReceiverListener =
-                new NetworkStatusHandler(this);
-        networkStateReceiver = new NetworkStateReceiver();
-        networkStateReceiver.addListener(networkStateReceiverListener);
-        registerReceiver(networkStateReceiver,
-                new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        ConnectivityWrapper.registerNetworkReceiver(this);
 
         Intent intent = getIntent();
         roomID = intent.getStringExtra("roomID");
@@ -412,7 +407,7 @@ public class WaitingPageActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(networkStateReceiver);
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.

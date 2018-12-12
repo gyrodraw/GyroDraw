@@ -34,6 +34,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
@@ -46,8 +47,6 @@ public class VotingPageActivity extends BaseActivity {
     private static boolean enableAnimations = true;
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-
-    private NetworkStateReceiver networkStateReceiver;
 
     private final String username = Account.getInstance(this).getUsername();
 
@@ -92,9 +91,8 @@ public class VotingPageActivity extends BaseActivity {
                         retrieveDrawingsFromDatabaseStorage();
                         break;
                     case END_VOTING_ACTIVITY:
-                        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
-                                + Account.getInstance(getApplicationContext())
-                                .getUsername()).setValue(1);
+                        Database.setOnlineStatusInGame(roomID,
+                                    Account.getInstance(getApplicationContext()).getUsername());
                         setAnimationWaitingBackground();
                         break;
                     case RANKING_FRAGEMNT:
@@ -140,12 +138,7 @@ public class VotingPageActivity extends BaseActivity {
         setContentView(R.layout.activity_voting_page);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-        NetworkStateReceiverListener networkStateReceiverListener =
-                new NetworkStatusHandler(this);
-        networkStateReceiver = new NetworkStateReceiver();
-        networkStateReceiver.addListener(networkStateReceiverListener);
-        registerReceiver(networkStateReceiver,
-                new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        ConnectivityWrapper.registerNetworkReceiver(this);
 
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
@@ -223,14 +216,13 @@ public class VotingPageActivity extends BaseActivity {
             }
         });
 
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
-                + Account.getInstance(this).getUsername()).setValue(1);
+        Database.setOnlineStatusInGame(roomID, Account.getInstance(this).getUsername());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(networkStateReceiver);
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         removeAllListeners();
         finish();

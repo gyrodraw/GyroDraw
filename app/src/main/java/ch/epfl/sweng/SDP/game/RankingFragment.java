@@ -234,8 +234,7 @@ public class RankingFragment extends ListFragment {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.ranking_item, parent, false);
 
-            AssetManager assets = getActivity().getAssets();
-            Typeface typeMuro = Typeface.createFromAsset(assets, "fonts/Muro.otf");
+            Typeface typeMuro = TypefaceLibrary.getTypeMuro();
 
             setTypeFace(typeMuro, convertView.findViewById(R.id.playerName),
                                 convertView.findViewById(R.id.starsWon),

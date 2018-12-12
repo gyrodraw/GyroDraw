@@ -30,6 +30,7 @@ import org.mockito.stubbing.Answer;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -350,7 +351,7 @@ public class WaitingPageActivityTest {
                 .thenReturn(true);
         when(intentMock.getExtras()).thenReturn(new Bundle());
 
-        mActivityRule.getActivity().callOnReceiveNetwork(spyContext, intentMock);
+        ConnectivityWrapper.callOnReceiveNetwork(spyContext, intentMock);
         SystemClock.sleep(1500);
 
         onView(withId(R.id.okDisconnectedButton)).check(matches(isDisplayed()));

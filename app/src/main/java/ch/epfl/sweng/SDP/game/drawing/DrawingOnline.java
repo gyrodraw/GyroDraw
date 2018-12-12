@@ -26,6 +26,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
@@ -39,8 +40,6 @@ import static java.lang.String.format;
 public class DrawingOnline extends GyroDrawingActivity {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-
-    private NetworkStateReceiver networkStateReceiver;
 
     private String winningWord;
 
@@ -122,12 +121,7 @@ public class DrawingOnline extends GyroDrawingActivity {
 
         Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
 
-        NetworkStateReceiverListener networkStateReceiverListener =
-                new NetworkStatusHandler(this);
-        networkStateReceiver = new NetworkStateReceiver();
-        networkStateReceiver.addListener(networkStateReceiverListener);
-        registerReceiver(networkStateReceiver,
-                new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        ConnectivityWrapper.registerNetworkReceiver(this);
 
         Intent intent = getIntent();
 
@@ -145,14 +139,13 @@ public class DrawingOnline extends GyroDrawingActivity {
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".onlineStatus."
-                + Account.getInstance(this).getUsername()).setValue(1);
+        Database.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(networkStateReceiver);
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         removeAllListeners();
         finish();

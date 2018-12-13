@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 
         FirebaseApp.initializeApp(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        
+
         if (auth.getCurrentUser() != null && ConnectivityWrapper.isOnline(this)) {
             Database.getReference("users").orderByChild("email")
                     .equalTo(auth.getCurrentUser().getEmail())

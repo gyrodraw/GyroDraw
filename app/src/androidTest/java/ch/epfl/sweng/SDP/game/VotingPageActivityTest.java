@@ -201,7 +201,7 @@ public class VotingPageActivityTest {
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(6000);
 
-        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
+        onView(withId(R.id.playerNameView)).check(matches(isDisplayed()));
     }
 
     @Test

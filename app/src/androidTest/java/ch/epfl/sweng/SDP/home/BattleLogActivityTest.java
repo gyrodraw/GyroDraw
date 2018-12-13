@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class BattleLogActivityTest {
     private final Bitmap DRAWING = initializedBitmap();
 
     private GameResult gameResult;
-    private LocalDbHandlerForGameResults localDbHandler;
+    private LocalDbForGameResults localDbHandler;
 
     @Rule
     public final ActivityTestRule<BattleLogActivity> activityRule =

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -172,7 +173,7 @@ public class RankingFragment extends ListFragment {
         if (drawing != null) {
             GameResult gameResult = new GameResult(names, rank, stars, trophies,
                     drawing, this.getActivity());
-            LocalDbHandlerForGameResults localDb =
+            LocalDbForGameResults localDb =
                     new LocalDbHandlerForGameResults(this.getActivity(), null, 1);
             localDb.addGameResultToDb(gameResult);
         }

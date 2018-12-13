@@ -1,30 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.content.Intent;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -35,10 +10,35 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_1;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+
+import android.content.Intent;
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -61,9 +61,9 @@ public class WaitingPageActivityTest {
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra("roomID", ROOM_ID_TEST);
-                    intent.putExtra("word1", "word1Mock");
-                    intent.putExtra("word2", "word2Mock");
+                    intent.putExtra(ROOM_ID, ROOM_ID_TEST);
+                    intent.putExtra(WORD_1, "word1Mock");
+                    intent.putExtra(WORD_2, "word2Mock");
 
                     return intent;
                 }

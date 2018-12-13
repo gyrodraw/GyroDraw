@@ -17,6 +17,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -301,7 +302,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                         if (currentId
                                 .equals(Account.getInstance(getApplicationContext()).getUserId())) {
                             // Get the image from the local database instead
-                            LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                            LocalDbForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
                             storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
                         } else {

@@ -28,11 +28,12 @@ import java.util.ArrayList;
  */
 public class LoadingScreenActivity extends NoBackPressActivity {
 
-    private static final String WORD_CHILDREN_DB_ID = "words";
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
     public static final String WORD_1 = "word1";
     public static final String WORD_2 = "word2";
     public static final String ROOM_ID = "roomID";
+
+    private static final String WORD_CHILDREN_DB_ID = "words";
+    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;

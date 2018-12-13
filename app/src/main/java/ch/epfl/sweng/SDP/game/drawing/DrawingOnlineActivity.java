@@ -15,6 +15,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -68,7 +69,8 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                     case WAITING_UPLOAD:
                         DrawingOnlineActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
-                                paintViewHolder.addView(timeIsUpTextFeedback(DrawingOnlineActivity.this));
+                                paintViewHolder
+                                        .addView(timeIsUpTextFeedback(DrawingOnlineActivity.this));
                             }
                         });
                         uploadDrawing().addOnCompleteListener(
@@ -156,7 +158,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
      * @return the {@link StorageTask} in charge of the upload
      */
     private StorageTask<TaskSnapshot> uploadDrawing() {
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
+        LocalDbForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
         paintView.saveCanvasInDb(localDbHandler);
         return paintView.saveCanvasInStorage();
     }

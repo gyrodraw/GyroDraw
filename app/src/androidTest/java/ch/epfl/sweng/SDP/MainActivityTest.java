@@ -24,6 +24,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.google.firebase.database.DataSnapshot;
 import java.util.HashMap;
@@ -78,7 +79,7 @@ public class MainActivityTest {
         activity.cloneAccountFromFirebase(snapshot);
 
         Account.deleteAccount();
-        LocalDbHandlerForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
+        LocalDbForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
                 activity, null, 1);
         Account.createAccount(activity, new ConstantsWrapper(),
                 TEST_USERNAME, TEST_EMAIL);

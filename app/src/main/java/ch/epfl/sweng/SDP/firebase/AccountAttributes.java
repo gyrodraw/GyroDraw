@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.firebase;
 
 public enum AccountAttributes {
     USER_ID, USERNAME, EMAIL, STARS, TROPHIES, LEAGUE, MATCHES_WON, MATCHES_TOTAL,
-    AVERAGE_RATING, MAX_TROPHIES, FRIENDS, STATUS;
+    AVERAGE_RATING, MAX_TROPHIES, FRIENDS, STATUS, BOUGHT_ITEMS;
 
     static String attributeToPath(AccountAttributes accountAttribute) {
         switch (accountAttribute) {
@@ -30,6 +30,8 @@ public enum AccountAttributes {
                 return "friends";
             case STATUS:
                 return "online";
+            case BOUGHT_ITEMS:
+                return "boughtItems";
             default:
                 throw new IllegalStateException("Unknown attribute");
         }

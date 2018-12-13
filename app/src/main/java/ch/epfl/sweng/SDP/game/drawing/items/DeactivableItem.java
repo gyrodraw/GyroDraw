@@ -4,6 +4,9 @@ import android.os.CountDownTimer;
 
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
+/**
+ * Represents all items that act on a PaintView for a limited amount of time.
+ */
 public abstract class DeactivableItem extends Item {
 
     protected DeactivableItem(int posX, int posY, int radius) {
@@ -13,7 +16,7 @@ public abstract class DeactivableItem extends Item {
     /**
      * Deactivates the item's ability.
      */
-    public abstract void deactivate(PaintView paintView);
+    protected abstract void deactivate(PaintView paintView);
 
     /**
      * Launches the countdown until the item will be deactivated.

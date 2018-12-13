@@ -39,10 +39,11 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class WaitingPageActivity extends NoBackPressActivity {
 
+    public static final String WINNING_WORD = "winningWord";
+
     private static final String TAG = "WaitingPageActivity";
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
-    public static final String WINNING_WORD = "WinningWord";
 
     private static boolean enableSquareAnimation = true;
 

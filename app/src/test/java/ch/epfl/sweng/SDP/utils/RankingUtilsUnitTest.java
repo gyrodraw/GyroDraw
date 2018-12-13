@@ -41,10 +41,10 @@ public class RankingUtilsUnitTest {
 
     @Test
     public void testGeneratePositionsFromRankingWithNegatives() {
-        Integer[] ranking = new Integer[] {5, 2, 2, 2, -1};
+        Integer[] ranking = new Integer[] {5, -1, -1, -1, -1};
 
         Integer[] trophies = RankingUtils.generatePositionsFromRanking(ranking);
-        Integer[] result = new Integer[] {1, 2, 2, 2, 5};
+        Integer[] result = new Integer[] {1, 5, 5, 5, 5};
         assertThat(trophies, is(result));
     }
 

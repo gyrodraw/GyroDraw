@@ -27,12 +27,10 @@ public final class RankingUtils {
 
         trophies[0] = ranking[0] >= 0 ? MAX_RANK : MIN_RANK;
         for (int i = 1; i < trophies.length; ++i) {
-            if (ranking[i] >= 0) {
-                if (ranking[i - 1].intValue() == ranking[i].intValue()) {
-                    trophies[i] = trophies[i - 1];
-                } else {
-                    trophies[i] = MAX_RANK - DELTA_RANK * i;
-                }
+            if (ranking[i] >= 0 && ranking[i - 1].intValue() == ranking[i].intValue()) {
+                trophies[i] = trophies[i - 1];
+            } else if (ranking[i] >= 0){
+                trophies[i] = MAX_RANK - DELTA_RANK * i;
             } else {
                 trophies[i] = MIN_RANK;
             }
@@ -54,12 +52,10 @@ public final class RankingUtils {
 
         positions[0] = ranking[0] >= 0 ? FIRST_POSITION : LAST_POSITION;
         for (int i = 1; i < positions.length; ++i) {
-            if (ranking[i] >= 0) {
-                if (ranking[i - 1].intValue() == ranking[i].intValue()) {
-                    positions[i] = positions[i - 1];
-                } else {
-                    positions[i] = i + 1;
-                }
+            if (ranking[i] >= 0 && ranking[i - 1].intValue() == ranking[i].intValue()) {
+                positions[i] = positions[i - 1];
+            } else if (ranking[i] >= 0){
+                positions[i] = i + 1;
             } else {
                 positions[i] = LAST_POSITION;
             }

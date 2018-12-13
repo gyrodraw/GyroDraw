@@ -38,6 +38,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.CheckConnection;
@@ -127,7 +128,7 @@ public class HomeActivity extends NoBackPressActivity {
             GlideUtils.startBackgroundAnimation(this);
         }
 
-        LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
+        LocalDbForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
         // Update the user online status on Firebase and set the onDisconnect listener

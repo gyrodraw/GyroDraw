@@ -8,6 +8,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
@@ -54,7 +55,7 @@ public class BattleLogActivity extends NoBackPressActivity {
      * and add them to the layout.
      */
     private void fetchGameResults() {
-        LocalDbHandlerForGameResults localDb =
+        LocalDbForGameResults localDb =
                 new LocalDbHandlerForGameResults(this, null, 1);
         List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
 

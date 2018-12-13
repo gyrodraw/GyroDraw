@@ -1,7 +1,11 @@
 package ch.epfl.sweng.SDP.firebase;
 
+import android.content.Context;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import ch.epfl.sweng.SDP.auth.Account;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 

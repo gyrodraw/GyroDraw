@@ -1,6 +1,10 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
+
+import android.content.IntentFilter;
+import android.graphics.Typeface;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -22,7 +26,10 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
 import static java.lang.String.format;
@@ -40,7 +47,6 @@ public class DrawingOnline extends GyroDrawingActivity {
 
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
-    private boolean isVotingActivityLaunched = false;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -83,7 +89,6 @@ public class DrawingOnline extends GyroDrawingActivity {
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
-                                        isVotingActivityLaunched = true;
                                         timerRef.removeEventListener(listenerTimer);
 
                                         Intent intent = new Intent(getApplicationContext(),
@@ -113,6 +118,11 @@ public class DrawingOnline extends GyroDrawingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        ConnectivityWrapper.registerNetworkReceiver(this);
+
         Intent intent = getIntent();
 
         roomId = intent.getStringExtra("RoomID");
@@ -128,20 +138,16 @@ public class DrawingOnline extends GyroDrawingActivity {
         timerRef.addValueEventListener(listenerTimer);
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
+
+        ConnectivityWrapper.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        // Does not leave the room if the activity is stopped because
-        // voting activity is launched.
-        if (!isVotingActivityLaunched) {
-            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
-        }
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         removeAllListeners();
-
         finish();
     }
 

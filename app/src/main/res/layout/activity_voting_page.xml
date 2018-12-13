@@ -30,15 +30,16 @@
     tools:ignore="ContentDescription"/>
 
   <RatingBar
-    android:id="@+id/ratingBar"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:progressDrawable="@drawable/custom_rating_bar"
-    android:stepSize="1.0"
-    app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/playerNameView"/>
+      android:id="@+id/ratingBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:progressDrawable="@drawable/custom_rating_bar"
+      android:stepSize="1.0"
+      app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/playerNameView"
+      app:layout_constraintVertical_bias="0.132" />
 
   <ImageView
     android:id="@+id/drawing"
@@ -64,6 +65,21 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/drawing"/>
+
+
+  <TextView
+      android:id="@+id/disconnectedText"
+      android:layout_width="wrap_content"
+      android:layout_height="31dp"
+      android:layout_marginTop="8dp"
+      android:text="Disconnected"
+      android:textColor="@color/colorRed"
+      android:visibility="gone"
+      android:textSize="25sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
   <TextView
     android:id="@+id/timer"

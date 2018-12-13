@@ -78,5 +78,20 @@
       android:layout_marginEnd="20dp"
       android:layout_marginRight="20dp"
       android:layout_weight="1"
+      android:visibility="visible"
       app:srcCompat="@drawable/battle_log_button" />
+
+  <TextView
+      android:id="@+id/disconnectedRanking"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_marginEnd="20dp"
+      android:layout_marginRight="20dp"
+      android:layout_weight="2"
+      android:gravity="center"
+      android:text="Disconnected"
+      android:textColor="@color/colorRed"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:visibility="gone" />
 </LinearLayout> 

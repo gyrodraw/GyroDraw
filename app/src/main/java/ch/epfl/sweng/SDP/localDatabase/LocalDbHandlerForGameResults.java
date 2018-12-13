@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.home.battlelog.GameResult;
 
 /**
  * Local database handler for storing and retrieving the user's game results.
@@ -128,8 +128,7 @@ public final class LocalDbHandlerForGameResults extends SQLiteOpenHelper impleme
                         .decodeResource(context.getResources(), R.drawable.default_image);
             }
 
-            recentResults.add(
-                    new GameResult(rankedUsername, rank, stars, trophies, drawing, context));
+            recentResults.add(new GameResult(rankedUsername, rank, stars, trophies, drawing));
         }
         while (cursor.moveToNext());
 

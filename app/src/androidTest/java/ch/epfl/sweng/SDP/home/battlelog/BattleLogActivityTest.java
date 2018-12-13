@@ -1,4 +1,23 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.battlelog;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.battlelog.BattleLogActivity;
+import ch.epfl.sweng.SDP.home.battlelog.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -10,20 +29,6 @@ import static ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivityTest.testExi
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class BattleLogActivityTest {
@@ -47,8 +52,7 @@ public class BattleLogActivityTest {
      */
     @Before
     public void init() {
-        gameResult = new GameResult(rankedUsernames, RANK, STARS, TROPHIES, DRAWING,
-                activityRule.getActivity());
+        gameResult = new GameResult(rankedUsernames, RANK, STARS, TROPHIES, DRAWING);
         localDbHandler = new LocalDbHandlerForGameResults(
                 activityRule.getActivity(), null, 1);
     }
@@ -91,8 +95,8 @@ public class BattleLogActivityTest {
 
     @Test
     public void testNullBitmapToDatabase() {
-        localDbHandler.addGameResultToDb(new GameResult(
-                rankedUsernames, RANK, STARS, TROPHIES, null, activityRule.getActivity()));
+        localDbHandler.addGameResultToDb(
+                new GameResult(rankedUsernames, RANK, STARS, TROPHIES, null));
         Activity activity = activityRule.getActivity();
         Bitmap drawing = localDbHandler.getGameResultsFromDb(activity).get(0).getDrawing();
         for (int i = 5; i < 10; i++) {

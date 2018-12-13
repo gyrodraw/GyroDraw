@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.BounceInterpolator;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.home.League;
 

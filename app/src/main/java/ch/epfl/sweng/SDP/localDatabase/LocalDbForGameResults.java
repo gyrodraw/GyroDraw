@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP.localDatabase;
 
 import android.content.Context;
-import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.home.battlelog.GameResult;
 import java.util.List;
 
 /**

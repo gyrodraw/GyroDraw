@@ -43,7 +43,7 @@
             android:name=".home.leaderboard.LeaderboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.BattleLogActivity"
+            android:name=".home.battlelog.BattleLogActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.LeaguesActivity"

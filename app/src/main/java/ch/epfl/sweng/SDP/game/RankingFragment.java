@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +28,8 @@ import java.util.Map;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.home.battlelog.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.RankingUtils;
 import ch.epfl.sweng.SDP.utils.SortUtils;
@@ -171,8 +171,7 @@ public class RankingFragment extends ListFragment {
         Bitmap drawing = drawings[getIndexForUserName(userNameId)];
 
         if (drawing != null) {
-            GameResult gameResult = new GameResult(names, rank, stars, trophies,
-                    drawing, this.getActivity());
+            GameResult gameResult = new GameResult(names, rank, stars, trophies, drawing);
             LocalDbForGameResults localDb =
                     new LocalDbHandlerForGameResults(this.getActivity(), null, 1);
             localDb.addGameResultToDb(gameResult);

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.battlelog;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -6,13 +6,15 @@ import android.view.ViewManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import java.util.List;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import java.util.List;
 
 /**
  * Class representing the battle log.
@@ -61,7 +63,7 @@ public class BattleLogActivity extends NoBackPressActivity {
 
         for (GameResult gameResult : gameResults) {
             if (gameResult != null) {
-                battleLogView.addView(gameResult.toLayout());
+                battleLogView.addView(gameResult.toLayout(this));
             }
         }
     }

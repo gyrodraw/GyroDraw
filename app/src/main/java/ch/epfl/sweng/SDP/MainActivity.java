@@ -14,6 +14,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
+
 /**
  * Class representing the first page shown to the user upon first app launch.
  */
@@ -32,9 +34,8 @@ public class MainActivity extends BaseActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            Database.getReference("users").orderByChild("email")
-                    .equalTo(auth.getCurrentUser().getEmail())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            Database.getUserByEmail(auth.getCurrentUser().getEmail(),
+                    new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
@@ -54,7 +55,7 @@ public class MainActivity extends BaseActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            throw databaseError.toException();
+                            checkForDatabaseError(databaseError);
                         }
                     });
         } else {

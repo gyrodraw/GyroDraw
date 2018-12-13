@@ -106,7 +106,6 @@ public final class LocalDbHandlerForAccount extends SQLiteOpenHelper implements 
             account.setTotalMatches(cursor.getInt(8));
             account.setAverageRating(cursor.getDouble(9));
             account.setMaxTrophies(cursor.getInt(10));
-            account.setUsersRef(Database.getReference("users"));
             cursor.close();
         }
         db.close();

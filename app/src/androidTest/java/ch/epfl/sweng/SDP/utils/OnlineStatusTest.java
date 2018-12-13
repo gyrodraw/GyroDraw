@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.utils;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
+import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static java.lang.String.format;
@@ -22,31 +24,30 @@ public class OnlineStatusTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testChangeOnlineStatusNullContext() {
-        OnlineStatus.changeOnlineStatus(null, OFFLINE);
+        OnlineStatus.changeOnlineStatus(null, OFFLINE, createCompletionListener());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testChangeOnlineStatusUnknownStatus() {
-        OnlineStatus.changeOnlineStatus(USER_ID, null);
+        OnlineStatus.changeOnlineStatus(USER_ID, null, createCompletionListener());
     }
 
     @Test
     public void testChangeOnlineStatusOnline() {
-        OnlineStatus.changeOnlineStatus(USER_ID, ONLINE);
+        OnlineStatus.changeOnlineStatus(USER_ID, ONLINE, createCompletionListener());
         assertOnlineStatus(ONLINE.ordinal());
     }
 
     @Test
     public void testChangeOnlineStatusOffline() {
-        OnlineStatus.changeOnlineStatus(USER_ID, OFFLINE);
+        OnlineStatus.changeOnlineStatus(USER_ID, OFFLINE, createCompletionListener());
         assertOnlineStatus(OFFLINE.ordinal());
     }
 
 
     private void assertOnlineStatus(final int status) {
-        Database.getReference(format("users.%s.online", USER_ID))
-                .addListenerForSingleValueEvent(
-                        new ValueEventListener() {
+        Database.getAttribute(USER_ID, STATUS,
+                new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 int value = dataSnapshot.getValue(int.class);

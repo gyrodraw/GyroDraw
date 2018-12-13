@@ -151,12 +151,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testSetUsersRef() {
-        DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
-        account.setUsersRef(databaseReference);
-    }
-
-    @Test
     public void testIncreaseMatchesWon() {
         account.increaseMatchesWon();
         assertThat(account.getMatchesWon(), is(1));

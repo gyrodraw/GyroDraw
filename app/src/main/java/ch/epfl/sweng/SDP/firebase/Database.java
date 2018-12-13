@@ -8,6 +8,7 @@ import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
 
@@ -116,9 +117,26 @@ public final class Database {
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public static void setAttribute(String userId, AccountAttributes attribute, Object newValue) {
+    public static void getAttribute(String userId, AccountAttributes attribute,
+                                    ValueEventListener valueEventListener) {
         Database.getReference(format("users.%s.%s", userId, attributeToPath(attribute)))
-                .setValue(newValue, createCompletionListener());
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void setAttribute(String userId, AccountAttributes attribute, Object newValue,
+                                    DatabaseReference.CompletionListener completionListener) {
+        Database.getReference(format("users.%s.%s", userId, attributeToPath(attribute)))
+                .setValue(newValue, completionListener);
+    }
+
+    public static void setAttribute(String userId, AccountAttributes attribute, Object newValue) {
+        setAttribute(userId, attribute, newValue, createCompletionListener());
+    }
+
+    public static void setListenerToAttribute(String userId, AccountAttributes attribute,
+                                              ValueEventListener valueEventListener) {
+        Database.getReference(format("users.%s.%s", userId, attributeToPath(attribute)))
+                .addValueEventListener(valueEventListener);
     }
 
     public static void setFriendValue(String userId, String friendId, int newValue) {
@@ -135,6 +153,12 @@ public final class Database {
         Database.getReference(
                 format("users.%s.boughtItems.%s", userId, item.getColorItem().toString()))
                 .setValue(item.getPriceItem(), createCompletionListener());
+    }
+
+    public static void changeToOfflineOnDisconnect(String userId) {
+        Database.getReference(format("users.%s.online", userId))
+                .onDisconnect()
+                .setValue(OFFLINE.ordinal());
     }
 
     /**

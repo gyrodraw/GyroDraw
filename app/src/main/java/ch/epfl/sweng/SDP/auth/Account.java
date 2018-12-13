@@ -43,8 +43,6 @@ public class Account {
 
     private static Account instance = null;
 
-    private static final String FRIENDS_LIST_FORMAT = "users.%s.friends.%s";
-
     private String userId;
     private String username;
     private String email;
@@ -57,8 +55,6 @@ public class Account {
     private int maxTrophies;
     private List<ShopItem> itemsBought;
 
-    private DatabaseReference usersRef;
-
     private LocalDbHandlerForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
@@ -70,7 +66,6 @@ public class Account {
             throw new IllegalStateException("Already instantiated");
         }
         this.localDbHandler = new LocalDbHandlerForAccount(context, null, 1);
-        this.usersRef = constantsWrapper.getReference("users");
         this.userId = constantsWrapper.getFirebaseUserId();
         this.username = username;
         this.email = email;
@@ -165,10 +160,6 @@ public class Account {
 
     public static void deleteAccount() {
         instance = null;
-    }
-
-    public void setUsersRef(DatabaseReference usersRef) {
-        this.usersRef = usersRef;
     }
 
     public String getUsername() {

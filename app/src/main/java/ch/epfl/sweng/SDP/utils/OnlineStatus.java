@@ -1,7 +1,9 @@
 package ch.epfl.sweng.SDP.utils;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 
+import ch.epfl.sweng.SDP.firebase.AccountAttributes;
 import ch.epfl.sweng.SDP.firebase.Database;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
@@ -40,14 +42,13 @@ public enum OnlineStatus {
      * @throws IllegalArgumentException if the userId string is null or the given status is
      *                                  wrong/unknown
      */
-    public static Task<Void> changeOnlineStatus(String userId, OnlineStatus status) {
+    public static void changeOnlineStatus(String userId, OnlineStatus status,
+                                          DatabaseReference.CompletionListener listener) {
         checkPrecondition(userId != null, "userId is null");
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
-        return Database
-                .getReference(format("users.%s.online", userId))
-                .setValue(status.ordinal());
+        Database.setAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
     }
 
     /**
@@ -58,8 +59,6 @@ public enum OnlineStatus {
      */
     public static void changeToOfflineOnDisconnect(String userId) {
         checkPrecondition(userId != null, "userId is null");
-        Database.getReference(format("users.%s.online", userId))
-                .onDisconnect()
-                .setValue(OFFLINE.ordinal());
+        Database.changeToOfflineOnDisconnect(userId);
     }
 }

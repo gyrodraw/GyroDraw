@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
@@ -22,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -50,6 +54,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -190,7 +195,7 @@ public class HomeActivity extends NoBackPressActivity {
                         if (connected) {
                             String userId = Account.getInstance(getApplicationContext())
                                     .getUserId();
-                            changeOnlineStatus(userId, ONLINE);
+                            changeOnlineStatus(userId, ONLINE, createCompletionListener());
 
                             // On user disconnection, update Firebase
                             changeToOfflineOnDisconnect(userId);
@@ -205,9 +210,8 @@ public class HomeActivity extends NoBackPressActivity {
     }
 
     private void addListenerForFriendsRequests() {
-        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
-                .addValueEventListener(listenerFriendsRequest);
-
+        Database.setListenerToAttribute(Account.getInstance(this).getUserId(),
+                FRIENDS, listenerFriendsRequest);
     }
 
     @VisibleForTesting
@@ -227,14 +231,14 @@ public class HomeActivity extends NoBackPressActivity {
                             // Update Firebase, delete the account instance and launch MainActivity
                             changeOnlineStatus(
                                     Account.getInstance(getApplicationContext()).getUserId(),
-                                    OFFLINE)
-                                    .addOnCompleteListener(
-                                            new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    successfulSignOut();
-                                                }
-                                            });
+                                    OFFLINE, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError,
+                                                               @NonNull DatabaseReference databaseReference) {
+                                            checkForDatabaseError(databaseError);
+                                            successfulSignOut();
+                                        }
+                                    });
                         } else {
                             Log.e(TAG, "Sign out failed!");
                         }

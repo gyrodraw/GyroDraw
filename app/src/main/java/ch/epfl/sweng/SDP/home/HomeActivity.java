@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
@@ -22,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -38,17 +42,19 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.CheckConnection;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
-import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -56,6 +62,8 @@ import com.google.firebase.database.ValueEventListener;
  * Class representing the homepage of the app.
  */
 public class HomeActivity extends NoBackPressActivity {
+
+    public static final String GAME_MODE = "mode";
 
     private static final String TAG = "HomeActivity";
 
@@ -121,13 +129,11 @@ public class HomeActivity extends NoBackPressActivity {
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
 
-        ImageView backgroundAnimation = findViewById(R.id.homeBackgroundAnimation);
-
         if (enableBackgroundAnimation) {
-            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
+            GlideUtils.startBackgroundAnimation(this);
         }
 
-        LocalDbHandlerForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
+        LocalDbForAccount localDb = new LocalDbHandlerForAccount(this, null, 1);
         localDb.retrieveAccount(Account.getInstance(this));
 
         // Update the user online status on Firebase and set the onDisconnect listener
@@ -170,7 +176,7 @@ public class HomeActivity extends NoBackPressActivity {
         setListener(practiceButton, getMainAmplitude(), getMainFrequency());
         setListener(mysteryButton, getMainAmplitude(), getMainFrequency());
 
-        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+        findViewById(R.id.backgroundAnimation).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeRight() {
                 launchActivity(ShopActivity.class);
@@ -189,7 +195,7 @@ public class HomeActivity extends NoBackPressActivity {
                         if (connected) {
                             String userId = Account.getInstance(getApplicationContext())
                                     .getUserId();
-                            changeOnlineStatus(userId, ONLINE);
+                            changeOnlineStatus(userId, ONLINE, createCompletionListener());
 
                             // On user disconnection, update Firebase
                             changeToOfflineOnDisconnect(userId);
@@ -204,9 +210,8 @@ public class HomeActivity extends NoBackPressActivity {
     }
 
     private void addListenerForFriendsRequests() {
-        Database.getReference(format("users.%s.friends", Account.getInstance(this).getUserId()))
-                .addValueEventListener(listenerFriendsRequest);
-
+        Database.setListenerToAttribute(Account.getInstance(this).getUserId(),
+                FRIENDS, listenerFriendsRequest);
     }
 
     @VisibleForTesting
@@ -226,14 +231,14 @@ public class HomeActivity extends NoBackPressActivity {
                             // Update Firebase, delete the account instance and launch MainActivity
                             changeOnlineStatus(
                                     Account.getInstance(getApplicationContext()).getUserId(),
-                                    OFFLINE)
-                                    .addOnCompleteListener(
-                                            new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    successfulSignOut();
-                                                }
-                                            });
+                                    OFFLINE, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError,
+                                                               @NonNull DatabaseReference databaseReference) {
+                                            checkForDatabaseError(databaseError);
+                                            successfulSignOut();
+                                        }
+                                    });
                         } else {
                             Log.e(TAG, "Sign out failed!");
                         }
@@ -377,7 +382,7 @@ public class HomeActivity extends NoBackPressActivity {
         if (CheckConnection.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
-            intent.putExtra("mode", gameMode);
+            intent.putExtra(GAME_MODE, gameMode);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.no_internet,

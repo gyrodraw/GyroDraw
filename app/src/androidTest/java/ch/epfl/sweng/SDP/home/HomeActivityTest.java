@@ -32,6 +32,7 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 import org.junit.After;
@@ -70,7 +71,7 @@ public class HomeActivityTest {
 
     @Test
     public void testLocalDb() {
-        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
+        LocalDbForAccount localDbHandler = new LocalDbHandlerForAccount(
                 mActivityRule.getActivity(), null, 1);
         localDbHandler.saveAccount(Account.getInstance(mActivityRule.getActivity()));
         localDbHandler.retrieveAccount(Account.getInstance(mActivityRule.getActivity()));
@@ -192,8 +193,8 @@ public class HomeActivityTest {
 
     @Test
     public void testSwipeRightOpensShop() {
-        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeLeft());
-        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeRight());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
         intended(hasComponent(ShopActivity.class.getName()));
     }
 }

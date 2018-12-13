@@ -92,25 +92,25 @@ public class DrawingOfflineActivityWithItemsTest {
     @Test
     public void testSpeedupItemSpeedsUpPaintView() {
         checkItemHasCorrectBehaviourOnPaintView(
-                SpeedupItem.createSpeedupItem(20, 20, 10), 2);
+                new SpeedupItem(20, 20, 10), 2);
     }
 
     @Test
     public void testSlowdownItemSlowsDownPaintView() {
         checkItemHasCorrectBehaviourOnPaintView(
-                SlowdownItem.createSlowdownItem(20, 20, 10), .5);
+                new SlowdownItem(20, 20, 10), .5);
     }
 
     @Test
     public void testSwapAxisItemSwapsSpeedPaintView() {
         checkItemHasCorrectBehaviourOnPaintView(
-                SwapAxisItem.createSwapAxisItem(20, 20, 10), -1);
+                new SwapAxisItem(20, 20, 10), -1);
     }
 
     @Test
     public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() {
         paintView.setCircle(202, 202);
-        activateItem(BumpingItem.createBumpingItem(200, 200, 10));
+        activateItem(new BumpingItem(200, 200, 10));
         int dx = paintView.getCircleX() - 200;
         int dy = paintView.getCircleY() - 200;
         double radius = Math.sqrt(dx * dx + dy * dy) + paintView.getCircleRadius();
@@ -120,7 +120,7 @@ public class DrawingOfflineActivityWithItemsTest {
     @Test
     public void testBumpingItemChangesItsDrawable() {
         paintView.setCircle(200, 200);
-        BumpingItem item = BumpingItem.createBumpingItem(200, 200, 10);
+        BumpingItem item = new BumpingItem(200, 200, 10);
         ImageView view = new ImageView(activity);
         view.setX(item.getX() - item.getRadius());
         view.setY(item.getY() - item.getRadius());

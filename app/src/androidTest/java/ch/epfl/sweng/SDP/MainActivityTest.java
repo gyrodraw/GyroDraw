@@ -4,6 +4,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import com.google.firebase.database.DataSnapshot;
 import java.util.HashMap;
@@ -78,7 +80,7 @@ public class MainActivityTest {
         activity.cloneAccountFromFirebase(snapshot);
 
         Account.deleteAccount();
-        LocalDbHandlerForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
+        LocalDbForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
                 activity, null, 1);
         Account.createAccount(activity, new ConstantsWrapper(),
                 TEST_USERNAME, TEST_EMAIL);
@@ -90,7 +92,7 @@ public class MainActivityTest {
 
     @Test
     public void testHandleUserStatusOnline() {
-        changeOnlineStatus(TEST_USER_ID, ONLINE);
+        changeOnlineStatus(TEST_USER_ID, ONLINE, createCompletionListener());
         SystemClock.sleep(3000);
 
         TextView errorMessage = new TextView(activity);
@@ -100,12 +102,12 @@ public class MainActivityTest {
         assertThat(errorMessage.getText().toString(),
                 is(activity.getString(R.string.already_logged_in)));
         assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
-        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        changeOnlineStatus(TEST_USER_ID, OFFLINE, createCompletionListener());
     }
 
     @Test
     public void testHandleUserStatusOffline() {
-        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        changeOnlineStatus(TEST_USER_ID, OFFLINE, createCompletionListener());
         SystemClock.sleep(3000);
 
         TextView errorMessage = new TextView(activity);

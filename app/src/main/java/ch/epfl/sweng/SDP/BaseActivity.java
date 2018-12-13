@@ -18,6 +18,7 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
@@ -204,7 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         Shop.firebaseToListShopItem((HashMap<String, String>)
                                 user.get("boughtItems")));
 
-                LocalDbHandlerForAccount handler = new LocalDbHandlerForAccount(
+                LocalDbForAccount handler = new LocalDbHandlerForAccount(
                         getApplicationContext(), null, 1);
                 handler.saveAccount(Account.getInstance(getApplicationContext()));
             }

@@ -1,10 +1,11 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.widget.ImageView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -12,7 +13,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,10 @@ import java.util.ArrayList;
  * player the {@link WaitingPageActivity}.
  */
 public class LoadingScreenActivity extends NoBackPressActivity {
+
+    public static final String WORD_1 = "word1";
+    public static final String WORD_2 = "word2";
+    public static final String ROOM_ID = "roomID";
 
     private static final String WORD_CHILDREN_DB_ID = "words";
     private static final String TOP_ROOM_NODE_ID = "realRooms";
@@ -58,10 +63,10 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                         wordsVotesRef.removeEventListener(listenerWords);
                         Intent intent = new Intent(getApplicationContext(),
                                 WaitingPageActivity.class);
-                        intent.putExtra("word1", word1);
-                        intent.putExtra("word2", word2);
-                        intent.putExtra("roomID", roomID);
-                        intent.putExtra("mode", gameMode);
+                        intent.putExtra(WORD_1, word1);
+                        intent.putExtra(WORD_2, word2);
+                        intent.putExtra(ROOM_ID, roomID);
+                        intent.putExtra(GAME_MODE, gameMode);
                         startActivity(intent);
                     }
                 }
@@ -113,7 +118,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
-        gameMode = getIntent().getIntExtra("mode", 0);
+        gameMode = getIntent().getIntExtra(GAME_MODE, 0);
 
         if (!isTesting) {
             lookingForRoom(gameMode);
@@ -124,10 +129,8 @@ public class LoadingScreenActivity extends NoBackPressActivity {
         areWordsReady.setListener(listenerRoomReady);
 
         if (enableWaitingAnimation) {
-            Glide.with(this).load(R.drawable.waiting_animation_dots)
-                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
-            Glide.with(this).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+            GlideUtils.startDotsWaitingAnimation(this);
+            GlideUtils.startBackgroundAnimation(this);
         }
 
     }
@@ -138,7 +141,6 @@ public class LoadingScreenActivity extends NoBackPressActivity {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()) {
-                    task.getException().printStackTrace();
                     launchActivity(HomeActivity.class);
                     finish();
                 } else {

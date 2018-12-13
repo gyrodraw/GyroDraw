@@ -5,24 +5,12 @@ import android.os.CountDownTimer;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
- * Class representing an item which swaps the axis while drawing.
+ * Immutable class representing an item which swaps the axis while drawing.
  */
 public class SwapAxisItem extends Item {
 
-    private SwapAxisItem(int x, int y, int radius) {
+    public SwapAxisItem(int x, int y, int radius) {
         super(x, y, radius);
-    }
-
-    /**
-     * Creates a {@link SwapAxisItem}.
-     *
-     * @param x      x position
-     * @param y      y position
-     * @param radius radius of the item
-     * @return the desired item
-     */
-    public static SwapAxisItem createSwapAxisItem(int x, int y, int radius) {
-        return new SwapAxisItem(x, y, radius);
     }
 
     @Override

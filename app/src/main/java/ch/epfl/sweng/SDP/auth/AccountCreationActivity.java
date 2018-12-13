@@ -1,18 +1,18 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static ch.epfl.sweng.SDP.auth.LoginActivity.EMAIL;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -32,7 +32,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setContentView(R.layout.activity_account_creation);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        userEmail = getIntent().getStringExtra("email");
+        userEmail = getIntent().getStringExtra(EMAIL);
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
@@ -40,8 +40,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
                 findViewById(R.id.usernameTaken));
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this);
 
         ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(
                 new UsernameInputWatcher((TextView) findViewById(R.id.usernameTaken),

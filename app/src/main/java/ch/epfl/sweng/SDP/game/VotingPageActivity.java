@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,8 +12,17 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -20,16 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import ch.epfl.sweng.SDP.NoBackPressActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -120,7 +121,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         Intent intent = getIntent();
-        roomID = intent.getStringExtra("RoomID");
+        roomID = intent.getStringExtra(ROOM_ID);
 
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
@@ -130,10 +131,8 @@ public class VotingPageActivity extends NoBackPressActivity {
         ratingBar = findViewById(R.id.ratingBar);
 
         if (enableAnimations) {
-            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
-            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
-                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
+            GlideUtils.startBackgroundAnimation(this);
+            GlideUtils.startDotsWaitingAnimation(this);
         }
 
         // Make the layout invisible until the drawings have been downloaded
@@ -303,7 +302,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                         if (currentId
                                 .equals(Account.getInstance(getApplicationContext()).getUserId())) {
                             // Get the image from the local database instead
-                            LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                            LocalDbForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
                             storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
                         } else {

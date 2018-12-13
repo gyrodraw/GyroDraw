@@ -12,7 +12,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 /**
  * Local database handler for storing and retrieving the user's account.
  */
-public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
+public final class LocalDbHandlerForAccount extends SQLiteOpenHelper implements LocalDbForAccount {
 
     private static final String DATABASE_NAME = "account.db";
     private static final String TABLE_NAME = "account";
@@ -67,11 +67,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
-     * Saves the given account in the local database.
-     *
-     * @param account the account to be saved
-     */
+    @Override
     public void saveAccount(Account account) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_USER_ID, account.getUserId());
@@ -90,12 +86,7 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
         db.close();
     }
 
-
-    /**
-     * Retrieves the account data stored in the local database and update the given account with it.
-     *
-     * @param account the account to be updated
-     */
+    @Override
     public void retrieveAccount(Account account) {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
 
@@ -115,7 +106,6 @@ public class LocalDbHandlerForAccount extends SQLiteOpenHelper {
             account.setTotalMatches(cursor.getInt(8));
             account.setAverageRating(cursor.getDouble(9));
             account.setMaxTrophies(cursor.getInt(10));
-            account.setUsersRef(Database.getReference("users"));
             cursor.close();
         }
         db.close();

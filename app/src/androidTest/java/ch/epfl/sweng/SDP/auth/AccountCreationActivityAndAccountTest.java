@@ -151,12 +151,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testSetUsersRef() {
-        DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
-        account.setUsersRef(databaseReference);
-    }
-
-    @Test
     public void testIncreaseMatchesWon() {
         account.increaseMatchesWon();
         assertThat(account.getMatchesWon(), is(1));
@@ -207,9 +201,7 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     private void friendsTestHelper(int state) {
-        Database.getReference(USERS_TAG
-                + USER_ID + TEST_FRIEND_TAG)
-                .setValue(state);
+        Database.setFriendValue(USER_ID, TEST_FRIEND, state);
         setListenerAndAssertToFirebaseForFriendsTest(true,
                 USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);

@@ -358,13 +358,10 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
-        // Prevents that the user launches two online games at the same time.
-        findViewById(R.id.practiceButton).setEnabled(false);
-        findViewById(R.id.drawButton).setEnabled(false);
-        findViewById(R.id.mysteryButton).setEnabled(false);
-
+        view.setImageResource(resourceId);
         if (CheckConnection.isOnline(this)) {
-            view.setImageResource(resourceId);
+            // Prevents that the user launches two online games at the same time.
+            setGameButtons(false);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
             intent.putExtra("mode", gameMode);
             startActivity(intent);
@@ -515,5 +512,17 @@ public class HomeActivity extends BaseActivity {
         ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
         ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
                 account.getTrophies()));
+        setGameButtons(true);
+    }
+
+    /**
+     * Sets the game buttons locked or unlocked.
+     *
+     * @param state the target state
+     */
+    private void setGameButtons(boolean state) {
+        findViewById(R.id.practiceButton).setEnabled(state);
+        findViewById(R.id.drawButton).setEnabled(state);
+        findViewById(R.id.mysteryButton).setEnabled(state);
     }
 }

@@ -1,7 +1,9 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -21,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -30,6 +34,10 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -47,6 +55,8 @@ public class VotingPageActivity extends BaseActivity {
     private DatabaseReference timerRef;
     private DatabaseReference usersRef;
 
+    private HashMap<String, Integer> rankingTable = new HashMap<>();
+
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
     private short changeDrawingCounter = 0;
@@ -60,6 +70,7 @@ public class VotingPageActivity extends BaseActivity {
     private ImageView drawingView;
     private TextView playerNameView;
     private TextView timer;
+    private TextView disconnectedText;
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
@@ -80,7 +91,13 @@ public class VotingPageActivity extends BaseActivity {
                         retrieveDrawingsFromDatabaseStorage();
                         break;
                     case END_VOTING_ACTIVITY:
+                        ConnectivityWrapper.setOnlineStatusInGame(roomID,
+                                    Account.getInstance(getApplicationContext()).getUsername());
+                        setAnimationWaitingBackground();
+                        break;
+                    case RANKING_FRAGEMNT:
                         // Start ranking activity
+                        setLayoutToVisible();
                         startRankingFragment();
                         break;
                     default:
@@ -121,32 +138,41 @@ public class VotingPageActivity extends BaseActivity {
         setContentView(R.layout.activity_voting_page);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        ConnectivityWrapper.registerNetworkReceiver(this);
+
         Intent intent = getIntent();
         roomID = intent.getStringExtra("RoomID");
 
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
         timer = findViewById(R.id.timer);
+        disconnectedText = findViewById(R.id.disconnectedText);
 
         starsAnimation = findViewById(R.id.starsAnimation);
         ratingBar = findViewById(R.id.ratingBar);
 
-        if (enableAnimations) {
-            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
-                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
-            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
-                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
-        }
+        setAnimationWaitingBackground();
 
-        // Make the layout invisible until the drawings have been downloaded
-        setVisibility(View.GONE, ratingBar, playerNameView,
-                drawingView, timer, starsAnimation);
-
-        playerNameView.setTypeface(typeMuro);
-        timer.setTypeface(typeMuro);
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference
         rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds.getValue(Integer.class) != null) {
+                        rankingTable.put(ds.getKey(), ds.getValue(Integer.class));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
 
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
@@ -189,16 +215,14 @@ public class VotingPageActivity extends BaseActivity {
                 throw databaseError.toException();
             }
         });
+
+        ConnectivityWrapper.setOnlineStatusInGame(roomID, Account.getInstance(this).getUsername());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (roomID != null && !roomID.equals("0123457890")) {
-            Matchmaker.getInstance(Account.getInstance(this))
-                    .leaveRoom(roomID);
-        }
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         removeAllListeners();
         finish();
@@ -214,12 +238,17 @@ public class VotingPageActivity extends BaseActivity {
         // Remove the drawings from Firebase Storage
         for (String id : drawingsIds) {
             // Remove this after testing
-            if (id != null && !id.substring(0, 4).equals("user")) {
+            if (id != null && !id.substring(0, Math.min(4, id.length())).equals("user")) {
                 FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
             }
         }
 
         launchActivity(HomeActivity.class);
+
+        if (roomID != null && ConnectivityWrapper.isOnline(this)) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+        }
+
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
@@ -236,7 +265,13 @@ public class VotingPageActivity extends BaseActivity {
 
         addStarAnimationListener();
 
-        enableRatingBar(playerName);
+        if (rankingTable.get(playerName) >= 0) {
+            findViewById(R.id.disconnectedText).setVisibility(View.GONE);
+            enableRatingBar(playerName);
+        } else {
+            ratingBar.setRating(0f);
+            findViewById(R.id.disconnectedText).setVisibility(View.VISIBLE);
+        }
     }
 
     private void enableRatingBar(String playerName) {
@@ -256,6 +291,21 @@ public class VotingPageActivity extends BaseActivity {
         if (enableAnimations) {
             setVisibility(View.VISIBLE, starsAnimation);
         }
+    }
+
+    private void setAnimationWaitingBackground() {
+        if (enableAnimations) {
+            Glide.with(getApplicationContext()).load(R.drawable.background_animation)
+                    .into((ImageView) findViewById(R.id.votingBackgroundAnimation));
+            Glide.with(getApplicationContext()).load(R.drawable.waiting_animation_dots)
+                    .into((ImageView) findViewById(R.id.waitingAnimationDots));
+        }
+
+        setVisibility(View.VISIBLE, findViewById(R.id.waitingAnimationDots));
+
+        // Make the layout invisible until the drawings have been downloaded
+        setVisibility(View.GONE, ratingBar, playerNameView,
+                drawingView, timer, starsAnimation, disconnectedText);
     }
 
     private void addStarAnimationListener() {

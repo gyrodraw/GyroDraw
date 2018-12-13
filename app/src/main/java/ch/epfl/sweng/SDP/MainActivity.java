@@ -6,14 +6,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.firebase.Database;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 /**
  * Class representing the first page shown to the user upon first app launch.
@@ -34,7 +39,7 @@ public class MainActivity extends Activity {
         FirebaseApp.initializeApp(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
+        if (auth.getCurrentUser() != null && ConnectivityWrapper.isOnline(this)) {
             Database.getReference("users").orderByChild("email")
                     .equalTo(auth.getCurrentUser().getEmail())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -74,8 +79,13 @@ public class MainActivity extends Activity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        launchActivity(LoginActivity.class);
-                        finish();
+                        if (ConnectivityWrapper.isOnline(getApplicationContext())) {
+                            launchActivity(LoginActivity.class);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No internet connection",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

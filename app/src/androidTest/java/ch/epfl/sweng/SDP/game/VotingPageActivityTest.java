@@ -199,7 +199,9 @@ public class VotingPageActivityTest {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
+        SystemClock.sleep(6000);
+
+        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
     }
 
     @Test

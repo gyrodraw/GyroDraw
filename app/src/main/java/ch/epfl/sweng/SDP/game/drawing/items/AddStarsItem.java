@@ -22,11 +22,6 @@ public class AddStarsItem extends Item {
     }
 
     @Override
-    public void deactivate(PaintView paintView) {
-        // Must be implemented, but does nothing.
-    }
-
-    @Override
     public String getTextFeedback() {
         return "+" + ADD_STARS + " STARS ! ";
     }

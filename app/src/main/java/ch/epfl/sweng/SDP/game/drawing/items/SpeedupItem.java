@@ -5,7 +5,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
 /**
  * Class representing an item which speeds up the player's cursor.
  */
-public class SpeedupItem extends Item {
+public class SpeedupItem extends DeactivableItem {
 
     private static final double SPEEDUP_FACTOR = 2;
 

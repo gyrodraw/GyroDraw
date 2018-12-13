@@ -5,7 +5,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
 /**
  * Class representing an item which swaps the axis while drawing.
  */
-public class SwapAxisItem extends Item {
+public class SwapAxisItem extends DeactivableItem {
 
     public SwapAxisItem(int posX, int posY, int radius) {
         super(posX, posY, radius);

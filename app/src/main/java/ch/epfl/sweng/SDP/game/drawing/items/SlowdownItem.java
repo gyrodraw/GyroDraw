@@ -6,7 +6,7 @@ import ch.epfl.sweng.SDP.game.drawing.PaintView;
 /**
  * Class representing an item which slows down the player's cursor.
  */
-public class SlowdownItem extends Item {
+public class SlowdownItem extends DeactivableItem {
 
     private static final double SLOWDOWN_FACTOR = 0.5;
 

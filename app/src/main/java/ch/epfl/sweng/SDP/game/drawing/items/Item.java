@@ -77,11 +77,6 @@ public abstract class Item {
     public abstract void activate(final PaintView paintView);
 
     /**
-     * Deactivates the item's ability.
-     */
-    public abstract void deactivate(PaintView paintView);
-
-    /**
      * String to show to the player which item class was picked.
      *
      * @return feedback text
@@ -112,18 +107,5 @@ public abstract class Item {
             //deprecated in API 26
             vibrator.vibrate(100);
         }
-    }
-
-    protected CountDownTimer launchCountDownUntilDeactivation(final PaintView paintView) {
-        return new CountDownTimer(ITEM_DURATION, ITEM_DURATION) {
-
-            public void onTick(long millisUntilFinished) {
-                // Is never called
-            }
-
-            public void onFinish() {
-                deactivate(paintView);
-            }
-        };
     }
 }

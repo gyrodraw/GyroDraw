@@ -9,7 +9,8 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 public final class TestUsers {
 
     private static final String[] allTestUsers = new String[]{
-            "123456789", "no_user", "userA", "userAA", "EPFLien"
+            "123456789", "1234567891", "FriendId123ForTesting", "no_user",
+            "userA", "userAA", "EPFLien"
     };
 
     private TestUsers() {

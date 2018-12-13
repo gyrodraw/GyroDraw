@@ -161,7 +161,7 @@ public class VotingPageActivity extends BaseActivity {
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.getValue(Integer.class) != null) {
                         rankingTable.put(ds.getKey(), ds.getValue(Integer.class));
                     }

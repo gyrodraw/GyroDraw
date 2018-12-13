@@ -71,7 +71,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     /**
-     * Remove from the listener sets the given listener.
+     * Removes from the listener sets the given listener.
      *
      * @param listener Listener to be removed
      */

@@ -11,14 +11,19 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
- * Connectivity wrapper that registers the the network receiver and unregisters it.
+ * Connectivity wrapper that registers the network receiver and unregisters it. This class provides
+ * also utility to update or check connectivity status.
  */
 public final class ConnectivityWrapper {
 
     private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static NetworkStateReceiver networkStateReceiver = null;
 
-    private ConnectivityWrapper() {}
+    private ConnectivityWrapper() {
+        if(networkStateReceiver != null) {
+            throw new IllegalStateException("NetworkStateReceiver already instantiated");
+        }
+    }
 
     private static NetworkStateReceiver getInstanceNetwork() {
         if (networkStateReceiver == null) {
@@ -29,9 +34,9 @@ public final class ConnectivityWrapper {
     }
 
     /**
-     * Create a network receiver and sets the corresponding listener to it.
+     * Creates a network receiver and sets the corresponding listener to it.
      *
-     * @param context Contetxt of the activity
+     * @param context Context of the activity
      */
     public static void registerNetworkReceiver(Context context) {
         getInstanceNetwork();
@@ -44,7 +49,7 @@ public final class ConnectivityWrapper {
     }
 
     /**
-     * Unregister the listener and deletes the instance of the receiver.
+     * Unregisters the listener and deletes the instance of the receiver.
      *
      * @param context Context of the activity
      */
@@ -56,7 +61,7 @@ public final class ConnectivityWrapper {
     }
 
     /**
-     * Set the online flag to 1 when in-game. Allows to notify database that the player is still
+     * Sets the online flag to 1 when in-game. Allows to notify database that the player is still
      * here.
      *
      * @param roomID Room number of the game

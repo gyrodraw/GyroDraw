@@ -3,14 +3,11 @@ package ch.epfl.sweng.SDP.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -110,8 +107,6 @@ public class HomeActivity extends BaseActivity {
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
 
-        isStoragePermissionGranted();
-
         ImageView backgroundAnimation = findViewById(R.id.homeBackgroundAnimation);
 
         if (enableBackgroundAnimation) {
@@ -169,28 +164,6 @@ public class HomeActivity extends BaseActivity {
         });
 
         setLeague();
-    }
-
-    /**
-     * Checks if storage permissions are granted.
-     * If permissions are revoked it requests permission.
-     *
-     * @return a boolean indicating if permissions are granted or not.
-     */
-    private boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else {
-            //permission is automatically granted on sdk<23 upon installation
-            return true;
-        }
     }
 
     /**

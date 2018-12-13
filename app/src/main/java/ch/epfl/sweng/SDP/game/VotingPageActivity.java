@@ -71,13 +71,11 @@ public class VotingPageActivity extends BaseActivity {
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
-    private RankingFragment fragment;
-
     private String roomID = "undefined";
     private boolean sharingMode = false;
 
     /**
-     * Share an image to facebook.
+     * Shares an image to facebook.
      * @param view the button invoked this method.
      */
     public void shareImage(View view) {
@@ -231,7 +229,7 @@ public class VotingPageActivity extends BaseActivity {
         super.onPause();
 
 
-        if (sharingMode == true) {
+        if (sharingMode) {
             sharingMode = false;
             return;
         }
@@ -360,8 +358,8 @@ public class VotingPageActivity extends BaseActivity {
                             // Get the image from the local database instead
                             LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
-                            Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-                            storeBitmap(localImage, currentId);
+
+                            storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
                         } else {
 
                             refs[i] = storage.getReference().child(currentId + ".jpg");
@@ -399,8 +397,10 @@ public class VotingPageActivity extends BaseActivity {
                                             // Display the first drawing
                                             String playerName = playersNames[0];
                                             changeDrawing(drawings[0], playerName);
+
                                             // Enable the rating bar only if the image is not the player's one
                                             enableRatingBar(playerName);
+                                            
                                             // Display the voting page layout
                                             setLayoutToVisible();
                                         }
@@ -460,7 +460,7 @@ public class VotingPageActivity extends BaseActivity {
         setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                 R.id.playerNameView, R.id.timer);
 
-        fragment = new RankingFragment();
+        RankingFragment fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
         fragment.putExtra(roomID, drawings, playersNames);
 

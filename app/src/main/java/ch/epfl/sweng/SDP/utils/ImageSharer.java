@@ -37,7 +37,7 @@ public class ImageSharer {
     }
 
     /**
-     * Get this ImageSharer instance. Use this method to initialize the singleton.
+     * Gets this ImageSharer instance. Use this method to initialize the singleton.
      *
      * @param   activity activity calling this method
      * @return  ImageSharer instance
@@ -50,7 +50,7 @@ public class ImageSharer {
     }
 
     /**
-     * Get the ImageSharer instance.
+     * Gets the ImageSharer instance.
      */
     public static ImageSharer getInstance() {
         return instance;

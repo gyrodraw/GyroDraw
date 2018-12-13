@@ -21,10 +21,12 @@ import java.nio.file.Paths;
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 /**
  * This class is responsible for saving images to the device storage.
  */
-public class ImageStorageManager {
+public final class ImageStorageManager {
 
     private ImageStorageManager() {
         // Empty constructor
@@ -109,6 +111,27 @@ public class ImageStorageManager {
                 toast.show();
             }
         });
+    }
+
+    /**
+     * Checks if storage permissions are granted.
+     * If permissions are revoked it requests permission.
+     *
+     * @return a boolean indicating if permissions are granted or not.
+     */
+    public static boolean askForStoragePermission(Activity activity) {
+        // Permission is automatically granted on sdk<23 upon installation
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(activity.getApplicationContext(),
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+            return true;
+        }
+        return true;
     }
 
 }

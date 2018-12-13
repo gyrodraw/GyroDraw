@@ -4,6 +4,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
@@ -91,7 +92,7 @@ public class MainActivityTest {
 
     @Test
     public void testHandleUserStatusOnline() {
-        changeOnlineStatus(TEST_USER_ID, ONLINE);
+        changeOnlineStatus(TEST_USER_ID, ONLINE, createCompletionListener());
         SystemClock.sleep(3000);
 
         TextView errorMessage = new TextView(activity);
@@ -101,12 +102,12 @@ public class MainActivityTest {
         assertThat(errorMessage.getText().toString(),
                 is(activity.getString(R.string.already_logged_in)));
         assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
-        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        changeOnlineStatus(TEST_USER_ID, OFFLINE, createCompletionListener());
     }
 
     @Test
     public void testHandleUserStatusOffline() {
-        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        changeOnlineStatus(TEST_USER_ID, OFFLINE, createCompletionListener());
         SystemClock.sleep(3000);
 
         TextView errorMessage = new TextView(activity);

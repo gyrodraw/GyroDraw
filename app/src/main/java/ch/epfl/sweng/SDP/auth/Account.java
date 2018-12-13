@@ -1,5 +1,32 @@
 package ch.epfl.sweng.SDP.auth;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import ch.epfl.sweng.SDP.firebase.AccountAttributes;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.AVERAGE_RATING;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MATCHES_TOTAL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MATCHES_WON;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MAX_TROPHIES;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STARS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
 import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
 import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
@@ -8,23 +35,6 @@ import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
-
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.League;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Singleton class that represents an account.
@@ -245,7 +255,7 @@ public class Account {
      * Registers this account in Firebase and in the local database.
      */
     public void registerAccount() throws DatabaseException {
-        usersRef.child(userId).setValue(this, createCompletionListener());
+        Database.saveAccount(this);
         localDbHandler.saveAccount(this);
     }
 
@@ -257,15 +267,14 @@ public class Account {
      */
     public void changeTrophies(final int change) throws DatabaseException {
         int newTrophies = Math.max(0, trophies + change);
-        Database.getReference(format("users.%s.trophies", userId))
-                .setValue(newTrophies, createCompletionListener());
         trophies = newTrophies;
+
+        Database.setAttribute(userId, TROPHIES, trophies);
 
         updateCurrentLeague();
 
         if (trophies > maxTrophies) {
-            Database.getReference(format("users.%s.maxTrophies", userId))
-                    .setValue(trophies, createCompletionListener());
+            Database.setAttribute(userId, MAX_TROPHIES, trophies);
             maxTrophies = trophies;
         }
 
@@ -280,8 +289,7 @@ public class Account {
             }
         }
 
-        Database.getReference(format("users.%s.currentLeague", userId))
-                .setValue(currentLeague, createCompletionListener());
+        Database.setAttribute(userId, LEAGUE, currentLeague);
     }
 
     /**
@@ -292,9 +300,7 @@ public class Account {
     public void updateItemsBought(ShopItem shopItem) {
         checkPrecondition(shopItem != null, "Shop item is null");
 
-        Database.getReference(
-                format("users.%s.boughtItems.%s", userId, shopItem.getColorItem().toString()))
-                .setValue(shopItem.getPriceItem(), createCompletionListener());
+        Database.setShopItemValue(userId, shopItem);
 
         itemsBought.add(shopItem);
         sortItemsBought();
@@ -316,10 +322,9 @@ public class Account {
         int newStars = amount + stars;
         checkPrecondition(newStars >= 0, "Negative Balance");
 
-        Database.getReference(format("users.%s.stars", userId))
-                .setValue(newStars, createCompletionListener());
         stars = newStars;
 
+        Database.setAttribute(userId, STARS, stars);
         localDbHandler.saveAccount(instance);
     }
 
@@ -329,8 +334,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseMatchesWon() throws DatabaseException {
-        Database.getReference(format("users.%s.matchesWon", userId))
-                .setValue(++matchesWon, createCompletionListener());
+        Database.setAttribute(userId, MATCHES_WON, ++matchesWon);
 
         localDbHandler.saveAccount(instance);
     }
@@ -341,8 +345,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseTotalMatches() throws DatabaseException {
-        Database.getReference(format("users.%s.totalMatches", userId))
-                .setValue(++totalMatches, createCompletionListener());
+        Database.setAttribute(userId, MATCHES_TOTAL, ++totalMatches);
 
         localDbHandler.saveAccount(instance);
     }
@@ -358,11 +361,9 @@ public class Account {
         checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
         checkPrecondition(totalMatches >= 1, "Wrong total matches");
 
-        double newAverageRating = (averageRating * (totalMatches - 1) + rating) / totalMatches;
-        Database.getReference(format("users.%s.averageRating", userId))
-                .setValue(newAverageRating, createCompletionListener());
-        averageRating = newAverageRating;
+        averageRating = (averageRating * (totalMatches - 1) + rating) / totalMatches;
 
+        Database.setAttribute(userId, AVERAGE_RATING, averageRating);
         localDbHandler.saveAccount(instance);
     }
 
@@ -376,8 +377,7 @@ public class Account {
     public void addFriend(final String usernameId) throws DatabaseException {
         checkPrecondition(usernameId != null, "Friend's usernameId is null");
 
-        Database.getReference(format("users.%s.friends.%s", userId, usernameId))
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        Database.getAllFriends(userId, new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -402,9 +402,9 @@ public class Account {
     /**
      * Updates current users and friends friendship-state.
      *
-     * @param friendId id of friend
-     * @param stateUser state that current user will save
-     * @param stateFriend state that friend will save
+     * @param friendId      id of friend
+     * @param stateUser     state that current user will save
+     * @param stateFriend   state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
         assert friendId != null : "friendId is null";
@@ -412,28 +412,23 @@ public class Account {
         assert 0 <= stateFriend && stateFriend <= 2 : "Wrong stateUser given";
 
         // Update the user's friends' list
-        Database.getReference(format(FRIENDS_LIST_FORMAT,
-                userId, friendId)).setValue(stateUser, createCompletionListener());
+        Database.setFriendValue(userId, friendId, stateUser);
 
         // Update the sender's friends' list
-        Database.getReference(format(FRIENDS_LIST_FORMAT,
-                friendId, userId)).setValue(stateFriend, createCompletionListener());
+        Database.setFriendValue(friendId, userId, stateFriend);
     }
 
     /**
      * Method that allows one to remove friends.
      *
-     * @param usernameId String specifying FirebaseUser.UID of friend
-     * @throws IllegalArgumentException in case the given usernameId is null
-     * @throws DatabaseException in case write to database fails
+     * @param   friendId String specifying FirebaseUser.UID of friend
+     * @throws  IllegalArgumentException in case the given usernameId is null
+     * @throws  DatabaseException in case write to database fails
      */
-    public void removeFriend(final String usernameId) throws DatabaseException {
-        checkPrecondition(usernameId != null, "Friend's usernameId is null");
+    public void removeFriend(final String friendId) throws DatabaseException {
+        checkPrecondition(friendId != null, "Friend's id is null");
 
-        Database.getReference(format(FRIENDS_LIST_FORMAT,
-                userId, usernameId)).removeValue(createCompletionListener());
-
-        Database.getReference(format(FRIENDS_LIST_FORMAT,
-                usernameId, userId)).removeValue(createCompletionListener());
+        Database.removeFriend(userId, friendId);
+        Database.removeFriend(friendId, userId);
     }
 }

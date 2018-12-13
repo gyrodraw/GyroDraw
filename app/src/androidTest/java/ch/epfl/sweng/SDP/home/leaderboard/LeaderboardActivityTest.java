@@ -151,9 +151,8 @@ public class LeaderboardActivityTest {
     }
 
     private void friendsTest(int state, int expected) {
-        Database.getReference("users."
-                + USER_ID + ".friends.HFNDgmFKQPX92nmfmi2qAUfTzxJ3")
-                .setValue(state);
+        Database.setFriendValue(USER_ID, "HFNDgmFKQPX92nmfmi2qAUfTzxJ3", state);
+
         SystemClock.sleep(2000);
         activityRule.getActivity().initLeaderboard();
         onView(withId(R.id.friendsFilter)).perform(click());

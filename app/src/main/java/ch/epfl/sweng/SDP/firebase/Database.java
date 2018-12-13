@@ -2,7 +2,12 @@ package ch.epfl.sweng.SDP.firebase;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 import static java.lang.String.format;
 
@@ -11,6 +16,9 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
@@ -36,6 +44,10 @@ public final class Database {
 
         DatabaseReferenceBuilder builder = new DatabaseReferenceBuilder();
         return builder.addChildren(path).build();
+    }
+
+    public static void saveAccount(Account account) {
+        USERS_REFERENCE.child(account.getUserId()).setValue(account, createCompletionListener());
     }
 
     /**
@@ -65,7 +77,7 @@ public final class Database {
      * @param valueEventListener    action that should be taken after retrieving the user
      */
     public static void getUserByUsername(String username, ValueEventListener valueEventListener) {
-        USERS_REFERENCE.orderByChild("username").equalTo(username)
+        USERS_REFERENCE.orderByChild(attributeToPath(USERNAME)).equalTo(username)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -77,7 +89,7 @@ public final class Database {
      * @param valueEventListener    action that should be taken after retrieving the user
      */
     public static void getUserByEmail(String email, ValueEventListener valueEventListener) {
-        USERS_REFERENCE.orderByChild("email").equalTo(email)
+        USERS_REFERENCE.orderByChild(attributeToPath(EMAIL)).equalTo(email)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -89,7 +101,7 @@ public final class Database {
      * @param valueEventListener    action that should be taken after retrieving the friends
      */
     public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
-        Database.getReference(format("users.%s.friends", userId))
+        Database.getReference(format("users.%s.%s", userId, attributeToPath(FRIENDS)))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -100,8 +112,29 @@ public final class Database {
      */
     public static void getFriend(String userId, String friendId,
             ValueEventListener valueEventListener) {
-        Database.getReference(format("users.%s.friends.%s", userId, friendId))
+        Database.getReference(format("users.%s.%s.%s", userId, attributeToPath(FRIENDS), friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void setAttribute(String userId, AccountAttributes attribute, Object newValue) {
+        Database.getReference(format("users.%s.%s", userId, attributeToPath(attribute)))
+                .setValue(newValue, createCompletionListener());
+    }
+
+    public static void setFriendValue(String userId, String friendId, int newValue) {
+        Database.getReference(format("users.%s.%s.%s", userId, attributeToPath(FRIENDS), friendId))
+                .setValue(newValue, createCompletionListener());
+    }
+
+    public static void removeFriend(String userId, String friendId) {
+        Database.getReference(format("users.%s.%s.%s", userId, attributeToPath(FRIENDS), friendId))
+                .removeValue(createCompletionListener());
+    }
+
+    public static void setShopItemValue(String userId, ShopItem item) {
+        Database.getReference(
+                format("users.%s.boughtItems.%s", userId, item.getColorItem().toString()))
+                .setValue(item.getPriceItem(), createCompletionListener());
     }
 
     /**

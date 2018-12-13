@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
@@ -433,33 +435,5 @@ public class Account {
 
         Database.getReference(format(FRIENDS_LIST_FORMAT,
                 usernameId, userId)).removeValue(createCompletionListener());
-    }
-
-    /**
-     * Checks if databaseError occurred.
-     *
-     * @param databaseError potential databaseError
-     * @throws DatabaseException in case databaseError is non-null
-     */
-    private void checkForDatabaseError(@Nullable DatabaseError databaseError)
-            throws DatabaseException {
-        if (databaseError != null) {
-            throw databaseError.toException();
-        }
-    }
-
-    /**
-     * Creates a CompletionListener that checks if there was a DatabaseError.
-     *
-     * @return the CompletionListener
-     */
-    private DatabaseReference.CompletionListener createCompletionListener() {
-        return new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError,
-                    @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
-            }
-        };
     }
 }

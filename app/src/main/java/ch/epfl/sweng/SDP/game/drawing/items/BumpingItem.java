@@ -16,8 +16,8 @@ public class BumpingItem extends Item {
     private ImageView imageView;
     private boolean isActivated = false;
 
-    public BumpingItem(int x, int y, int radius) {
-        super(x, y, radius);
+    public BumpingItem(int posX, int posY, int radius) {
+        super(posX, posY, radius);
     }
 
     /**
@@ -39,6 +39,7 @@ public class BumpingItem extends Item {
                 imageView.setImageResource(R.drawable.bumping_item);
                 imageView.setColorFilter(new LightingColorFilter(Color.WHITE, Color.GRAY));
                 isActivated = true;
+                vibrate(paintView);
             }
         }
         return false;

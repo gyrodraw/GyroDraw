@@ -2,8 +2,6 @@ package ch.epfl.sweng.SDP.utils;
 
 import org.junit.Test;
 
-import ch.epfl.sweng.SDP.utils.BounceInterpolator;
-
 public class BounceInterpolatorUnitTest {
 
     private final BounceInterpolator interpolator = new BounceInterpolator(0.1, 10);

@@ -1,9 +1,5 @@
 package ch.epfl.sweng.SDP;
 
-import static android.view.View.VISIBLE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-import static java.lang.String.format;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -14,20 +10,28 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import java.util.HashMap;
+
+import static android.view.View.VISIBLE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static java.lang.String.format;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -146,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     @SuppressLint("NewApi")
     public TextView createTextView(String text, int color, int size, Typeface typeface,
-            LinearLayout.LayoutParams layoutParams) {
+                                   LinearLayout.LayoutParams layoutParams) {
         TextView textView = new TextView(this);
         styleView(textView, text, color,
                 size, typeface, layoutParams);
@@ -171,7 +175,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void styleView(TextView view, String text, int color, int size, Typeface typeface,
-            LinearLayout.LayoutParams layoutParams) {
+                           LinearLayout.LayoutParams layoutParams) {
         view.setText(text);
         view.setTextSize(size);
         view.setTextColor(color);
@@ -183,7 +187,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Clones the {@link Account}, corresponding to the user logged in, from Firebase, and stores it
      * in the local database.
      *
-     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase Database
+     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase FbDatabase
      */
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
@@ -220,29 +224,30 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param errorMessage the {@link TextView} corresponding to the error message
      */
     protected void handleUserStatus(final TextView errorMessage) {
-        final DatabaseReference statusRef = Database.getReference(format("users.%s.online",
+        final DatabaseReference statusRef = FbDatabase.getReference(format("users.%s.online",
                 Account.getInstance(getApplicationContext()).getUserId()));
+        FbDatabase.setListenerToAccountAttribute(
+                Account.getInstance(getApplicationContext()).getUserId(), STATUS,
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        OnlineStatus isOnline = OnlineStatus.fromInteger(
+                                dataSnapshot.getValue(int.class));
+                        if (isOnline == ONLINE) {
+                            errorMessage.setText(getString(R.string.already_logged_in));
+                            errorMessage.setVisibility(VISIBLE);
+                        } else {
+                            statusRef.removeEventListener(this);
+                            launchActivity(HomeActivity.class);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            finish();
+                        }
+                    }
 
-        statusRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                OnlineStatus isOnline = OnlineStatus.fromInteger(
-                        dataSnapshot.getValue(int.class));
-                if (isOnline == ONLINE) {
-                    errorMessage.setText(getString(R.string.already_logged_in));
-                    errorMessage.setVisibility(VISIBLE);
-                } else {
-                    statusRef.removeEventListener(this);
-                    launchActivity(HomeActivity.class);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
     }
 }

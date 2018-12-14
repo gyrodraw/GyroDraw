@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.leagues.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -25,13 +25,12 @@ import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MATCHES_WON;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MAX_TROPHIES;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STARS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
-import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-import static java.lang.String.format;
 
 /**
  * Singleton class that represents an account.
@@ -55,9 +54,9 @@ public class Account {
     private LocalDbHandlerForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-            String email, String currentLeague,
-            int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
-            int maxTrophies, List<ShopItem> itemsBought) {
+                    String email, String currentLeague,
+                    int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
+                    int maxTrophies, List<ShopItem> itemsBought) {
 
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
@@ -84,16 +83,16 @@ public class Account {
     /**
      * Creates an account instance. Trophies, stars and statistics are initialized to 0.
      *
-     * @param context the context in which the method is called
+     * @param context          the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     * instance
-     * @param username the string defining the preferred username
-     * @param email the string defining the user email
+     *                         instance
+     * @param username         the string defining the preferred username
+     * @param email            the string defining the user email
      * @throws IllegalArgumentException if one of the parameters is null
-     * @throws IllegalStateException if the account was already instantiated
+     * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-            String username, String email) {
+                                     String username, String email) {
         createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0,
                 0, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
@@ -101,26 +100,26 @@ public class Account {
     /**
      * Creates an account instance given the specified parameters.
      *
-     * @param context the context in which the method is called
+     * @param context          the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     * instance
-     * @param username the string defining the preferred username
-     * @param email the string defining the user's email
-     * @param currentLeague the string defining the user's current league
-     * @param trophies the string defining the user's trophies
-     * @param stars the string defining the user's stars
-     * @param matchesWon the string defining the user's matches won
-     * @param totalMatches the string defining the user's total matches played
-     * @param averageRating the string defining the user's average rating
-     * @param maxTrophies the string defining the user's max trophies achieved
+     *                         instance
+     * @param username         the string defining the preferred username
+     * @param email            the string defining the user's email
+     * @param currentLeague    the string defining the user's current league
+     * @param trophies         the string defining the user's trophies
+     * @param stars            the string defining the user's stars
+     * @param matchesWon       the string defining the user's matches won
+     * @param totalMatches     the string defining the user's total matches played
+     * @param averageRating    the string defining the user's average rating
+     * @param maxTrophies      the string defining the user's max trophies achieved
      * @throws IllegalArgumentException if one of the parameters is null or invalid
-     * @throws IllegalStateException if the account was already instantiated
+     * @throws IllegalStateException    if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-            String username, String email, String currentLeague,
-            int trophies, int stars, int matchesWon, int totalMatches,
-            double averageRating, int maxTrophies,
-            List<ShopItem> itemsBought) {
+                                     String username, String email, String currentLeague,
+                                     int trophies, int stars, int matchesWon, int totalMatches,
+                                     double averageRating, int maxTrophies,
+                                     List<ShopItem> itemsBought) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
         checkPrecondition(username != null, "username is null");
@@ -243,7 +242,7 @@ public class Account {
      * Registers this account in Firebase and in the local database.
      */
     public void registerAccount() throws DatabaseException {
-        Database.saveAccount(this);
+        FbDatabase.saveAccount(this);
         localDbHandler.saveAccount(this);
     }
 
@@ -254,15 +253,14 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void changeTrophies(final int change) throws DatabaseException {
-        int newTrophies = Math.max(0, trophies + change);
-        trophies = newTrophies;
+        trophies = Math.max(0, trophies + change);
 
-        Database.setAttribute(userId, TROPHIES, trophies);
+        FbDatabase.setAccountAttribute(userId, TROPHIES, trophies);
 
         updateCurrentLeague();
 
         if (trophies > maxTrophies) {
-            Database.setAttribute(userId, MAX_TROPHIES, trophies);
+            FbDatabase.setAccountAttribute(userId, MAX_TROPHIES, trophies);
             maxTrophies = trophies;
         }
 
@@ -277,7 +275,7 @@ public class Account {
             }
         }
 
-        Database.setAttribute(userId, LEAGUE, currentLeague);
+        FbDatabase.setAccountAttribute(userId, LEAGUE, currentLeague);
     }
 
     /**
@@ -288,7 +286,7 @@ public class Account {
     public void updateItemsBought(ShopItem shopItem) {
         checkPrecondition(shopItem != null, "Shop item is null");
 
-        Database.setShopItemValue(userId, shopItem);
+        FbDatabase.setShopItemValue(userId, shopItem);
 
         itemsBought.add(shopItem);
         sortItemsBought();
@@ -304,7 +302,7 @@ public class Account {
      *
      * @param amount the amount to add
      * @throws IllegalArgumentException in case the balance becomes negative
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void changeStars(final int amount) throws DatabaseException {
         int newStars = amount + stars;
@@ -312,7 +310,7 @@ public class Account {
 
         stars = newStars;
 
-        Database.setAttribute(userId, STARS, stars);
+        FbDatabase.setAccountAttribute(userId, STARS, stars);
         localDbHandler.saveAccount(instance);
     }
 
@@ -322,7 +320,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseMatchesWon() throws DatabaseException {
-        Database.setAttribute(userId, MATCHES_WON, ++matchesWon);
+        FbDatabase.setAccountAttribute(userId, MATCHES_WON, ++matchesWon);
 
         localDbHandler.saveAccount(instance);
     }
@@ -333,7 +331,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseTotalMatches() throws DatabaseException {
-        Database.setAttribute(userId, MATCHES_TOTAL, ++totalMatches);
+        FbDatabase.setAccountAttribute(userId, MATCHES_TOTAL, ++totalMatches);
 
         localDbHandler.saveAccount(instance);
     }
@@ -343,7 +341,7 @@ public class Account {
      * passed as parameter should be the total rating obtained after a match.
      *
      * @throws IllegalArgumentException in case a rating <= 0 or > 20 is given
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void changeAverageRating(double rating) throws DatabaseException {
         checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
@@ -351,7 +349,7 @@ public class Account {
 
         averageRating = (averageRating * (totalMatches - 1) + rating) / totalMatches;
 
-        Database.setAttribute(userId, AVERAGE_RATING, averageRating);
+        FbDatabase.setAccountAttribute(userId, AVERAGE_RATING, averageRating);
         localDbHandler.saveAccount(instance);
     }
 
@@ -360,39 +358,39 @@ public class Account {
      *
      * @param friendId String specifying FirebaseUser.UID of friend
      * @throws IllegalArgumentException in case the given friendId is null
-     * @throws DatabaseException in case write to database fails
+     * @throws DatabaseException        in case write to database fails
      */
     public void addFriend(final String friendId) throws DatabaseException {
         checkPrecondition(friendId != null, "Friend's friendId is null");
 
-        Database.getFriend(userId, friendId, new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            if (dataSnapshot.getValue(int.class)
-                                    == RECEIVED.ordinal()) {
-                                updateFriendship(friendId, FRIENDS.ordinal(), FRIENDS.ordinal());
-                            } else {
-                                updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
-                            }
-                        } else {
-                            updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
-                        }
+        FbDatabase.getFriend(userId, friendId, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.getValue(int.class)
+                            == RECEIVED.ordinal()) {
+                        updateFriendship(friendId, FRIENDS.ordinal(), FRIENDS.ordinal());
+                    } else {
+                        updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
                     }
+                } else {
+                    updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        checkForDatabaseError(databaseError);
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                checkForDatabaseError(databaseError);
+            }
+        });
     }
 
     /**
      * Updates current users and friends friendship-state.
      *
-     * @param friendId      id of friend
-     * @param stateUser     state that current user will save
-     * @param stateFriend   state that friend will save
+     * @param friendId    id of friend
+     * @param stateUser   state that current user will save
+     * @param stateFriend state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
         assert friendId != null : "friendId is null";
@@ -400,23 +398,23 @@ public class Account {
         assert 0 <= stateFriend && stateFriend <= 2 : "Wrong stateUser given";
 
         // Update the user's friends' list
-        Database.setFriendValue(userId, friendId, stateUser);
+        FbDatabase.setFriendValue(userId, friendId, stateUser);
 
         // Update the sender's friends' list
-        Database.setFriendValue(friendId, userId, stateFriend);
+        FbDatabase.setFriendValue(friendId, userId, stateFriend);
     }
 
     /**
      * Method that allows one to remove friends.
      *
-     * @param   friendId String specifying FirebaseUser.UID of friend
-     * @throws  IllegalArgumentException in case the given usernameId is null
-     * @throws  DatabaseException in case write to database fails
+     * @param friendId String specifying FirebaseUser.UID of friend
+     * @throws IllegalArgumentException in case the given usernameId is null
+     * @throws DatabaseException        in case write to database fails
      */
     public void removeFriend(final String friendId) throws DatabaseException {
         checkPrecondition(friendId != null, "Friend's id is null");
 
-        Database.removeFriend(userId, friendId);
-        Database.removeFriend(friendId, userId);
+        FbDatabase.removeFriend(userId, friendId);
+        FbDatabase.removeFriend(friendId, userId);
     }
 }

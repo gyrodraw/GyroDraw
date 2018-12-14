@@ -1,35 +1,39 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import android.content.Context;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.support.annotation.VisibleForTesting;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Abstract class representing an item.
  */
 public abstract class Item {
 
-    protected static final int ITEM_DURATION = 10000;
+    private int posX;
+    private int posY;
+    private int radius;
 
-    private final int x;
-    private final int y;
-    private final int radius;
-
-    protected Item(int x, int y, int radius) {
-        checkPrecondition(x >= 0 && y >= 0 && radius >= 0,
+    protected Item(int posX, int posY, int radius) {
+        checkPrecondition(posX >= 0 && posY >= 0 && radius >= 0,
                 "Coordinates and radius must not be negative");
-        this.x = x;
-        this.y = y;
+        this.posX = posX;
+        this.posY = posY;
         this.radius = radius;
     }
 
     public int getX() {
-        return x;
+        return posX;
     }
 
     public int getY() {
-        return y;
+        return posY;
     }
 
     public int getRadius() {
@@ -51,13 +55,13 @@ public abstract class Item {
     /**
      * Calculates if there is a collision between the item and the given parameters.
      *
-     * @param x      x coordinate to check
-     * @param y      y coordinate to check
+     * @param posX   x coordinate to check
+     * @param posY   y coordinate to check
      * @param radius radius of circle
      * @return true if there is collision, else false
      */
-    boolean collision(int x, int y, int radius) {
-        return Math.hypot(this.x - x, this.y - y)
+    protected boolean collision(int posX, int posY, int radius) {
+        return Math.hypot(this.posX - posX, this.posY - posY)
                 < this.radius + radius;
     }
 
@@ -66,6 +70,7 @@ public abstract class Item {
      *
      * @param paintView to apply the ability on
      */
+    @VisibleForTesting
     public abstract void activate(final PaintView paintView);
 
     /**
@@ -82,5 +87,23 @@ public abstract class Item {
      */
     public int getColorId() {
         return R.color.colorExitRed;
+    }
+
+    /**
+     * Creates a short vibration feedback.
+     *
+     * @param paintView used to get the context from
+     */
+    protected void vibrate(PaintView paintView) {
+        Vibrator vibrator = (Vibrator) paintView.getContext()
+                .getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(
+                    100, 1));
+        } else {
+            //deprecated in API 26
+            vibrator.vibrate(100);
+        }
     }
 }

@@ -419,7 +419,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
 
       setTimeout(() => {
         removeRoom(roomID);
-      }, 5000);
+      }, 10000);
 
       break;
     default:

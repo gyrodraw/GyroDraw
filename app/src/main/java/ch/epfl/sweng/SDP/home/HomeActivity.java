@@ -1,21 +1,5 @@
 package ch.epfl.sweng.SDP.home;
 
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
-import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -32,14 +16,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
-import ch.epfl.sweng.SDP.home.battlelog.BattleLogActivity;
+import ch.epfl.sweng.SDP.home.battleLog.BattleLogActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.home.leagues.LeaguesActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
@@ -49,13 +42,22 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
 
 /**
  * Class representing the homepage of the app.
@@ -86,6 +88,7 @@ public class HomeActivity extends NoBackPressActivity {
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
                         getUserById(id, new ValueEventListener() {
+
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String name = dataSnapshot.getValue(String.class);
@@ -185,14 +188,14 @@ public class HomeActivity extends NoBackPressActivity {
         String userId = Account.getInstance(getApplicationContext())
                 .getUserId();
 
-        changeOnlineStatus(userId, ONLINE, Database.createCompletionListener());
+        changeOnlineStatus(userId, ONLINE, FbDatabase.createCompletionListener());
 
         // On user disconnection, update Firebase
         changeToOfflineOnDisconnect(userId);
     }
 
     private void addListenerForFriendsRequests() {
-        Database.setListenerToAttribute(Account.getInstance(this).getUserId(),
+        FbDatabase.setListenerToAccountAttribute(Account.getInstance(this).getUserId(),
                 FRIENDS, listenerFriendsRequest);
     }
 
@@ -250,6 +253,7 @@ public class HomeActivity extends NoBackPressActivity {
     private void setListener(final View view, final double amplitude, final int frequency) {
         final Context context = this;
         view.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 int id = view.getId();

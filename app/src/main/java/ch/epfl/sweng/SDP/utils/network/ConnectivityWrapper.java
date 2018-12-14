@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.VisibleForTesting;
 
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
@@ -64,11 +64,11 @@ public final class ConnectivityWrapper {
      * Sets the online flag to 1 when in-game. Allows to notify database that the player is still
      * here.
      *
-     * @param roomID Room number of the game
+     * @param roomID   Room number of the game
      * @param username Username of the player
      */
     public static void setOnlineStatusInGame(String roomID, String username) {
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
+        FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
                 + username).setValue(1);
     }
 
@@ -89,7 +89,7 @@ public final class ConnectivityWrapper {
      * Test method that allows to directly call the onReceive method with the given parameters.
      *
      * @param context Context of the activity
-     * @param intent Connectivity intent
+     * @param intent  Connectivity intent
      */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static void callOnReceiveNetwork(final Context context, final Intent intent) {

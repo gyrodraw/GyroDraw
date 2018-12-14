@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import ch.epfl.sweng.SDP.R;
+
 import org.junit.Test;
 
 public class ItemTest {
@@ -26,11 +27,6 @@ public class ItemTest {
         SpeedupItem speedupItem = new SpeedupItem(0, 0, 10);
         assertThat(speedupItem.collision(21, 0, 10), is(false));
         assertThat(speedupItem.collision(20, 0, 11), is(true));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateItemWithIllegalArguments() {
-        new SpeedupItem(-10, -10, -10);
     }
 
     @Test

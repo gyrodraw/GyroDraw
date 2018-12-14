@@ -5,11 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
-import ch.epfl.sweng.SDP.utils.TestUsers;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -18,9 +13,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-import static ch.epfl.sweng.SDP.firebase.Database.getAllFriends;
-import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
-import static ch.epfl.sweng.SDP.firebase.Database.getUsers;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.utils.TestUsers;
+
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USER_ID;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
 
 /**
  * Helper class to manage and display data from Firebase.
@@ -89,8 +93,8 @@ class Leaderboard {
     /**
      * Copies all players that contain query into wantedPlayers.
      *
-     * @param players   pool of players to filter
-     * @param query     string to search
+     * @param players pool of players to filter
+     * @param query   string to search
      */
     private void filterWantedPlayers(LinkedList<Player> players, String query) {
         wantedPlayers.clear();
@@ -107,21 +111,21 @@ class Leaderboard {
     private void fetchPlayersFromFirebase() {
         allPlayers.clear();
         getUsers(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        allPlayers.clear();
-                        wantedPlayers.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            convertSnapshotToPlayerAndAddToList(snapshot, allPlayers);
-                        }
-                        update("");
-                    }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allPlayers.clear();
+                wantedPlayers.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Player.convertSnapshotToPlayerAndAddToList(context, snapshot, allPlayers);
+                }
+                update("");
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
+            }
+        });
     }
 
     /**
@@ -130,71 +134,45 @@ class Leaderboard {
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
         getAllFriends(Account.getInstance(context).getUserId(), new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        allPlayers.clear();
-                        wantedPlayers.clear();
-                        for (DataSnapshot s : dataSnapshot.getChildren()) {
-                            if (s != null && !TestUsers.isTestUser(s.getKey())
-                                    && s.getValue(int.class) == FRIENDS) {
-                                findAndAddPlayer(s.getKey());
-                            }
-                        }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allPlayers.clear();
+                wantedPlayers.clear();
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    if (s != null && !TestUsers.isTestUser(s.getKey())
+                            && s.getValue(int.class) == FRIENDS) {
+                        findAndAddPlayer(s.getKey());
                     }
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
+            }
+        });
     }
 
     /**
      * Searches a player in Firebase using id and converts the response into a Player.
      * Then the new player is added to the pool of friends.
      *
-     * @param playerId  id of friend to search
+     * @param playerId id of friend to search
      */
     private void findAndAddPlayer(final String playerId) {
         getUserById(playerId, new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            convertSnapshotToPlayerAndAddToList(dataSnapshot, allFriends);
-                        }
-                    }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Player.convertSnapshotToPlayerAndAddToList(context, dataSnapshot, allFriends);
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
-                    }
-                });
-    }
-
-    /**
-     * Checks if the received player is not the test-user and if all values are available.
-     * Then adds the player to allPlayers.
-     *
-     * @param snapshot  to convert
-     */
-    private void convertSnapshotToPlayerAndAddToList(DataSnapshot snapshot,
-                                                     LinkedList<Player> players) {
-        String userId = snapshot.child(USERID_TAG).getValue(String.class);
-        String username = snapshot.child(USERNAME_TAG).getValue(String.class);
-        Long trophies = snapshot.child(TROPHIES_TAG).getValue(Long.class);
-        String league = snapshot.child(LEAGUE_TAG).getValue(String.class);
-        if (!TestUsers.isTestUser(snapshot.getKey())
-                && userId != null
-                && username != null
-                && trophies != null
-                && league != null) {
-            Player temp = new Player(context, userId, username, trophies, league,
-                    username.equals(
-                            Account.getInstance(context)
-                                    .getUsername()));
-
-            players.add(temp);
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
+            }
+        });
     }
 
     /**

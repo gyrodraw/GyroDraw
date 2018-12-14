@@ -1,5 +1,38 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.RatingBar;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.RoomAttributes;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -14,34 +47,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.os.SystemClock;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.RatingBar;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.BitmapManipulator;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import java.io.ByteArrayOutputStream;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -92,8 +97,8 @@ public class VotingPageActivityTest {
     public void ratingUsingRatingBarShouldBeSaved() {
 
         // To ensure that the rating value does not get above 20
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
-                .setValue(0);
+        FbDatabase.setValueToUserInRoomAttribute("0123457890", "userA",
+                RoomAttributes.RANKING, 0);
 
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
@@ -163,9 +168,9 @@ public class VotingPageActivityTest {
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
+        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
                 .setValue(USER_ID);
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
+        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
                 .setValue(0);
         SystemClock.sleep(2000);
     }

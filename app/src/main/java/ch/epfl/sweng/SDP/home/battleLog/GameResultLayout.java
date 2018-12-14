@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home.battlelog;
+package ch.epfl.sweng.SDP.home.battleLog;
 
 import android.content.Context;
 import android.content.res.Resources;

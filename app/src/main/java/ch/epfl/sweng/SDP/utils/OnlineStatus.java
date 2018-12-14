@@ -1,10 +1,11 @@
 package ch.epfl.sweng.SDP.utils;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import com.google.firebase.database.DatabaseReference;
 
 import ch.epfl.sweng.SDP.firebase.AccountAttributes;
-import ch.epfl.sweng.SDP.firebase.Database;
-import com.google.firebase.database.DatabaseReference;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Enum representing whether the user is online or offline.
@@ -46,7 +47,7 @@ public enum OnlineStatus {
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
-        Database.setAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
+        FbDatabase.setAccountAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
     }
 
     /**
@@ -57,6 +58,6 @@ public enum OnlineStatus {
      */
     public static void changeToOfflineOnDisconnect(String userId) {
         checkPrecondition(userId != null, "userId is null");
-        Database.changeToOfflineOnDisconnect(userId);
+        FbDatabase.changeToOfflineOnDisconnect(userId);
     }
 }

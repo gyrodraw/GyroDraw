@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -86,8 +87,8 @@ public final class LayoutUtils {
     /**
      * Determines if the given point is inside a view.
      *
-     * @param posX    the posX coordinate of the point
-     * @param posY    the posY coordinate of the point
+     * @param posX the posX coordinate of the point
+     * @param posY the posY coordinate of the point
      * @param view the object to compare
      * @return true if the point is within the view bounds, false otherwise
      */

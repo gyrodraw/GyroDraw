@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.battlelog.GameResult;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 
 /**
  * Local database handler for storing and retrieving the user's game results.

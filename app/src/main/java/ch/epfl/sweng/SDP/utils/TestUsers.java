@@ -20,9 +20,9 @@ public final class TestUsers {
     /**
      * Checks if the given id belongs to a user created only for testing purposes.
      *
-     * @param userId    to check
-     * @return          true if id belongs to a test user, else false
-     * @throws          IllegalArgumentException if userId is null or empty
+     * @param userId to check
+     * @return true if id belongs to a test user, else false
+     * @throws IllegalArgumentException if userId is null or empty
      */
     public static boolean isTestUser(String userId) {
         checkPrecondition(userId != null, "UserId must not be null");

@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

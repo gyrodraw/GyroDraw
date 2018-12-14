@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
@@ -134,8 +134,8 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testLeaderboardIsSearchable() {
-        onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(1000);
+        onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         assertThat(((LinearLayout) activityRule.getActivity().findViewById(R.id.leaderboard))
                 .getChildCount(), greaterThanOrEqualTo(1));
     }
@@ -151,7 +151,7 @@ public class LeaderboardActivityTest {
     }
 
     private void friendsTest(int state, int expected) {
-        Database.setFriendValue(USER_ID, "HFNDgmFKQPX92nmfmi2qAUfTzxJ3", state);
+        FbDatabase.setFriendValue(USER_ID, "HFNDgmFKQPX92nmfmi2qAUfTzxJ3", state);
 
         SystemClock.sleep(2000);
         activityRule.getActivity().initLeaderboard();

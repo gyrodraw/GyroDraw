@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
@@ -9,8 +7,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.LinkedList;
+
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.utils.TestUsers;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USER_ID;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 
 /**
  * Helper class to manage and display user data from Firebase.
@@ -27,7 +39,7 @@ class Player implements Comparable {
     private final boolean isCurrentUser;
 
     Player(Context context, String userId, String username, Long trophies, String league,
-                   boolean isCurrentUser) {
+           boolean isCurrentUser) {
         this.context = context;
         this.userId = userId;
         this.username = username;
@@ -63,7 +75,7 @@ class Player implements Comparable {
     /**
      * Converts this player into a LinearLayout that will be displayed on the leaderboard.
      *
-     * @param index   of the player
+     * @param index of the player
      * @return LinearLayout that will be displayed
      */
     LinearLayout toLayout(int index) {
@@ -119,5 +131,31 @@ class Player implements Comparable {
 
     void setRank(int rank) {
         this.rank = rank;
+    }
+
+    /**
+     * Checks if the received player is not a test-user and if all values are available.
+     * Then adds the player to allPlayers.
+     *
+     * @param snapshot to convert
+     */
+    static void convertSnapshotToPlayerAndAddToList(Context context, DataSnapshot snapshot,
+                                                     LinkedList<Player> players) {
+        String userId = snapshot.child(attributeToPath(USER_ID)).getValue(String.class);
+        String username = snapshot.child(attributeToPath(USERNAME)).getValue(String.class);
+        Long trophies = snapshot.child(attributeToPath(TROPHIES)).getValue(Long.class);
+        String league = snapshot.child(attributeToPath(LEAGUE)).getValue(String.class);
+        if (!TestUsers.isTestUser(snapshot.getKey())
+                && userId != null
+                && username != null
+                && trophies != null
+                && league != null) {
+            Player temp = new Player(context, userId, username, trophies, league,
+                    username.equals(
+                            Account.getInstance(context)
+                                    .getUsername()));
+
+            players.add(temp);
+        }
     }
 }

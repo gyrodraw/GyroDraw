@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 
 /**
  * Local database handler for storing and retrieving the user's account.
@@ -32,7 +30,7 @@ public final class LocalDbHandlerForAccount extends SQLiteOpenHelper implements 
      * Helper class to save the account in local database.
      */
     public LocalDbHandlerForAccount(Context context, SQLiteDatabase.CursorFactory factory,
-                                    int dbVersion) {
+            int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
@@ -57,7 +55,7 @@ public final class LocalDbHandlerForAccount extends SQLiteOpenHelper implements 
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db         database to look in
+     * @param db database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */

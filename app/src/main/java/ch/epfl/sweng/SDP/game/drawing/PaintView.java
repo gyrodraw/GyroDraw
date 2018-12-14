@@ -1,8 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,15 +11,19 @@ import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-import java.util.LinkedList;
-import java.util.List;
+
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 
 /**
  * Class representing the view used for drawing.
@@ -361,9 +362,10 @@ public class PaintView extends View {
             drawEnd();
         }
         canDraw = false;
+
         // Use userId as the name for the image
         String imageName = Account.getInstance(context).getUserId() + ".jpg";
-        StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);
-        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageRef);
+
+        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageName);
     }
 }

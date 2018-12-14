@@ -20,7 +20,7 @@ public final class ConnectivityWrapper {
     private static NetworkStateReceiver networkStateReceiver = null;
 
     private ConnectivityWrapper() {
-        if(networkStateReceiver != null) {
+        if (networkStateReceiver != null) {
             throw new IllegalStateException("NetworkStateReceiver already instantiated");
         }
     }
@@ -54,7 +54,7 @@ public final class ConnectivityWrapper {
      * @param context Context of the activity
      */
     public static void unregisterNetworkReceiver(Context context) {
-        if(networkStateReceiver != null) {
+        if (networkStateReceiver != null) {
             context.unregisterReceiver(networkStateReceiver);
             networkStateReceiver = null;
         }
@@ -87,12 +87,13 @@ public final class ConnectivityWrapper {
 
     /**
      * Test method that allows to directly call the onReceive method with the given parameters.
+     *
      * @param context Context of the activity
      * @param intent Connectivity intent
      */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static void callOnReceiveNetwork(final Context context, final Intent intent) {
-        for(NetworkStateReceiverListener listener : networkStateReceiver.getListeners()) {
+        for (NetworkStateReceiverListener listener : networkStateReceiver.getListeners()) {
             networkStateReceiver.removeListener(listener);
         }
 

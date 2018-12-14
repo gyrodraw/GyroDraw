@@ -11,18 +11,18 @@ import ch.epfl.sweng.SDP.auth.Account;
 
 /**
  * Class that implements the interface for our network listener. It defines the methods
- * to be called when internet connection changes.
+ * to be called when the internet connection changes.
  */
-public class NetworkStatusHandler implements NetworkStateReceiverListener {
+public final class NetworkStatusHandler implements NetworkStateReceiverListener {
 
-    private Dialog disconnectedDialog;
-    private Context context;
+    private final Dialog disconnectedDialog;
+    private final Context context;
 
     /**
      * Initialize the dialog that pops up when disconnected.
      * @param context Context of the activity
      */
-    public NetworkStatusHandler(final Context context) {
+    NetworkStatusHandler(final Context context) {
         this.context = context;
         disconnectedDialog = new Dialog(this.context);
         disconnectedDialog.setCanceledOnTouchOutside(false);

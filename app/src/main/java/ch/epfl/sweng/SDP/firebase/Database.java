@@ -217,18 +217,39 @@ public final class Database {
                 .addValueEventListener(valueEventListener);
     }
 
+    /**
+     * Gets an attribute from a given room in the database.
+     *
+     * @param roomId                id of the room to get the attribute from
+     * @param attribute             attribute to get
+     * @param valueEventListener    listener to run on completion
+     */
     public static void getRoomAttribute(String roomId, RoomAttributes attribute,
                                         ValueEventListener valueEventListener) {
         Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
                 .addValueEventListener(valueEventListener);
     }
 
+    /**
+     * Modifies the value associated to a given username in a given attribute of a given room.
+     *
+     * @param roomId    id of the room where the value will be changed
+     * @param username  of the user whose value will change
+     * @param attribute of room where to search the user in
+     * @param newValue  associated to the user
+     */
     public static void setValueToUserInRoomAttribute(String roomId, String username,
                                                      RoomAttributes attribute, Object newValue) {
         Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute), username))
                 .setValue(newValue);
     }
 
+    /**
+     * Removes a user from a given room.
+     *
+     * @param roomId    id of the room to modify
+     * @param account   user that should be deleted
+     */
     public static void removeUserFromRoom(String roomId, Account account) {
         Database.getReference(constructRoomsPath(roomId,
                 attributeToPath(USERS), account.getUserId()))
@@ -257,12 +278,18 @@ public final class Database {
                 .addValueEventListener(valueEventListener);
     }
 
+    /**
+     * Removes a listener from an attribute of a given room.
+     */
     public static void removeListenerFromRoomAttribute(String roomId, RoomAttributes attribute,
                                                        ValueEventListener valueEventListener) {
         Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
                 .removeEventListener(valueEventListener);
     }
 
+    /**
+     * Returns the DatabaseReference of an attribute in a given room.
+     */
     public static DatabaseReference getRoomAttributeReference(String roomId, RoomAttributes attribute) {
         return Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)));
     }
@@ -306,14 +333,23 @@ public final class Database {
         };
     }
 
+    /**
+     * Constructs a path with users at the root.
+     */
     private static String constructUsersPath(String... args) {
         return constructPath(USERS_TAG, args);
     }
 
+    /**
+     * Constructs a path with rooms at the root.
+     */
     private static String constructRoomsPath(String... args) {
         return constructPath(ROOMS_TAG, args);
     }
 
+    /**
+     * Constructs a path from a series of string arguments.
+     */
     private static String constructPath(String base, String... args) {
         StringBuilder builder = new StringBuilder(base);
 

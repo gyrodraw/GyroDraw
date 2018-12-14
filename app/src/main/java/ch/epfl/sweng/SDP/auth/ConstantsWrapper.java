@@ -3,7 +3,7 @@ package ch.epfl.sweng.SDP.auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 
 /**
  * Wrapper class useful for testing.
@@ -11,7 +11,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 public class ConstantsWrapper {
 
     /**
-     * Defines wrapper for testing interaction with Database.
+     * Defines wrapper for testing interaction with FbDatabase.
      */
     public ConstantsWrapper() {
         // This constructor does nothing.
@@ -24,7 +24,7 @@ public class ConstantsWrapper {
      * @return the desired reference
      */
     public DatabaseReference getReference(String path) {
-        return Database.getReference(path);
+        return FbDatabase.getReference(path);
     }
 
     /**

@@ -29,14 +29,13 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
  */
-public final class Database {
+public final class FbDatabase {
 
+    private static final DatabaseReference USERS_REFERENCE = getReference("users");
     private static final String USERS_TAG = "users";
-    private static final DatabaseReference USERS_REFERENCE =
-            Database.getReference(USERS_TAG);
     private static final String ROOMS_TAG = "realRooms";
 
-    private Database() {
+    private FbDatabase() {
     }
 
     /**
@@ -82,7 +81,7 @@ public final class Database {
      */
     public static void getAccountAttribute(String userId, AccountAttributes attribute,
                                            ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -96,7 +95,7 @@ public final class Database {
      */
     public static void setAccountAttribute(String userId, AccountAttributes attribute, Object newValue,
                                            DatabaseReference.CompletionListener completionListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .setValue(newValue, completionListener);
     }
 
@@ -154,7 +153,7 @@ public final class Database {
      * @param valueEventListener action that should be taken after retrieving the friends
      */
     public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS)))
+        getReference(constructUsersPath(userId, attributeToPath(FRIENDS)))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -164,8 +163,8 @@ public final class Database {
      * @param valueEventListener how to handle response
      */
     public static void getFriend(String userId, String friendId,
-                                 ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+            ValueEventListener valueEventListener) {
+        getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -177,7 +176,7 @@ public final class Database {
      * @param newValue new status of friendship
      */
     public static void setFriendValue(String userId, String friendId, int newValue) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .setValue(newValue, createCompletionListener());
     }
 
@@ -188,7 +187,7 @@ public final class Database {
      * @param friendId id of friend to be removed
      */
     public static void removeFriend(String userId, String friendId) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .removeValue(createCompletionListener());
     }
 
@@ -199,7 +198,7 @@ public final class Database {
      * @param item   item that will be inserted
      */
     public static void setShopItemValue(String userId, ShopItem item) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(BOUGHT_ITEMS),
+        getReference(constructUsersPath(userId, attributeToPath(BOUGHT_ITEMS),
                 item.getColorItem().toString()))
                 .setValue(item.getPriceItem(), createCompletionListener());
     }
@@ -213,7 +212,7 @@ public final class Database {
      */
     public static void setListenerToAccountAttribute(String userId, AccountAttributes attribute,
                                                      ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .addValueEventListener(valueEventListener);
     }
 
@@ -226,7 +225,7 @@ public final class Database {
      */
     public static void getRoomAttribute(String roomId, RoomAttributes attribute,
                                         ValueEventListener valueEventListener) {
-        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+        getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
                 .addValueEventListener(valueEventListener);
     }
 
@@ -240,7 +239,7 @@ public final class Database {
      */
     public static void setValueToUserInRoomAttribute(String roomId, String username,
                                                      RoomAttributes attribute, Object newValue) {
-        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute), username))
+        getReference(constructRoomsPath(roomId, attributeToPath(attribute), username))
                 .setValue(newValue);
     }
 
@@ -251,16 +250,16 @@ public final class Database {
      * @param account   user that should be deleted
      */
     public static void removeUserFromRoom(String roomId, Account account) {
-        Database.getReference(constructRoomsPath(roomId,
+        getReference(constructRoomsPath(roomId,
                 attributeToPath(USERS), account.getUserId()))
                 .removeValue();
-        Database.getReference(constructRoomsPath(roomId,
+        getReference(constructRoomsPath(roomId,
                 attributeToPath(RANKING), account.getUsername()))
                 .removeValue();
-        Database.getReference(constructRoomsPath(roomId,
+        getReference(constructRoomsPath(roomId,
                 attributeToPath(FINISHED), account.getUsername()))
                 .removeValue();
-        Database.getReference(constructRoomsPath(roomId,
+        getReference(constructRoomsPath(roomId,
                 attributeToPath(UPLOAD_DRAWING), account.getUsername()))
                 .removeValue();
     }
@@ -274,7 +273,7 @@ public final class Database {
      */
     public static void setListenerToRoomAttribute(String roomId, RoomAttributes attribute,
                                                   ValueEventListener valueEventListener) {
-        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+        getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
                 .addValueEventListener(valueEventListener);
     }
 
@@ -283,7 +282,7 @@ public final class Database {
      */
     public static void removeListenerFromRoomAttribute(String roomId, RoomAttributes attribute,
                                                        ValueEventListener valueEventListener) {
-        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+        getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
                 .removeEventListener(valueEventListener);
     }
 
@@ -291,7 +290,7 @@ public final class Database {
      * Returns the DatabaseReference of an attribute in a given room.
      */
     public static DatabaseReference getRoomAttributeReference(String roomId, RoomAttributes attribute) {
-        return Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)));
+        return getReference(constructRoomsPath(roomId, attributeToPath(attribute)));
     }
 
     /**
@@ -300,7 +299,7 @@ public final class Database {
      * @param userId id of user whose online value will be set to offline upon disconnection
      */
     public static void changeToOfflineOnDisconnect(String userId) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(STATUS)))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(STATUS)))
                 .onDisconnect()
                 .setValue(OFFLINE.ordinal());
     }
@@ -354,7 +353,7 @@ public final class Database {
         StringBuilder builder = new StringBuilder(base);
 
         for (String arg : args) {
-            builder.append("." + arg);
+            builder.append(".").append(arg);
         }
 
         return builder.toString();

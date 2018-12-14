@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -33,7 +33,7 @@ import static android.support.test.internal.runner.junit4.statement.UiThreadStat
 public class ShopActivityTest {
 
     private static final String USER_ID = "no_user";
-    private static DatabaseReference usersRef = Database.getReference("users."
+    private static DatabaseReference usersRef = FbDatabase.getReference("users."
             + USER_ID + ".boughtItems");
 
     @Rule
@@ -65,7 +65,7 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
-        Database.getReference("users.123456789.boughtItems.blue").removeValue();
+        FbDatabase.getReference("users.123456789.boughtItems.blue").removeValue();
         SystemClock.sleep(2000);
         setStarsAndRefresh();
 

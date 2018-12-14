@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
@@ -56,7 +56,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         final String username = usernameInput.getText().toString().toUpperCase();
 
         if (!username.isEmpty()) {
-            Database.getUserByUsername(username, new ValueEventListener() {
+            FbDatabase.getUserByUsername(username, new ValueEventListener() {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

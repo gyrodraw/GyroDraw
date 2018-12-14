@@ -10,10 +10,10 @@ import com.google.firebase.database.ValueEventListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
-import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,7 +48,7 @@ public class OnlineStatusTest {
 
 
     private void assertOnlineStatus(final int status) {
-        Database.getAccountAttribute(USER_ID, STATUS,
+        FbDatabase.getAccountAttribute(USER_ID, STATUS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -21,7 +21,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -154,8 +154,8 @@ public class VotingPageActivity extends NoBackPressActivity {
         setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference
-        rankingRef = Database.getRoomAttributeReference(roomID, RANKING);
-        Database.setListenerToRoomAttribute(roomID, RANKING,
+        rankingRef = FbDatabase.getRoomAttributeReference(roomID, RANKING);
+        FbDatabase.setListenerToRoomAttribute(roomID, RANKING,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -172,10 +172,10 @@ public class VotingPageActivity extends NoBackPressActivity {
                     }
                 });
 
-        Database.setListenerToRoomAttribute(roomID, STATE, listenerState);
-        Database.setListenerToRoomAttribute(roomID, TIMER, listenerCounter);
+        FbDatabase.setListenerToRoomAttribute(roomID, STATE, listenerState);
+        FbDatabase.setListenerToRoomAttribute(roomID, TIMER, listenerCounter);
 
-        Database.getRoomAttribute(roomID, USERS,
+        FbDatabase.getRoomAttribute(roomID, USERS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -343,7 +343,7 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     // Retrieve the drawings and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage() {
-        Database.getRoomAttribute(roomID, USERS,
+        FbDatabase.getRoomAttribute(roomID, USERS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -480,8 +480,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     }
 
     private void removeAllListeners() {
-        Database.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
-        Database.removeListenerFromRoomAttribute(roomID, TIMER, listenerCounter);
+        FbDatabase.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
+        FbDatabase.removeListenerFromRoomAttribute(roomID, TIMER, listenerCounter);
     }
 
     /**

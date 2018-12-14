@@ -22,7 +22,7 @@ import java.util.List;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
 import static android.view.View.VISIBLE;
@@ -110,32 +110,32 @@ public class LoginActivity extends NoBackPressActivity {
             startActivity(intent);
             finish();
         } else {
-            Database.getUserByEmail(email, new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        // User already has an account on Firebase
-                        Log.d(TAG, "User already has an account on Firebase");
+            FbDatabase.getUserByEmail(email, new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                // User already has an account on Firebase
+                                Log.d(TAG, "User already has an account on Firebase");
 
-                        cloneAccountFromFirebase(snapshot);
+                                cloneAccountFromFirebase(snapshot);
 
-                        handleUserStatus(errorMessage);
-                    } else {
-                        // User signed in but not did not create an account
-                        Log.d(TAG, "User signed in but not did not create an account");
-                        Intent intent = new Intent(getApplicationContext(),
-                                AccountCreationActivity.class);
-                        intent.putExtra(EMAIL, email);
-                        startActivity(intent);
-                        finish();
-                    }
-                }
+                                handleUserStatus(errorMessage);
+                            } else {
+                                // User signed in but not did not create an account
+                                Log.d(TAG, "User signed in but not did not create an account");
+                                Intent intent = new Intent(getApplicationContext(),
+                                        AccountCreationActivity.class);
+                                intent.putExtra(EMAIL, email);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    throw databaseError.toException();
-                }
-            });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            throw databaseError.toException();
+                        }
+                    });
         }
     }
 

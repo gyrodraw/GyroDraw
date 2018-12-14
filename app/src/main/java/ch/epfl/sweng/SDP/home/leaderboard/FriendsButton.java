@@ -16,7 +16,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 
-import static ch.epfl.sweng.SDP.firebase.Database.getFriend;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getFriend;
 
 /**
  * Button to show if a user is a friend of current user and to manage friends requests.

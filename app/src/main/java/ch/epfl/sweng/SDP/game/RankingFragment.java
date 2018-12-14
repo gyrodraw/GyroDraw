@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -27,8 +27,7 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.battlelog.GameResult;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.RankingUtils;
@@ -100,7 +99,7 @@ public class RankingFragment extends ListFragment {
     }
 
     private void retrieveFinalRanking() {
-        Database.getRoomAttribute(roomId, RANKING,
+        FbDatabase.getRoomAttribute(roomId, RANKING,
                 new ValueEventListener() {
 
                     @Override
@@ -174,7 +173,7 @@ public class RankingFragment extends ListFragment {
     }
 
     private void setFinishedCollectingRanking() {
-        Database.setValueToUserInRoomAttribute(roomId, account.getUsername(), FINISHED, 1);
+        FbDatabase.setValueToUserInRoomAttribute(roomId, account.getUsername(), FINISHED, 1);
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

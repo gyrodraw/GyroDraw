@@ -17,9 +17,14 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.utils.TestUsers;
 
-import static ch.epfl.sweng.SDP.firebase.Database.getAllFriends;
-import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
-import static ch.epfl.sweng.SDP.firebase.Database.getUsers;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USER_ID;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
 
 /**
  * Helper class to manage and display data from Firebase.
@@ -111,7 +116,7 @@ class Leaderboard {
                 allPlayers.clear();
                 wantedPlayers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    convertSnapshotToPlayerAndAddToList(snapshot, allPlayers);
+                    Player.convertSnapshotToPlayerAndAddToList(context, snapshot, allPlayers);
                 }
                 update("");
             }
@@ -159,7 +164,7 @@ class Leaderboard {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    convertSnapshotToPlayerAndAddToList(dataSnapshot, allFriends);
+                    Player.convertSnapshotToPlayerAndAddToList(context, dataSnapshot, allFriends);
                 }
             }
 
@@ -168,32 +173,6 @@ class Leaderboard {
                 Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
             }
         });
-    }
-
-    /**
-     * Checks if the received player is not the test-user and if all values are available.
-     * Then adds the player to allPlayers.
-     *
-     * @param snapshot to convert
-     */
-    private void convertSnapshotToPlayerAndAddToList(DataSnapshot snapshot,
-                                                     LinkedList<Player> players) {
-        String userId = snapshot.child(USERID_TAG).getValue(String.class);
-        String username = snapshot.child(USERNAME_TAG).getValue(String.class);
-        Long trophies = snapshot.child(TROPHIES_TAG).getValue(Long.class);
-        String league = snapshot.child(LEAGUE_TAG).getValue(String.class);
-        if (!TestUsers.isTestUser(snapshot.getKey())
-                && userId != null
-                && username != null
-                && trophies != null
-                && league != null) {
-            Player temp = new Player(context, userId, username, trophies, league,
-                    username.equals(
-                            Account.getInstance(context)
-                                    .getUsername()));
-
-            players.add(temp);
-        }
     }
 
     /**

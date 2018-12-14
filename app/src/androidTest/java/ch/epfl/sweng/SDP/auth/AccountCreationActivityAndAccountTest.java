@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -199,7 +199,7 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     private void friendsTestHelper(int state) {
-        Database.setFriendValue(USER_ID, TEST_FRIEND, state);
+        FbDatabase.setFriendValue(USER_ID, TEST_FRIEND, state);
         setListenerAndAssertToFirebaseForFriendsTest(true,
                 USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);
@@ -418,7 +418,7 @@ public class AccountCreationActivityAndAccountTest {
             }
         };
 
-        Database.getReference(path)
+        FbDatabase.getReference(path)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 

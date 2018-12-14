@@ -26,7 +26,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItemsActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
@@ -108,10 +108,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
                     case CHOOSE_WORDS_TIMER_START:
                         findViewById(R.id.waitingTime).setVisibility(View.VISIBLE);
                         findViewById(R.id.leaveButton).setVisibility(View.GONE);
-                        Database.setListenerToRoomAttribute(roomID, TIMER, listenerTimer);
+                        FbDatabase.setListenerToRoomAttribute(roomID, TIMER, listenerTimer);
                         break;
                     case START_DRAWING_ACTIVITY:
-                        Database.removeListenerFromRoomAttribute(roomID, TIMER, listenerTimer);
+                        FbDatabase.removeListenerFromRoomAttribute(roomID, TIMER, listenerTimer);
                         launchDrawingActivity(gameMode);
                         break;
                     default:
@@ -205,12 +205,12 @@ public class WaitingPageActivity extends NoBackPressActivity {
             GlideUtils.startBackgroundAnimation(this);
         }
 
-        word1Ref = Database.getRoomAttributeReference(roomID, WORDS).child(word1);
-        word2Ref = Database.getRoomAttributeReference(roomID, WORDS).child(word2);
+        word1Ref = FbDatabase.getRoomAttributeReference(roomID, WORDS).child(word1);
+        word2Ref = FbDatabase.getRoomAttributeReference(roomID, WORDS).child(word2);
 
-        Database.setListenerToRoomAttribute(roomID, STATE, listenerState);
+        FbDatabase.setListenerToRoomAttribute(roomID, STATE, listenerState);
 
-        Database.setListenerToRoomAttribute(roomID, USERS, listenerCountUsers);
+        FbDatabase.setListenerToRoomAttribute(roomID, USERS, listenerCountUsers);
 
         initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
                 WordNumber.ONE);
@@ -360,12 +360,12 @@ public class WaitingPageActivity extends NoBackPressActivity {
 
     private void removeAllListeners() {
         try {
-            Database.removeListenerFromRoomAttribute(roomID, TIMER, listenerTimer);
+            FbDatabase.removeListenerFromRoomAttribute(roomID, TIMER, listenerTimer);
         } catch (NullPointerException e) {
             Log.e(TAG, "Timer listener not initialized");
         }
 
-        Database.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
+        FbDatabase.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
         word1Ref.removeEventListener(listenerWord1);
         word2Ref.removeEventListener(listenerWord2);
     }
@@ -386,8 +386,8 @@ public class WaitingPageActivity extends NoBackPressActivity {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
-                Database.getRoomAttributeReference(roomID, WORDS).child(wordVoted);
-                DatabaseReference wordRef = Database.getRoomAttributeReference(roomID, WORDS)
+                FbDatabase.getRoomAttributeReference(roomID, WORDS).child(wordVoted);
+                DatabaseReference wordRef = FbDatabase.getRoomAttributeReference(roomID, WORDS)
                         .child(wordVoted);
                 removeVote(wordRef);
             }

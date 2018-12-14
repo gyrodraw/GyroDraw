@@ -1,21 +1,9 @@
 package ch.epfl.sweng.SDP.game;
 
-import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
-import ch.epfl.sweng.SDP.NoBackPressActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.firebase.RoomAttributes;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
-import ch.epfl.sweng.SDP.utils.GlideUtils;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +13,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import ch.epfl.sweng.SDP.NoBackPressActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.RoomAttributes;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
+import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
+
+import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
 
 /**
  * Class encapsulating methods necessary for communicating with the backend before showing to the
@@ -151,7 +151,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                                 .leaveRoom(roomID);
                         finish();
                     } else {
-                        wordsVotesRef = Database.getRoomAttributeReference(roomID,
+                        wordsVotesRef = FbDatabase.getRoomAttributeReference(roomID,
                                 RoomAttributes.WORDS);
                         wordsVotesRef.addValueEventListener(listenerWords);
                         isRoomReady.setBoo(true);

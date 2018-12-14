@@ -245,7 +245,7 @@ public final class Database {
         StringBuilder builder = new StringBuilder(USERS_TAG);
 
         for (String arg : args) {
-            builder.append("." + arg);
+            builder.append(".").append(arg);
         }
 
         return builder.toString();

@@ -73,7 +73,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
-    private String roomID = "undefined";
+    private String roomId = "undefined";
 
     @VisibleForTesting
     protected final ValueEventListener listenerState = new ValueEventListener() {
@@ -88,7 +88,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                         retrieveDrawingsFromDatabaseStorage();
                         break;
                     case END_VOTING_ACTIVITY:
-                        ConnectivityWrapper.setOnlineStatusInGame(roomID,
+                        ConnectivityWrapper.setOnlineStatusInGame(roomId,
                                 Account.getInstance(getApplicationContext()).getUsername());
                         setAnimationWaitingBackground();
                         break;
@@ -138,7 +138,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         ConnectivityWrapper.registerNetworkReceiver(this);
 
         Intent intent = getIntent();
-        roomID = intent.getStringExtra(ROOM_ID);
+        roomId = intent.getStringExtra(ROOM_ID);
 
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
@@ -153,8 +153,8 @@ public class VotingPageActivity extends NoBackPressActivity {
         setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference
-        rankingRef = FbDatabase.getRoomAttributeReference(roomID, RANKING);
-        FbDatabase.setListenerToRoomAttribute(roomID, RANKING,
+        rankingRef = FbDatabase.getRoomAttributeReference(roomId, RANKING);
+        FbDatabase.setListenerToRoomAttribute(roomId, RANKING,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -171,10 +171,10 @@ public class VotingPageActivity extends NoBackPressActivity {
                     }
                 });
 
-        FbDatabase.setListenerToRoomAttribute(roomID, STATE, listenerState);
-        FbDatabase.setListenerToRoomAttribute(roomID, TIMER, listenerCounter);
+        FbDatabase.setListenerToRoomAttribute(roomId, STATE, listenerState);
+        FbDatabase.setListenerToRoomAttribute(roomId, TIMER, listenerCounter);
 
-        FbDatabase.getRoomAttribute(roomID, USERS,
+        FbDatabase.getRoomAttribute(roomId, USERS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -218,7 +218,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                     }
                 });
 
-        ConnectivityWrapper.setOnlineStatusInGame(roomID, Account.getInstance(this).getUsername());
+        ConnectivityWrapper.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());
     }
 
     @Override
@@ -247,8 +247,8 @@ public class VotingPageActivity extends NoBackPressActivity {
 
         launchActivity(HomeActivity.class);
 
-        if (roomID != null && ConnectivityWrapper.isOnline(this)) {
-            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+        if (roomId != null && ConnectivityWrapper.isOnline(this)) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
         }
 
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -342,7 +342,7 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     // Retrieve the drawings and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage() {
-        FbDatabase.getRoomAttribute(roomID, USERS,
+        FbDatabase.getRoomAttribute(roomId, USERS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -459,7 +459,7 @@ public class VotingPageActivity extends NoBackPressActivity {
 
         // Create and show the final ranking in the new fragment
         RankingFragment fragment = new RankingFragment();
-        fragment.putExtra(roomID, drawings, playersNames);
+        fragment.putExtra(roomId, drawings, playersNames);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)
@@ -479,8 +479,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     }
 
     private void removeAllListeners() {
-        FbDatabase.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
-        FbDatabase.removeListenerFromRoomAttribute(roomID, TIMER, listenerCounter);
+        FbDatabase.removeListenerFromRoomAttribute(roomId, STATE, listenerState);
+        FbDatabase.removeListenerFromRoomAttribute(roomId, TIMER, listenerCounter);
     }
 
     /**

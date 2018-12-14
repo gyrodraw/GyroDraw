@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +13,7 @@
         android:layout_marginEnd="10dp"
         android:gravity="center"
         android:shadowColor="@android:color/black"
-        android:text="Final Ranking"
+        android:text="@string/final_ranking"
         android:textColor="@color/colorLightGrey"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +24,9 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toTopOf="@id/homeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,23 +50,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="saveImage"
-        android:text="save"
-        tools:text="save" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/homeButton"
+        app:layout_constraintEnd_toEndOf="@+id/homeButton"
+        app:layout_constraintStart_toStartOf="@+id/homeButton">
 
-    <Button
-        android:id="@+id/share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="156dp"
-        android:onClick="shareImage"
-        android:text="@string/com_facebook_share_button_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:onClick="saveImage"
+            app:srcCompat="@drawable/save_button" />
+
+        <ImageView
+            android:id="@+id/shareButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:onClick="shareImage"
+            app:srcCompat="@drawable/share_button" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

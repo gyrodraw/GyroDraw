@@ -137,7 +137,7 @@ public class VotingPageActivityTest {
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 2);
-        onView(withId(R.id.save)).perform(click());
+        onView(withId(R.id.saveButton)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
     }
 

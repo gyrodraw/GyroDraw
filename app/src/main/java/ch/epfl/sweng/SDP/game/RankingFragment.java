@@ -211,12 +211,12 @@ public class RankingFragment extends ListFragment {
 
         private void setHighlightColors(View convertView) {
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);
-            int lightGreyColor = getResources().getColor(R.color.colorLightGrey);
+            int greyColor = getResources().getColor(R.color.colorGrey);
 
             ((TextView) convertView.findViewById(R.id.playerName)).setTextColor(yellowColor);
             ((TextView) convertView.findViewById(R.id.trophiesWon)).setTextColor(yellowColor);
             ((TextView) convertView.findViewById(R.id.starsWon)).setTextColor(yellowColor);
-            convertView.setBackgroundColor(lightGreyColor);
+            convertView.setBackgroundColor(greyColor);
         }
 
         private void setTypeFace(Typeface typeface, View... views) {

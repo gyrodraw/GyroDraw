@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP.utils;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
-import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static java.lang.String.format;
@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.is;
 
 import android.support.annotation.NonNull;
 import android.support.test.runner.AndroidJUnit4;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -46,7 +46,7 @@ public class OnlineStatusTest {
 
 
     private void assertOnlineStatus(final int status) {
-        Database.getAttribute(USER_ID, STATUS,
+        FbDatabase.getAttribute(USER_ID, STATUS,
                 new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

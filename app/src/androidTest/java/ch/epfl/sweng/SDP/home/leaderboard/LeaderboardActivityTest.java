@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
@@ -151,7 +151,7 @@ public class LeaderboardActivityTest {
     }
 
     private void friendsTest(int state, int expected) {
-        Database.setFriendValue(USER_ID, "HFNDgmFKQPX92nmfmi2qAUfTzxJ3", state);
+        FbDatabase.setFriendValue(USER_ID, "HFNDgmFKQPX92nmfmi2qAUfTzxJ3", state);
 
         SystemClock.sleep(2000);
         activityRule.getActivity().initLeaderboard();

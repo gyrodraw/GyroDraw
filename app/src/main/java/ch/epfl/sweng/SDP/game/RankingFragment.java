@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,8 +28,7 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.battlelog.GameResult;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 import ch.epfl.sweng.SDP.utils.RankingUtils;
@@ -68,8 +67,8 @@ public class RankingFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
-        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
+        rankingRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
+        finishedRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
 
         ((TextView) getActivity().findViewById(R.id.rankingTitle))
                 .setTypeface(TypefaceLibrary.getTypeOptimus());

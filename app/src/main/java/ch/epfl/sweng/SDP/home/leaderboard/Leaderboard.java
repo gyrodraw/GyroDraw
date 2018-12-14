@@ -6,7 +6,6 @@ import android.util.Log;
 import android.widget.LinearLayout;
 
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.utils.TestUsers;
 
@@ -18,9 +17,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-import static ch.epfl.sweng.SDP.firebase.Database.getAllFriends;
-import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
-import static ch.epfl.sweng.SDP.firebase.Database.getUsers;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
 
 /**
  * Helper class to manage and display data from Firebase.

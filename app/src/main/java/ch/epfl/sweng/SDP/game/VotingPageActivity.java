@@ -16,7 +16,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -151,7 +151,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference
-        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        rankingRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
         rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -168,13 +168,13 @@ public class VotingPageActivity extends NoBackPressActivity {
             }
         });
 
-        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+        stateRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
+        timerRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
         timerRef.addValueEventListener(listenerCounter);
 
-        usersRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
+        usersRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

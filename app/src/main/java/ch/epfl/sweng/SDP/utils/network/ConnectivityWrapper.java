@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.VisibleForTesting;
 
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
@@ -68,7 +68,7 @@ public final class ConnectivityWrapper {
      * @param username Username of the player
      */
     public static void setOnlineStatusInGame(String roomID, String username) {
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
+        FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
                 + username).setValue(1);
     }
 

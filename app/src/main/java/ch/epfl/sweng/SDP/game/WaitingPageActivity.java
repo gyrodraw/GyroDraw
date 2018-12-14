@@ -21,7 +21,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItemsActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
@@ -108,7 +108,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
                         findViewById(R.id.waitingTime).setVisibility(View.VISIBLE);
                         findViewById(R.id.leaveButton).setVisibility(View.GONE);
 
-                        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "."
+                        timerRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "."
                                 + roomID + ".timer.observableTime");
                         timerRef.addValueEventListener(listenerTimer);
                         break;
@@ -209,15 +209,15 @@ public class WaitingPageActivity extends NoBackPressActivity {
             GlideUtils.startBackgroundAnimation(this);
         }
 
-        DatabaseReference wordsVotesRef = Database.getReference(
+        DatabaseReference wordsVotesRef = FbDatabase.getReference(
                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
         word1Ref = wordsVotesRef.child(word1);
         word2Ref = wordsVotesRef.child(word2);
 
-        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
+        stateRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
         stateRef.addValueEventListener(listenerState);
 
-        DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." +
+        DatabaseReference usersCountRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." +
                 roomID + ".users");
         usersCountRef.addValueEventListener(listenerCountUsers);
 
@@ -411,7 +411,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
-                DatabaseReference wordRef = Database.getReference(TOP_ROOM_NODE_ID + "."
+                DatabaseReference wordRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "."
                         + roomID + ".words." + wordVoted);
                 removeVote(wordRef);
             }

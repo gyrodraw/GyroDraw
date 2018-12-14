@@ -9,7 +9,7 @@ import android.support.annotation.VisibleForTesting;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
@@ -150,7 +150,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                                 .leaveRoom(roomID);
                         finish();
                     } else {
-                        wordsVotesRef = Database.getReference(
+                        wordsVotesRef = FbDatabase.getReference(
                                 TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
                         wordsVotesRef.addValueEventListener(listenerWords);
                         isRoomReady.setBoo(true);

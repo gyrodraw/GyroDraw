@@ -14,7 +14,7 @@ import android.util.Log;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -77,7 +77,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                                 new OnCompleteListener<TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<TaskSnapshot> task) {
-                                        Database.getReference(
+                                        FbDatabase.getReference(
                                                 format("%s.%s.uploadDrawing.%s", TOP_ROOM_NODE_ID,
                                                         roomId,
                                                         Account.getInstance(getApplicationContext())
@@ -130,9 +130,9 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
 
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
-        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
+        timerRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
-        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
+        stateRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
 
         ConnectivityWrapper.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());

@@ -3,7 +3,7 @@ package ch.epfl.sweng.SDP.utils;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import ch.epfl.sweng.SDP.firebase.AccountAttributes;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import com.google.firebase.database.DatabaseReference;
 
 /**
@@ -46,7 +46,7 @@ public enum OnlineStatus {
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
-        Database.setAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
+        FbDatabase.setAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
     }
 
     /**
@@ -57,6 +57,6 @@ public enum OnlineStatus {
      */
     public static void changeToOfflineOnDisconnect(String userId) {
         checkPrecondition(userId != null, "userId is null");
-        Database.changeToOfflineOnDisconnect(userId);
+        FbDatabase.changeToOfflineOnDisconnect(userId);
     }
 }

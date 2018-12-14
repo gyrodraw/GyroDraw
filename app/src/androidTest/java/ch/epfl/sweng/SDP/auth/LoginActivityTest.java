@@ -2,7 +2,7 @@ package ch.epfl.sweng.SDP.auth;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
 import static org.hamcrest.CoreMatchers.equalTo;

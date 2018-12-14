@@ -3,6 +3,7 @@ package ch.epfl.sweng.SDP.auth;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -13,7 +14,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.leagues.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -25,7 +25,7 @@ import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MATCHES_WON;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MAX_TROPHIES;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STARS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
-import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
@@ -243,7 +243,7 @@ public class Account {
      * Registers this account in Firebase and in the local database.
      */
     public void registerAccount() throws DatabaseException {
-        Database.saveAccount(this);
+        FbDatabase.saveAccount(this);
         localDbHandler.saveAccount(this);
     }
 
@@ -257,12 +257,12 @@ public class Account {
         int newTrophies = Math.max(0, trophies + change);
         trophies = newTrophies;
 
-        Database.setAttribute(userId, TROPHIES, trophies);
+        FbDatabase.setAttribute(userId, TROPHIES, trophies);
 
         updateCurrentLeague();
 
         if (trophies > maxTrophies) {
-            Database.setAttribute(userId, MAX_TROPHIES, trophies);
+            FbDatabase.setAttribute(userId, MAX_TROPHIES, trophies);
             maxTrophies = trophies;
         }
 
@@ -277,7 +277,7 @@ public class Account {
             }
         }
 
-        Database.setAttribute(userId, LEAGUE, currentLeague);
+        FbDatabase.setAttribute(userId, LEAGUE, currentLeague);
     }
 
     /**
@@ -288,7 +288,7 @@ public class Account {
     public void updateItemsBought(ShopItem shopItem) {
         checkPrecondition(shopItem != null, "Shop item is null");
 
-        Database.setShopItemValue(userId, shopItem);
+        FbDatabase.setShopItemValue(userId, shopItem);
 
         itemsBought.add(shopItem);
         sortItemsBought();
@@ -312,7 +312,7 @@ public class Account {
 
         stars = newStars;
 
-        Database.setAttribute(userId, STARS, stars);
+        FbDatabase.setAttribute(userId, STARS, stars);
         localDbHandler.saveAccount(instance);
     }
 
@@ -322,7 +322,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseMatchesWon() throws DatabaseException {
-        Database.setAttribute(userId, MATCHES_WON, ++matchesWon);
+        FbDatabase.setAttribute(userId, MATCHES_WON, ++matchesWon);
 
         localDbHandler.saveAccount(instance);
     }
@@ -333,7 +333,7 @@ public class Account {
      * @throws DatabaseException in case write to database fails
      */
     public void increaseTotalMatches() throws DatabaseException {
-        Database.setAttribute(userId, MATCHES_TOTAL, ++totalMatches);
+        FbDatabase.setAttribute(userId, MATCHES_TOTAL, ++totalMatches);
 
         localDbHandler.saveAccount(instance);
     }
@@ -351,7 +351,7 @@ public class Account {
 
         averageRating = (averageRating * (totalMatches - 1) + rating) / totalMatches;
 
-        Database.setAttribute(userId, AVERAGE_RATING, averageRating);
+        FbDatabase.setAttribute(userId, AVERAGE_RATING, averageRating);
         localDbHandler.saveAccount(instance);
     }
 
@@ -365,7 +365,7 @@ public class Account {
     public void addFriend(final String friendId) throws DatabaseException {
         checkPrecondition(friendId != null, "Friend's friendId is null");
 
-        Database.getFriend(userId, friendId, new ValueEventListener() {
+        FbDatabase.getFriend(userId, friendId, new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -400,10 +400,10 @@ public class Account {
         assert 0 <= stateFriend && stateFriend <= 2 : "Wrong stateUser given";
 
         // Update the user's friends' list
-        Database.setFriendValue(userId, friendId, stateUser);
+        FbDatabase.setFriendValue(userId, friendId, stateUser);
 
         // Update the sender's friends' list
-        Database.setFriendValue(friendId, userId, stateFriend);
+        FbDatabase.setFriendValue(friendId, userId, stateFriend);
     }
 
     /**
@@ -416,7 +416,7 @@ public class Account {
     public void removeFriend(final String friendId) throws DatabaseException {
         checkPrecondition(friendId != null, "Friend's id is null");
 
-        Database.removeFriend(userId, friendId);
-        Database.removeFriend(friendId, userId);
+        FbDatabase.removeFriend(userId, friendId);
+        FbDatabase.removeFriend(friendId, userId);
     }
 }

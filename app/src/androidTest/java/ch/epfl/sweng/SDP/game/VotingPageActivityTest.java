@@ -29,7 +29,7 @@ import android.widget.RatingBar;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import com.google.firebase.database.DataSnapshot;
@@ -92,7 +92,7 @@ public class VotingPageActivityTest {
     public void ratingUsingRatingBarShouldBeSaved() {
 
         // To ensure that the rating value does not get above 20
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
+        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
                 .setValue(0);
 
         short counter = mActivityRule.getActivity().getChangeDrawingCounter();
@@ -163,9 +163,9 @@ public class VotingPageActivityTest {
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
+        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
                 .setValue(USER_ID);
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
+        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
                 .setValue(0);
         SystemClock.sleep(2000);
     }

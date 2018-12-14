@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -183,7 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Clones the {@link Account}, corresponding to the user logged in, from Firebase, and stores it
      * in the local database.
      *
-     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase Database
+     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase FbDatabase
      */
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =
@@ -220,7 +220,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param errorMessage the {@link TextView} corresponding to the error message
      */
     protected void handleUserStatus(final TextView errorMessage) {
-        final DatabaseReference statusRef = Database.getReference(format("users.%s.online",
+        final DatabaseReference statusRef = FbDatabase.getReference(format("users.%s.online",
                 Account.getInstance(getApplicationContext()).getUserId()));
 
         statusRef.addValueEventListener(new ValueEventListener() {

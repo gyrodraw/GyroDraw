@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
-import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
@@ -36,10 +36,10 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
-import ch.epfl.sweng.SDP.home.battlelog.BattleLogActivity;
+import ch.epfl.sweng.SDP.home.battleLog.BattleLogActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.home.leagues.LeaguesActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
@@ -185,14 +185,14 @@ public class HomeActivity extends NoBackPressActivity {
         String userId = Account.getInstance(getApplicationContext())
                 .getUserId();
 
-        changeOnlineStatus(userId, ONLINE, Database.createCompletionListener());
+        changeOnlineStatus(userId, ONLINE, FbDatabase.createCompletionListener());
 
         // On user disconnection, update Firebase
         changeToOfflineOnDisconnect(userId);
     }
 
     private void addListenerForFriendsRequests() {
-        Database.setListenerToAttribute(Account.getInstance(this).getUserId(),
+        FbDatabase.setListenerToAttribute(Account.getInstance(this).getUserId(),
                 FRIENDS, listenerFriendsRequest);
     }
 

@@ -10,14 +10,13 @@ import android.widget.LinearLayout;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import static ch.epfl.sweng.SDP.firebase.Database.getFriend;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getFriend;
 import static java.lang.String.format;
 
 /**

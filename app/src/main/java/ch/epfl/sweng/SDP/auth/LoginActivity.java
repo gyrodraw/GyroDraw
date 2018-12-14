@@ -11,7 +11,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
@@ -107,7 +107,7 @@ public class LoginActivity extends NoBackPressActivity {
             startActivity(intent);
             finish();
         } else {
-            Database.getUserByEmail(email, new ValueEventListener() {
+            FbDatabase.getUserByEmail(email, new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {

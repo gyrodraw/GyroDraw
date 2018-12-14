@@ -17,8 +17,6 @@ import android.view.View;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
 import java.util.LinkedList;
@@ -361,9 +359,10 @@ public class PaintView extends View {
             drawEnd();
         }
         canDraw = false;
+
         // Use userId as the name for the image
         String imageName = Account.getInstance(context).getUserId() + ".jpg";
-        StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);
-        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageRef);
+
+        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageName);
     }
 }

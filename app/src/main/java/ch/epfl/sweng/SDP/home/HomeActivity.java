@@ -324,7 +324,8 @@ public class HomeActivity extends BaseActivity {
     private void listenerEventSelector(final View view, int resourceId) {
         switch (resourceId) {
             case R.id.drawButton:
-                launchOnlineGame((ImageView) view, R.drawable.draw_button, 0);
+                ((ImageView) view).setImageResource(R.drawable.draw_button);
+                launchOnlineGame(0);
                 break;
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
@@ -351,14 +352,13 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(DrawingOffline.class);
                 break;
             case R.id.mysteryButton:
-                launchOnlineGame((ImageView) view, R.drawable.home_mystery_button, 1);
+                launchOnlineGame(1);
                 break;
             default:
         }
     }
 
-    private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
-        view.setImageResource(resourceId);
+    private void launchOnlineGame(int gameMode) {
         if (CheckConnection.isOnline(this)) {
             // Prevents that the user launches two online games at the same time.
             setGameButtons(false);

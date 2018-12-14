@@ -26,25 +26,24 @@ import ch.epfl.sweng.SDP.firebase.FbStorage;
  */
 public class ImageSharer {
 
-    private static ImageSharer instance = null;
+    private static ImageSharer instance;
 
-    private Activity activity;
     private Context context;
+    private Activity activity;
 
     private ImageSharer(Activity activity) {
-        this.activity = activity;
         this.context = activity.getApplicationContext();
     }
 
     /**
      * Gets this ImageSharer instance. Use this method to initialize the singleton.
      *
-     * @param   activity activity calling this method
-     * @return  ImageSharer instance
+     * @param activity activity calling this method
+     * @return ImageSharer instance
      */
     public static ImageSharer getInstance(Activity activity) {
         if (instance == null) {
-              instance = new ImageSharer(activity);
+            instance = new ImageSharer(activity);
         }
         return instance;
     }
@@ -84,8 +83,8 @@ public class ImageSharer {
     /**
      * Shares an image to facebook app.
      *
-     * @param   image the image to share
-     * @return  true if ShareDialog was created, else false
+     * @param image the image to share
+     * @return true if ShareDialog was created, else false
      */
     @VisibleForTesting
     public boolean shareImageToFacebookApp(Bitmap image) {
@@ -114,11 +113,11 @@ public class ImageSharer {
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
         FbStorage.sendBitmapToFirebaseStorage(image, ref,
                 new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                getUrl(ref);
-            }
-        });
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        getUrl(ref);
+                    }
+                });
     }
 
     /**
@@ -147,8 +146,7 @@ public class ImageSharer {
      */
     @VisibleForTesting
     public void shareDrawingToFacebook(Uri uri) {
-        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri)
-                .build();
+        ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri).build();
         if (activity != null) {
             ShareDialog.show(activity, linkContent);
         }

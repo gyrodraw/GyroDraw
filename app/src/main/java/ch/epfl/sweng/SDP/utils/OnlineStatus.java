@@ -7,7 +7,6 @@ import ch.epfl.sweng.SDP.firebase.AccountAttributes;
 import ch.epfl.sweng.SDP.firebase.Database;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-import static java.lang.String.format;
 
 /**
  * Enum representing whether the user is online or offline.
@@ -48,7 +47,7 @@ public enum OnlineStatus {
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
-        Database.setAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
+        Database.setAccountAttribute(userId, AccountAttributes.STATUS, status.ordinal(), listener);
     }
 
     /**

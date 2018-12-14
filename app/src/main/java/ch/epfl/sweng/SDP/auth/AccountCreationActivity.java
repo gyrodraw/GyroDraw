@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -56,25 +58,25 @@ public class AccountCreationActivity extends NoBackPressActivity {
         if (!username.isEmpty()) {
             Database.getUserByUsername(username, new ValueEventListener() {
 
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                usernameTaken.setText(getString(R.string.usernameTaken));
-                            } else {
-                                Account.createAccount(getApplicationContext(),
-                                        new ConstantsWrapper(), username, userEmail);
-                                Account.getInstance(getApplicationContext()).registerAccount();
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                launchActivity(HomeActivity.class);
-                                finish();
-                            }
-                        }
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        usernameTaken.setText(getString(R.string.usernameTaken));
+                    } else {
+                        Account.createAccount(getApplicationContext(),
+                                new ConstantsWrapper(), username, userEmail);
+                        Account.getInstance(getApplicationContext()).registerAccount();
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        launchActivity(HomeActivity.class);
+                        finish();
+                    }
+                }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            throw databaseError.toException();
-                        }
-                    });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    throw databaseError.toException();
+                }
+            });
         }
     }
 }

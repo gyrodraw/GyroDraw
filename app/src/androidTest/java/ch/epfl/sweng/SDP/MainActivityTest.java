@@ -1,5 +1,29 @@
 package ch.epfl.sweng.SDP;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.os.SystemClock;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -14,26 +38,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
-
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.os.SystemClock;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.TextView;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import com.google.firebase.database.DataSnapshot;
-import java.util.HashMap;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {

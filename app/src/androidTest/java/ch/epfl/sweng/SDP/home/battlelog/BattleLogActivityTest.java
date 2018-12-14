@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.battlelog.BattleLogActivity;
-import ch.epfl.sweng.SDP.home.battlelog.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 

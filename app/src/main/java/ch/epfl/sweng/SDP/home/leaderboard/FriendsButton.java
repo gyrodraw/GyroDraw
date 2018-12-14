@@ -8,17 +8,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+
 import static ch.epfl.sweng.SDP.firebase.Database.getFriend;
-import static java.lang.String.format;
 
 /**
  * Button to show if a user is a friend of current user and to manage friends requests.
@@ -97,6 +95,7 @@ class FriendsButton extends AppCompatImageView {
 
     /**
      * Sets the image depending on the friends state.
+     *
      * @param state current state of friendship
      */
     @VisibleForTesting
@@ -138,7 +137,7 @@ class FriendsButton extends AppCompatImageView {
      * Helper function for changeFriendsButtonImageOnClick.
      * Updates the friends state depending on status.
      *
-     * @param state    current state of friendship
+     * @param state current state of friendship
      */
     @VisibleForTesting
     public void setImageAndUpdateFriendsState(int state) {

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
@@ -27,7 +28,7 @@ class Player implements Comparable {
     private final boolean isCurrentUser;
 
     Player(Context context, String userId, String username, Long trophies, String league,
-                   boolean isCurrentUser) {
+           boolean isCurrentUser) {
         this.context = context;
         this.userId = userId;
         this.username = username;
@@ -63,7 +64,7 @@ class Player implements Comparable {
     /**
      * Converts this player into a LinearLayout that will be displayed on the leaderboard.
      *
-     * @param index   of the player
+     * @param index of the player
      * @return LinearLayout that will be displayed
      */
     LinearLayout toLayout(int index) {

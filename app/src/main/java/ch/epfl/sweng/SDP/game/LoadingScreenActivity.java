@@ -6,20 +6,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.RoomAttributes;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 /**
@@ -31,9 +35,6 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     public static final String WORD_1 = "word1";
     public static final String WORD_2 = "word2";
     public static final String ROOM_ID = "roomID";
-
-    private static final String WORD_CHILDREN_DB_ID = "words";
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;
@@ -150,8 +151,8 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                                 .leaveRoom(roomID);
                         finish();
                     } else {
-                        wordsVotesRef = Database.getReference(
-                                TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
+                        wordsVotesRef = Database.getRoomAttributeReference(roomID,
+                                RoomAttributes.WORDS);
                         wordsVotesRef.addValueEventListener(listenerWords);
                         isRoomReady.setBoo(true);
                     }

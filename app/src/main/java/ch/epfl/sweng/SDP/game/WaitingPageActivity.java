@@ -1,5 +1,9 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.WORDS;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_1;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
@@ -18,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -28,6 +33,7 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,8 +48,6 @@ public class WaitingPageActivity extends NoBackPressActivity {
     public static final String WINNING_WORD = "winningWord";
 
     private static final String TAG = "WaitingPageActivity";
-    private static final String WORD_CHILDREN_DB_ID = "words";
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private static boolean enableSquareAnimation = true;
 
@@ -59,9 +63,6 @@ public class WaitingPageActivity extends NoBackPressActivity {
 
     private boolean hasVoted = false;
     private boolean isWord1Voted = false;
-
-    private DatabaseReference stateRef;
-    private DatabaseReference timerRef;
 
     private DatabaseReference word1Ref;
     private int word1Votes = 0;
@@ -106,15 +107,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
                     case CHOOSE_WORDS_TIMER_START:
                         findViewById(R.id.waitingTime).setVisibility(View.VISIBLE);
                         findViewById(R.id.leaveButton).setVisibility(View.GONE);
-
-                        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "."
-                                + roomID + ".timer.observableTime");
-                        timerRef.addValueEventListener(listenerTimer);
+                        Database.setListenerToRoomAttribute(roomID, TIMER, listenerTimer);
                         break;
                     case START_DRAWING_ACTIVITY:
-                        if (timerRef != null) {
-                            timerRef.removeEventListener(listenerTimer);
-                        }
+                        Database.removeListenerFromRoomAttribute(roomID, TIMER, listenerTimer);
                         launchDrawingActivity(gameMode);
                         break;
                     default:
@@ -206,17 +202,12 @@ public class WaitingPageActivity extends NoBackPressActivity {
             GlideUtils.startBackgroundAnimation(this);
         }
 
-        DatabaseReference wordsVotesRef = Database.getReference(
-                TOP_ROOM_NODE_ID + "." + roomID + "." + WORD_CHILDREN_DB_ID);
-        word1Ref = wordsVotesRef.child(word1);
-        word2Ref = wordsVotesRef.child(word2);
+        word1Ref = Database.getRoomAttributeReference(roomID, WORDS).child(word1);
+        word2Ref = Database.getRoomAttributeReference(roomID, WORDS).child(word2);
 
-        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
-        stateRef.addValueEventListener(listenerState);
+        Database.setListenerToRoomAttribute(roomID, STATE, listenerState);
 
-        DatabaseReference usersCountRef = Database.getReference(TOP_ROOM_NODE_ID + "." +
-                roomID + ".users");
-        usersCountRef.addValueEventListener(listenerCountUsers);
+        Database.setListenerToRoomAttribute(roomID, USERS, listenerCountUsers);
 
         initRadioButton((Button) findViewById(R.id.buttonWord1), word1, word1Ref,
                 WordNumber.ONE);
@@ -245,7 +236,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     }
 
     private void initRadioButton(Button button, String childString,
-            DatabaseReference dbRef, WordNumber wordNumber) {
+                                 DatabaseReference dbRef, WordNumber wordNumber) {
         dbRef.addValueEventListener(
                 wordNumber == WordNumber.ONE ? listenerWord1 : listenerWord2);
 
@@ -258,7 +249,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
      *
      * @param word1Votes Votes for the word 1
      * @param word2Votes Votes for the word 2
-     * @param words Array containing the words
+     * @param words      Array containing the words
      * @return Returns the winning word.
      */
     static String getWinningWord(int word1Votes, int word2Votes, String[] words) {
@@ -334,23 +325,6 @@ public class WaitingPageActivity extends NoBackPressActivity {
         b2.setEnabled(false);
     }
 
-    private void removeVote(final DatabaseReference wordRef) {
-        wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer value = dataSnapshot.getValue(Integer.class);
-                if (value != null) {
-                    wordRef.setValue(--value);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
-    }
-
     /**
      * Getter of the number of votes for word 1.
      *
@@ -383,11 +357,12 @@ public class WaitingPageActivity extends NoBackPressActivity {
 
     private void removeAllListeners() {
         try {
-            timerRef.removeEventListener(listenerTimer);
+            Database.removeListenerFromRoomAttribute(roomID, TIMER, listenerTimer);
         } catch (NullPointerException e) {
             Log.e(TAG, "Timer listener not initialized");
         }
-        stateRef.removeEventListener(listenerState);
+
+        Database.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
         word1Ref.removeEventListener(listenerWord1);
         word2Ref.removeEventListener(listenerWord2);
     }
@@ -407,14 +382,32 @@ public class WaitingPageActivity extends NoBackPressActivity {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
-                DatabaseReference wordRef = Database.getReference(TOP_ROOM_NODE_ID + "."
-                        + roomID + ".words." + wordVoted);
+                Database.getRoomAttributeReference(roomID, WORDS).child(wordVoted);
+                DatabaseReference wordRef = Database.getRoomAttributeReference(roomID, WORDS)
+                        .child(wordVoted);
                 removeVote(wordRef);
             }
         }
 
         removeAllListeners();
         finish();
+    }
+
+    private void removeVote(final DatabaseReference wordRef) {
+        wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer value = dataSnapshot.getValue(Integer.class);
+                if (value != null) {
+                    wordRef.setValue(--value);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
 
     /**

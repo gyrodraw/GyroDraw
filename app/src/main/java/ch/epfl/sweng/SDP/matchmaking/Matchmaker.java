@@ -1,16 +1,17 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import static java.lang.String.format;
-
 import android.support.annotation.NonNull;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
 
 /**
  * Singleton class that represents the matchmaker.
@@ -82,16 +83,8 @@ public class Matchmaker implements MatchmakingInterface {
      * @param roomId the id of the room.
      */
     public void leaveRoom(String roomId) {
-        Database.getReference(format("realRooms.%s.users.%s", roomId, account.getUserId()))
-                .removeValue();
-
         if (!account.getUsername().isEmpty()) {
-            Database.getReference(format("realRooms.%s.ranking.%s", roomId, account.getUsername()))
-                    .removeValue();
-            Database.getReference(format("realRooms.%s.finished.%s", roomId, account.getUsername()))
-                    .removeValue();
-            Database.getReference(format("realRooms.%s.uploadDrawing.%s", roomId, account.getUsername()))
-                    .removeValue();
+            Database.removeUserFromRoom(roomId, account);
         }
     }
 }

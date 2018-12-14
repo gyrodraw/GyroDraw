@@ -1,5 +1,9 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 
 import android.content.Intent;
@@ -12,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -23,6 +28,7 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -39,14 +45,10 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     private static boolean enableAnimations = true;
     private static final int NUMBER_OF_DRAWINGS = 5;
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
 
     private final String username = Account.getInstance(this).getUsername();
 
     private DatabaseReference rankingRef;
-    private DatabaseReference stateRef;
-    private DatabaseReference timerRef;
-    private DatabaseReference usersRef;
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
@@ -143,49 +145,46 @@ public class VotingPageActivity extends NoBackPressActivity {
         timer.setTypeface(typeMuro);
 
         // Get the ranking reference
-        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".ranking");
+        rankingRef = Database.getRoomAttributeReference(roomID, RANKING);
 
-        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".state");
-        stateRef.addValueEventListener(listenerState);
+        Database.setListenerToRoomAttribute(roomID, STATE, listenerState);
+        Database.setListenerToRoomAttribute(roomID, TIMER, listenerCounter);
 
-        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".timer.observableTime");
-        timerRef.addValueEventListener(listenerCounter);
-
-        usersRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".users");
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Get the players' ids and usernames
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    drawingsIds[idsAndUsernamesCounter] = snapshot.getKey();
-                    playersNames[idsAndUsernamesCounter++] = (String) snapshot.getValue();
-                }
-
-                ratings = new int[NUMBER_OF_DRAWINGS];
-                ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+        Database.getRoomAttribute(roomID, USERS,
+                new ValueEventListener() {
                     @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating,
-                                                boolean fromUser) {
-                        ratingBar.setIsIndicator(true);
-                        ratingBar.setAlpha(0.8f);
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        // Get the players' ids and usernames
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            drawingsIds[idsAndUsernamesCounter] = snapshot.getKey();
+                            playersNames[idsAndUsernamesCounter++] = (String) snapshot.getValue();
+                        }
 
-                        // Store the rating
-                        ratings[changeDrawingCounter] = (int) rating;
+                        ratings = new int[NUMBER_OF_DRAWINGS];
+                        ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+                            @Override
+                            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                                        boolean fromUser) {
+                                ratingBar.setIsIndicator(true);
+                                ratingBar.setAlpha(0.8f);
 
-                        // Send it to the database along with the corresponding player name
-                        sendRatingToDatabase(playersNames[changeDrawingCounter]);
+                                // Store the rating
+                                ratings[changeDrawingCounter] = (int) rating;
+
+                                // Send it to the database along with the corresponding player name
+                                sendRatingToDatabase(playersNames[changeDrawingCounter]);
+                            }
+                        });
+
+                        previousRating = 0;
+                        addStarAnimationListener();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
                     }
                 });
-
-                previousRating = 0;
-                addStarAnimationListener();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
     }
 
     @Override
@@ -289,76 +288,77 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     // Retrieve the drawings and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage() {
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];
-                final long FIFTY_KB = 51200; // Maximum image size
+        Database.getRoomAttribute(roomID, USERS,
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference[] refs = new StorageReference[NUMBER_OF_DRAWINGS];
+                        final long FIFTY_KB = 51200; // Maximum image size
 
-                for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
-                    final String currentId = drawingsIds[i];
-                    if (currentId != null) {
-                        if (currentId
-                                .equals(Account.getInstance(getApplicationContext()).getUserId())) {
-                            // Get the image from the local database instead
-                            LocalDbForImages localDbHandler = new LocalDbHandlerForImages(
-                                    getApplicationContext(), null, 1);
-                            storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
-                        } else {
-                            refs[i] = storage.getReference().child(currentId + ".jpg");
+                        for (int i = 0; i < NUMBER_OF_DRAWINGS; ++i) {
+                            final String currentId = drawingsIds[i];
+                            if (currentId != null) {
+                                if (currentId
+                                        .equals(Account.getInstance(getApplicationContext()).getUserId())) {
+                                    // Get the image from the local database instead
+                                    LocalDbForImages localDbHandler = new LocalDbHandlerForImages(
+                                            getApplicationContext(), null, 1);
+                                    storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
+                                } else {
+                                    refs[i] = storage.getReference().child(currentId + ".jpg");
 
-                            // Download the image
-                            refs[i].getBytes(FIFTY_KB).addOnCompleteListener(
-                                    new OnCompleteListener<byte[]>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<byte[]> task) {
-                                            Bitmap bitmap;
-                                            if (task.isSuccessful()) {
-                                                final int OFFSET = 0;
+                                    // Download the image
+                                    refs[i].getBytes(FIFTY_KB).addOnCompleteListener(
+                                            new OnCompleteListener<byte[]>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<byte[]> task) {
+                                                    Bitmap bitmap;
+                                                    if (task.isSuccessful()) {
+                                                        final int OFFSET = 0;
 
-                                                // Convert the image downloaded as byte[] to Bitmap
-                                                bitmap = BitmapManipulator
-                                                        .decodeSampledBitmapFromByteArray(
-                                                                task.getResult(), OFFSET,
-                                                                task.getResult().length,
-                                                                drawingView.getMaxWidth(),
-                                                                drawingView.getMaxHeight());
-                                            } else {
+                                                        // Convert the image downloaded as byte[] to Bitmap
+                                                        bitmap = BitmapManipulator
+                                                                .decodeSampledBitmapFromByteArray(
+                                                                        task.getResult(), OFFSET,
+                                                                        task.getResult().length,
+                                                                        drawingView.getMaxWidth(),
+                                                                        drawingView.getMaxHeight());
+                                                    } else {
 
-                                                // Use a default image if unsuccessful
-                                                bitmap = BitmapManipulator
-                                                        .decodeSampledBitmapFromResource(
-                                                                getResources(),
-                                                                R.drawable.default_image,
-                                                                drawingView.getMaxWidth(),
-                                                                drawingView.getMaxHeight());
-                                            }
+                                                        // Use a default image if unsuccessful
+                                                        bitmap = BitmapManipulator
+                                                                .decodeSampledBitmapFromResource(
+                                                                        getResources(),
+                                                                        R.drawable.default_image,
+                                                                        drawingView.getMaxWidth(),
+                                                                        drawingView.getMaxHeight());
+                                                    }
 
-                                            // Store the image
-                                            storeBitmap(bitmap, currentId);
+                                                    // Store the image
+                                                    storeBitmap(bitmap, currentId);
 
-                                            // Display the first drawing
-                                            String playerName = playersNames[0];
-                                            changeDrawing(drawings[0], playerName);
+                                                    // Display the first drawing
+                                                    String playerName = playersNames[0];
+                                                    changeDrawing(drawings[0], playerName);
 
-                                            // Enable the rating bar only if the image is not the player's one
-                                            enableRatingBar(playerName);
+                                                    // Enable the rating bar only if the image is not the player's one
+                                                    enableRatingBar(playerName);
 
-                                            // Display the voting page layout
-                                            setLayoutToVisible();
-                                        }
-                                    });
+                                                    // Display the voting page layout
+                                                    setLayoutToVisible();
+                                                }
+                                            });
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
     }
 
     private void storeBitmap(Bitmap bitmap, String id) {
@@ -405,7 +405,7 @@ public class VotingPageActivity extends NoBackPressActivity {
 
         // Create and show the final ranking in the new fragment
         RankingFragment fragment = new RankingFragment();
-        fragment.putExtra(roomID,drawings,playersNames);
+        fragment.putExtra(roomID, drawings, playersNames);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)
@@ -425,8 +425,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     }
 
     private void removeAllListeners() {
-        stateRef.removeEventListener(listenerState);
-        timerRef.removeEventListener(listenerCounter);
+        Database.removeListenerFromRoomAttribute(roomID, STATE, listenerState);
+        Database.removeListenerFromRoomAttribute(roomID, TIMER, listenerCounter);
     }
 
     /**

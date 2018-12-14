@@ -2,17 +2,6 @@ package ch.epfl.sweng.SDP.firebase;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.BOUGHT_ITEMS;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-import static java.lang.String.format;
 
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -23,13 +12,32 @@ import com.google.firebase.database.ValueEventListener;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.BOUGHT_ITEMS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.FINISHED;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
  */
 public final class Database {
 
-    private static final DatabaseReference USERS_REFERENCE = Database.getReference("users");
     private static final String USERS_TAG = "users";
+    private static final DatabaseReference USERS_REFERENCE =
+            Database.getReference(USERS_TAG);
+
+    private static final String ROOMS_TAG = "realRooms";
+    private static final DatabaseReference ROOMS_REFERENCE =
+            Database.getReference(ROOMS_TAG);
 
     private Database() {
     }
@@ -50,6 +58,11 @@ public final class Database {
         return builder.addChildren(path).build();
     }
 
+    /**
+     * Uploades all attributes of a given account into the database.
+     *
+     * @param account to be uploaded
+     */
     public static void saveAccount(Account account) {
         USERS_REFERENCE.child(account.getUserId()).setValue(account, createCompletionListener());
     }
@@ -64,21 +77,60 @@ public final class Database {
     }
 
     /**
+     * Gets an attribute from a given user in the database.
+     *
+     * @param userId             id of the user to get the attribute from
+     * @param attribute          enum to determine which attribute to get
+     * @param valueEventListener listener to handle response
+     */
+    public static void getAccountAttribute(String userId, AccountAttributes attribute,
+                                           ValueEventListener valueEventListener) {
+        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+                .addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    /**
+     * Modifies (or inserts) the value of a given attribute in the database.
+     *
+     * @param userId             id of the user whose attribute to modify
+     * @param attribute          enum to determine which attribute to modify
+     * @param newValue           new value to be inserted for attribute
+     * @param completionListener listener to handle response
+     */
+    public static void setAccountAttribute(String userId, AccountAttributes attribute, Object newValue,
+                                           DatabaseReference.CompletionListener completionListener) {
+        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+                .setValue(newValue, completionListener);
+    }
+
+    /**
+     * Same method as above, but with a default completionListener.
+     *
+     * @param userId    id of user whose attribute to modify
+     * @param attribute enum to determine which attribute to modify
+     * @param newValue  new value to be inserted for attribute
+     */
+    public static void setAccountAttribute(String userId, AccountAttributes attribute, Object newValue) {
+        setAccountAttribute(userId, attribute, newValue, createCompletionListener());
+    }
+
+    /**
      * Retrieves a DataSnapshot of a user with the given id.
      * Applies the listener if the user exists.
      *
+     * @param userId             id of user to get
      * @param valueEventListener action that should be taken after retrieving the user
      */
-    public static void getUserById(String id, ValueEventListener valueEventListener) {
-        USERS_REFERENCE.child(id).addListenerForSingleValueEvent(valueEventListener);
+    public static void getUserById(String userId, ValueEventListener valueEventListener) {
+        USERS_REFERENCE.child(userId).addListenerForSingleValueEvent(valueEventListener);
     }
 
     /**
      * Retrieves a DataSnapshot of a user with the given username.
      * Applies the listener if the user exists.
      *
-     * @param username              username of the user to search for
-     * @param valueEventListener    action that should be taken after retrieving the user
+     * @param username           username of the user to search for
+     * @param valueEventListener action that should be taken after retrieving the user
      */
     public static void getUserByUsername(String username, ValueEventListener valueEventListener) {
         USERS_REFERENCE.orderByChild(attributeToPath(USERNAME)).equalTo(username)
@@ -89,8 +141,8 @@ public final class Database {
      * Retrieves a DataSnapshot of a user with the given email.
      * Applies the listener if the user exists.
      *
-     * @param email                 email of the user to search for
-     * @param valueEventListener    action that should be taken after retrieving the user
+     * @param email              email of the user to search for
+     * @param valueEventListener action that should be taken after retrieving the user
      */
     public static void getUserByEmail(String email, ValueEventListener valueEventListener) {
         USERS_REFERENCE.orderByChild(attributeToPath(EMAIL)).equalTo(email)
@@ -101,8 +153,8 @@ public final class Database {
      * Retrieves a DataSnapshot of all friends from the user with the given id.
      * Applies the listener on the snapshot.
      *
-     * @param userId                id of the user whose friends should be retrieved
-     * @param valueEventListener    action that should be taken after retrieving the friends
+     * @param userId             id of the user whose friends should be retrieved
+     * @param valueEventListener action that should be taken after retrieving the friends
      */
     public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
         Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS)))
@@ -115,68 +167,17 @@ public final class Database {
      * @param valueEventListener how to handle response
      */
     public static void getFriend(String userId, String friendId,
-            ValueEventListener valueEventListener) {
+                                 ValueEventListener valueEventListener) {
         Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
     /**
-     * Gets an attribute from a given user in the database.
-     *
-     * @param userId                id of the user to get the attribute from
-     * @param attribute             enum to determine which attribute to get
-     * @param valueEventListener    listener to handle response
-     */
-    public static void getAttribute(String userId, AccountAttributes attribute,
-                                    ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
-                .addListenerForSingleValueEvent(valueEventListener);
-    }
-
-    /**
-     * Modifies (or inserts) the value of a given attribute in the database.
-     *
-     * @param userId                id of the user whose attribute to modify
-     * @param attribute             enum to determine which attribute to modify
-     * @param newValue              new value to be inserted for attribute
-     * @param completionListener    listener to handle response
-     */
-    public static void setAttribute(String userId, AccountAttributes attribute, Object newValue,
-                                    DatabaseReference.CompletionListener completionListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
-                .setValue(newValue, completionListener);
-    }
-
-    /**
-     * Same method as above, but with a default completionListener.
-     *
-     * @param userId    id of user whose attribute to modify
-     * @param attribute enum to determine which attribute to modify
-     * @param newValue  new value to be inserted for attribute
-     */
-    public static void setAttribute(String userId, AccountAttributes attribute, Object newValue) {
-        setAttribute(userId, attribute, newValue, createCompletionListener());
-    }
-
-    /**
-     * Sets a listener to an attribute of a given user.
-     *
-     * @param userId                id of user whose attribute will be observed
-     * @param attribute             enum to determine which attribute to observe
-     * @param valueEventListener    listener to handle response
-     */
-    public static void setListenerToAttribute(String userId, AccountAttributes attribute,
-                                              ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
-                .addValueEventListener(valueEventListener);
-    }
-
-    /**
      * Updates the friendship status of a friend.
      *
-     * @param userId    id of user whose friendship state will be modified
-     * @param friendId  id of friend
-     * @param newValue  new status of friendship
+     * @param userId   id of user whose friendship state will be modified
+     * @param friendId id of friend
+     * @param newValue new status of friendship
      */
     public static void setFriendValue(String userId, String friendId, int newValue) {
         Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
@@ -186,8 +187,8 @@ public final class Database {
     /**
      * Removes a friend.
      *
-     * @param userId    id of user whose friend will be removed
-     * @param friendId  id of friend to be removed
+     * @param userId   id of user whose friend will be removed
+     * @param friendId id of friend to be removed
      */
     public static void removeFriend(String userId, String friendId) {
         Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
@@ -197,13 +198,76 @@ public final class Database {
     /**
      * Adds a shopItem to the bought items of a given user.
      *
-     * @param userId    id of user that receives the item
-     * @param item      item that will be inserted
+     * @param userId id of user that receives the item
+     * @param item   item that will be inserted
      */
     public static void setShopItemValue(String userId, ShopItem item) {
         Database.getReference(constructUsersPath(userId, attributeToPath(BOUGHT_ITEMS),
-                        item.getColorItem().toString()))
+                item.getColorItem().toString()))
                 .setValue(item.getPriceItem(), createCompletionListener());
+    }
+
+    /**
+     * Sets a listener to an attribute of a given user.
+     *
+     * @param userId             id of user whose attribute will be observed
+     * @param attribute          enum to determine which attribute to observe
+     * @param valueEventListener listener to handle response
+     */
+    public static void setListenerToAccountAttribute(String userId, AccountAttributes attribute,
+                                                     ValueEventListener valueEventListener) {
+        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+                .addValueEventListener(valueEventListener);
+    }
+
+    public static void getRoomAttribute(String roomId, RoomAttributes attribute,
+                                        ValueEventListener valueEventListener) {
+        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+                .addValueEventListener(valueEventListener);
+    }
+
+    public static void setValueToUserInRoomAttribute(String roomId, String username,
+                                                     RoomAttributes attribute, Object newValue) {
+        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute), username))
+                .setValue(newValue);
+    }
+
+    public static void removeUserFromRoom(String roomId, Account account) {
+        Database.getReference(constructRoomsPath(roomId,
+                attributeToPath(USERS), account.getUserId()))
+                .removeValue();
+        Database.getReference(constructRoomsPath(roomId,
+                attributeToPath(RANKING), account.getUsername()))
+                .removeValue();
+        Database.getReference(constructRoomsPath(roomId,
+                attributeToPath(FINISHED), account.getUsername()))
+                .removeValue();
+        Database.getReference(constructRoomsPath(roomId,
+                attributeToPath(UPLOAD_DRAWING), account.getUsername()))
+                .removeValue();
+    }
+
+    /**
+     * Sets a listener to an attribute of a given user.
+     *
+     * @param roomId             id of room whose attribute will be observed
+     * @param attribute          enum to determine which attribute to observe
+     * @param valueEventListener listener to handle response
+     */
+    public static void setListenerToRoomAttribute(String roomId, RoomAttributes attribute,
+                                                  ValueEventListener valueEventListener) {
+        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+                .addValueEventListener(valueEventListener);
+    }
+
+    public static void removeListenerFromRoomAttribute(String roomId, RoomAttributes attribute,
+                                                       ValueEventListener valueEventListener) {
+        Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+                .removeEventListener(valueEventListener);
+    }
+
+    public static DatabaseReference getRoomAttributeReference(String roomId, RoomAttributes attribute) {
+        return Database.getReference(constructRoomsPath(roomId, attributeToPath(attribute)));
     }
 
     /**
@@ -246,7 +310,15 @@ public final class Database {
     }
 
     private static String constructUsersPath(String... args) {
-        StringBuilder builder = new StringBuilder(USERS_TAG);
+        return constructPath(USERS_TAG, args);
+    }
+
+    private static String constructRoomsPath(String... args) {
+        return constructPath(ROOMS_TAG, args);
+    }
+
+    private static String constructPath(String base, String... args) {
+        StringBuilder builder = new StringBuilder(base);
 
         for (String arg : args) {
             builder.append("." + arg);
@@ -254,6 +326,7 @@ public final class Database {
 
         return builder.toString();
     }
+
 
     /**
      * Utility builder for {@link DatabaseReference}.

@@ -17,12 +17,12 @@ public class TestUsersUnitTest {
         assertThat(TestUsers.isTestUser("PICASSO"), is(false));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIsTestUserWithNullId() {
         TestUsers.isTestUser(null);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIsTestUserWithEmptyId() {
         TestUsers.isTestUser("");
     }

@@ -1,8 +1,10 @@
 package ch.epfl.sweng.SDP.utils;
 
 import android.widget.ImageView;
+
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
+
 import com.bumptech.glide.Glide;
 
 /**

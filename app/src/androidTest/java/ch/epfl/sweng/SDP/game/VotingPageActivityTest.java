@@ -33,9 +33,13 @@ import ch.epfl.sweng.SDP.firebase.RoomAttributes;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -46,6 +50,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
+
+    private static final String USER_ID = "userA";
+    private static final String ROOM_ID_TEST = "0123457890";
+    private static final String TOP_ROOM_ID = "realRooms";
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
@@ -59,15 +67,15 @@ public class VotingPageActivityTest {
                     VotingPageActivity.disableAnimations();
                     Account.deleteAccount();
                     Account.createAccount(InstrumentationRegistry.getTargetContext(),
-                            new ConstantsWrapper(), "userA", "test");
+                            new ConstantsWrapper(), USER_ID, "test");
                     Account.getInstance(InstrumentationRegistry.getTargetContext())
-                            .setUserId("userA");
+                            .setUserId(USER_ID);
                 }
 
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra(ROOM_ID, "0123457890");
+                    intent.putExtra(ROOM_ID, ROOM_ID_TEST);
                     return intent;
                 }
             };
@@ -160,14 +168,19 @@ public class VotingPageActivityTest {
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
+        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
+                .setValue(USER_ID);
+        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
+                .setValue(0);
+        SystemClock.sleep(2000);
     }
 
     @Test
-    public void testState5Change() {
+    public void testState6Change() {
         SystemClock.sleep(1000);
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
+        SystemClock.sleep(2500);
 
         RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
@@ -175,11 +188,20 @@ public class VotingPageActivityTest {
     }
 
     @Test
+    public void testState5Change() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2500);
+
+        onView(withId(R.id.playerNameView)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
     public void testState4Change() {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
-        SystemClock.sleep(2000);
+        SystemClock.sleep(6000);
     }
 
     @Test
@@ -229,7 +251,8 @@ public class VotingPageActivityTest {
         bitmap.compress(Bitmap.CompressFormat.JPEG,
                 1, byteArrayOutputStream);
         byte[] data = byteArrayOutputStream.toByteArray();
-        Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
+        Bitmap newBitmap = BitmapManipulator
+                .decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
         assertThat(newBitmap, is(not(nullValue())));
     }
 }

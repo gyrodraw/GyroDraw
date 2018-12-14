@@ -1,6 +1,10 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -20,10 +24,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -41,6 +48,8 @@ import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -50,6 +59,9 @@ public class WaitingPageActivityTest {
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
+    private Intent intentMock;
+    private ConnectivityManager connectivityManagerMock;
+    private Context spyContext;
 
     @Rule
     public final ActivityTestRule<WaitingPageActivity> mActivityRule =
@@ -75,6 +87,9 @@ public class WaitingPageActivityTest {
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
+        intentMock = Mockito.mock(Intent.class);
+        connectivityManagerMock = Mockito.mock(ConnectivityManager.class);
+        spyContext = Mockito.spy(mActivityRule.getActivity());
     }
 
     /**
@@ -318,5 +333,30 @@ public class WaitingPageActivityTest {
         clickButtonsTest(R.id.leaveButton);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
+    }
+
+    @Test
+    public void testOnReceiveNetworkDisabled() {
+        when(connectivityManagerMock.getActiveNetworkInfo()).thenReturn(null);
+        when(((ConnectivityManager) spyContext.getSystemService(Context.CONNECTIVITY_SERVICE)))
+                .thenReturn(connectivityManagerMock);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                return null;
+            }
+        }).when(spyContext).startActivity(any(Intent.class));
+
+        when(intentMock.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE))
+                .thenReturn(true);
+        when(intentMock.getExtras()).thenReturn(new Bundle());
+
+        ConnectivityWrapper.callOnReceiveNetwork(spyContext, intentMock);
+        SystemClock.sleep(1500);
+
+        onView(withId(R.id.okDisconnectedButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.okDisconnectedButton)).perform(click());
+
     }
 }

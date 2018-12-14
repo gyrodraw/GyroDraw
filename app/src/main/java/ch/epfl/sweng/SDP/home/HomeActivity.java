@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.MainActivity;
@@ -38,14 +37,13 @@ import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
-import ch.epfl.sweng.SDP.utils.CheckConnection;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
 import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.firebase.Database.getUserById;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
@@ -84,23 +82,20 @@ public class HomeActivity extends NoBackPressActivity {
             for (DataSnapshot child : dataSnapshot.getChildren()) {
                 Integer stateValue = child.getValue(Integer.class);
                 if (stateValue != null) {
-                    FriendsRequestState state =
-                            FriendsRequestState.fromInteger(stateValue);
+                    FriendsRequestState state = FriendsRequestState.fromInteger(stateValue);
 
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
                         getUserById(id, new ValueEventListener() {
+
                             @Override
-                            public void onDataChange(
-                                    @NonNull DataSnapshot dataSnapshot) {
-                                String name = dataSnapshot
-                                        .getValue(String.class);
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String name = dataSnapshot.getValue(String.class);
                                 showFriendRequestPopup(name, id);
                             }
 
                             @Override
-                            public void onCancelled(
-                                    @NonNull DatabaseError databaseError) {
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
                                 throw databaseError.toException();
                             }
                         });
@@ -189,26 +184,13 @@ public class HomeActivity extends NoBackPressActivity {
     }
 
     private void updateUserStatusOnFirebase() {
-        FirebaseDatabase.getInstance().getReference(".info/connected")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean connected = snapshot.getValue(boolean.class);
-                        if (connected) {
-                            String userId = Account.getInstance(getApplicationContext())
-                                    .getUserId();
-                            changeOnlineStatus(userId, ONLINE, createCompletionListener());
+        String userId = Account.getInstance(getApplicationContext())
+                .getUserId();
 
-                            // On user disconnection, update Firebase
-                            changeToOfflineOnDisconnect(userId);
-                        }
-                    }
+        changeOnlineStatus(userId, ONLINE, Database.createCompletionListener());
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        throw error.toException();
-                    }
-                });
+        // On user disconnection, update Firebase
+        changeToOfflineOnDisconnect(userId);
     }
 
     private void addListenerForFriendsRequests() {
@@ -235,8 +217,9 @@ public class HomeActivity extends NoBackPressActivity {
                                     Account.getInstance(getApplicationContext()).getUserId(),
                                     OFFLINE, new DatabaseReference.CompletionListener() {
                                         @Override
-                                        public void onComplete(@Nullable DatabaseError databaseError,
-                                                               @NonNull DatabaseReference databaseReference) {
+                                        public void onComplete(
+                                                @Nullable DatabaseError databaseError,
+                                                @NonNull DatabaseReference databaseReference) {
                                             checkForDatabaseError(databaseError);
                                             successfulSignOut();
                                         }
@@ -381,7 +364,7 @@ public class HomeActivity extends NoBackPressActivity {
         findViewById(R.id.drawButton).setEnabled(false);
         findViewById(R.id.mysteryButton).setEnabled(false);
 
-        if (CheckConnection.isOnline(this)) {
+        if (ConnectivityWrapper.isOnline(this)) {
             view.setImageResource(resourceId);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
             intent.putExtra(GAME_MODE, gameMode);

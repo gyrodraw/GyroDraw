@@ -34,10 +34,7 @@ public final class Database {
     private static final String USERS_TAG = "users";
     private static final DatabaseReference USERS_REFERENCE =
             Database.getReference(USERS_TAG);
-
     private static final String ROOMS_TAG = "realRooms";
-    private static final DatabaseReference ROOMS_REFERENCE =
-            Database.getReference(ROOMS_TAG);
 
     private Database() {
     }
@@ -126,8 +123,8 @@ public final class Database {
     }
 
     /**
-     * Retrieves a DataSnapshot of a user with the given username.
-     * Applies the listener if the user exists.
+     * Retrieves a DataSnapshot of a user with the given username. Applies the listener if the user
+     * exists.
      *
      * @param username           username of the user to search for
      * @param valueEventListener action that should be taken after retrieving the user
@@ -138,8 +135,8 @@ public final class Database {
     }
 
     /**
-     * Retrieves a DataSnapshot of a user with the given email.
-     * Applies the listener if the user exists.
+     * Retrieves a DataSnapshot of a user with the given email. Applies the listener if the user
+     * exists.
      *
      * @param email              email of the user to search for
      * @param valueEventListener action that should be taken after retrieving the user
@@ -150,8 +147,8 @@ public final class Database {
     }
 
     /**
-     * Retrieves a DataSnapshot of all friends from the user with the given id.
-     * Applies the listener on the snapshot.
+     * Retrieves a DataSnapshot of all friends from the user with the given id. Applies the listener
+     * on the snapshot.
      *
      * @param userId             id of the user whose friends should be retrieved
      * @param valueEventListener action that should be taken after retrieving the friends
@@ -303,7 +300,7 @@ public final class Database {
         return new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
-                                   @NonNull DatabaseReference databaseReference) {
+                    @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
             }
         };

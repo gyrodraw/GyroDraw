@@ -1,25 +1,12 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
-import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
-import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
-import static java.lang.String.format;
-
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +16,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
+import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
+import static java.lang.String.format;
 
 /**
  * Class representing the drawing phase of an online game in normal mode.
@@ -43,7 +44,6 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
 
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
-    private boolean isVotingActivityLaunched = false;
 
     protected final ValueEventListener listenerTimer = new ValueEventListener() {
         @Override
@@ -87,7 +87,6 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
-                                        isVotingActivityLaunched = true;
                                         timerRef.removeEventListener(listenerTimer);
 
                                         Intent intent = new Intent(getApplicationContext(),
@@ -117,6 +116,11 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+
+        ConnectivityWrapper.registerNetworkReceiver(this);
+
         Intent intent = getIntent();
 
         roomId = intent.getStringExtra(ROOM_ID);
@@ -132,20 +136,16 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
         timerRef.addValueEventListener(listenerTimer);
         stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);
+
+        ConnectivityWrapper.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        // Does not leave the room if the activity is stopped because
-        // voting activity is launched.
-        if (!isVotingActivityLaunched) {
-            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomId);
-        }
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         removeAllListeners();
-
         finish();
     }
 

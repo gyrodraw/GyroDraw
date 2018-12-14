@@ -8,6 +8,7 @@ import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -28,6 +29,7 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +39,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -49,6 +53,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     private final String username = Account.getInstance(this).getUsername();
 
     private DatabaseReference rankingRef;
+
+    private HashMap<String, Integer> rankingTable = new HashMap<>();
 
     private Bitmap[] drawings = new Bitmap[NUMBER_OF_DRAWINGS];
     private short idsAndUsernamesCounter = 0;
@@ -63,6 +69,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     private ImageView drawingView;
     private TextView playerNameView;
     private TextView timer;
+    private TextView disconnectedText;
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
@@ -81,7 +88,13 @@ public class VotingPageActivity extends NoBackPressActivity {
                         retrieveDrawingsFromDatabaseStorage();
                         break;
                     case END_VOTING_ACTIVITY:
+                        ConnectivityWrapper.setOnlineStatusInGame(roomID,
+                                Account.getInstance(getApplicationContext()).getUsername());
+                        setAnimationWaitingBackground();
+                        break;
+                    case RANKING_FRAGEMNT:
                         // Start ranking activity
+                        setLayoutToVisible();
                         startRankingFragment();
                         break;
                     default:
@@ -122,30 +135,42 @@ public class VotingPageActivity extends NoBackPressActivity {
         setContentView(R.layout.activity_voting_page);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        ConnectivityWrapper.registerNetworkReceiver(this);
+
         Intent intent = getIntent();
         roomID = intent.getStringExtra(ROOM_ID);
 
         playerNameView = findViewById(R.id.playerNameView);
         drawingView = findViewById(R.id.drawing);
         timer = findViewById(R.id.timer);
+        disconnectedText = findViewById(R.id.disconnectedText);
 
         starsAnimation = findViewById(R.id.starsAnimation);
         ratingBar = findViewById(R.id.ratingBar);
 
-        if (enableAnimations) {
-            GlideUtils.startBackgroundAnimation(this);
-            GlideUtils.startDotsWaitingAnimation(this);
-        }
+        setAnimationWaitingBackground();
 
-        // Make the layout invisible until the drawings have been downloaded
-        setVisibility(View.GONE, ratingBar, playerNameView,
-                drawingView, timer, starsAnimation);
-
-        playerNameView.setTypeface(typeMuro);
-        timer.setTypeface(typeMuro);
+        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
+        setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference
         rankingRef = Database.getRoomAttributeReference(roomID, RANKING);
+        Database.setListenerToRoomAttribute(roomID, RANKING,
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.getValue(Integer.class) != null) {
+                                rankingTable.put(ds.getKey(), ds.getValue(Integer.class));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        throw databaseError.toException();
+                    }
+                });
 
         Database.setListenerToRoomAttribute(roomID, STATE, listenerState);
         Database.setListenerToRoomAttribute(roomID, TIMER, listenerCounter);
@@ -168,33 +193,39 @@ public class VotingPageActivity extends NoBackPressActivity {
                                 ratingBar.setIsIndicator(true);
                                 ratingBar.setAlpha(0.8f);
 
-                                // Store the rating
-                                ratings[changeDrawingCounter] = (int) rating;
+                                ratings = new int[NUMBER_OF_DRAWINGS];
+                                ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+                                    @Override
+                                    public void onRatingChanged(RatingBar ratingBar, float rating,
+                                                                boolean fromUser) {
+                                        ratingBar.setIsIndicator(true);
+                                        ratingBar.setAlpha(0.8f);
 
-                                // Send it to the database along with the corresponding player name
-                                sendRatingToDatabase(playersNames[changeDrawingCounter]);
+                                        // Send it to the database along with the corresponding player name
+                                        sendRatingToDatabase(playersNames[changeDrawingCounter]);
+                                    }
+                                });
+
+                                previousRating = 0;
+                                addStarAnimationListener();
                             }
                         });
-
-                        previousRating = 0;
-                        addStarAnimationListener();
                     }
+
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         throw databaseError.toException();
                     }
                 });
+
+        ConnectivityWrapper.setOnlineStatusInGame(roomID, Account.getInstance(this).getUsername());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (roomID != null && !roomID.equals("0123457890")) {
-            Matchmaker.getInstance(Account.getInstance(this))
-                    .leaveRoom(roomID);
-        }
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         removeAllListeners();
         finish();
@@ -210,12 +241,17 @@ public class VotingPageActivity extends NoBackPressActivity {
         // Remove the drawings from Firebase Storage
         for (String id : drawingsIds) {
             // Remove this after testing
-            if (id != null && !id.substring(0, 4).equals("user")) {
+            if (id != null && !id.substring(0, Math.min(4, id.length())).equals("user")) {
                 FirebaseStorage.getInstance().getReference().child(id + ".jpg").delete();
             }
         }
 
         launchActivity(HomeActivity.class);
+
+        if (roomID != null && ConnectivityWrapper.isOnline(this)) {
+            Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
+        }
+
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
@@ -232,7 +268,13 @@ public class VotingPageActivity extends NoBackPressActivity {
 
         addStarAnimationListener();
 
-        enableRatingBar(playerName);
+        if (rankingTable.get(playerName) >= 0) {
+            findViewById(R.id.disconnectedText).setVisibility(View.GONE);
+            enableRatingBar(playerName);
+        } else {
+            ratingBar.setRating(0f);
+            findViewById(R.id.disconnectedText).setVisibility(View.VISIBLE);
+        }
     }
 
     private void enableRatingBar(String playerName) {
@@ -252,6 +294,19 @@ public class VotingPageActivity extends NoBackPressActivity {
         if (enableAnimations) {
             setVisibility(View.VISIBLE, starsAnimation);
         }
+    }
+
+    private void setAnimationWaitingBackground() {
+        if (enableAnimations) {
+            GlideUtils.startBackgroundAnimation(this);
+            GlideUtils.startDotsWaitingAnimation(this);
+        }
+
+        setVisibility(View.VISIBLE, findViewById(R.id.waitingAnimationDots));
+
+        // Make the layout invisible until the drawings have been downloaded
+        setVisibility(View.GONE, ratingBar, playerNameView,
+                drawingView, timer, starsAnimation, disconnectedText);
     }
 
     private void addStarAnimationListener() {

@@ -6,12 +6,12 @@ package ch.epfl.sweng.SDP.utils.network;
 public interface NetworkStateReceiverListener {
 
     /**
-     * TODO
+     * This method describes the behavior when a user goes online.
      */
     void networkAvailable();
 
     /**
-     * Displays the disconnected popup dialog.
+     * This method describes the behavior when a user goes offline.
      */
     void networkUnavailable();
 }

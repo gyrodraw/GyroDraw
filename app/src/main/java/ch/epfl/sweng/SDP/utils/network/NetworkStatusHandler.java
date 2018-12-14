@@ -33,6 +33,9 @@ public final class NetworkStatusHandler implements NetworkStateReceiverListener 
         // Not needed
     }
 
+    /**
+     * Displays the disconnected popup dialog.
+     */
     @Override
     public void networkUnavailable() {
         disconnectedDialog.setContentView(R.layout.disconnected_pop_up);

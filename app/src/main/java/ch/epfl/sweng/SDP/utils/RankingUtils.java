@@ -29,7 +29,7 @@ public final class RankingUtils {
         for (int i = 1; i < trophies.length; ++i) {
             if (ranking[i] >= 0 && ranking[i - 1].intValue() == ranking[i].intValue()) {
                 trophies[i] = trophies[i - 1];
-            } else if (ranking[i] >= 0){
+            } else if (ranking[i] >= 0) {
                 trophies[i] = MAX_RANK - DELTA_RANK * i;
             } else {
                 trophies[i] = MIN_RANK;
@@ -54,7 +54,7 @@ public final class RankingUtils {
         for (int i = 1; i < positions.length; ++i) {
             if (ranking[i] >= 0 && ranking[i - 1].intValue() == ranking[i].intValue()) {
                 positions[i] = positions[i - 1];
-            } else if (ranking[i] >= 0){
+            } else if (ranking[i] >= 0) {
                 positions[i] = i + 1;
             } else {
                 positions[i] = LAST_POSITION;
@@ -63,7 +63,7 @@ public final class RankingUtils {
 
         return positions;
     }
-    
+
     /**
      * Returns a string array with the sign of the number in front of this latter. In other words
      * the number 10 becomes +10.
@@ -71,14 +71,24 @@ public final class RankingUtils {
      * @param list List of the numbers
      * @return A list of number with the respective sign
      */
-    public static String[] addSignToNumber(Integer[] list) {
+    public static String[] addSignToNumberList(Integer[] list) {
         String[] numbersWithSign = new String[list.length];
 
         for (int i = 0; i < numbersWithSign.length; ++i) {
-            numbersWithSign[i] = list[i] > 0 ? "+" + String.valueOf(list[i])
-                    : String.valueOf(list[i]);
+            numbersWithSign[i] = addSignToNumber(list[i]);
         }
 
         return numbersWithSign;
+    }
+
+    /**
+     * Returns a string with the sign of the number in front of this latter. In other words
+     * the number 10 becomes +10.
+     *
+     * @param num An integer
+     * @return An integer with the sign
+     */
+    public static String addSignToNumber(int num) {
+        return num >= 0 ? "+" + String.valueOf(num) : String.valueOf(num);
     }
 }

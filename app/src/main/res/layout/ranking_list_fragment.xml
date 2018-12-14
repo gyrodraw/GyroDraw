@@ -8,11 +8,10 @@
     <TextView
         android:id="@+id/rankingTitle"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:shadowColor="@android:color/black"
         android:text="Final Ranking"
@@ -26,7 +25,6 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@id/homeButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +35,7 @@
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="40dp"
         android:background="@color/colorExitRed"
         android:gravity="center"
         android:onClick="startHomeActivity"
@@ -49,8 +47,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@android:id/list" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/save"
@@ -64,8 +61,8 @@
         android:id="@+id/share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="156dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="156dp"
         android:onClick="shareImage"
         android:text="@string/com_facebook_share_button_text"
         app:layout_constraintEnd_toEndOf="parent"

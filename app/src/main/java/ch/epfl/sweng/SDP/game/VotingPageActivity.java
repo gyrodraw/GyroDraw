@@ -497,7 +497,6 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void startRankingFragment() {
-
         // Clear the UI
         setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                 R.id.playerNameView, R.id.timer);

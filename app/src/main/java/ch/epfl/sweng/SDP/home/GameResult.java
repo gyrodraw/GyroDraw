@@ -18,6 +18,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+import static ch.epfl.sweng.SDP.utils.RankingUtils.addSignToNumber;
 
 /**
  * Class representing a game result.
@@ -190,9 +191,8 @@ public class GameResult {
     }
 
     private TextView setReward(int reward) {
-        String prefix = reward >= 0 ? "+" : "";
-        TextView rewardView = styleView(prefix + String.valueOf(reward),
-                REWARD_SIZE, res.getColor(R.color.colorPrimaryDark), textParams);
+        TextView rewardView = styleView(addSignToNumber(reward), REWARD_SIZE,
+                res.getColor(R.color.colorPrimaryDark), textParams);
 
         rewardView.setGravity(Gravity.CENTER_VERTICAL);
         rewardView.setGravity(Gravity.START);

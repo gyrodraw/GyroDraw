@@ -63,6 +63,6 @@ public class RankingUtilsUnitTest {
         Integer[] input = new Integer[]{10, 10, 0, -5, -10};
         String[] expectedOutput = new String[]{"+10", "+10", "0", "-5", "-10"};
 
-        assertThat(RankingUtils.addSignToNumber(input), is(expectedOutput));
+        assertThat(RankingUtils.addSignToNumberList(input), is(expectedOutput));
     }
 }

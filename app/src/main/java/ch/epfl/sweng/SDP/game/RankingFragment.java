@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -71,7 +70,7 @@ public class RankingFragment extends ListFragment {
         finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
 
         ((TextView) getActivity().findViewById(R.id.rankingTitle))
-                .setTypeface(TypefaceLibrary.getTypeOptimus());
+                .setTypeface(TypefaceLibrary.getTypeMuro());
 
         Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(TypefaceLibrary.getTypeMuro());
@@ -196,7 +195,7 @@ public class RankingFragment extends ListFragment {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
-            this.trophies = RankingUtils.addSignToNumber(trophies);
+            this.trophies = RankingUtils.addSignToNumberList(trophies);
             this.drawings = drawings;
             this.positions = positions;
         }
@@ -207,17 +206,17 @@ public class RankingFragment extends ListFragment {
             ((TextView) convertView.findViewById(R.id.trophiesWon))
                     .setText(trophies[position]);
             ((TextView) convertView.findViewById(R.id.starsWon))
-                    .setText(String.valueOf(Math.max(rankings[position], 0)));
+                    .setText(RankingUtils.addSignToNumber(Math.max(rankings[position], 0)));
         }
 
         private void setHighlightColors(View convertView) {
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);
-            int darkColor = getResources().getColor(R.color.colorPrimaryDark);
+            int lightGreyColor = getResources().getColor(R.color.colorLightGrey);
 
             ((TextView) convertView.findViewById(R.id.playerName)).setTextColor(yellowColor);
             ((TextView) convertView.findViewById(R.id.trophiesWon)).setTextColor(yellowColor);
             ((TextView) convertView.findViewById(R.id.starsWon)).setTextColor(yellowColor);
-            convertView.setBackgroundColor(darkColor);
+            convertView.setBackgroundColor(lightGreyColor);
         }
 
         private void setTypeFace(Typeface typeface, View... views) {

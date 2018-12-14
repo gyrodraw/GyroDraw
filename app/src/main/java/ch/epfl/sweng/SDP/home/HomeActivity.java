@@ -41,6 +41,7 @@ import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.battlelog.BattleLogActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.home.leagues.LeaguesActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;

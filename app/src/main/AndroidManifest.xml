@@ -49,7 +49,7 @@
             android:name=".home.battlelog.BattleLogActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.LeaguesActivity"
+            android:name=".home.leagues.LeaguesActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".game.LoadingScreenActivity"

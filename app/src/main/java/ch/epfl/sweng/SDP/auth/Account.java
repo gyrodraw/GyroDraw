@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -14,9 +13,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.firebase.AccountAttributes;
 import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.home.leagues.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
 
@@ -28,7 +26,6 @@ import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MAX_TROPHIES;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STARS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
 import static ch.epfl.sweng.SDP.firebase.Database.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.Database.createCompletionListener;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.FRIENDS;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;

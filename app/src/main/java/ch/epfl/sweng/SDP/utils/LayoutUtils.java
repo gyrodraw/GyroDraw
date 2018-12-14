@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.utils;
 
-import static ch.epfl.sweng.SDP.home.League.createLeague1;
-import static ch.epfl.sweng.SDP.home.League.createLeague2;
-import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import static ch.epfl.sweng.SDP.home.leagues.League.createLeague1;
+import static ch.epfl.sweng.SDP.home.leagues.League.createLeague2;
+import static ch.epfl.sweng.SDP.home.leagues.League.createLeague3;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.view.animation.AnimationUtils;
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.home.leagues.League;
 
 /**
  * Utility class containing methods for layout-related operations.

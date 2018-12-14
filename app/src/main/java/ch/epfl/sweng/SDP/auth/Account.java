@@ -361,25 +361,25 @@ public class Account {
     /**
      * Method that allows one to add friends.
      *
-     * @param usernameId String specifying FirebaseUser.UID of friend
-     * @throws IllegalArgumentException in case the given usernameId is null
+     * @param friendId String specifying FirebaseUser.UID of friend
+     * @throws IllegalArgumentException in case the given friendId is null
      * @throws DatabaseException in case write to database fails
      */
-    public void addFriend(final String usernameId) throws DatabaseException {
-        checkPrecondition(usernameId != null, "Friend's usernameId is null");
+    public void addFriend(final String friendId) throws DatabaseException {
+        checkPrecondition(friendId != null, "Friend's friendId is null");
 
-        Database.getAllFriends(userId, new ValueEventListener() {
+        Database.getFriend(userId, friendId, new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             if (dataSnapshot.getValue(int.class)
                                     == RECEIVED.ordinal()) {
-                                updateFriendship(usernameId, FRIENDS.ordinal(), FRIENDS.ordinal());
+                                updateFriendship(friendId, FRIENDS.ordinal(), FRIENDS.ordinal());
                             } else {
-                                updateFriendship(usernameId, SENT.ordinal(), RECEIVED.ordinal());
+                                updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
                             }
                         } else {
-                            updateFriendship(usernameId, SENT.ordinal(), RECEIVED.ordinal());
+                            updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
                         }
                     }
 

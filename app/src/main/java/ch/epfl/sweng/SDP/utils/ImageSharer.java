@@ -31,7 +31,7 @@ public class ImageSharer {
     private Activity activity;
     private Context context;
 
-    ImageSharer(Activity activity) {
+    private ImageSharer(Activity activity) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
     }

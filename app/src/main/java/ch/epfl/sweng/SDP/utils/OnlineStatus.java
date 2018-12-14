@@ -1,13 +1,10 @@
 package ch.epfl.sweng.SDP.utils;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 import ch.epfl.sweng.SDP.firebase.AccountAttributes;
 import ch.epfl.sweng.SDP.firebase.Database;
-
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-import static java.lang.String.format;
+import com.google.firebase.database.DatabaseReference;
 
 /**
  * Enum representing whether the user is online or offline.
@@ -38,12 +35,13 @@ public enum OnlineStatus {
      *
      * @param userId the userId of the user
      * @param status the desired status for the user
-     * @return a {@link Task} wrapping the operation
+     * @param listener {@link com.google.firebase.database.DatabaseReference.CompletionListener} for
+     * the operation
      * @throws IllegalArgumentException if the userId string is null or the given status is
-     *                                  wrong/unknown
+     * wrong/unknown
      */
     public static void changeOnlineStatus(String userId, OnlineStatus status,
-                                          DatabaseReference.CompletionListener listener) {
+            DatabaseReference.CompletionListener listener) {
         checkPrecondition(userId != null, "userId is null");
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");

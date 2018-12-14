@@ -64,7 +64,7 @@ public final class ImageStorageManager {
     }
 
     /**
-     * Write an image to the storage.
+     * Writes an image to the storage.
      *
      * @param image the image to store.
      * @param file the file path.

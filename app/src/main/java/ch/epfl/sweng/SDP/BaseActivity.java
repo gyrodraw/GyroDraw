@@ -29,7 +29,7 @@ import ch.epfl.sweng.SDP.utils.OnlineStatus;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import static android.view.View.VISIBLE;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STARS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static java.lang.String.format;
 
@@ -227,7 +227,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         final DatabaseReference statusRef = Database.getReference(format("users.%s.online",
                 Account.getInstance(getApplicationContext()).getUserId()));
         Database.setListenerToAccountAttribute(
-                Account.getInstance(getApplicationContext()).getUserId(), STARS,
+                Account.getInstance(getApplicationContext()).getUserId(), STATUS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

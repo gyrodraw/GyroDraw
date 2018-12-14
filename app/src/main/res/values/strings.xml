@@ -57,7 +57,7 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="new_friend_request">New friend request</string>
-    <string name="empty_battle_log">You have not done any game recently</string>
+    <string name="empty_battle_log">You have not played any games recently</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="usernameValid">Valid username</string>

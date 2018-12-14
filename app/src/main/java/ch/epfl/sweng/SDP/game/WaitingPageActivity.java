@@ -28,6 +28,7 @@ import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -194,6 +195,8 @@ public class WaitingPageActivity extends NoBackPressActivity {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_waiting_page);
+
+        ConnectivityWrapper.registerNetworkReceiver(this);
 
         Intent intent = getIntent();
         roomID = intent.getStringExtra(ROOM_ID);
@@ -400,10 +403,11 @@ public class WaitingPageActivity extends NoBackPressActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.
-        if (!isDrawingActivityLaunched) {
+        if (!isDrawingActivityLaunched && ConnectivityWrapper.isOnline(this)) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
@@ -431,5 +435,4 @@ public class WaitingPageActivity extends NoBackPressActivity {
             }
         });
     }
-
 }

@@ -38,7 +38,8 @@
     app:layout_constraintBottom_toBottomOf="@+id/backgroundAnimation"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/playerNameView"/>
+    app:layout_constraintTop_toBottomOf="@+id/playerNameView"
+    app:layout_constraintVertical_bias="0.132"/>
 
   <ImageView
     android:id="@+id/drawing"
@@ -64,6 +65,21 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/drawing"/>
+
+
+  <TextView
+    android:id="@+id/disconnectedText"
+    android:textStyle="bold"
+    android:layout_width="wrap_content"
+    android:layout_height="31dp"
+    android:layout_marginTop="8dp"
+    android:text="Disconnected"
+    android:textColor="@color/colorRed"
+    android:textSize="25sp"
+    android:visibility="gone"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/ratingBar"/>
 
   <TextView
     android:id="@+id/timer"

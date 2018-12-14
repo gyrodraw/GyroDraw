@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.leagues;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 

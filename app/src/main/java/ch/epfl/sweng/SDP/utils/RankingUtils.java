@@ -6,7 +6,10 @@ package ch.epfl.sweng.SDP.utils;
 public final class RankingUtils {
 
     private static final int MAX_RANK = 10;
+    private static final int MIN_RANK = -10;
     private static final int DELTA_RANK = 5;
+    private static final int FIRST_POSITION = 1;
+    private static final int LAST_POSITION = 5;
 
     private RankingUtils() {
     }
@@ -21,12 +24,15 @@ public final class RankingUtils {
      */
     public static Integer[] generateTrophiesFromRanking(Integer[] ranking) {
         Integer[] trophies = new Integer[ranking.length];
-        trophies[0] = MAX_RANK;
+
+        trophies[0] = ranking[0] >= 0 ? MAX_RANK : MIN_RANK;
         for (int i = 1; i < trophies.length; ++i) {
-            if (ranking[i - 1].intValue() == ranking[i].intValue()) {
+            if (ranking[i] >= 0 && ranking[i - 1].intValue() == ranking[i].intValue()) {
                 trophies[i] = trophies[i - 1];
-            } else {
+            } else if (ranking[i] >= 0){
                 trophies[i] = MAX_RANK - DELTA_RANK * i;
+            } else {
+                trophies[i] = MIN_RANK;
             }
         }
 
@@ -43,18 +49,21 @@ public final class RankingUtils {
      */
     public static Integer[] generatePositionsFromRanking(Integer[] ranking) {
         Integer[] positions = new Integer[ranking.length];
-        positions[0] = 1;
+
+        positions[0] = ranking[0] >= 0 ? FIRST_POSITION : LAST_POSITION;
         for (int i = 1; i < positions.length; ++i) {
-            if (ranking[i - 1].intValue() == ranking[i].intValue()) {
+            if (ranking[i] >= 0 && ranking[i - 1].intValue() == ranking[i].intValue()) {
                 positions[i] = positions[i - 1];
-            } else {
+            } else if (ranking[i] >= 0){
                 positions[i] = i + 1;
+            } else {
+                positions[i] = LAST_POSITION;
             }
         }
 
         return positions;
     }
-
+    
     /**
      * Returns a string array with the sign of the number in front of this latter. In other words
      * the number 10 becomes +10.

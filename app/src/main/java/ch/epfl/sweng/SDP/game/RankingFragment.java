@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -132,7 +133,7 @@ public class RankingFragment extends ListFragment {
                 int trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
 
                 Boolean won = usernames.get(0).equals(account.getUsername());
-                updateUserStats(rankForUser, trophiesForUser, won);
+                updateUserStats(Math.max(rankForUser, 0), trophiesForUser, won);
                 createAndStoreGameResult(usernames, usernames.indexOf(account.getUsername()),
                         rankForUser, trophiesForUser);
 
@@ -206,7 +207,7 @@ public class RankingFragment extends ListFragment {
             ((TextView) convertView.findViewById(R.id.trophiesWon))
                     .setText(trophies[position]);
             ((TextView) convertView.findViewById(R.id.starsWon))
-                    .setText(String.valueOf(rankings[position]));
+                    .setText(String.valueOf(Math.max(rankings[position], 0)));
         }
 
         private void setHighlightColors(View convertView) {
@@ -234,12 +235,21 @@ public class RankingFragment extends ListFragment {
                     .inflate(R.layout.ranking_item, parent, false);
 
             setTypeFace(TypefaceLibrary.getTypeMuro(), convertView.findViewById(R.id.playerName),
-                    convertView.findViewById(R.id.starsWon),
-                    convertView.findViewById(R.id.trophiesWon));
+                                convertView.findViewById(R.id.starsWon),
+                                convertView.findViewById(R.id.trophiesWon),
+                                convertView.findViewById(R.id.disconnectedRanking));
 
             // Update image
-            ImageView imageview = convertView.findViewById(R.id.drawing);
-            imageview.setImageBitmap(drawings[getIndexForUserName(players[position])]);
+            ImageView drawingView = convertView.findViewById(R.id.drawing);
+            TextView disconnectedTextView = convertView.findViewById(R.id.disconnectedRanking);
+            if (rankings[position] >= 0) {
+                disconnectedTextView.setVisibility(View.GONE);
+                drawingView.setVisibility(View.VISIBLE);
+                drawingView.setImageBitmap(drawings[getIndexForUserName(players[position])]);
+            } else {
+                disconnectedTextView.setVisibility(View.VISIBLE);
+                drawingView.setVisibility(View.GONE);
+            }
 
             // Set the color
             if (!players[position].equals(account.getUsername())) {

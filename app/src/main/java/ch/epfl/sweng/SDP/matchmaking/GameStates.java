@@ -5,7 +5,7 @@ package ch.epfl.sweng.SDP.matchmaking;
  */
 public enum GameStates {
     HOMESTATE, CHOOSE_WORDS_TIMER_START, START_DRAWING_ACTIVITY, WAITING_UPLOAD,
-    START_VOTING_ACTIVITY, END_VOTING_ACTIVITY;
+    START_VOTING_ACTIVITY, END_VOTING_ACTIVITY, RANKING_FRAGEMNT;
 
     /**
      * Converts the an integer value into its corresponding {@link GameStates} value.
@@ -33,6 +33,9 @@ public enum GameStates {
                 break;
             case 5:
                 state = END_VOTING_ACTIVITY;
+                break;
+            case 6:
+                state = RANKING_FRAGEMNT;
                 break;
             default:
                 state = HOMESTATE;

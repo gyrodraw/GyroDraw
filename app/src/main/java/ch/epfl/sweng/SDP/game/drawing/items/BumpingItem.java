@@ -16,12 +16,8 @@ public class BumpingItem extends Item {
     private ImageView imageView;
     private boolean isActivated = false;
 
-    private BumpingItem(int x, int y, int radius) {
-        super(x, y, radius);
-    }
-
-    public static BumpingItem createBumpingItem(int x, int y, int radius) {
-        return new BumpingItem(x, y, radius);
+    public BumpingItem(int posX, int posY, int radius) {
+        super(posX, posY, radius);
     }
 
     /**
@@ -30,8 +26,8 @@ public class BumpingItem extends Item {
      * there was a collision. So instead it places the paintView outside
      * of its radius again.
      *
-     * @param paintView reference to compare with
-     * @return always false, because this item will never be removed
+     * @param   paintView reference to compare with
+     * @return  always false, because this item will never be removed
      */
     @Override
     public boolean collision(PaintView paintView) {
@@ -43,6 +39,7 @@ public class BumpingItem extends Item {
                 imageView.setImageResource(R.drawable.bumping_item);
                 imageView.setColorFilter(new LightingColorFilter(Color.WHITE, Color.GRAY));
                 isActivated = true;
+                vibrate(paintView);
             }
         }
         return false;

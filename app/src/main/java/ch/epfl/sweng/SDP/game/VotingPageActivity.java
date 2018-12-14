@@ -255,11 +255,6 @@ public class VotingPageActivity extends BaseActivity {
         }
 
         Log.d(TAG, "Pausing activity");
-
-        if (roomID != null && !roomID.equals("0123457890")) {
-            Matchmaker.getInstance(Account.getInstance(this))
-                    .leaveRoom(roomID);
-        }
         ConnectivityWrapper.unregisterNetworkReceiver(this);
 
         ImageSharer sharer = ImageSharer.getInstance();

@@ -67,4 +67,7 @@
     <string name="usernameIllegalChar">Username must not contain</string>
     <string name="successfulImageDownload">Successfully saved image to /Camera/Gyrodraw</string>
     <string name="already_logged_in">You have already logged in on another device! Waiting...</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="error">Error</string>
+    <string name="you_have_been_disconnected">You have been disconnected</string>
 </resources>

@@ -9,7 +9,6 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
-      android:layout_marginLeft="16dp"
       android:layout_marginBottom="5dp"
       android:layout_weight="4"
       android:orientation="vertical">
@@ -27,7 +26,6 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginBottom="5dp">
 
       <TextView
@@ -50,8 +48,7 @@
     <LinearLayout
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp">
+        android:layout_marginStart="10dp">
 
       <TextView
           android:id="@+id/trophiesWon"
@@ -76,7 +73,6 @@
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_marginEnd="20dp"
-      android:layout_marginRight="20dp"
       android:layout_weight="1"
       android:visibility="visible"
       app:srcCompat="@drawable/battle_log_button" />
@@ -86,10 +82,9 @@
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_marginEnd="20dp"
-      android:layout_marginRight="20dp"
       android:layout_weight="2"
       android:gravity="center"
-      android:text="Disconnected"
+      android:text="@string/disconnected"
       android:textColor="@color/colorRed"
       android:textSize="20sp"
       android:textStyle="bold"

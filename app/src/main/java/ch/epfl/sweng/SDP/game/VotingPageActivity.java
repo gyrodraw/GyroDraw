@@ -76,28 +76,27 @@ public class VotingPageActivity extends BaseActivity {
 
     /**
      * Shares an image to facebook.
+     *
      * @param view the button invoked this method.
      */
     public void shareImage(View view) {
         sharingMode = true;
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
-                getApplicationContext(), null, 1);
-        ImageSharer.getInstance(this)
-                .shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
+        ImageSharer.getInstance(this).shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
     }
 
     /**
      * Saves an image to the disk.
-     * @param view  the button invoked this method.
+     *
+     * @param view the button invoked this method.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveImage(View view) {
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
-                getApplicationContext(), null, 1);
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
         Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-        Account account = Account.getInstance(getApplicationContext());
+        Account account = Account.getInstance(this);
         String imageName = account.getUsername() + account.getTotalMatches();
-        ImageStorageManager.saveImage(localImage, imageName, this,getApplicationContext());
+        ImageStorageManager.saveImage(localImage, imageName, this);
     }
 
     @VisibleForTesting
@@ -234,7 +233,7 @@ public class VotingPageActivity extends BaseActivity {
             return;
         }
 
-        Log.d(TAG,"Pausing activity");
+        Log.d(TAG, "Pausing activity");
 
         if (roomID != null && !roomID.equals("0123457890")) {
             Matchmaker.getInstance(Account.getInstance(this))
@@ -264,7 +263,7 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
-        Log.d(TAG,"Starting home activity");
+        Log.d(TAG, "Starting home activity");
 
         ImageSharer sharer = ImageSharer.getInstance();
         if (sharer != null) {
@@ -400,7 +399,7 @@ public class VotingPageActivity extends BaseActivity {
 
                                             // Enable the rating bar only if the image is not the player's one
                                             enableRatingBar(playerName);
-                                            
+
                                             // Display the voting page layout
                                             setLayoutToVisible();
                                         }

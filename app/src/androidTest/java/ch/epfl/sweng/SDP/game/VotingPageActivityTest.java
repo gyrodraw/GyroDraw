@@ -1,22 +1,16 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.RatingBar;
 
@@ -24,10 +18,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -120,7 +111,7 @@ public class VotingPageActivityTest {
                 activityRule.getActivity().getResources(), R.drawable.league_1);
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap,2);
+        localDbHandler.addBitmapToDb(bitmap, 2);
         onView(withId(R.id.share)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
     }
@@ -141,7 +132,7 @@ public class VotingPageActivityTest {
         Bitmap bitmap = initializedBitmap();
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap,2);
+        localDbHandler.addBitmapToDb(bitmap, 2);
         onView(withId(R.id.save)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
     }

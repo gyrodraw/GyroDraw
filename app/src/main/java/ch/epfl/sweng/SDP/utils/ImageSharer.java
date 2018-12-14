@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -27,12 +26,10 @@ import ch.epfl.sweng.SDP.firebase.FbStorage;
 public class ImageSharer {
 
     private static ImageSharer instance;
-
-    private Context context;
     private Activity activity;
 
     private ImageSharer(Activity activity) {
-        this.context = activity.getApplicationContext();
+        this.activity = activity;
     }
 
     /**
@@ -88,12 +85,9 @@ public class ImageSharer {
      */
     @VisibleForTesting
     public boolean shareImageToFacebookApp(Bitmap image) {
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(image)
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
+        SharePhoto photo = new SharePhoto.Builder().setBitmap(image).build();
+        SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
+
         if (activity != null) {
             ShareDialog.show(activity, content);
             return true;
@@ -107,7 +101,7 @@ public class ImageSharer {
      * @param image the image to upload
      */
     private void uploadImageToFireBase(Bitmap image) {
-        Account account = Account.getInstance(context);
+        Account account = Account.getInstance(activity);
         String imageName = "DRAWING_" + account.getTotalMatches()
                 + "_" + account.getUsername() + ".jpg";
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);

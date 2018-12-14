@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
@@ -12,7 +13,7 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 /**
  * Class representing a game result.
  */
-public class GameResult {
+public final class GameResult {
 
     private final List<String> rankedUsername;
     private final int rank;
@@ -35,7 +36,7 @@ public class GameResult {
                 "Rank is out of bounds");
         checkPrecondition(rankedUsername.size() <= 5,
                 "The number of username is bigger than 5");
-        this.rankedUsername = rankedUsername;
+        this.rankedUsername = new ArrayList<>(rankedUsername);
         this.rank = rank;
         this.drawing = drawing;
         this.stars = stars;
@@ -43,7 +44,7 @@ public class GameResult {
     }
 
     public List<String> getRankedUsername() {
-        return new ArrayList<>(rankedUsername);
+        return Collections.unmodifiableList(rankedUsername);
     }
 
     public int getRank() {

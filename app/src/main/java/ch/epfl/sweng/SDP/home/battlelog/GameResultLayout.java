@@ -17,7 +17,7 @@ import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 /**
  * Class that manages the view part of GameResult.
  */
-public class GameResultLayout {
+public final class GameResultLayout {
 
     private static final int USERNAME_SIZE = 20;
     private static final int REWARD_SIZE = 15;

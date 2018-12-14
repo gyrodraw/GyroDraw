@@ -34,9 +34,11 @@ import org.junit.Test;
 
 public class ImageStorageManagerTest {
 
-    @Rule public GrantPermissionRule writeExternalStoragePermission =
+    @Rule 
+    public GrantPermissionRule writeExternalStoragePermission =
             GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    @Rule public GrantPermissionRule readExternalStoragePermission =
+    @Rule 
+    public GrantPermissionRule readExternalStoragePermission =
             GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
     @Test

@@ -134,8 +134,8 @@ public class LeaderboardActivityTest {
 
     @Test
     public void testLeaderboardIsSearchable() {
-        onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         SystemClock.sleep(1000);
+        onView(withId(R.id.searchField)).perform(typeText("PICASSO"));
         assertThat(((LinearLayout) activityRule.getActivity().findViewById(R.id.leaderboard))
                 .getChildCount(), greaterThanOrEqualTo(1));
     }

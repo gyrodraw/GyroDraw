@@ -11,12 +11,13 @@ public class AddStarsItem extends Item {
 
     private static final int ADD_STARS = 3;
 
-    public AddStarsItem(int x, int y, int radius) {
-        super(x, y, radius);
+    public AddStarsItem(int posX, int posY, int radius) {
+        super(posX, posY, radius);
     }
 
     @Override
     public void activate(final PaintView paintView) {
+        vibrate(paintView);
         Account.getInstance(paintView.getContext()).changeStars(ADD_STARS);
     }
 

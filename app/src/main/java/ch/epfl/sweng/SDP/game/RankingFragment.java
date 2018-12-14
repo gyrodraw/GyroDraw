@@ -227,23 +227,21 @@ public class RankingFragment extends ListFragment {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.ranking_item, parent, false);
 
-            Typeface typeMuro = TypefaceLibrary.getTypeMuro();
-
-            setTypeFace(typeMuro, convertView.findViewById(R.id.playerName),
+            setTypeFace(TypefaceLibrary.getTypeMuro(), convertView.findViewById(R.id.playerName),
                                 convertView.findViewById(R.id.starsWon),
                                 convertView.findViewById(R.id.trophiesWon),
                                 convertView.findViewById(R.id.disconnectedRanking));
 
             // Update image
-            ImageView imageView = convertView.findViewById(R.id.drawing);
+            ImageView drawingView = convertView.findViewById(R.id.drawing);
             TextView disconnectedTextView = convertView.findViewById(R.id.disconnectedRanking);
             if (rankings[position] >= 0) {
                 disconnectedTextView.setVisibility(View.GONE);
-                imageView.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(drawings[getIndexForUserName(players[position])]);
+                drawingView.setVisibility(View.VISIBLE);
+                drawingView.setImageBitmap(drawings[getIndexForUserName(players[position])]);
             } else {
                 disconnectedTextView.setVisibility(View.VISIBLE);
-                imageView.setVisibility(View.GONE);
+                drawingView.setVisibility(View.GONE);
             }
 
             // Set the color

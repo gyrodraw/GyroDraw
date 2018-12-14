@@ -226,7 +226,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void handleUserStatus(final TextView errorMessage) {
         final DatabaseReference statusRef = FbDatabase.getReference(format("users.%s.online",
                 Account.getInstance(getApplicationContext()).getUserId()));
-        Database.setListenerToAccountAttribute(
+        FbDatabase.setListenerToAccountAttribute(
                 Account.getInstance(getApplicationContext()).getUserId(), STATUS,
                 new ValueEventListener() {
                     @Override

@@ -29,11 +29,6 @@ public class ItemTest {
         assertThat(speedupItem.collision(20, 0, 11), is(true));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateItemWithIllegalArguments() {
-        new SpeedupItem(-10, -10, -10);
-    }
-
     @Test
     public void testTextFeedbacksFromDifferentItemClasses() {
         SpeedupItem speedupItem = new SpeedupItem(0, 0, 10);

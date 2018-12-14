@@ -113,7 +113,11 @@ public class DrawingOfflineActivityWithItemsTest {
     @Test
     public void testBumpingItemReplacesPaintViewCoordinatesCorrectly() {
         paintView.setCircle(202, 202);
+<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOfflineActivityWithItemsTest.java
         activateItem(new BumpingItem(200, 200, 10));
+=======
+        collisionItem(new BumpingItem(200, 200, 10));
+>>>>>>> 7f2d6de382937dc9dc5392b8e6758e90cbc0c3b0:app/src/androidTest/java/ch/epfl/sweng/SDP/game/drawing/DrawingOfflineWithItemsTest.java
         int dx = paintView.getCircleX() - 200;
         int dy = paintView.getCircleY() - 200;
         double radius = Math.sqrt(dx * dx + dy * dy) + paintView.getCircleRadius();

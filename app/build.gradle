@@ -32,6 +32,9 @@ android {
     testOptions {
         animationsDisabled = true
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 tasks.withType(Test) {

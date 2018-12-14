@@ -14,7 +14,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -42,10 +41,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
 
     private String roomID = null;
     private int gameMode = 0;
-
-    //private BooleanVariableListener isRoomReady = new BooleanVariableListener();
-    //private BooleanVariableListener areWordsReady = new BooleanVariableListener();
-
+    
     private ObservableBoolean isRoomReady = new ObservableBoolean();
     private ObservableBoolean areWordsReady = new ObservableBoolean();
 

@@ -22,12 +22,12 @@ import com.google.firebase.database.ValueEventListener;
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
  */
-public final class Database {
+public final class FbDatabase {
 
-    private static final DatabaseReference USERS_REFERENCE = Database.getReference("users");
+    private static final DatabaseReference USERS_REFERENCE = getReference("users");
     private static final String USERS_TAG = "users";
 
-    private Database() {
+    private FbDatabase() {
     }
 
     /**
@@ -101,7 +101,7 @@ public final class Database {
      * @param valueEventListener action that should be taken after retrieving the friends
      */
     public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS)))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(FRIENDS)))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -112,7 +112,7 @@ public final class Database {
      */
     public static void getFriend(String userId, String friendId,
             ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -125,7 +125,7 @@ public final class Database {
      */
     public static void getAttribute(String userId, AccountAttributes attribute,
             ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -139,7 +139,7 @@ public final class Database {
      */
     public static void setAttribute(String userId, AccountAttributes attribute, Object newValue,
             DatabaseReference.CompletionListener completionListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .setValue(newValue, completionListener);
     }
 
@@ -163,7 +163,7 @@ public final class Database {
      */
     public static void setListenerToAttribute(String userId, AccountAttributes attribute,
             ValueEventListener valueEventListener) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .addValueEventListener(valueEventListener);
     }
 
@@ -175,7 +175,7 @@ public final class Database {
      * @param newValue new status of friendship
      */
     public static void setFriendValue(String userId, String friendId, int newValue) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .setValue(newValue, createCompletionListener());
     }
 
@@ -186,7 +186,7 @@ public final class Database {
      * @param friendId id of friend to be removed
      */
     public static void removeFriend(String userId, String friendId) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .removeValue(createCompletionListener());
     }
 
@@ -197,7 +197,7 @@ public final class Database {
      * @param item item that will be inserted
      */
     public static void setShopItemValue(String userId, ShopItem item) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(BOUGHT_ITEMS),
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(BOUGHT_ITEMS),
                 item.getColorItem().toString()))
                 .setValue(item.getPriceItem(), createCompletionListener());
     }
@@ -208,7 +208,7 @@ public final class Database {
      * @param userId id of user whose online value will be set to offline upon disconnection
      */
     public static void changeToOfflineOnDisconnect(String userId) {
-        Database.getReference(constructUsersPath(userId, attributeToPath(STATUS)))
+        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(STATUS)))
                 .onDisconnect()
                 .setValue(OFFLINE.ordinal());
     }

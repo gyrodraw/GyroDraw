@@ -119,8 +119,6 @@ public class DrawingOnline extends GyroDrawingActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
-
         ConnectivityWrapper.registerNetworkReceiver(this);
 
         Intent intent = getIntent();

@@ -153,7 +153,6 @@ public class VotingPageActivity extends BaseActivity {
 
         setAnimationWaitingBackground();
 
-        Typeface typeMuro = Typeface.createFromAsset(getAssets(), "fonts/Muro.otf");
         setTypeFace(typeMuro, playerNameView, timer, disconnectedText);
 
         // Get the ranking reference

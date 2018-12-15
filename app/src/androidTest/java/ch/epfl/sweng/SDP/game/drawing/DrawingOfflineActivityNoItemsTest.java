@@ -6,14 +6,14 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.SeekBar;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

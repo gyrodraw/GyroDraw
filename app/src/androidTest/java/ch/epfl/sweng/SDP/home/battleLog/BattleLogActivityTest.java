@@ -5,17 +5,17 @@ import android.graphics.Bitmap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

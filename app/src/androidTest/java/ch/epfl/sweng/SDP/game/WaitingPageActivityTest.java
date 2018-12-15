@@ -13,6 +13,11 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -26,11 +31,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

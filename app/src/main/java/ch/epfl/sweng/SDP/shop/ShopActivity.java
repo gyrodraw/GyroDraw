@@ -12,10 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -23,6 +19,10 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 

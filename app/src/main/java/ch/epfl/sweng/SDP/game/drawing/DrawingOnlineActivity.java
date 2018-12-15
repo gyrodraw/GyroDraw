@@ -7,15 +7,6 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
@@ -24,6 +15,15 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;

@@ -9,14 +9,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Utility class containing methods related to the special items mode.

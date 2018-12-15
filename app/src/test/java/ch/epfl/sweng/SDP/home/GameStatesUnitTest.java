@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
-import org.junit.Test;
-
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
+
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

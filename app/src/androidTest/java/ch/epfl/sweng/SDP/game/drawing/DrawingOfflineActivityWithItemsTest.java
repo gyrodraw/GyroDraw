@@ -5,12 +5,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.util.Map;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
@@ -21,6 +15,12 @@ import ch.epfl.sweng.SDP.game.drawing.items.SpeedupItem;
 import ch.epfl.sweng.SDP.game.drawing.items.SwapAxisItem;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
+
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.CoreMatchers.is;

@@ -9,10 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import java.util.List;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import java.util.List;
 
 /**
  * Class that manages the view part of GameResult.

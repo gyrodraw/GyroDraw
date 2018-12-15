@@ -2,6 +2,9 @@ package ch.epfl.sweng.SDP.firebase;
 
 import android.content.Context;
 
+import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.R;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.AuthUI.IdpConfig;
 import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
@@ -10,9 +13,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Collections;
 import java.util.List;
-
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
 
 /**
  * Utility wrapper class over {@link FirebaseAuth} and {@link AuthUI}.

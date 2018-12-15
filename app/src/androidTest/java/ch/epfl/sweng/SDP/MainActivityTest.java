@@ -8,21 +8,21 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.TextView;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import java.util.HashMap;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;

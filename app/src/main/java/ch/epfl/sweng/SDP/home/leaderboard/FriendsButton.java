@@ -8,13 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getFriend;
 

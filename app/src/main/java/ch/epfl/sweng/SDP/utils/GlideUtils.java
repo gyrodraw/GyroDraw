@@ -2,10 +2,10 @@ package ch.epfl.sweng.SDP.utils;
 
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
 import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
+
+import com.bumptech.glide.Glide;
 
 /**
  * Utility class used to display animations using Glide.

@@ -3,14 +3,14 @@ package ch.epfl.sweng.SDP.firebase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.BOUGHT_ITEMS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;

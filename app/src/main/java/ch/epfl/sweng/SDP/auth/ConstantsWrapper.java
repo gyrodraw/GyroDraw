@@ -1,9 +1,9 @@
 package ch.epfl.sweng.SDP.auth;
 
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
 
 /**
  * Wrapper class useful for testing.

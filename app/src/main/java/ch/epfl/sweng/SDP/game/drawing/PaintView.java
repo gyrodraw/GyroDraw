@@ -12,15 +12,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
+
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.FbStorage;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 
 import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;

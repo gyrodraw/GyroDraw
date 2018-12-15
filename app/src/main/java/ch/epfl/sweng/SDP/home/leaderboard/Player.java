@@ -8,14 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-
-import java.util.LinkedList;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.utils.TestUsers;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.LinkedList;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;

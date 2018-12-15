@@ -11,12 +11,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
@@ -26,6 +20,12 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 import static android.view.View.VISIBLE;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;

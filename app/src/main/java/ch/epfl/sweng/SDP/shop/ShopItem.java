@@ -11,11 +11,11 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Comparator;
-import java.util.Objects;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;

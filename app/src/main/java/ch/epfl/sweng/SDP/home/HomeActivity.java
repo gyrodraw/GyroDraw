@@ -17,13 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
@@ -42,6 +35,13 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;

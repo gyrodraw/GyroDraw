@@ -1,9 +1,9 @@
 package ch.epfl.sweng.SDP.utils;
 
-import com.google.firebase.database.DatabaseReference;
-
 import ch.epfl.sweng.SDP.firebase.AccountAttributes;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
+
+import com.google.firebase.database.DatabaseReference;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 

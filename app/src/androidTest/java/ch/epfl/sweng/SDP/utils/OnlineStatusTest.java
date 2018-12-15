@@ -3,14 +3,14 @@ package ch.epfl.sweng.SDP.utils;
 import android.support.annotation.NonNull;
 import android.support.test.runner.AndroidJUnit4;
 
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;

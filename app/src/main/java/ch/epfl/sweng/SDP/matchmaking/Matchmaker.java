@@ -1,10 +1,10 @@
 package ch.epfl.sweng.SDP.matchmaking;
 
-import com.google.android.gms.tasks.Task;
-
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.FbFunctions;
+
+import com.google.android.gms.tasks.Task;
 
 /**
  * Singleton class that represents the matchmaker.

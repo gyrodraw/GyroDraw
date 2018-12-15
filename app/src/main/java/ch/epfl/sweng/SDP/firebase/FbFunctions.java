@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.firebase;
 
 import android.support.annotation.NonNull;
 
+import ch.epfl.sweng.SDP.auth.Account;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -9,8 +11,6 @@ import com.google.firebase.functions.HttpsCallableResult;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import ch.epfl.sweng.SDP.auth.Account;
 
 /**
  * Utility wrapper class over {@link com.google.firebase.functions.FirebaseFunctions}.

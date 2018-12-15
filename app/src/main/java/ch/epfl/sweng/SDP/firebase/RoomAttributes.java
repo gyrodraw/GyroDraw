@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP.firebase;
 
 /**
- * TODO
+ * Enum representing all the room's attributes.
  */
 public enum RoomAttributes {
     FINISHED, GAME_MODE, ONLINE_STATUS, PLAYING, RANKING, STATE,

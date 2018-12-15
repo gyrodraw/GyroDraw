@@ -103,7 +103,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void testSharingImage() {
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
         activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
 
@@ -124,7 +124,7 @@ public class VotingPageActivityTest {
     public void testSaveImage() {
         // Open fragment
         SystemClock.sleep(1000);
-        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
         activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
 

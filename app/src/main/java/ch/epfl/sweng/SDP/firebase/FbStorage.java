@@ -19,8 +19,11 @@ import java.io.IOException;
  */
 public final class FbStorage {
 
-    private static final String TAG = "fbStorage";
+    private static final String TAG = "FbStorage";
     private static final int QUALITY = 20;
+
+    private static final StorageReference STORAGE_REF = FirebaseStorage.getInstance()
+            .getReference();
 
     private FbStorage() {
     }
@@ -28,7 +31,7 @@ public final class FbStorage {
     /**
      * Uploads a given bitmap to Firebase Storage with the given name.
      *
-     * @param bitmap   the image to upload
+     * @param bitmap the image to upload
      * @param imageName the name of the image
      * @return the {@link StorageTask} in charge of the upload
      */
@@ -37,7 +40,7 @@ public final class FbStorage {
         checkPrecondition(bitmap != null, "bitmap is null");
         checkPrecondition(imageName != null, "imageName is null");
 
-        StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageName);
+        StorageReference imageRef = STORAGE_REF.child(imageName);
 
         ByteArrayOutputStream byteArrayOutputStream =
                 new ByteArrayOutputStream();
@@ -58,5 +61,15 @@ public final class FbStorage {
                 Log.d(TAG, "Upload to Firebase Storage failed.");
             }
         });
+    }
+
+    /**
+     * Removes from Firebase Storage the image corresponding to the given name. The image name has
+     * to contain the extension (imageName.jpg, for example).
+     *
+     * @param imageName the name of the image
+     */
+    public static void removeImage(String imageName) {
+        STORAGE_REF.child(imageName).delete();
     }
 }

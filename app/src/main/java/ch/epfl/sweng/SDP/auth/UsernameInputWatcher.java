@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static java.lang.String.format;
-
 import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ch.epfl.sweng.SDP.R;
+
+import static java.lang.String.format;
 
 /**
  * This class is a listener which can be applied to the username input

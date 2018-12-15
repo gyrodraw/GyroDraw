@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -27,6 +26,7 @@ import java.util.Map;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;

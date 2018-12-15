@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.home.leagues;
 
-import ch.epfl.sweng.SDP.home.leagues.League;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

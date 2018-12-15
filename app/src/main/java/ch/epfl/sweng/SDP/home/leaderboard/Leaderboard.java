@@ -17,11 +17,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.utils.TestUsers;
 
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USER_ID;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;

@@ -1,11 +1,11 @@
 package ch.epfl.sweng.SDP.utils;
 
+import org.junit.Test;
+
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-
-import org.junit.Test;
 
 public class OnlineStatusUnitTest {
 

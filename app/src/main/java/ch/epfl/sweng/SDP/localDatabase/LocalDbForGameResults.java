@@ -1,8 +1,10 @@
 package ch.epfl.sweng.SDP.localDatabase;
 
 import android.content.Context;
-import ch.epfl.sweng.SDP.home.battleLog.GameResult;
+
 import java.util.List;
+
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 
 /**
  * Interface representing a generic handler for the local database, responsible of operations

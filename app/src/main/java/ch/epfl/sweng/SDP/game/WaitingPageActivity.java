@@ -1,15 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.WORDS;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_1;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
-import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
-import static java.lang.String.format;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +13,11 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -35,10 +30,15 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.WORDS;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_1;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
+import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
+import static java.lang.String.format;
 
 /**
  * Class representing the first phase of an online game: a waiting page in which players can vote

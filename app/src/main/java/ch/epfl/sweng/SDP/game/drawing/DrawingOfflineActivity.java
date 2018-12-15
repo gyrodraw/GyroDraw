@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
-
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -11,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Random;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
 import ch.epfl.sweng.SDP.home.HomeActivity;
@@ -18,8 +19,7 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
-import java.util.HashMap;
-import java.util.Random;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
 
 /**
  * Class representing the offline practice mode. The user has the choice of

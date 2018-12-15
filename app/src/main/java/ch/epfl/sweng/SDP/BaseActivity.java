@@ -223,7 +223,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void handleUserStatus(final TextView errorMessage) {
         final String userId = Account.getInstance(this).getUserId();
-
         FbDatabase.setListenerToAccountAttribute(
                 userId, STATUS,
                 new ValueEventListener() {

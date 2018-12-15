@@ -487,6 +487,11 @@ public class VotingPageActivity extends NoBackPressActivity {
     }
 
     @VisibleForTesting
+    public String[] getDrawingsIds() {
+        return drawingsIds;
+    }
+
+    @VisibleForTesting
     public int[] getRatings() {
         return ratings.clone();
     }

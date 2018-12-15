@@ -6,8 +6,6 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.FbFunctions;
 
-import static java.lang.String.format;
-
 /**
  * Singleton class that represents the matchmaker.
  */

@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +28,7 @@ import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbAuthentication;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
@@ -44,8 +44,9 @@ import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAccountAttribute;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
@@ -87,7 +88,7 @@ public class HomeActivity extends NoBackPressActivity {
 
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
-                        getUserById(id, new ValueEventListener() {
+                        getAccountAttribute(id, USERNAME, new ValueEventListener() {
 
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -208,28 +209,26 @@ public class HomeActivity extends NoBackPressActivity {
      * Signs the current user out and starts the {@link MainActivity}.
      */
     private void signOut() {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // Update Firebase, delete the account instance and launch MainActivity
-                            changeOnlineStatus(
-                                    Account.getInstance(getApplicationContext()).getUserId(),
-                                    OFFLINE, new DatabaseReference.CompletionListener() {
-                                        @Override
-                                        public void onComplete(
-                                                @Nullable DatabaseError databaseError,
-                                                @NonNull DatabaseReference databaseReference) {
-                                            checkForDatabaseError(databaseError);
-                                            successfulSignOut();
-                                        }
-                                    });
-                        } else {
-                            Log.e(TAG, "Sign out failed!");
-                        }
-                    }
-                });
+        FbAuthentication.signOut(this, new OnCompleteListener<Void>() {
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // Update Firebase, delete the account instance and launch MainActivity
+                    changeOnlineStatus(
+                            Account.getInstance(getApplicationContext()).getUserId(),
+                            OFFLINE, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(
+                                        @Nullable DatabaseError databaseError,
+                                        @NonNull DatabaseReference databaseReference) {
+                                    checkForDatabaseError(databaseError);
+                                    successfulSignOut();
+                                }
+                            });
+                } else {
+                    Log.e(TAG, "Sign out failed!");
+                }
+            }
+        });
         profileWindow.dismiss();
     }
 

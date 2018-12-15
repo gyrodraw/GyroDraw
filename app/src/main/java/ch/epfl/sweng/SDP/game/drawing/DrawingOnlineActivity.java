@@ -1,7 +1,6 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -26,10 +25,10 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
 import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
-import static java.lang.String.format;
 
 /**
  * Class representing the drawing phase of an online game in normal mode.
@@ -79,11 +78,9 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                                 new OnCompleteListener<TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<TaskSnapshot> task) {
-                                        FbDatabase.getReference(
-                                                format("%s.%s.uploadDrawing.%s", TOP_ROOM_NODE_ID,
-                                                        roomId,
-                                                        Account.getInstance(getApplicationContext())
-                                                                .getUsername())).setValue(1);
+                                        FbDatabase.setValueToUserInRoomAttribute(roomId,
+                                                Account.getInstance(getApplicationContext())
+                                                .getUsername(), UPLOAD_DRAWING, 1);
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);

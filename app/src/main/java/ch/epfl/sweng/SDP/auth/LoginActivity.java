@@ -1,31 +1,24 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.AuthUI.IdpConfig;
-import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder;
+import ch.epfl.sweng.SDP.MainActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.FbAuthentication;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Collections;
-import java.util.List;
-
-import ch.epfl.sweng.SDP.MainActivity;
-import ch.epfl.sweng.SDP.NoBackPressActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.utils.GlideUtils;
-
-import static android.view.View.VISIBLE;
 
 
 /**
@@ -47,26 +40,13 @@ public class LoginActivity extends NoBackPressActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
-        createSignInIntent();
+        FbAuthentication.signIn(this, REQUEST_CODE_SIGN_IN);
 
         errorMessage = findViewById(R.id.errorMessage);
         errorMessage.setTypeface(typeMuro);
 
         GlideUtils.startDotsWaitingAnimation(this);
         GlideUtils.startBackgroundAnimation(this);
-    }
-
-    private void createSignInIntent() {
-        final List<IdpConfig> providers = Collections.singletonList(
-                new GoogleBuilder().build());
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTheme(R.style.LoginTheme)
-                        .setLogo(R.mipmap.ic_launcher_round) // custom logo here
-                        .build(),
-                REQUEST_CODE_SIGN_IN);
     }
 
     @Override

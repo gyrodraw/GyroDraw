@@ -116,7 +116,7 @@ public class VotingPageActivityTest {
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 2);
-        onView(withId(R.id.share)).perform(click());
+        onView(withId(R.id.shareButton)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
     }
 
@@ -211,7 +211,7 @@ public class VotingPageActivityTest {
     @Test
     public void startHomeActivityStartsHomeActivity() {
         Intents.init();
-        activityRule.getActivity().startHomeActivity(null);
+        activityRule.getActivity().startHomeActivity();
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();

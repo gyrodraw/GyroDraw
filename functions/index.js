@@ -96,7 +96,7 @@ function functionTimer (seconds, state, roomID, call) {
         }
 
         if (hasEveryoneVoted(snapshot) === true 
-          && snapshot.child("state").val() == StateEnum.ChoosingWordsCountdown) {
+          && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
           elapsedSeconds = seconds;
         }
       });
@@ -315,7 +315,7 @@ function updateUser(userID) {
       let totalMatches;
 
       return admin.database().ref("users/" + userID + "/trophies").transaction((currentValue) => {
-        newTrophies = currentValue + minRank;
+        newTrophies = Math.max(currentValue + minRank, 0);
         return newTrophies;
       })
       .then(() => {

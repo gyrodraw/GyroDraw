@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
@@ -31,7 +30,6 @@ import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 import static android.view.View.VISIBLE;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-import static java.lang.String.format;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other
@@ -224,10 +222,10 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param errorMessage the {@link TextView} corresponding to the error message
      */
     protected void handleUserStatus(final TextView errorMessage) {
-        final DatabaseReference statusRef = FbDatabase.getReference(format("users.%s.online",
-                Account.getInstance(getApplicationContext()).getUserId()));
+        final String userId = Account.getInstance(this).getUserId();
+
         FbDatabase.setListenerToAccountAttribute(
-                Account.getInstance(getApplicationContext()).getUserId(), STATUS,
+                userId, STATUS,
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -237,7 +235,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             errorMessage.setText(getString(R.string.already_logged_in));
                             errorMessage.setVisibility(VISIBLE);
                         } else {
-                            statusRef.removeEventListener(this);
+                            FbDatabase.removeListenerFromAccountAttribute(userId, STATUS, this);
                             launchActivity(HomeActivity.class);
                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             finish();

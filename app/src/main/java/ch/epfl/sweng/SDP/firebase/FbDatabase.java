@@ -163,7 +163,7 @@ public final class FbDatabase {
      * @param valueEventListener how to handle response
      */
     public static void getFriend(String userId, String friendId,
-            ValueEventListener valueEventListener) {
+                                 ValueEventListener valueEventListener) {
         getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
@@ -208,7 +208,7 @@ public final class FbDatabase {
      *
      * @param userId             id of user whose attribute will be observed
      * @param attribute          enum to determine which attribute to observe
-     * @param valueEventListener listener to handle response
+     * @param valueEventListener listener to add
      */
     public static void setListenerToAccountAttribute(String userId, AccountAttributes attribute,
                                                      ValueEventListener valueEventListener) {
@@ -217,11 +217,24 @@ public final class FbDatabase {
     }
 
     /**
+     * Removes a listener to an attribute of a given user.
+     *
+     * @param userId             id of user whose attribute won't be observed anymore
+     * @param attribute          enum to determine which attribute's listener to remove
+     * @param valueEventListener listener to remove
+     */
+    public static void removeListenerFromAccountAttribute(
+            String userId, AccountAttributes attribute, ValueEventListener valueEventListener) {
+        getReference(constructUsersPath(userId, attributeToPath(attribute)))
+                .removeEventListener(valueEventListener);
+    }
+
+    /**
      * Gets an attribute from a given room in the database.
      *
-     * @param roomId                id of the room to get the attribute from
-     * @param attribute             attribute to get
-     * @param valueEventListener    listener to run on completion
+     * @param roomId             id of the room to get the attribute from
+     * @param attribute          attribute to get
+     * @param valueEventListener listener to run on completion
      */
     public static void getRoomAttribute(String roomId, RoomAttributes attribute,
                                         ValueEventListener valueEventListener) {
@@ -246,8 +259,8 @@ public final class FbDatabase {
     /**
      * Removes a user from a given room.
      *
-     * @param roomId    id of the room to modify
-     * @param account   user that should be deleted
+     * @param roomId  id of the room to modify
+     * @param account user that should be deleted
      */
     public static void removeUserFromRoom(String roomId, Account account) {
         getReference(constructRoomsPath(roomId,
@@ -326,7 +339,7 @@ public final class FbDatabase {
         return new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
-                    @NonNull DatabaseReference databaseReference) {
+                                   @NonNull DatabaseReference databaseReference) {
                 checkForDatabaseError(databaseError);
             }
         };

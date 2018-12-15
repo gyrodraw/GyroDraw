@@ -44,8 +44,9 @@ import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAccountAttribute;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
@@ -87,7 +88,7 @@ public class HomeActivity extends NoBackPressActivity {
 
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
-                        getUserById(id, new ValueEventListener() {
+                        getAccountAttribute(id, USERNAME, new ValueEventListener() {
 
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

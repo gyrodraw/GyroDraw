@@ -192,25 +192,17 @@ public class VotingPageActivity extends NoBackPressActivity {
                                 ratingBar.setIsIndicator(true);
                                 ratingBar.setAlpha(0.8f);
 
-                                ratings = new int[NUMBER_OF_DRAWINGS];
-                                ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
-                                    @Override
-                                    public void onRatingChanged(RatingBar ratingBar, float rating,
-                                                                boolean fromUser) {
-                                        ratingBar.setIsIndicator(true);
-                                        ratingBar.setAlpha(0.8f);
+                                // Store the rating
+                                ratings[changeDrawingCounter] = (int) rating;
 
-                                        // Send it to the database along with the corresponding player name
-                                        sendRatingToDatabase(playersNames[changeDrawingCounter]);
-                                    }
-                                });
-
-                                previousRating = 0;
-                                addStarAnimationListener();
+                                // Send it to the database along with the corresponding player name
+                                sendRatingToDatabase(playersNames[changeDrawingCounter]);
                             }
                         });
-                    }
 
+                        previousRating = 0;
+                        addStarAnimationListener();
+                    }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

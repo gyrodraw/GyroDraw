@@ -239,7 +239,7 @@ public final class FbDatabase {
     public static void getRoomAttribute(String roomId, RoomAttributes attribute,
                                         ValueEventListener valueEventListener) {
         getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
-                .addValueEventListener(valueEventListener);
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
     /**

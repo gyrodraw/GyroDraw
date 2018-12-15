@@ -56,7 +56,8 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     private String word1 = null;
     private String word2 = null;
 
-    Observable.OnPropertyChangedCallback listenerRoomReady = new Observable.OnPropertyChangedCallback() {
+    Observable.OnPropertyChangedCallback listenerRoomReady =
+            new Observable.OnPropertyChangedCallback() {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
             if (areWordsReady.get() && isRoomReady.get()) {

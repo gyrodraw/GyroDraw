@@ -163,6 +163,7 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity() {
+        SystemClock.sleep(1000);
         Intents.init();
         mActivityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);

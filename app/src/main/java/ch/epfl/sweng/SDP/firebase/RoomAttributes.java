@@ -1,9 +1,17 @@
 package ch.epfl.sweng.SDP.firebase;
 
+/**
+ * TODO
+ */
 public enum RoomAttributes {
     FINISHED, GAME_MODE, ONLINE_STATUS, PLAYING, RANKING, STATE,
     TIMER, UPLOAD_DRAWING, USERS, WORDS;
 
+    /**
+     * TODO
+     * @param roomAttributes
+     * @return
+     */
     static String attributeToPath(RoomAttributes roomAttributes) {
         switch (roomAttributes) {
             case FINISHED:

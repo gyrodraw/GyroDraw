@@ -268,10 +268,8 @@ public class VotingPageActivity extends BaseActivity {
     /**
      * Starts the {@link HomeActivity} when the button is pressed. The button is used at the end of
      * the game to return to the home screen.
-     *
-     * @param view the view corresponding to the button pressed
      */
-    public void startHomeActivity(View view) {
+    public void startHomeActivity() {
         // Remove the drawings from Firebase Storage
         for (String id : drawingsIds) {
             // Remove this after testing
@@ -282,8 +280,7 @@ public class VotingPageActivity extends BaseActivity {
 
         Log.d(TAG, "Starting home activity");
 
-        ImageSharer sharer = ImageSharer.getInstance();
-        if (sharer != null) {
+        if (ImageSharer.getInstance() != null) {
             ImageSharer.getInstance().setActivity(null);
         }
         launchActivity(HomeActivity.class);
@@ -503,7 +500,7 @@ public class VotingPageActivity extends BaseActivity {
 
         RankingFragment fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        fragment.putExtra(roomID, drawings, playersNames);
+        fragment.putExtra(roomID, drawings, playersNames, this);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)

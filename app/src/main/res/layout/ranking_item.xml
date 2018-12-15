@@ -6,86 +6,86 @@
     android:layout_marginBottom="5dp"
     android:background="@color/colorDrawYellow">
 
-  <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginBottom="5dp"
-      android:layout_weight="4"
-      android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/playerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="23sp" />
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:id="@+id/starsWon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/star" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:id="@+id/trophiesWon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/trophy" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/drawing"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="20dp"
+        android:layout_weight="1"
+        android:visibility="visible"
+        app:srcCompat="@drawable/default_image" />
 
     <TextView
-        android:id="@+id/playerName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|start"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="23sp" />
-
-    <LinearLayout
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="5dp">
-
-      <TextView
-          android:id="@+id/starsWon"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center_vertical|start"
-          android:textColor="@color/colorPrimaryDark"
-          android:textSize="18sp" />
-
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          app:srcCompat="@drawable/star" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp">
-
-      <TextView
-          android:id="@+id/trophiesWon"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center_vertical|start"
-          android:textColor="@color/colorPrimaryDark"
-          android:textSize="18sp" />
-
-      <ImageView
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          app:srcCompat="@drawable/trophy" />
-    </LinearLayout>
-  </LinearLayout>
-
-  <ImageView
-      android:id="@+id/drawing"
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_marginEnd="20dp"
-      android:layout_weight="1"
-      android:visibility="visible"
-      app:srcCompat="@drawable/default_image" />
-
-  <TextView
-      android:id="@+id/disconnectedRanking"
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_marginEnd="20dp"
-      android:layout_weight="2"
-      android:gravity="center"
-      android:text="@string/disconnected"
-      android:textColor="@color/colorRed"
-      android:textSize="20sp"
-      android:textStyle="bold"
-      android:visibility="gone" />
+        android:id="@+id/disconnectedRanking"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="20dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="@string/disconnected"
+        android:textColor="@color/colorRed"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 </LinearLayout> 

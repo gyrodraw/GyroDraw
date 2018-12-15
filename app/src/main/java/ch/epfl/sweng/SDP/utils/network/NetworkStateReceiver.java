@@ -17,11 +17,20 @@ public final class NetworkStateReceiver extends BroadcastReceiver {
     private Set<NetworkStateReceiverListener> listeners;
     private Boolean connected;
 
+    /**
+     * Constructor
+     */
     public NetworkStateReceiver() {
         listeners = new HashSet<>();
         connected = null;
     }
 
+    /**
+     * Method called when our receiver detects a new connection state. This method detects the
+     * connectivity state and notify to all listeners the new state.
+     * @param context context of the application
+     * @param intent connectivity Intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null || intent.getExtras() == null) {

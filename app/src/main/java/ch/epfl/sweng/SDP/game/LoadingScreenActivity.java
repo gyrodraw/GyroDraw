@@ -1,6 +1,8 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
+import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -21,7 +23,6 @@ import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.RoomAttributes;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
-import ch.epfl.sweng.SDP.utils.BooleanVariableListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
 import static ch.epfl.sweng.SDP.home.HomeActivity.GAME_MODE;
@@ -41,9 +42,9 @@ public class LoadingScreenActivity extends NoBackPressActivity {
 
     private String roomID = null;
     private int gameMode = 0;
-
-    private BooleanVariableListener isRoomReady = new BooleanVariableListener();
-    private BooleanVariableListener areWordsReady = new BooleanVariableListener();
+    
+    private ObservableBoolean isRoomReady = new ObservableBoolean();
+    private ObservableBoolean areWordsReady = new ObservableBoolean();
 
     private boolean hasLeft = false;
 
@@ -55,23 +56,22 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     private String word1 = null;
     private String word2 = null;
 
-    private BooleanVariableListener.ChangeListener listenerRoomReady =
-            new BooleanVariableListener.ChangeListener() {
-                @Override
-                public void onChange() {
-                    if (areWordsReady.getBoo() && isRoomReady.getBoo()) {
-                        // Start new activity
-                        wordsVotesRef.removeEventListener(listenerWords);
-                        Intent intent = new Intent(getApplicationContext(),
-                                WaitingPageActivity.class);
-                        intent.putExtra(WORD_1, word1);
-                        intent.putExtra(WORD_2, word2);
-                        intent.putExtra(ROOM_ID, roomID);
-                        intent.putExtra(GAME_MODE, gameMode);
-                        startActivity(intent);
-                    }
-                }
-            };
+    Observable.OnPropertyChangedCallback listenerRoomReady = new Observable.OnPropertyChangedCallback() {
+        @Override
+        public void onPropertyChanged(Observable sender, int propertyId) {
+            if (areWordsReady.get() && isRoomReady.get()) {
+                // Start new activity
+                wordsVotesRef.removeEventListener(listenerWords);
+                Intent intent = new Intent(getApplicationContext(),
+                        WaitingPageActivity.class);
+                intent.putExtra(WORD_1, word1);
+                intent.putExtra(WORD_2, word2);
+                intent.putExtra(ROOM_ID, roomID);
+                intent.putExtra(GAME_MODE, gameMode);
+                startActivity(intent);
+            }
+        }
+    };
 
     private final ValueEventListener listenerWords = new ValueEventListener() {
         @Override
@@ -83,7 +83,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
             }
 
             if (areWordsReady(words)) {
-                areWordsReady.setBoo(true);
+                areWordsReady.set(true);
             }
         }
 
@@ -125,9 +125,8 @@ public class LoadingScreenActivity extends NoBackPressActivity {
             lookingForRoom(gameMode);
         }
 
-
-        isRoomReady.setListener(listenerRoomReady);
-        areWordsReady.setListener(listenerRoomReady);
+        isRoomReady.addOnPropertyChangedCallback(listenerRoomReady);
+        areWordsReady.addOnPropertyChangedCallback(listenerRoomReady);
 
         if (enableWaitingAnimation) {
             GlideUtils.startDotsWaitingAnimation(this);
@@ -154,7 +153,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                         wordsVotesRef = FbDatabase.getRoomAttributeReference(roomID,
                                 RoomAttributes.WORDS);
                         wordsVotesRef.addValueEventListener(listenerWords);
-                        isRoomReady.setBoo(true);
+                        isRoomReady.set(true);
                     }
                 }
             }

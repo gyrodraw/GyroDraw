@@ -21,7 +21,7 @@ public enum AccountAttributes {
             case USER_ID:
                 return "userId";
             case USERNAME:
-                return "userId";
+                return "username";
             case EMAIL:
                 return "email";
             case STARS:

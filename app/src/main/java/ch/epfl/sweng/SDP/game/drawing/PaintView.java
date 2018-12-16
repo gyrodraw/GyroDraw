@@ -12,15 +12,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.FbStorage;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
-
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 
 import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
 import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
@@ -33,6 +33,7 @@ public class PaintView extends View {
     private static final int QUALITY = 20;
     private static final float INIT_SPEED = 5;
     private static final int CIRCLE_STROKE = 15;
+    private static final int CURVE_INTENSITY = 5;
 
     private boolean canDraw = true;
     private boolean isDrawing = false;
@@ -47,8 +48,8 @@ public class PaintView extends View {
 
     private final Context context;
 
-    private int circleX = 0;
-    private int circleY = 0;
+    private IntCurver circleX = new IntCurver(CURVE_INTENSITY, 0);
+    private IntCurver circleY = new IntCurver(CURVE_INTENSITY, 0);
     private int width;
     private int height;
     private int circleRadius;
@@ -106,11 +107,11 @@ public class PaintView extends View {
     }
 
     public int getCircleX() {
-        return circleX;
+        return circleX.getValue();
     }
 
     public int getCircleY() {
-        return circleY;
+        return circleY.getValue();
     }
 
     /**
@@ -120,10 +121,10 @@ public class PaintView extends View {
      * @param circleY the y position
      */
     public void setCircle(int circleX, int circleY) {
-        this.circleX = sanitizeCoordinate(circleX, width);
-        this.circleY = sanitizeCoordinate(circleY, height);
+        this.circleX.addValue(sanitizeCoordinate(circleX, width));
+        this.circleY.addValue(sanitizeCoordinate(circleY, height));
         if (isDrawing) {
-            path.lineTo(this.circleX, this.circleY);
+            path.lineTo(this.circleX.getValue(), this.circleY.getValue());
         }
     }
 
@@ -179,9 +180,9 @@ public class PaintView extends View {
      * @param posY coordinate
      */
     public void updateCoordinates(float posX, float posY) {
-        circleX -= posX * speed;
-        circleY += posY * speed;
-        setCircle(circleX, circleY);
+        circleX.addValue(sanitizeCoordinate(circleX.getValue() - (int) (posX * speed), width));
+        circleY.addValue(sanitizeCoordinate(circleY.getValue() + (int) (posY * speed), height));
+        setCircle(circleX.getValue(), circleY.getValue());
     }
 
     /**
@@ -201,10 +202,10 @@ public class PaintView extends View {
      */
     public void setColor(int color) {
         if (isDrawing) {
-            path.lineTo(circleX, circleY);
+            path.lineTo(circleX.getValue(), circleY.getValue());
             canvas.drawPath(path, colors.get(this.color));
             path.reset();
-            path.moveTo(circleX, circleY);
+            path.moveTo(circleX.getValue(), circleY.getValue());
         }
 
         if (this.color != colors.size() - 1) {
@@ -271,8 +272,8 @@ public class PaintView extends View {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
         this.width = width;
         this.height = height;
-        circleX = width / 2;
-        circleY = height / 2;
+        circleX = new IntCurver(CURVE_INTENSITY, width / 2);
+        circleY = new IntCurver(CURVE_INTENSITY, height / 2);
         clear();
     }
 
@@ -286,8 +287,9 @@ public class PaintView extends View {
             }
             canvas.drawPath(path, colors.get(color));
         }
-        paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX, circleY) + Color.BLACK));
-        canvas.drawCircle(circleX, circleY, circleRadius, paintC);
+        paintC.setColor(colorToGrey(Color.WHITE - bitmap.getPixel(circleX.getValue(),
+                circleY.getValue()) + Color.BLACK));
+        canvas.drawCircle(circleX.getValue(), circleY.getValue(), circleRadius, paintC);
     }
 
     @Override
@@ -300,10 +302,12 @@ public class PaintView extends View {
                         drawStart();
                     } else if (SystemClock.elapsedRealtime() - lastClickTime >= 500) {
                         lastClickTime = SystemClock.elapsedRealtime();
-                        path.moveTo(circleX, circleY);
+                        path.moveTo(circleX.getValue(), circleY.getValue());
                         // Apply the flood fill algorithm
-                        new BucketTool(bitmap, bitmap.getPixel(circleX, circleY),
-                                colors.get(color).getColor()).floodFill(circleX, circleY);
+                        new BucketTool(bitmap,
+                                bitmap.getPixel(circleX.getValue(), circleY.getValue()),
+                                colors.get(color).getColor())
+                                .floodFill(circleX.getValue(), circleY.getValue());
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -330,13 +334,13 @@ public class PaintView extends View {
         isDrawing = true;
         circleRadius = drawWidth / 2;
         path.reset();
-        path.moveTo(circleX, circleY);
+        path.moveTo(circleX.getValue(), circleY.getValue());
     }
 
     private void drawEnd() {
         isDrawing = false;
         circleRadius = (CIRCLE_STROKE + drawWidth) / 2;
-        path.lineTo(circleX, circleY);
+        path.lineTo(circleX.getValue(), circleY.getValue());
         canvas.drawPath(path, colors.get(color));
         path.reset();
     }

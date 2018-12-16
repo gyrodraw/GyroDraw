@@ -30,7 +30,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbAuthentication;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.battleLog.BattleLogActivity;
@@ -79,7 +79,7 @@ public class HomeActivity extends NoBackPressActivity {
     private Dialog profileWindow;
     private Dialog friendRequestWindow;
 
-    private ValueEventListener listenerFriendsRequest = new OnSuccesValueEventListener() {
+    private ValueEventListener listenerFriendsRequest = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -89,7 +89,7 @@ public class HomeActivity extends NoBackPressActivity {
 
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
-                        getAccountAttribute(id, USERNAME, new OnSuccesValueEventListener() {
+                        getAccountAttribute(id, USERNAME, new OnSuccessValueEventListener() {
 
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

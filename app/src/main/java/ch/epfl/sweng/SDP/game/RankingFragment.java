@@ -25,7 +25,7 @@ import java.util.Map;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
@@ -99,7 +99,7 @@ public class RankingFragment extends ListFragment {
 
     private void retrieveFinalRanking() {
         FbDatabase.getRoomAttribute(roomId, RANKING,
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

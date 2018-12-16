@@ -16,7 +16,7 @@ import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbAuthentication;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
 import static android.view.View.VISIBLE;
@@ -91,7 +91,7 @@ public class LoginActivity extends NoBackPressActivity {
             startActivity(intent);
             finish();
         } else {
-            FbDatabase.getUserByEmail(email, new OnSuccesValueEventListener() {
+            FbDatabase.getUserByEmail(email, new OnSuccessValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {

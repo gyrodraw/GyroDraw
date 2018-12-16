@@ -12,7 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
@@ -55,7 +55,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         final String username = usernameInput.getText().toString().toUpperCase();
 
         if (!username.isEmpty()) {
-            FbDatabase.getUserByUsername(username, new OnSuccesValueEventListener() {
+            FbDatabase.getUserByUsername(username, new OnSuccessValueEventListener() {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

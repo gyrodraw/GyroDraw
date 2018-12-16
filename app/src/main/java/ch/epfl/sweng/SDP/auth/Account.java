@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.leagues.League;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -361,7 +361,7 @@ public class Account {
     public void addFriend(final String friendId) {
         checkPrecondition(friendId != null, "Friend's friendId is null");
 
-        FbDatabase.getFriend(userId, friendId, new OnSuccesValueEventListener() {
+        FbDatabase.getFriend(userId, friendId, new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

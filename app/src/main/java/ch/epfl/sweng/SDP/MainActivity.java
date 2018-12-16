@@ -14,7 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity {
 
         if (auth.getCurrentUser() != null && ConnectivityWrapper.isOnline(this)) {
             FbDatabase.getUserByEmail(auth.getCurrentUser().getEmail(),
-                    new OnSuccesValueEventListener() {
+                    new OnSuccessValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             handleRedirection(dataSnapshot);

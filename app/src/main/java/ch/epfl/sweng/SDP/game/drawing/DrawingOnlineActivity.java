@@ -117,7 +117,8 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
 
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
-        timerRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
+        timerRef = FbDatabase.getReference(
+                TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
         timerRef.addValueEventListener(listenerTimer);
         stateRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
         stateRef.addValueEventListener(listenerState);

@@ -8,9 +8,11 @@ public enum RoomAttributes {
     TIMER, UPLOAD_DRAWING, USERS, WORDS;
 
     /**
-     * TODO
-     * @param roomAttributes
-     * @return
+     * Converts the given {@link RoomAttributes} to a string which can be used in a path (for a
+     * Firebase Database query, for example).
+     *
+     * @param roomAttributes the account attribute to convert
+     * @return a string representing the given attribute
      */
     static String attributeToPath(RoomAttributes roomAttributes) {
         switch (roomAttributes) {

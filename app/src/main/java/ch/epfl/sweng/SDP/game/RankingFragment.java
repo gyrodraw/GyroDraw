@@ -117,7 +117,8 @@ public class RankingFragment extends ListFragment {
 
                         int rankForUser = 0;
                         if (dataSnapshot.child(account.getUsername()).getValue(int.class) != null) {
-                            rankForUser = dataSnapshot.child(account.getUsername()).getValue(int.class);
+                            rankForUser = dataSnapshot.child(account.getUsername())
+                                    .getValue(int.class);
                         }
 
                         Integer[] trophies = RankingUtils.generateTrophiesFromRanking(rankings);
@@ -128,8 +129,8 @@ public class RankingFragment extends ListFragment {
 
                         Boolean won = usernames.get(0).equals(account.getUsername());
                         updateUserStats(rankForUser, trophiesForUser, won);
-                        createAndStoreGameResult(usernames, usernames.indexOf(account.getUsername()),
-                                rankForUser, trophiesForUser);
+                        createAndStoreGameResult(usernames, usernames.indexOf(
+                                account.getUsername()), rankForUser, trophiesForUser);
 
                         String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
                         ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),

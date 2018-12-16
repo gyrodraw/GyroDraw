@@ -8,9 +8,6 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
@@ -21,6 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -133,7 +133,10 @@ public class LoginActivityTest {
                 loginActivity.getResources().getString(expectedErrorMessageId))));
     }
 
-    private void executeOnUiThread(Runnable runnable) {
+    /**
+     * Executes a runnable on the UI thread.
+     */
+    public static void executeOnUiThread(Runnable runnable) {
         try {
             runOnUiThread(runnable);
         } catch (Throwable throwable) {

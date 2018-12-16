@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -39,21 +40,30 @@ public class MainActivity extends BaseActivity {
                     new OnSuccesValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                // Go to the home if the user has already logged in
-                                // and created an account
-                                cloneAccountFromFirebase(dataSnapshot);
-
-                                TextView errorMessage = findViewById(
-                                        R.id.errorMessage);
-                                errorMessage.setTypeface(typeMuro);
-
-                                handleUserStatus(errorMessage);
-                            } else {
-                                displayMainLayout();
-                            }
+                            handleRedirection(dataSnapshot);
                         }
                     });
+        } else {
+            displayMainLayout();
+        }
+    }
+
+    /**
+     * Checks if account exists and redirects to HomeActivity.
+     * Else shows the MainActivity.
+     *
+     * @param dataSnapshot contains the response to evaluate
+     */
+    @VisibleForTesting
+    public void handleRedirection(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.exists()) {
+            cloneAccountFromFirebase(dataSnapshot);
+
+            TextView errorMessage = findViewById(
+                    R.id.errorMessage);
+            errorMessage.setTypeface(typeMuro);
+
+            handleUserStatus(errorMessage);
         } else {
             displayMainLayout();
         }

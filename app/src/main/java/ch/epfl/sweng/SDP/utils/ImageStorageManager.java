@@ -1,10 +1,12 @@
 package ch.epfl.sweng.SDP.utils;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +20,8 @@ import java.nio.file.Files;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
@@ -30,33 +34,39 @@ public final class ImageStorageManager {
         // Empty constructor
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void saveImage(Context context) {
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(context,
+                                                                    null, 1);
+        Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
+        Account account = Account.getInstance(context);
+        String imageName = account.getUsername() + account.getTotalMatches();
+        ImageStorageManager.writeImage(localImage, imageName, context);
+    }
+
     /**
      * Saves an image to the device file system.
      *
      * @param image     the image to save.
      * @param imageName the filename of the image.
-     * @param activity  the activity.
+     * @param context  the activity.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void saveImage(Bitmap image, String imageName, final Activity activity) {
+    private static void writeImage(Bitmap image, String imageName, final Context context) {
 
         File file = getFile(imageName);
 
         if (file.exists()) {
-            try {
-                Files.delete(file.toPath());
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            file.delete();
         }
 
         writeFileToStorage(image, file);
 
-        MediaScannerConnection.scanFile(activity, new String[]{file.getPath()},
+        MediaScannerConnection.scanFile(context, new String[]{file.getPath()},
                 new String[]{"image/png"}, null);
 
-        if (activity != null) {
-            successfullyDownloadedImageToast(activity);
+        if (context != null) {
+            successfullyDownloadedImageToast(context);
         }
     }
 
@@ -66,7 +76,6 @@ public final class ImageStorageManager {
      * @param image the image to store.
      * @param file  the file path.
      */
-    @VisibleForTesting
     static void writeFileToStorage(Bitmap image, File file) {
         Log.d("ImageStorageManager", "Saving image: " + file.getPath());
         // Save image in file directory
@@ -84,11 +93,9 @@ public final class ImageStorageManager {
      * @param imageName the name of the image.
      * @return a file object to the directory.
      */
-    @VisibleForTesting
     static File getFile(String imageName) {
-        String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString() + "/Camera/Gyrodraw/";
-        File myDir = new File(root);
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/Gyrodraw");
         myDir.mkdirs();
         String fname = "Image-" + imageName + ".png";
         return new File(myDir, fname);
@@ -97,38 +104,33 @@ public final class ImageStorageManager {
     /**
      * Creates a toast to show that image was successfully downloaded.
      *
-     * @param activity to show the toast on
+     * @param context to show the toast on
      */
-    @VisibleForTesting
-    public static void successfullyDownloadedImageToast(final Activity activity) {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast toast = Toast.makeText(activity,
-                        activity.getString(R.string.successfulImageDownload), Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
+    public static void successfullyDownloadedImageToast(final Context context) {
+        Toast toast = Toast.makeText(context,
+                context.getString(R.string.successfulImageDownload), Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    /**
+     * Asks permissions for writing in external files.
+     * @param context context of the application
+     */
+    public static void askForStoragePermission(Context context) {
+        ActivityCompat.requestPermissions((Activity) context, new String[]{
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
     }
 
     /**
      * Checks if storage permissions are granted.
      * If permissions are revoked it requests permission.
      *
+     * @param context activity context
      * @return a boolean indicating if permissions are granted or not.
      */
-    public static boolean askForStoragePermission(Activity activity) {
-        // Permission is automatically granted on sdk<23 upon installation
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(activity.getApplicationContext(),
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-            return true;
-        }
-        return true;
+    public static boolean hasExternalWritePermissions(Context context) {
+        return checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
-
 }

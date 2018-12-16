@@ -6,9 +6,12 @@ import static java.lang.String.format;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +23,7 @@ import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.Shop;
+import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +37,8 @@ import java.util.HashMap;
  * activities.
  */
 public abstract class Activity extends AppCompatActivity {
+
+    private static final int PERMISSION_EXTERNAL_STORAGE = 1;
 
     protected Typeface typeMuro;
     protected Typeface typeOptimus;
@@ -209,6 +215,35 @@ public abstract class Activity extends AppCompatActivity {
                         getApplicationContext(), null, 1);
                 handler.saveAccount(Account.getInstance(getApplicationContext()));
             }
+        }
+    }
+
+
+    /**
+     * Callback function fired when user allowed or disallowed permissions.
+     * @param requestCode request code when asking for permissions
+     * @param permissions permissions asked
+     * @param grantResults results of the permissions asked
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_EXTERNAL_STORAGE: {
+                // Check if user granted permissions. If it is the case save the corresponding file
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permissions granted
+                    ImageStorageManager.saveImage(this);
+
+                }
+                return;
+            }
+
+            default:
+                // Does nothing for other permissions
         }
     }
 

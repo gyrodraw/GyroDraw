@@ -98,8 +98,8 @@ public class RankingFragment extends ListFragment {
     public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames,
                          VotingPageActivity activity) {
         this.roomId = roomId;
-        this.drawings = drawings;
-        this.playerNames = playerNames;
+        this.drawings = drawings.clone();
+        this.playerNames = playerNames.clone();
         this.activity = activity;
     }
 

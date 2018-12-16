@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,6 +80,7 @@ public class VotingPageActivity extends BaseActivity {
 
     private String roomID = "undefined";
     private boolean sharingMode = false;
+    private boolean savingModeRequest = false;
 
     /**
      * Shares an image to facebook.
@@ -98,11 +100,12 @@ public class VotingPageActivity extends BaseActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveImage(View view) {
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
-        Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
-        Account account = Account.getInstance(this);
-        String imageName = account.getUsername() + account.getTotalMatches();
-        ImageStorageManager.saveImage(localImage, imageName, this);
+        if(ImageStorageManager.hasExternalWritePermissions(this)) {
+            ImageStorageManager.saveImage(this);
+        } else {
+            savingModeRequest = true;
+            ImageStorageManager.askForStoragePermission(this);
+        }
     }
 
     @VisibleForTesting
@@ -251,6 +254,11 @@ public class VotingPageActivity extends BaseActivity {
 
         if (sharingMode) {
             sharingMode = false;
+            return;
+        }
+
+        if(savingModeRequest) {
+            savingModeRequest = false;
             return;
         }
 

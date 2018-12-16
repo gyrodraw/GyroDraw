@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
@@ -62,10 +64,15 @@ public class VotingPageActivityTest {
     private static final String USER_ID = "userA";
     private static final String ROOM_ID_TEST = "0123457890";
     private static final String TOP_ROOM_ID = "realRooms";
+    private static final int PERMISSION_WRITE_STORAGE = 1;
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule
+            .grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> activityRule =
@@ -313,9 +320,55 @@ public class VotingPageActivityTest {
 
     @Test
     public void testToastAfterSuccessfulDownload() {
-        ImageStorageManager.successfullyDownloadedImageToast(activityRule.getActivity());
+        activityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageStorageManager.successfullyDownloadedImageToast(activityRule.getActivity());
+            }
+        });
+
         onView(withText(activityRule.getActivity().getString(R.string.successfulImageDownload)))
                 .inRoot(withDecorView(not(is(activityRule.getActivity()
                         .getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testOnRequestWritePermissionsAccepted() {
+        // Open fragment
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        // Save image
+        Bitmap bitmap = initializedBitmap();
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                activityRule.getActivity().getApplicationContext(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap, 2);
+        activityRule.getActivity().onRequestPermissionsResult(PERMISSION_WRITE_STORAGE,
+                new String[]{}, new int[]{});
+
+        assertThat(myFragment.isVisible(), is(true));
+    }
+
+    @Test
+    public void testOnRandomRequestPermissionsAccepted() {
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        activityRule.getActivity().onRequestPermissionsResult(42,
+                new String[]{}, new int[]{});
+
+        assertThat(myFragment.isVisible(), is(true));
     }
 }

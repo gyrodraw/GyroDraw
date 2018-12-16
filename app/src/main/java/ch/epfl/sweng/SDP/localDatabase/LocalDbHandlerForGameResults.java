@@ -8,18 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.battleLog.GameResult;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
+
 /**
  * Local database handler for storing and retrieving the user's game results.
  */
-public final class LocalDbHandlerForGameResults extends SQLiteOpenHelper implements LocalDbForGameResults {
+public final class LocalDbHandlerForGameResults extends SQLiteOpenHelper
+        implements LocalDbForGameResults {
 
     private static final String DATABASE_NAME = "gameResults.db";
     private static final String TABLE_NAME = "gameResults";

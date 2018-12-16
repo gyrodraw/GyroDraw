@@ -239,7 +239,7 @@ public class Account {
     /**
      * Registers this account in Firebase and in the local database.
      */
-    public void registerAccount() throws DatabaseException {
+    public void registerAccount() {
         FbDatabase.saveAccount(this);
         localDbHandler.saveAccount(this);
     }
@@ -302,7 +302,7 @@ public class Account {
      * @throws IllegalArgumentException in case the balance becomes negative
      * @throws DatabaseException        in case write to database fails
      */
-    public void changeStars(final int amount) throws DatabaseException {
+    public void changeStars(final int amount) {
         int newStars = amount + stars;
         checkPrecondition(newStars >= 0, "Negative Balance");
 
@@ -317,7 +317,7 @@ public class Account {
      *
      * @throws DatabaseException in case write to database fails
      */
-    public void increaseMatchesWon() throws DatabaseException {
+    public void increaseMatchesWon() {
         FbDatabase.setAccountAttribute(userId, MATCHES_WON, ++matchesWon);
 
         localDbHandler.saveAccount(instance);
@@ -328,7 +328,7 @@ public class Account {
      *
      * @throws DatabaseException in case write to database fails
      */
-    public void increaseTotalMatches() throws DatabaseException {
+    public void increaseTotalMatches() {
         FbDatabase.setAccountAttribute(userId, MATCHES_TOTAL, ++totalMatches);
 
         localDbHandler.saveAccount(instance);
@@ -341,7 +341,7 @@ public class Account {
      * @throws IllegalArgumentException in case a rating <= 0 or > 20 is given
      * @throws DatabaseException        in case write to database fails
      */
-    public void changeAverageRating(double rating) throws DatabaseException {
+    public void changeAverageRating(double rating) {
         checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
         checkPrecondition(totalMatches >= 1, "Wrong total matches");
 
@@ -358,7 +358,7 @@ public class Account {
      * @throws IllegalArgumentException in case the given friendId is null
      * @throws DatabaseException        in case write to database fails
      */
-    public void addFriend(final String friendId) throws DatabaseException {
+    public void addFriend(final String friendId) {
         checkPrecondition(friendId != null, "Friend's friendId is null");
 
         FbDatabase.getFriend(userId, friendId, new OnSuccesValueEventListener() {
@@ -404,7 +404,7 @@ public class Account {
      * @throws IllegalArgumentException in case the given usernameId is null
      * @throws DatabaseException        in case write to database fails
      */
-    public void removeFriend(final String friendId) throws DatabaseException {
+    public void removeFriend(final String friendId) {
         checkPrecondition(friendId != null, "Friend's id is null");
 
         FbDatabase.removeFriend(userId, friendId);

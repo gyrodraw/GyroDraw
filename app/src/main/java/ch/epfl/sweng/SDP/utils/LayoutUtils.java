@@ -142,7 +142,8 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setSlideRightExitListener(final View exitButton, final BaseActivity activity) {
+    public static void setSlideRightExitListener(final View exitButton,
+                                                 final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
@@ -152,7 +153,8 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setSlideLeftExitListener(final View exitButton, final BaseActivity activity) {
+    public static void setSlideLeftExitListener(final View exitButton,
+                                                final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 

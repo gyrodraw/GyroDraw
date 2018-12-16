@@ -18,7 +18,7 @@ public final class NetworkStateReceiver extends BroadcastReceiver {
     private Boolean connected;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public NetworkStateReceiver() {
         listeners = new HashSet<>();

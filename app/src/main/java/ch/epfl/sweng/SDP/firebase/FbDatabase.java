@@ -3,14 +3,14 @@ package ch.epfl.sweng.SDP.firebase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.BOUGHT_ITEMS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
@@ -93,8 +93,9 @@ public final class FbDatabase {
      * @param newValue           new value to be inserted for attribute
      * @param completionListener listener to handle response
      */
-    public static void setAccountAttribute(String userId, AccountAttributes attribute, Object newValue,
-                                           DatabaseReference.CompletionListener completionListener) {
+    public static void setAccountAttribute(
+            String userId, AccountAttributes attribute, Object newValue,
+            DatabaseReference.CompletionListener completionListener) {
         getReference(constructUsersPath(userId, attributeToPath(attribute)))
                 .setValue(newValue, completionListener);
     }
@@ -106,7 +107,8 @@ public final class FbDatabase {
      * @param attribute enum to determine which attribute to modify
      * @param newValue  new value to be inserted for attribute
      */
-    public static void setAccountAttribute(String userId, AccountAttributes attribute, Object newValue) {
+    public static void setAccountAttribute(String userId,
+                                           AccountAttributes attribute, Object newValue) {
         setAccountAttribute(userId, attribute, newValue, createCompletionListener());
     }
 
@@ -302,7 +304,8 @@ public final class FbDatabase {
     /**
      * Returns the DatabaseReference of an attribute in a given room.
      */
-    public static DatabaseReference getRoomAttributeReference(String roomId, RoomAttributes attribute) {
+    public static DatabaseReference getRoomAttributeReference(String roomId,
+                                                              RoomAttributes attribute) {
         return getReference(constructRoomsPath(roomId, attributeToPath(attribute)));
     }
 

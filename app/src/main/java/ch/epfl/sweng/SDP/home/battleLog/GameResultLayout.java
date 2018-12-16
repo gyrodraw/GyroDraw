@@ -9,10 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import java.util.List;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-
-import java.util.List;
 
 /**
  * Class that manages the view part of GameResult.
@@ -75,21 +75,21 @@ public final class GameResultLayout {
      * @return LinearLayout that will be displayed
      */
     private LinearLayout setLayout() {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setLayoutParams(rankListParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout newLayout = new LinearLayout(context);
+        newLayout.setLayoutParams(rankListParams);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
         List<String> rankedUsername = result.getRankedUsername();
 
         for (int i = 0; i < rankedUsername.size(); i++) {
             String prefix = (i + 1) + ". ";
             if (i == result.getRank()) {
-                layout.addView(userLayout());
+                newLayout.addView(userLayout());
             } else {
-                layout.addView(rankLayout(prefix + rankedUsername.get(i)));
+                newLayout.addView(rankLayout(prefix + rankedUsername.get(i)));
             }
         }
 
-        return layout;
+        return newLayout;
     }
 
     private LinearLayout rankLayout(String username) {

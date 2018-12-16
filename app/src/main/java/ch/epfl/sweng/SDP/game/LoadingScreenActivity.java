@@ -42,9 +42,6 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     private String roomID = null;
     private int gameMode = 0;
 
-    //private ObservableBoolean isRoomReady = new ObservableBoolean();
-    //private ObservableBoolean areWordsReady = new ObservableBoolean();
-
     private BooleanVariableListener isRoomReady = new BooleanVariableListener();
     private BooleanVariableListener areWordsReady = new BooleanVariableListener();
 

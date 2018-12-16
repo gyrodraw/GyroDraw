@@ -89,6 +89,6 @@ public final class RankingUtils {
      * @return An integer with the sign
      */
     public static String addSignToNumber(int num) {
-        return num > 0 ? "+" + String.valueOf(num) : String.valueOf(num);
+        return num >= 0 ? "+" + String.valueOf(num) : String.valueOf(num);
     }
 }

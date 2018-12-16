@@ -37,7 +37,6 @@ import ch.epfl.sweng.SDP.shop.ShopActivity;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
@@ -79,24 +78,7 @@ public class HomeActivity extends BaseActivity {
                             FriendsRequestState.fromInteger(stateValue);
 
                     if (state == FriendsRequestState.RECEIVED) {
-                        final String id = child.getKey();
-                        Database.getReference(format("users.%s.username", id))
-                                .addListenerForSingleValueEvent(
-                                        new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(
-                                                    @NonNull DataSnapshot dataSnapshot) {
-                                                String name = dataSnapshot
-                                                        .getValue(String.class);
-                                                showFriendRequestPopup(name, id);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(
-                                                    @NonNull DatabaseError databaseError) {
-                                                throw databaseError.toException();
-                                            }
-                                        });
+                        getFriendsUsernameAndShowPopUp(child.getKey());
                     }
                 }
             }
@@ -183,6 +165,9 @@ public class HomeActivity extends BaseActivity {
         setLeague();
     }
 
+    /**
+     * Changes the user's state on firebase to online.
+     */
     private void updateUserStatusOnFirebase() {
         String userId = Account.getInstance(getApplicationContext())
                 .getUserId();
@@ -325,7 +310,8 @@ public class HomeActivity extends BaseActivity {
     private void listenerEventSelector(final View view, int resourceId) {
         switch (resourceId) {
             case R.id.drawButton:
-                launchOnlineGame((ImageView) view, R.drawable.draw_button, 0);
+                ((ImageView) view).setImageResource(R.drawable.draw_button);
+                launchOnlineGame(0);
                 break;
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
@@ -352,26 +338,21 @@ public class HomeActivity extends BaseActivity {
                 launchActivity(DrawingOffline.class);
                 break;
             case R.id.mysteryButton:
-                launchOnlineGame((ImageView) view, R.drawable.home_mystery_button, 1);
+                launchOnlineGame(1);
                 break;
             default:
         }
     }
 
-    private void launchOnlineGame(ImageView view, int resourceId, int gameMode) {
-        // Prevents that the user launches two online games at the same time.
-        findViewById(R.id.practiceButton).setEnabled(false);
-        findViewById(R.id.drawButton).setEnabled(false);
-        findViewById(R.id.mysteryButton).setEnabled(false);
-
+    private void launchOnlineGame(int gameMode) {
         if (ConnectivityWrapper.isOnline(this)) {
-            view.setImageResource(resourceId);
+            // Prevents that the user launches two online games at the same time.
+            setGameButtons(false);
             Intent intent = new Intent(this, LoadingScreenActivity.class);
             intent.putExtra("mode", gameMode);
             startActivity(intent);
         } else {
-            Toast.makeText(this, R.string.no_internet,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -441,6 +422,38 @@ public class HomeActivity extends BaseActivity {
         profileWindow.show();
     }
 
+    /**
+     * Gets the username corresponding to the given id and shows the friends request popup.
+     *
+     * @param id id from user that has sent a request
+     */
+    @VisibleForTesting
+    public void getFriendsUsernameAndShowPopUp(final String id) {
+        Database.getReference(format("users.%s.username", id))
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(
+                                    @NonNull DataSnapshot dataSnapshot) {
+                                String name = dataSnapshot
+                                        .getValue(String.class);
+                                showFriendRequestPopup(name, id);
+                            }
+
+                            @Override
+                            public void onCancelled(
+                                    @NonNull DatabaseError databaseError) {
+                                throw databaseError.toException();
+                            }
+                        });
+    }
+
+    /**
+     * Displays the friends request popup.
+     *
+     * @param name name of the user that sent the request
+     * @param id   id of the user that sent the request
+     */
     @VisibleForTesting
     public void showFriendRequestPopup(String name, String id) {
         assert name != null : "name is null";
@@ -485,5 +498,17 @@ public class HomeActivity extends BaseActivity {
         ((TextView) findViewById(R.id.starsCount)).setText(String.valueOf(account.getStars()));
         ((TextView) findViewById(R.id.trophiesCount)).setText(String.valueOf(
                 account.getTrophies()));
+        setGameButtons(true);
+    }
+
+    /**
+     * Sets the game buttons locked or unlocked.
+     *
+     * @param state the target state
+     */
+    private void setGameButtons(boolean state) {
+        findViewById(R.id.practiceButton).setEnabled(state);
+        findViewById(R.id.drawButton).setEnabled(state);
+        findViewById(R.id.mysteryButton).setEnabled(state);
     }
 }

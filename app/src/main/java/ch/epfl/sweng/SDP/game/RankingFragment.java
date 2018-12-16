@@ -1,13 +1,13 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,9 +31,14 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.Database;
 import ch.epfl.sweng.SDP.home.GameResult;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.RankingUtils;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
@@ -52,6 +57,7 @@ public class RankingFragment extends ListFragment {
     private String[] playerNames;
 
     private Account account;
+    private VotingPageActivity activity;
 
     public RankingFragment() {
         // Empty constructor
@@ -71,7 +77,7 @@ public class RankingFragment extends ListFragment {
         finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
 
         ((TextView) getActivity().findViewById(R.id.rankingTitle))
-                .setTypeface(TypefaceLibrary.getTypeOptimus());
+                .setTypeface(TypefaceLibrary.getTypeMuro());
 
         Button button = getActivity().findViewById(R.id.homeButton);
         button.setTypeface(TypefaceLibrary.getTypeMuro());
@@ -79,6 +85,7 @@ public class RankingFragment extends ListFragment {
         account = Account.getInstance(getActivity().getApplicationContext());
 
         retrieveFinalRanking();
+        setHomeButtonListener();
     }
 
     /**
@@ -88,10 +95,12 @@ public class RankingFragment extends ListFragment {
      * @param drawings    the users drawings.
      * @param playerNames the usernames of the players.
      */
-    public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames) {
+    public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames,
+                         VotingPageActivity activity) {
         this.roomId = roomId;
-        this.drawings = drawings;
-        this.playerNames = playerNames;
+        this.drawings = drawings.clone();
+        this.playerNames = playerNames.clone();
+        this.activity = activity;
     }
 
     private int getIndexForUserName(String username) {
@@ -196,7 +205,7 @@ public class RankingFragment extends ListFragment {
             super(context, 0, players);
             this.players = players;
             this.rankings = rankings;
-            this.trophies = RankingUtils.addSignToNumber(trophies);
+            this.trophies = RankingUtils.addSignToNumberList(trophies);
             this.drawings = drawings;
             this.positions = positions;
         }
@@ -207,17 +216,17 @@ public class RankingFragment extends ListFragment {
             ((TextView) convertView.findViewById(R.id.trophiesWon))
                     .setText(trophies[position]);
             ((TextView) convertView.findViewById(R.id.starsWon))
-                    .setText(String.valueOf(Math.max(rankings[position], 0)));
+                    .setText(RankingUtils.addSignToNumber(Math.max(rankings[position], 0)));
         }
 
         private void setHighlightColors(View convertView) {
             int yellowColor = getResources().getColor(R.color.colorDrawYellow);
-            int darkColor = getResources().getColor(R.color.colorPrimaryDark);
+            int greyColor = getResources().getColor(R.color.colorGrey);
 
             ((TextView) convertView.findViewById(R.id.playerName)).setTextColor(yellowColor);
             ((TextView) convertView.findViewById(R.id.trophiesWon)).setTextColor(yellowColor);
             ((TextView) convertView.findViewById(R.id.starsWon)).setTextColor(yellowColor);
-            convertView.setBackgroundColor(darkColor);
+            convertView.setBackgroundColor(greyColor);
         }
 
         private void setTypeFace(Typeface typeface, View... views) {
@@ -235,9 +244,9 @@ public class RankingFragment extends ListFragment {
                     .inflate(R.layout.ranking_item, parent, false);
 
             setTypeFace(TypefaceLibrary.getTypeMuro(), convertView.findViewById(R.id.playerName),
-                                convertView.findViewById(R.id.starsWon),
-                                convertView.findViewById(R.id.trophiesWon),
-                                convertView.findViewById(R.id.disconnectedRanking));
+                    convertView.findViewById(R.id.starsWon),
+                    convertView.findViewById(R.id.trophiesWon),
+                    convertView.findViewById(R.id.disconnectedRanking));
 
             // Update image
             ImageView drawingView = convertView.findViewById(R.id.drawing);
@@ -261,5 +270,26 @@ public class RankingFragment extends ListFragment {
             // Return the completed view to render on screen
             return convertView;
         }
+    }
+
+    private void setHomeButtonListener() {
+        activity.findViewById(R.id.homeButton).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, activity);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, activity);
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            activity.startHomeActivity();
+                        }
+                        break;
+                    default:
+                }
+                return true;
+            }
+        });
     }
 }

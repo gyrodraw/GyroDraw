@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.home;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -49,7 +50,7 @@ public class HomeActivityTest {
     private static final String FRIEND_ID = "FriendId123ForTesting";
 
     @Rule
-    public final ActivityTestRule<HomeActivity> mActivityRule =
+    public final ActivityTestRule<HomeActivity> activityRule =
             new ActivityTestRule<HomeActivity>(HomeActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
@@ -58,7 +59,6 @@ public class HomeActivityTest {
                     setOnTest();
                 }
             };
-
 
     @Before
     public void init() {
@@ -73,9 +73,9 @@ public class HomeActivityTest {
     @Test
     public void testLocalDb() {
         LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
-                mActivityRule.getActivity(), null, 1);
-        localDbHandler.saveAccount(Account.getInstance(mActivityRule.getActivity()));
-        localDbHandler.retrieveAccount(Account.getInstance(mActivityRule.getActivity()));
+                activityRule.getActivity(), null, 1);
+        localDbHandler.saveAccount(Account.getInstance(activityRule.getActivity()));
+        localDbHandler.retrieveAccount(Account.getInstance(activityRule.getActivity()));
     }
 
     @Test
@@ -127,18 +127,18 @@ public class HomeActivityTest {
 
     @Test
     public void testUsernameOpensPopUp() {
-        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
+        activityRule.getActivity().getFriendRequestWindow().dismiss();
         onView(withId(R.id.usernameButton)).perform(click());
         onView(withId(R.id.usernamePopUp)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFriendsRequestAccept() {
-        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
-        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+        activityRule.getActivity().getFriendRequestWindow().dismiss();
+        activityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mActivityRule.getActivity().showFriendRequestPopup(FRIEND_ACCOUNT, FRIEND_ID);
+                activityRule.getActivity().showFriendRequestPopup(FRIEND_ACCOUNT, FRIEND_ID);
             }
         });
         onView(withId(R.id.acceptButton)).perform(click());
@@ -146,12 +146,19 @@ public class HomeActivityTest {
     }
 
     @Test
+    public void testFriendsRequestPopUpGetsDisplayed() {
+        activityRule.getActivity().getFriendsUsernameAndShowPopUp("123456789");
+        SystemClock.sleep(2000);
+        onView(withId(R.id.friendRequestPopUp)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testFriendsRequestReject() {
-        mActivityRule.getActivity().getFriendRequestWindow().dismiss();
-        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+        activityRule.getActivity().getFriendRequestWindow().dismiss();
+        activityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mActivityRule.getActivity().showFriendRequestPopup(FRIEND_ACCOUNT, FRIEND_ID);
+                activityRule.getActivity().showFriendRequestPopup(FRIEND_ACCOUNT, FRIEND_ID);
             }
         });
         onView(withId(R.id.rejectButton)).perform(click());

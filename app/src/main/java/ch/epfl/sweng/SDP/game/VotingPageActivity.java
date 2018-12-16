@@ -1,12 +1,13 @@
 package ch.epfl.sweng.SDP.game;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -34,10 +35,9 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.ImageSharer;
+import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -45,6 +45,9 @@ import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
 public class VotingPageActivity extends BaseActivity {
 
     private static boolean enableAnimations = true;
+
+    private static final String TAG = "VotingPageActivity";
+
     private static final int NUMBER_OF_DRAWINGS = 5;
     private static final String TOP_ROOM_NODE_ID = "realRooms";
 
@@ -74,9 +77,35 @@ public class VotingPageActivity extends BaseActivity {
     private RatingBar ratingBar;
     private StarAnimationView starsAnimation;
 
-    private RankingFragment fragment;
-
     private String roomID = "undefined";
+    private boolean sharingMode = false;
+    private boolean savingModeRequest = false;
+
+    /**
+     * Shares an image to facebook.
+     *
+     * @param view the button invoked this method.
+     */
+    public void shareImage(View view) {
+        sharingMode = true;
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
+        ImageSharer.getInstance(this).shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
+    }
+
+    /**
+     * Saves an image to the disk.
+     *
+     * @param view the button invoked this method.
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void saveImage(View view) {
+        if(ImageStorageManager.hasExternalWritePermissions(this)) {
+            ImageStorageManager.saveImage(this);
+        } else {
+            savingModeRequest = true;
+            ImageStorageManager.askForStoragePermission(this);
+        }
+    }
 
     @VisibleForTesting
     protected final ValueEventListener listenerState = new ValueEventListener() {
@@ -92,7 +121,7 @@ public class VotingPageActivity extends BaseActivity {
                         break;
                     case END_VOTING_ACTIVITY:
                         ConnectivityWrapper.setOnlineStatusInGame(roomID,
-                                    Account.getInstance(getApplicationContext()).getUsername());
+                                Account.getInstance(getApplicationContext()).getUsername());
                         setAnimationWaitingBackground();
                         break;
                     case RANKING_FRAGEMNT:
@@ -221,8 +250,24 @@ public class VotingPageActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        if (sharingMode) {
+            sharingMode = false;
+            return;
+        }
+
+        if(savingModeRequest) {
+            savingModeRequest = false;
+            return;
+        }
+
+        Log.d(TAG, "Pausing activity");
         ConnectivityWrapper.unregisterNetworkReceiver(this);
 
+        ImageSharer sharer = ImageSharer.getInstance();
+        if (sharer != null) {
+            sharer.setActivity(null);
+        }
         removeAllListeners();
         finish();
     }
@@ -230,10 +275,8 @@ public class VotingPageActivity extends BaseActivity {
     /**
      * Starts the {@link HomeActivity} when the button is pressed. The button is used at the end of
      * the game to return to the home screen.
-     *
-     * @param view the view corresponding to the button pressed
      */
-    public void startHomeActivity(View view) {
+    public void startHomeActivity() {
         // Remove the drawings from Firebase Storage
         for (String id : drawingsIds) {
             // Remove this after testing
@@ -242,6 +285,11 @@ public class VotingPageActivity extends BaseActivity {
             }
         }
 
+        Log.d(TAG, "Starting home activity");
+
+        if (ImageSharer.getInstance() != null) {
+            ImageSharer.getInstance().setActivity(null);
+        }
         launchActivity(HomeActivity.class);
 
         if (roomID != null && ConnectivityWrapper.isOnline(this)) {
@@ -356,8 +404,10 @@ public class VotingPageActivity extends BaseActivity {
                             // Get the image from the local database instead
                             LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                                     getApplicationContext(), null, 1);
+
                             storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
                         } else {
+
                             refs[i] = storage.getReference().child(currentId + ".jpg");
 
                             // Download the image
@@ -410,6 +460,7 @@ public class VotingPageActivity extends BaseActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 throw databaseError.toException();
             }
+
         });
     }
 
@@ -450,14 +501,13 @@ public class VotingPageActivity extends BaseActivity {
     }
 
     private void startRankingFragment() {
-
         // Clear the UI
         setVisibility(View.GONE, R.id.ratingBar, R.id.drawing,
                 R.id.playerNameView, R.id.timer);
 
-        fragment = new RankingFragment();
+        RankingFragment fragment = new RankingFragment();
         // Create and show the final ranking in the new fragment
-        fragment.putExtra(roomID, drawings, playersNames);
+        fragment.putExtra(roomID, drawings, playersNames, this);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.votingPageLayout, fragment)

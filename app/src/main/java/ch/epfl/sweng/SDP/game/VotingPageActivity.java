@@ -63,8 +63,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     private int[] ratings;
     private int previousRating = 0;
 
-    private String[] playersNames = new String[NUMBER_OF_DRAWINGS];
-    private String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
+    private final String[] playersNames = new String[NUMBER_OF_DRAWINGS];
+    private final String[] drawingsIds = new String[NUMBER_OF_DRAWINGS];
 
     private ImageView drawingView;
     private TextView playerNameView;
@@ -75,6 +75,7 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     private String roomId = "undefined";
 
+    /** This listener is only visible to tests, else private.  */
     @VisibleForTesting
     protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
         @Override
@@ -103,6 +104,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         }
     };
 
+    /** This listener is only visible to tests, else private.  */
     @VisibleForTesting
     protected final ValueEventListener listenerCounter = new OnSuccesValueEventListener() {
         @Override
@@ -442,12 +444,21 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     /**
      * Disables the background and stars animation. Call this method in every VotingPageActivity
-     * test
+     * test.
      */
     @VisibleForTesting
     public static void disableAnimations() {
         enableAnimations = false;
     }
+
+    /**
+     * Returns a deep copy of ratings.
+     */
+    @VisibleForTesting
+    public int[] getRatings() {
+        return ratings.clone();
+    }
+
 
     @VisibleForTesting
     public short getChangeDrawingCounter() {
@@ -459,11 +470,9 @@ public class VotingPageActivity extends NoBackPressActivity {
         return drawingsIds;
     }
 
-    @VisibleForTesting
-    public int[] getRatings() {
-        return ratings.clone();
-    }
-
+    /**
+     * Runs showWinnerDrawing on the UI thread.
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callShowWinnerDrawing(final Bitmap image, final String winner) {
         this.runOnUiThread(new Runnable() {
@@ -474,6 +483,9 @@ public class VotingPageActivity extends NoBackPressActivity {
         });
     }
 
+    /**
+     * Runs changeImage on the UI thread.
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callChangeImage() {
         this.runOnUiThread(new Runnable() {
@@ -484,6 +496,9 @@ public class VotingPageActivity extends NoBackPressActivity {
         });
     }
 
+    /**
+     * Runs onDataChanged on UI thread.
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnStateChange(final DataSnapshot dataSnapshot) {
         this.runOnUiThread(new Runnable() {

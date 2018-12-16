@@ -7,18 +7,15 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.utils.GlideUtils;
-import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 /**
  * Class representing the first page shown to the user upon first app launch.
@@ -39,7 +36,7 @@ public class MainActivity extends BaseActivity {
 
         if (auth.getCurrentUser() != null && ConnectivityWrapper.isOnline(this)) {
             FbDatabase.getUserByEmail(auth.getCurrentUser().getEmail(),
-                    new ValueEventListener() {
+                    new OnSuccesValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
@@ -55,11 +52,6 @@ public class MainActivity extends BaseActivity {
                             } else {
                                 displayMainLayout();
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            checkForDatabaseError(databaseError);
                         }
                     });
         } else {

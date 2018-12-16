@@ -7,18 +7,17 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.database.DataSnapshot;
+
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbAuthentication;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
-
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import static android.view.View.VISIBLE;
 
@@ -92,7 +91,7 @@ public class LoginActivity extends NoBackPressActivity {
             startActivity(intent);
             finish();
         } else {
-            FbDatabase.getUserByEmail(email, new ValueEventListener() {
+            FbDatabase.getUserByEmail(email, new OnSuccesValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
@@ -111,11 +110,6 @@ public class LoginActivity extends NoBackPressActivity {
                                 startActivity(intent);
                                 finish();
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            throw databaseError.toException();
                         }
                     });
         }

@@ -12,19 +12,9 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.RoomAttributes;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.BitmapManipulator;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-
-import java.io.ByteArrayOutputStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +22,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.RoomAttributes;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -61,7 +61,7 @@ public class VotingPageActivityTest {
     private StarAnimationView starsAnimation;
 
     @Rule
-    public final ActivityTestRule<VotingPageActivity> mActivityRule =
+    public final ActivityTestRule<VotingPageActivity> activityRule =
             new ActivityTestRule<VotingPageActivity>(VotingPageActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
@@ -85,7 +85,7 @@ public class VotingPageActivityTest {
     public void init() {
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         databaseErrorMock = Mockito.mock(DatabaseError.class);
-        starsAnimation = mActivityRule.getActivity()
+        starsAnimation = activityRule.getActivity()
                 .findViewById(R.id.starsAnimation);
     }
 
@@ -101,11 +101,11 @@ public class VotingPageActivityTest {
         FbDatabase.setValueToUserInRoomAttribute("0123457890", "userA",
                 RoomAttributes.RANKING, 0);
 
-        short counter = mActivityRule.getActivity().getChangeDrawingCounter();
+        short counter = activityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
-        ((RatingBar) mActivityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
+        ((RatingBar) activityRule.getActivity().findViewById(R.id.ratingBar)).setRating(3);
         SystemClock.sleep(5000);
-        assertThat(mActivityRule.getActivity().getRatings()[counter], is(3));
+        assertThat(activityRule.getActivity().getRatings()[counter], is(3));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class VotingPageActivityTest {
     public void startHomeActivityStartsHomeActivity() {
         SystemClock.sleep(1000);
         Intents.init();
-        mActivityRule.getActivity().startHomeActivity(null);
+        activityRule.getActivity().startHomeActivity(null);
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
@@ -181,10 +181,10 @@ public class VotingPageActivityTest {
     public void testState6Change() {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
-        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2500);
 
-        RankingFragment myFragment = (RankingFragment) mActivityRule.getActivity()
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
         assertThat(myFragment.isVisible(), is(true));
     }
@@ -192,7 +192,7 @@ public class VotingPageActivityTest {
     @Test
     public void testState5Change() {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(5);
-        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2500);
 
         onView(withId(R.id.playerNameView)).check(matches(not(isDisplayed())));
@@ -202,45 +202,45 @@ public class VotingPageActivityTest {
     public void testState4Change() {
         SystemClock.sleep(1000);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
-        mActivityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(6000);
-        assertThat(mActivityRule.getActivity().getDrawingsIds(), is(notNullValue()));
+        assertThat(activityRule.getActivity().getDrawingsIds(), is(notNullValue()));
     }
 
     @Test
     public void testShowDrawingImage() {
         Bitmap image = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
         image.eraseColor(android.graphics.Color.GREEN);
-        mActivityRule.getActivity().callShowWinnerDrawing(image, "Champion");
+        activityRule.getActivity().callShowWinnerDrawing(image, "Champion");
     }
 
     @Test
     public void testChangeImage() {
-        short counter = mActivityRule.getActivity().getChangeDrawingCounter();
-        mActivityRule.getActivity().callChangeImage();
+        short counter = activityRule.getActivity().getChangeDrawingCounter();
+        activityRule.getActivity().callChangeImage();
 
         SystemClock.sleep(6000);
 
-        assertThat((int) mActivityRule.getActivity().getChangeDrawingCounter(),
+        assertThat((int) activityRule.getActivity().getChangeDrawingCounter(),
                 greaterThanOrEqualTo(counter + 1));
     }
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerState() {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
-        mActivityRule.getActivity().listenerState.onCancelled(databaseErrorMock);
+        activityRule.getActivity().listenerState.onCancelled(databaseErrorMock);
     }
 
     @Test(expected = DatabaseException.class)
     public void testOnCancelledListenerCounter() {
         when(databaseErrorMock.toException()).thenReturn(new DatabaseException("Cancelled"));
-        mActivityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
+        activityRule.getActivity().listenerCounter.onCancelled(databaseErrorMock);
     }
 
     @Test
     public void testDecodeSampledBitmapFromResource() {
         Bitmap bitmap = BitmapManipulator.decodeSampledBitmapFromResource(
-                mActivityRule.getActivity().getResources(), R.drawable.default_image, 2, 2);
+                activityRule.getActivity().getResources(), R.drawable.default_image, 2, 2);
         assertThat(bitmap, is(not(nullValue())));
     }
 

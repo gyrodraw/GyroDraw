@@ -363,7 +363,7 @@ public class Account {
     public void addFriend(final String friendId) throws DatabaseException {
         checkPrecondition(friendId != null, "Friend's friendId is null");
 
-        FbDatabase.getFriend(userId, friendId, new ValueEventListener() {
+        FbDatabase.getFriend(userId, friendId, new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -376,11 +376,6 @@ public class Account {
                 } else {
                     updateFriendship(friendId, SENT.ordinal(), RECEIVED.ordinal());
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                checkForDatabaseError(databaseError);
             }
         });
     }

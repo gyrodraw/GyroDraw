@@ -2,20 +2,18 @@ package ch.epfl.sweng.SDP.home.leaderboard;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.LinearLayout;
 
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
-import ch.epfl.sweng.SDP.utils.TestUsers;
-
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.utils.TestUsers;
 
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
@@ -26,15 +24,7 @@ import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
  */
 class Leaderboard {
 
-    private static final String TAG = "Leaderboard";
-    private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
-    private static final String USERS_TAG = "users";
-    private static final String USERNAME_TAG = "username";
-    private static final String USERID_TAG = "userId";
-    private static final String TROPHIES_TAG = "trophies";
-    private static final String FRIENDS_TAG = "friends";
-    private static final String LEAGUE_TAG = "currentLeague";
 
     private LinkedList<Player> allPlayers;
     private LinkedList<Player> allFriends;
@@ -105,7 +95,7 @@ class Leaderboard {
      */
     private void fetchPlayersFromFirebase() {
         allPlayers.clear();
-        getUsers(new ValueEventListener() {
+        getUsers(new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allPlayers.clear();
@@ -115,11 +105,6 @@ class Leaderboard {
                 }
                 update("");
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
-            }
         });
     }
 
@@ -128,7 +113,7 @@ class Leaderboard {
      */
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
-        getAllFriends(Account.getInstance(context).getUserId(), new ValueEventListener() {
+        getAllFriends(Account.getInstance(context).getUserId(), new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allPlayers.clear();
@@ -140,11 +125,6 @@ class Leaderboard {
                     }
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
-            }
         });
     }
 
@@ -155,17 +135,12 @@ class Leaderboard {
      * @param playerId id of friend to search
      */
     private void findAndAddPlayer(final String playerId) {
-        getUserById(playerId, new ValueEventListener() {
+        getUserById(playerId, new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Player.convertSnapshotToPlayerAndAddToList(context, dataSnapshot, allFriends);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, FIREBASE_ERROR + databaseError.toString());
             }
         });
     }

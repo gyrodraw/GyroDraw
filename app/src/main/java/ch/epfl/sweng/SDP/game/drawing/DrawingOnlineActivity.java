@@ -7,23 +7,23 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
@@ -44,7 +44,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
 
-    protected final ValueEventListener listenerTimer = new ValueEventListener() {
+    protected final ValueEventListener listenerTimer = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -53,14 +53,9 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                 ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
-        }
     };
 
-    protected final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -96,11 +91,6 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                     default:
                 }
             }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
         }
     };
 

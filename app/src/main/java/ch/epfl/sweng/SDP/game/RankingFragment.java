@@ -14,25 +14,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.home.battleLog.GameResult;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.RankingUtils;
-import ch.epfl.sweng.SDP.utils.SortUtils;
-import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.RankingUtils;
+import ch.epfl.sweng.SDP.utils.SortUtils;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.FINISHED;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
@@ -100,7 +99,7 @@ public class RankingFragment extends ListFragment {
 
     private void retrieveFinalRanking() {
         FbDatabase.getRoomAttribute(roomId, RANKING,
-                new ValueEventListener() {
+                new OnSuccesValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -137,11 +136,6 @@ public class RankingFragment extends ListFragment {
                                 tmpUserNames, rankings, trophies, drawings, positions);
                         setListAdapter(adapter);
                         setFinishedCollectingRanking();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
                     }
                 });
     }

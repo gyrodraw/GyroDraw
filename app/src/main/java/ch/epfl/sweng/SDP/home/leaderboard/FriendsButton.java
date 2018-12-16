@@ -4,17 +4,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getFriend;
 
@@ -24,8 +23,6 @@ import static ch.epfl.sweng.SDP.firebase.FbDatabase.getFriend;
  */
 class FriendsButton extends AppCompatImageView {
 
-    private static final String TAG = "FriendsButton";
-    private static final String FIREBASE_ERROR = "There was a problem with Firebase";
     private static final int SENT = FriendsRequestState.SENT.ordinal();
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
 
@@ -75,7 +72,7 @@ class FriendsButton extends AppCompatImageView {
      * @return listener
      */
     private ValueEventListener initializeFriendsButton() {
-        return new ValueEventListener() {
+        return new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -84,11 +81,6 @@ class FriendsButton extends AppCompatImageView {
                 } else {
                     setImageResource(R.drawable.add_friend);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, FIREBASE_ERROR);
             }
         };
     }
@@ -115,7 +107,7 @@ class FriendsButton extends AppCompatImageView {
      * @return listener
      */
     private ValueEventListener changeFriendsButtonImageOnClick() {
-        return new ValueEventListener() {
+        return new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -124,11 +116,6 @@ class FriendsButton extends AppCompatImageView {
                     Account.getInstance(context).addFriend(player.getUserId());
                     setImageResource(R.drawable.pending_friend);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, FIREBASE_ERROR);
             }
         };
     }

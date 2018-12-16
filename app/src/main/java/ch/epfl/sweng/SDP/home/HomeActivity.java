@@ -17,12 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbAuthentication;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.battleLog.BattleLogActivity;
@@ -35,13 +43,6 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
@@ -78,7 +79,7 @@ public class HomeActivity extends NoBackPressActivity {
     private Dialog profileWindow;
     private Dialog friendRequestWindow;
 
-    private ValueEventListener listenerFriendsRequest = new ValueEventListener() {
+    private ValueEventListener listenerFriendsRequest = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -88,27 +89,17 @@ public class HomeActivity extends NoBackPressActivity {
 
                     if (state == FriendsRequestState.RECEIVED) {
                         final String id = child.getKey();
-                        getAccountAttribute(id, USERNAME, new ValueEventListener() {
+                        getAccountAttribute(id, USERNAME, new OnSuccesValueEventListener() {
 
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String name = dataSnapshot.getValue(String.class);
                                 showFriendRequestPopup(name, id);
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                throw databaseError.toException();
-                            }
                         });
                     }
                 }
             }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
         }
     };
 

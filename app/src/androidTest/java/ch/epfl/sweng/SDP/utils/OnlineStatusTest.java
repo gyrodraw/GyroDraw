@@ -3,14 +3,13 @@ package ch.epfl.sweng.SDP.utils;
 import android.support.annotation.NonNull;
 import android.support.test.runner.AndroidJUnit4;
 
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
@@ -49,16 +48,11 @@ public class OnlineStatusTest {
 
     private void assertOnlineStatus(final int status) {
         FbDatabase.getAccountAttribute(USER_ID, STATUS,
-                new ValueEventListener() {
+                new OnSuccesValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int value = dataSnapshot.getValue(int.class);
                         assertThat(value, is(status));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
                     }
                 });
     }

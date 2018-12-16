@@ -13,10 +13,15 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItemsActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
@@ -24,11 +29,6 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
@@ -76,7 +76,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     private String winningWord = null;
 
     @VisibleForTesting
-    protected final ValueEventListener listenerTimer = new ValueEventListener() {
+    protected final ValueEventListener listenerTimer = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -86,15 +86,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
                         .setText(String.valueOf(value));
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -118,15 +113,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
                 }
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerWord1 = new ValueEventListener() {
+    protected final ValueEventListener listenerWord1 = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -140,15 +130,10 @@ public class WaitingPageActivity extends NoBackPressActivity {
                 Log.e(TAG, "Value is not ready");
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerWord2 = new ValueEventListener() {
+    protected final ValueEventListener listenerWord2 = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -162,26 +147,16 @@ public class WaitingPageActivity extends NoBackPressActivity {
                 Log.e(TAG, "Value is not ready");
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerCountUsers = new ValueEventListener() {
+    protected final ValueEventListener listenerCountUsers = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
             ((TextView) findViewById(R.id.playersCounterText)).setText(
                     format("%s/5", String.valueOf(usersCount)));
 
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
         }
     };
 
@@ -398,18 +373,13 @@ public class WaitingPageActivity extends NoBackPressActivity {
     }
 
     private void removeVote(final DatabaseReference wordRef) {
-        wordRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        wordRef.addListenerForSingleValueEvent(new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);
                 if (value != null) {
                     wordRef.setValue(--value);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
             }
         });
     }

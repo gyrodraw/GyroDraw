@@ -405,16 +405,11 @@ public class AccountCreationActivityAndAccountTest {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
-        final ValueEventListener valueEventListener = new ValueEventListener() {
+        final ValueEventListener valueEventListener = new OnSuccesValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 assertThat(dataSnapshot.exists(), is(state));
                 countingResource.decrement();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
             }
         };
 

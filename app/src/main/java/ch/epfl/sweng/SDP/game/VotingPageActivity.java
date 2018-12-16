@@ -11,11 +11,22 @@ import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -24,17 +35,6 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.HashMap;
 
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
@@ -76,7 +76,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     private String roomId = "undefined";
 
     @VisibleForTesting
-    protected final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -101,15 +101,10 @@ public class VotingPageActivity extends NoBackPressActivity {
                 }
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
-        }
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerCounter = new ValueEventListener() {
+    protected final ValueEventListener listenerCounter = new OnSuccesValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -121,11 +116,6 @@ public class VotingPageActivity extends NoBackPressActivity {
                     changeImage();
                 }
             }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            throw databaseError.toException();
         }
     };
 
@@ -155,7 +145,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         // Get the ranking reference
         rankingRef = FbDatabase.getRoomAttributeReference(roomId, RANKING);
         FbDatabase.setListenerToRoomAttribute(roomId, RANKING,
-                new ValueEventListener() {
+                new OnSuccesValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -164,18 +154,13 @@ public class VotingPageActivity extends NoBackPressActivity {
                             }
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
                 });
 
         FbDatabase.setListenerToRoomAttribute(roomId, STATE, listenerState);
         FbDatabase.setListenerToRoomAttribute(roomId, TIMER, listenerCounter);
 
         FbDatabase.getRoomAttribute(roomId, USERS,
-                new ValueEventListener() {
+                new OnSuccesValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // Get the players' ids and usernames
@@ -202,11 +187,6 @@ public class VotingPageActivity extends NoBackPressActivity {
 
                         previousRating = 0;
                         addStarAnimationListener();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
                     }
                 });
 
@@ -306,7 +286,7 @@ public class VotingPageActivity extends NoBackPressActivity {
             final DatabaseReference playerRating = rankingRef
                     .child(playerName);
 
-            playerRating.addValueEventListener(new ValueEventListener() {
+            playerRating.addValueEventListener(new OnSuccesValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     // Get the current rating
@@ -316,11 +296,6 @@ public class VotingPageActivity extends NoBackPressActivity {
                         starsAnimation.addStars((int) (value - previousRating));
                         previousRating = value.intValue();
                     }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    throw databaseError.toException();
                 }
             });
         }
@@ -335,7 +310,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     // Retrieve the drawings and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage() {
         FbDatabase.getRoomAttribute(roomId, USERS,
-                new ValueEventListener() {
+                new OnSuccesValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -399,11 +374,6 @@ public class VotingPageActivity extends NoBackPressActivity {
                             }
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
-                    }
                 });
     }
 
@@ -424,7 +394,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                 .child(playerName);
 
         playerRating.addListenerForSingleValueEvent(
-                new ValueEventListener() {
+                new OnSuccesValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // Get the current rating
@@ -434,11 +404,6 @@ public class VotingPageActivity extends NoBackPressActivity {
                             // Increment the current rating
                             playerRating.setValue(value.intValue() + rating);
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        throw databaseError.toException();
                     }
                 });
     }

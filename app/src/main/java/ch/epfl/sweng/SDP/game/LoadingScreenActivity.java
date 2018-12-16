@@ -17,7 +17,7 @@ import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.firebase.RoomAttributes;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
@@ -73,7 +73,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
             }
     };
 
-    private final ValueEventListener listenerWords = new OnSuccesValueEventListener() {
+    private final ValueEventListener listenerWords = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             ArrayList<String> words = new ArrayList<>();

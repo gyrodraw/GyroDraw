@@ -25,7 +25,7 @@ import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -405,7 +405,7 @@ public class AccountCreationActivityAndAccountTest {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
-        final ValueEventListener valueEventListener = new OnSuccesValueEventListener() {
+        final ValueEventListener valueEventListener = new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 assertThat(dataSnapshot.exists(), is(state));

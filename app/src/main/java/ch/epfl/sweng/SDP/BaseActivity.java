@@ -18,7 +18,7 @@ import java.util.HashMap;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
@@ -224,7 +224,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         final String userId = Account.getInstance(this).getUserId();
         FbDatabase.setListenerToAccountAttribute(
                 userId, STATUS,
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         OnlineStatus isOnline = OnlineStatus.fromInteger(

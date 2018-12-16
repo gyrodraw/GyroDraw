@@ -21,7 +21,7 @@ import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineItemsActivity;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
@@ -76,7 +76,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     private String winningWord = null;
 
     @VisibleForTesting
-    protected final ValueEventListener listenerTimer = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerTimer = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -89,7 +89,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -116,7 +116,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerWord1 = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerWord1 = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -133,7 +133,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerWord2 = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerWord2 = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try {
@@ -150,7 +150,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     };
 
     @VisibleForTesting
-    protected final ValueEventListener listenerCountUsers = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerCountUsers = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             long usersCount = dataSnapshot.getChildrenCount();
@@ -373,7 +373,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
     }
 
     private void removeVote(final DatabaseReference wordRef) {
-        wordRef.addListenerForSingleValueEvent(new OnSuccesValueEventListener() {
+        wordRef.addListenerForSingleValueEvent(new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(Integer.class);

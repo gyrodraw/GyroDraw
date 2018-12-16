@@ -12,7 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getFriend;
@@ -72,7 +72,7 @@ class FriendsButton extends AppCompatImageView {
      * @return listener
      */
     private ValueEventListener initializeFriendsButton() {
-        return new OnSuccesValueEventListener() {
+        return new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -107,7 +107,7 @@ class FriendsButton extends AppCompatImageView {
      * @return listener
      */
     private ValueEventListener changeFriendsButtonImageOnClick() {
-        return new OnSuccesValueEventListener() {
+        return new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

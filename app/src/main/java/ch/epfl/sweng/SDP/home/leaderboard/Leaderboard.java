@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.utils.TestUsers;
 
@@ -95,7 +95,7 @@ class Leaderboard {
      */
     private void fetchPlayersFromFirebase() {
         allPlayers.clear();
-        getUsers(new OnSuccesValueEventListener() {
+        getUsers(new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allPlayers.clear();
@@ -113,7 +113,7 @@ class Leaderboard {
      */
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
-        getAllFriends(Account.getInstance(context).getUserId(), new OnSuccesValueEventListener() {
+        getAllFriends(Account.getInstance(context).getUserId(), new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allPlayers.clear();
@@ -135,7 +135,7 @@ class Leaderboard {
      * @param playerId id of friend to search
      */
     private void findAndAddPlayer(final String playerId) {
-        getUserById(playerId, new OnSuccesValueEventListener() {
+        getUserById(playerId, new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

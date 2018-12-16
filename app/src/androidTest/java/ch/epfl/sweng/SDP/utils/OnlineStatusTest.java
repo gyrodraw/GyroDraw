@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
@@ -48,7 +48,7 @@ public class OnlineStatusTest {
 
     private void assertOnlineStatus(final int status) {
         FbDatabase.getAccountAttribute(USER_ID, STATUS,
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int value = dataSnapshot.getValue(int.class);

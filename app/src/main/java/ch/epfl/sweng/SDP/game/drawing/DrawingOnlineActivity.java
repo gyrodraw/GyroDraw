@@ -18,7 +18,7 @@ import com.google.firebase.storage.UploadTask.TaskSnapshot;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -44,7 +44,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
     private DatabaseReference timerRef;
     private DatabaseReference stateRef;
 
-    protected final ValueEventListener listenerTimer = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerTimer = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -55,7 +55,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
         }
     };
 
-    protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);

@@ -1,5 +1,11 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,23 +16,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.HashMap;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
-import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
@@ -35,12 +30,14 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import java.util.HashMap;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.
@@ -75,9 +72,11 @@ public class VotingPageActivity extends NoBackPressActivity {
 
     private String roomId = "undefined";
 
-    /** This listener is only visible to tests, else private.  */
+    /**
+     * This listener is only visible to tests, else private.
+     */
     @VisibleForTesting
-    protected final ValueEventListener listenerState = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -104,9 +103,11 @@ public class VotingPageActivity extends NoBackPressActivity {
         }
     };
 
-    /** This listener is only visible to tests, else private.  */
+    /**
+     * This listener is only visible to tests, else private.
+     */
     @VisibleForTesting
-    protected final ValueEventListener listenerCounter = new OnSuccesValueEventListener() {
+    protected final ValueEventListener listenerCounter = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -147,7 +148,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         // Get the ranking reference
         rankingRef = FbDatabase.getRoomAttributeReference(roomId, RANKING);
         FbDatabase.setListenerToRoomAttribute(roomId, RANKING,
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -162,7 +163,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         FbDatabase.setListenerToRoomAttribute(roomId, TIMER, listenerCounter);
 
         FbDatabase.getRoomAttribute(roomId, USERS,
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // Get the players' ids and usernames
@@ -175,7 +176,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                         ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
                             @Override
                             public void onRatingChanged(RatingBar ratingBar, float rating,
-                                                        boolean fromUser) {
+                                    boolean fromUser) {
                                 ratingBar.setIsIndicator(true);
                                 ratingBar.setAlpha(0.8f);
 
@@ -288,7 +289,7 @@ public class VotingPageActivity extends NoBackPressActivity {
             final DatabaseReference playerRating = rankingRef
                     .child(playerName);
 
-            playerRating.addValueEventListener(new OnSuccesValueEventListener() {
+            playerRating.addValueEventListener(new OnSuccessValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     // Get the current rating
@@ -312,7 +313,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     // Retrieve the drawings and store them in the drawings field.
     private void retrieveDrawingsFromDatabaseStorage() {
         FbDatabase.getRoomAttribute(roomId, USERS,
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -323,7 +324,8 @@ public class VotingPageActivity extends NoBackPressActivity {
                             final String currentId = drawingsIds[i];
                             if (currentId != null) {
                                 if (currentId
-                                        .equals(Account.getInstance(getApplicationContext()).getUserId())) {
+                                        .equals(Account.getInstance(getApplicationContext())
+                                                .getUserId())) {
                                     // Get the image from the local database instead
                                     LocalDbForImages localDbHandler = new LocalDbHandlerForImages(
                                             getApplicationContext(), null, 1);
@@ -340,7 +342,8 @@ public class VotingPageActivity extends NoBackPressActivity {
                                                     if (task.isSuccessful()) {
                                                         final int OFFSET = 0;
 
-                                                        // Convert the image downloaded as byte[] to Bitmap
+                                                        // Convert the image downloaded as byte[]
+                                                        // to Bitmap
                                                         bitmap = BitmapManipulator
                                                                 .decodeSampledBitmapFromByteArray(
                                                                         task.getResult(), OFFSET,
@@ -396,7 +399,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                 .child(playerName);
 
         playerRating.addListenerForSingleValueEvent(
-                new OnSuccesValueEventListener() {
+                new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // Get the current rating
@@ -429,7 +432,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     /**
      * Displays the drawing of the winner.
      *
-     * @param img        Drawing of the winner
+     * @param img Drawing of the winner
      * @param winnerName Name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {

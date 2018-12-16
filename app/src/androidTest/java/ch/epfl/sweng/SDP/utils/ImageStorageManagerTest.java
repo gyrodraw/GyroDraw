@@ -29,16 +29,13 @@ public class ImageStorageManagerTest {
 
     @Test
     public void testIsPermissionsGranted() {
-        boolean granted = ActivityCompat.checkSelfPermission(InstrumentationRegistry.getContext(),
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        assertThat(granted, is(true));
+        assertThat(ImageStorageManager.hasExternalWritePermissions(
+                InstrumentationRegistry.getContext()), is(true));
     }
 
     @Test
     public void testGetFile() {
-        String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM).toString() + "/Camera/Gyrodraw/";
+        String root = Environment.getExternalStorageDirectory().toString() + "/Gyrodraw/";
         String fileName = root + "Image-testFile.png";
 
         File file = ImageStorageManager.getFile("testFile");

@@ -71,7 +71,7 @@ public class VotingPageActivityTest {
     private StarAnimationView starsAnimation;
 
     @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule
+    public GrantPermissionRule runtimePermissionRule = GrantPermissionRule
             .grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Rule

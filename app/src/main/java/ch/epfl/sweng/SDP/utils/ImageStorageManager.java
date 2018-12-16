@@ -6,17 +6,13 @@ import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
 
 import ch.epfl.sweng.SDP.Activity;
 import ch.epfl.sweng.SDP.R;
@@ -34,6 +30,10 @@ public final class ImageStorageManager {
         // Empty constructor
     }
 
+    /**
+     * Retrieve image from local DB and save it in local external storage.
+     * @param context activity context
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context) {
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(context,

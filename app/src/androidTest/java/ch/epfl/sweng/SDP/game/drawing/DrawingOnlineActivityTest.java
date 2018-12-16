@@ -13,6 +13,17 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.firebase.database.DataSnapshot;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
@@ -20,17 +31,6 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
-
-import com.google.firebase.database.DataSnapshot;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -103,6 +103,7 @@ public class DrawingOnlineActivityTest {
         assertThat(paintView.getCircleRadius(), is(12));
     }
 
+    @Test
     public void testSetCircleWorks() {
         paintView.setCircle(30, -10);
         assertThat(paintView.getCircleX(), is(30));

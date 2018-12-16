@@ -31,7 +31,7 @@ public final class ImageStorageManager {
     }
 
     /**
-     * Retrieve image from local DB and save it in local external storage.
+     * Retrieves image from local DB and saves it in local external storage.
      * @param context activity context
      */
     @RequiresApi(api = Build.VERSION_CODES.O)

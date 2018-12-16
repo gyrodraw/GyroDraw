@@ -10,25 +10,25 @@ import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
-import ch.epfl.sweng.SDP.shop.ColorsShop;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccesValueEventListener;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.shop.ColorsShop;
+import ch.epfl.sweng.SDP.shop.ShopItem;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

@@ -35,7 +35,6 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     public static final String WORD_1 = "word1";
     public static final String WORD_2 = "word2";
     public static final String ROOM_ID = "roomID";
-    public static final String MODE = "mode";
 
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;
@@ -68,7 +67,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                     intent.putExtra(WORD_1, word1);
                     intent.putExtra(WORD_2, word2);
                     intent.putExtra(ROOM_ID, roomID);
-                    intent.putExtra(MODE, gameMode);
+                    intent.putExtra(GAME_MODE, gameMode);
                     startActivity(intent);
                 }
             }

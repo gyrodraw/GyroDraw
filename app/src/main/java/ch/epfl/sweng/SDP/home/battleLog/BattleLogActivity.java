@@ -53,8 +53,8 @@ public class BattleLogActivity extends NoBackPressActivity {
     }
 
     /**
-     * Fetches the latest game results in the local database, convert them to views
-     * and add them to the layout.
+     * Fetches the latest game results in the local database, converts them to views
+     * and adds them to the layout.
      */
     private void fetchGameResults() {
         LocalDbForGameResults localDb =
@@ -69,7 +69,7 @@ public class BattleLogActivity extends NoBackPressActivity {
     }
 
     /**
-     * Returnsthe number of game result currently displayed.
+     * Returns the number of game result currently displayed.
      */
     @VisibleForTesting
     public int getGameResultsCount() {

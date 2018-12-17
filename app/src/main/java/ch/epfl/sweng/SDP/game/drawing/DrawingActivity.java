@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
+
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -13,25 +15,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
-import com.google.android.gms.common.util.ArrayUtils;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
-
-import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
+import com.google.android.gms.common.util.ArrayUtils;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Abstract class representing the drawing page of the game.
  */
 public abstract class DrawingActivity extends NoBackPressActivity {
-
-    protected static final String TAG = "DrawingActivity";
 
     static final int MIN_WIDTH = 10;
     static final int CURR_WIDTH = 20;

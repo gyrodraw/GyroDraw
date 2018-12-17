@@ -1,5 +1,12 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USER_ID;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
@@ -7,22 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.utils.TestUsers;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-
 import com.google.firebase.database.DataSnapshot;
-
 import java.util.LinkedList;
-
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.TROPHIES;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USER_ID;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
 
 /**
  * Helper class to manage and display user data from Firebase.
@@ -68,6 +65,11 @@ class Player implements Comparable {
         return compareTrophies;
     }
 
+    /**
+     * Returns true if the player name contains the given string, false otherwise.
+     * @param query the string to search for in the player name
+     * @return true if the player name contains the given string, false otherwise
+     */
     boolean playerNameContainsString(String query) {
         return username.toUpperCase().contains(query.toUpperCase());
     }

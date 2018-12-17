@@ -4,7 +4,6 @@ import static android.view.View.VISIBLE;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -148,7 +147,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param layoutParams Layout parameters of the textview
      * @return The newly created textview
      */
-    @SuppressLint("NewApi")
     public TextView createTextView(String text, int color, int size, Typeface typeface,
                                    LinearLayout.LayoutParams layoutParams) {
         TextView textView = new TextView(this);
@@ -184,7 +182,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Callback function fired when user allowed or disallowed permissions.
+     * Callback function fired when the user is allowed or disallowed permissions.
      * @param requestCode request code when asking for permissions
      * @param permissions permissions asked
      * @param grantResults results of the permissions asked
@@ -194,14 +192,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         switch (requestCode) {
             case PERMISSION_EXTERNAL_STORAGE: {
-                // Check if user granted permissions. If it is the case save the corresponding file
+                // Check if user granted permissions. If it is the case, save the corresponding file
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permissions granted
                     ImageStorageManager.saveImage(this);
-
                 }
                 return;
             }
@@ -215,7 +213,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Clones the {@link Account}, corresponding to the user logged in, from Firebase, and stores it
      * in the local database.
      *
-     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase FbDatabase
+     * @param snapshot the {@link DataSnapshot} corresponding to an account on Firebase Database
      */
     protected void cloneAccountFromFirebase(@NonNull DataSnapshot snapshot) {
         HashMap<String, HashMap<String, Object>> userEntry =

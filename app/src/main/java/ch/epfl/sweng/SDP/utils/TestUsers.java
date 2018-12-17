@@ -2,16 +2,20 @@ package ch.epfl.sweng.SDP.utils;
 
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Contains the IDs of all users on Firebase that were created for testing purposes.
- * Implements a method for checking if a given user is a real or a test user.
+ * This class contains the IDs of all users on Firebase that were created for testing purposes. It
+ * implements a method for checking if a given user is a real or a test user.
  */
 public final class TestUsers {
 
-    private static final String[] allTestUsers = new String[]{
+    private static final List<String> allTestUsers = Collections.unmodifiableList(Arrays.asList(
             "123456789", "1234567891", "FriendId123ForTesting", "no_user",
             "userA", "userAA", "EPFLien"
-    };
+    ));
 
     private TestUsers() {
         // This constructor must not be visible.
@@ -28,11 +32,6 @@ public final class TestUsers {
         checkPrecondition(userId != null, "UserId must not be null");
         checkPrecondition(!userId.isEmpty(), "UserId must not be empty");
 
-        for (String testUserId : allTestUsers) {
-            if (testUserId.equals(userId)) {
-                return true;
-            }
-        }
-        return false;
+        return allTestUsers.contains(userId);
     }
 }

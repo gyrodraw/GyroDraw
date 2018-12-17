@@ -97,7 +97,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
             if (state != null) {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
-                    case HOMESTATE:
+                    case HOME_STATE:
                         findViewById(R.id.waitingTime).setVisibility(View.GONE);
                         findViewById(R.id.leaveButton).setVisibility(View.VISIBLE);
                         break;

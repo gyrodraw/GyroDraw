@@ -1,20 +1,19 @@
 package ch.epfl.sweng.SDP.utils.network;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.ONLINE_STATUS;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.VisibleForTesting;
-
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.ONLINE_STATUS;
-
 /**
- * Connectivity wrapper that registers the network receiver and unregisters it. This class provides
- * also utility to update or check connectivity status.
+ * A wrapper class that registers and unregisters the network receiver. It provides
+ * also utility methods to update or check connectivity status.
  */
 public final class ConnectivityWrapper {
 

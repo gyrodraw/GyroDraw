@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,19 +14,13 @@ import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
-
-import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class representing the view used for drawing.
@@ -37,6 +34,7 @@ public class PaintView extends View {
 
     private boolean canDraw = true;
     private boolean bucketMode = false;
+
     @VisibleForTesting
     public boolean isDrawing = false;
 
@@ -51,6 +49,7 @@ public class PaintView extends View {
 
     private IntCurver circleX = new IntCurver(CURVE_INTENSITY, 0);
     private IntCurver circleY = new IntCurver(CURVE_INTENSITY, 0);
+
     private int width;
     private int height;
     private int circleRadius;
@@ -64,7 +63,7 @@ public class PaintView extends View {
      * Constructor for the view.
      *
      * @param context Context of class
-     * @param attrs   Attributes of class
+     * @param attrs Attributes of class
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -155,7 +154,7 @@ public class PaintView extends View {
     }
 
     /**
-     * Sets a new width to the brush and to all current paths.
+     * Sets the new brush width.
      *
      * @param newWidth the new width of the brush
      */
@@ -187,7 +186,7 @@ public class PaintView extends View {
     }
 
     /**
-     * Returns the value of the the current color.
+     * Returns the value of the current color.
      *
      * @return the value of the current color
      */
@@ -252,7 +251,7 @@ public class PaintView extends View {
      * Keeps coordinates within screen boundaries.
      *
      * @param coordinate coordinate to sanitize
-     * @param maxBound   maximum bound
+     * @param maxBound maximum bound
      * @return sanitized coordinate
      */
     private int sanitizeCoordinate(int coordinate, int maxBound) {

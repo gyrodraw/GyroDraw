@@ -1,21 +1,16 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import android.graphics.Bitmap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Helper class to upload and download images to/from Firebase Storage.
@@ -36,6 +31,7 @@ public final class FbStorage {
      *
      * @param bitmap    the image to upload
      * @param imageName the name of the image
+     * @param successListener optional {@link OnSuccessListener} to add to the task
      * @return the {@link StorageTask} in charge of the upload
      */
     public static StorageTask<TaskSnapshot> sendBitmapToFirebaseStorage(
@@ -57,18 +53,11 @@ public final class FbStorage {
             e.printStackTrace();
         }
 
-        StorageTask<TaskSnapshot> task = uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.d(TAG, "Upload to Firebase Storage failed.");
-            }
-        });
-
         if (successListener != null) {
-            task.addOnSuccessListener(successListener);
+            uploadTask.addOnSuccessListener(successListener);
         }
 
-        return task;
+        return uploadTask;
     }
 
     /**

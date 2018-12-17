@@ -1,19 +1,18 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
+import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
@@ -23,18 +22,19 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
-import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
-import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 /**
  * Class representing the drawing phase of an online game in normal mode.
  */
 public class DrawingOnlineActivity extends GyroDrawingActivity {
+
+    private static final String TAG = "DrawingOnlineActivity";
 
     private String winningWord;
 
@@ -71,7 +71,7 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                                     public void onComplete(@NonNull Task<TaskSnapshot> task) {
                                         FbDatabase.setValueToUserInRoomAttribute(roomId,
                                                 Account.getInstance(getApplicationContext())
-                                                .getUsername(), UPLOAD_DRAWING, 1);
+                                                        .getUsername(), UPLOAD_DRAWING, 1);
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
@@ -146,9 +146,9 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
     }
 
     /**
-     * Method that call onDataChange on the UI thread.
+     * Method that calls {@code listenerTimer.onDataChange()} on the UI thread.
      *
-     * @param dataSnapshot Snapshot of the database (mock snapshot in out case).
+     * @param dataSnapshot Snapshot of the database (mock snapshot in our case).
      */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {

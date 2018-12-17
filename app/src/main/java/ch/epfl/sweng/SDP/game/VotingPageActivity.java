@@ -49,11 +49,11 @@ import java.util.HashMap;
  */
 public class VotingPageActivity extends NoBackPressActivity {
 
-    private static boolean enableAnimations = true;
-
     private static final String TAG = "VotingPageActivity";
 
     private static final int NUMBER_OF_DRAWINGS = 5;
+
+    private static boolean enableAnimations = true;
 
     private final String username = Account.getInstance(this).getUsername();
 
@@ -83,24 +83,24 @@ public class VotingPageActivity extends NoBackPressActivity {
     private boolean savingModeRequest = false;
 
     /**
-     * Shares an image to facebook.
+     * Shares an image to Facebook.
      *
-     * @param view the button invoked this method.
+     * @param view the button which invoked this method.
      */
     public void shareImage(View view) {
         sharingMode = true;
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
+        LocalDbForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
         ImageSharer.getInstance(this).shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
     }
 
     /**
      * Saves an image to the disk.
      *
-     * @param view the button invoked this method.
+     * @param view the button which invoked this method.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveImage(View view) {
-        if(ImageStorageManager.hasExternalWritePermissions(this)) {
+        if (ImageStorageManager.hasExternalWritePermissions(this)) {
             ImageStorageManager.saveImage(this);
         } else {
             savingModeRequest = true;
@@ -128,7 +128,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                                 Account.getInstance(getApplicationContext()).getUsername());
                         setAnimationWaitingBackground();
                         break;
-                    case RANKING_FRAGEMNT:
+                    case RANKING_FRAGMENT:
                         // Start ranking activity
                         setLayoutToVisible();
                         startRankingFragment();
@@ -242,7 +242,7 @@ public class VotingPageActivity extends NoBackPressActivity {
             return;
         }
 
-        if(savingModeRequest) {
+        if (savingModeRequest) {
             savingModeRequest = false;
             return;
         }
@@ -254,6 +254,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         if (sharer != null) {
             sharer.setActivity(null);
         }
+
         removeAllListeners();
         finish();
     }
@@ -265,10 +266,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     public void startHomeActivity() {
         // Remove the drawings from Firebase Storage
         for (String id : drawingsIds) {
-            // Remove this after testing
-            if (id != null && !id.substring(0, Math.min(4, id.length())).equals("user")) {
-                FbStorage.removeImage(id + ".jpg");
-            }
+            FbStorage.removeImage(id + ".jpg");
         }
 
         Log.d(TAG, "Starting home activity");
@@ -276,6 +274,7 @@ public class VotingPageActivity extends NoBackPressActivity {
         if (ImageSharer.getInstance() != null) {
             ImageSharer.getInstance().setActivity(null);
         }
+
         launchActivity(HomeActivity.class);
 
         if (roomId != null && ConnectivityWrapper.isOnline(this)) {
@@ -424,7 +423,8 @@ public class VotingPageActivity extends NoBackPressActivity {
                                                     String playerName = playersNames[0];
                                                     changeDrawing(drawings[0], playerName);
 
-                                                    // Enable the rating bar only if the image is not the player's one
+                                                    // Enable the rating bar only if the image is
+                                                    // not the player's one
                                                     enableRatingBar(playerName);
 
                                                     // Display the voting page layout
@@ -487,8 +487,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     /**
      * Displays the drawing of the winner.
      *
-     * @param img Drawing of the winner
-     * @param winnerName Name of the winner
+     * @param img the drawing of the winner
+     * @param winnerName the name of the winner
      */
     public void showWinnerDrawing(Bitmap img, String winnerName) {
         changeDrawing(img, winnerName);
@@ -501,8 +501,8 @@ public class VotingPageActivity extends NoBackPressActivity {
     }
 
     /**
-     * Disables the background and stars animation. Call this method in every VotingPageActivity
-     * test.
+     * Disables the background and stars animation. This method should be called in every
+     * VotingPageActivity test.
      */
     @VisibleForTesting
     public static void disableAnimations() {

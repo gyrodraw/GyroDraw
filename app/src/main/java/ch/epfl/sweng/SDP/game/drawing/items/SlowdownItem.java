@@ -4,7 +4,7 @@ import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
- * Immutable class representing an item which slows down the player's cursor.
+ * Class representing an item which slows down the player's cursor.
  */
 public class SlowdownItem extends DeactivableItem {
 

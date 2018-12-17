@@ -5,7 +5,7 @@ import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
- * Immutable class representing a bonus item which gives 3 stars to the player.
+ * Class representing a bonus item which gives 3 stars to the player.
  */
 public class AddStarsItem extends Item {
 

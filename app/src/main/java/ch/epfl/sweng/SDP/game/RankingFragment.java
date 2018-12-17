@@ -85,6 +85,7 @@ public class RankingFragment extends ListFragment {
      * @param roomId      the id of the room.
      * @param drawings    the users drawings.
      * @param playerNames the usernames of the players.
+     * @param activity    the activity instantiating the fragment
      */
     public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames,
                          VotingPageActivity activity) {

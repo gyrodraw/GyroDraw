@@ -3,7 +3,7 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
- * Immutable class representing an item which swaps the axis while drawing.
+ * Class representing an item which swaps the axis while drawing.
  */
 public class SwapAxisItem extends DeactivableItem {
 

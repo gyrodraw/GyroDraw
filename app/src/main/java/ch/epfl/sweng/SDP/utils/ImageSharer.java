@@ -52,7 +52,7 @@ public class ImageSharer {
     }
 
     /**
-     * Use this method to set the activity. This method should also be used to prevent
+     * Sets the activity which uses the image sharer. This method should also be used to prevent
      * reference cycle by setting the activity to null when it's not used anymore.
      *
      * @param context the activity
@@ -62,7 +62,7 @@ public class ImageSharer {
     }
 
     /**
-     * Shares an image to facebook by opening a share dialog.
+     * Shares an image to Facebook by opening a share dialog.
      *
      * @param image the image to share
      */
@@ -77,10 +77,10 @@ public class ImageSharer {
     }
 
     /**
-     * Shares an image to facebook app.
+     * Shares an image to Facebook app.
      *
      * @param image the image to share
-     * @return true if ShareDialog was created, else false
+     * @return true if the {@link ShareDialog} was created, false otherwise
      */
     @VisibleForTesting
     public boolean shareImageToFacebookApp(Bitmap image) {
@@ -95,7 +95,7 @@ public class ImageSharer {
     }
 
     /**
-     * Uploads the image to firebase storage.
+     * Uploads the image to Firebase storage.
      *
      * @param image the image to upload
      */

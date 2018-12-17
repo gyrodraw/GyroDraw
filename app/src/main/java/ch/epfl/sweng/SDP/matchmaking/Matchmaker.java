@@ -15,6 +15,14 @@ public final class Matchmaker implements MatchmakingInterface {
 
     private final Account account;
 
+    private Matchmaker(Account account) {
+        if (instance != null) {
+            throw new IllegalStateException("Already instantiated");
+        }
+
+        this.account = account;
+    }
+
     /**
      * Gets (eventually creates) the instance.
      *
@@ -26,14 +34,6 @@ public final class Matchmaker implements MatchmakingInterface {
         }
 
         return instance;
-    }
-
-    private Matchmaker(Account account) {
-        if (instance != null) {
-            throw new IllegalStateException("Already instantiated");
-        }
-
-        this.account = account;
     }
 
     @Override

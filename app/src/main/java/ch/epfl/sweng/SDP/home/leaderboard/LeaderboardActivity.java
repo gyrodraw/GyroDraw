@@ -91,7 +91,7 @@ public class LeaderboardActivity extends NoBackPressActivity {
     }
 
     /**
-     * Populates the leaderboard's cache with values form firebase.
+     * Populates the leaderboard's cache with values from Firebase.
      */
     void initLeaderboard() {
         leaderboard.initLeaderboard();

@@ -1,28 +1,24 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.widget.LinearLayout;
-
-import com.google.firebase.database.DataSnapshot;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.TreeSet;
-
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
-import ch.epfl.sweng.SDP.home.FriendsRequestState;
-import ch.epfl.sweng.SDP.utils.TestUsers;
-
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
 import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.widget.LinearLayout;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.SDP.home.FriendsRequestState;
+import ch.epfl.sweng.SDP.utils.TestUsers;
+import com.google.firebase.database.DataSnapshot;
+import java.util.LinkedList;
+import java.util.TreeSet;
+
 /**
  * Helper class to manage and display data from Firebase.
  */
-class Leaderboard {
+final class Leaderboard {
 
     private static final int FRIENDS = FriendsRequestState.FRIENDS.ordinal();
 
@@ -91,7 +87,7 @@ class Leaderboard {
     }
 
     /**
-     * Gets all the players from Firebase and stores them in LinkedList.
+     * Gets all the players from Firebase and stores them in the linked list.
      */
     private void fetchPlayersFromFirebase() {
         allPlayers.clear();
@@ -109,7 +105,7 @@ class Leaderboard {
     }
 
     /**
-     * Gets all friends of current user and stores them in LinkedList.
+     * Gets all friends of current user and stores them in the linked list.
      */
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
@@ -156,9 +152,7 @@ class Leaderboard {
 
         // add all (max MAX_PLAYERS_DISPLAYED) players to the leaderboard
         int index = 0;
-        Iterator<Player> playerIterator = wantedPlayers.iterator();
-        while (playerIterator.hasNext()) {
-            Player currentPlayer = playerIterator.next();
+        for (Player currentPlayer : wantedPlayers) {
             currentPlayer.setRank(index + 1);
             leaderboardView.addView(currentPlayer
                     .toLayout(index), layoutParams);

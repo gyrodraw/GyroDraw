@@ -1,22 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseException;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
-import ch.epfl.sweng.SDP.home.leagues.League;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.SDP.shop.ShopItem;
-
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.AVERAGE_RATING;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.LEAGUE;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.MATCHES_TOTAL;
@@ -29,6 +12,20 @@ import static ch.epfl.sweng.SDP.home.FriendsRequestState.RECEIVED;
 import static ch.epfl.sweng.SDP.home.FriendsRequestState.SENT;
 import static ch.epfl.sweng.SDP.utils.LayoutUtils.LEAGUES;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.SDP.home.leagues.League;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.SDP.shop.ShopItem;
+import com.google.firebase.database.DataSnapshot;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Singleton class that represents an account.
@@ -49,16 +46,17 @@ public class Account {
     private int maxTrophies;
     private List<ShopItem> itemsBought;
 
-    private LocalDbHandlerForAccount localDbHandler;
+    private LocalDbForAccount localDbHandler;
 
     private Account(Context context, ConstantsWrapper constantsWrapper, String username,
-                    String email, String currentLeague,
-                    int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
-                    int maxTrophies, List<ShopItem> itemsBought) {
+            String email, String currentLeague,
+            int trophies, int stars, int matchesWon, int totalMatches, double averageRating,
+            int maxTrophies, List<ShopItem> itemsBought) {
 
         if (instance != null) {
             throw new IllegalStateException("Already instantiated");
         }
+
         this.localDbHandler = new LocalDbHandlerForAccount(context, null, 1);
         this.userId = constantsWrapper.getFirebaseUserId();
         this.username = username;
@@ -81,16 +79,16 @@ public class Account {
     /**
      * Creates an account instance. Trophies, stars and statistics are initialized to 0.
      *
-     * @param context          the context in which the method is called
+     * @param context the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     *                         instance
-     * @param username         the string defining the preferred username
-     * @param email            the string defining the user email
-     * @throws IllegalArgumentException if one of the parameters is null
-     * @throws IllegalStateException    if the account was already instantiated
+     * instance
+     * @param username the string defining the preferred username
+     * @param email the string defining the user email
+     * @throws IllegalArgumentException if one of the parameters is null or invalid
+     * @throws IllegalStateException if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-                                     String username, String email) {
+            String username, String email) {
         createAccount(context, constantsWrapper, username, email, LEAGUES[0].getName(), 0,
                 0, 0, 0, 0.0, 0, new ArrayList<ShopItem>());
     }
@@ -98,26 +96,26 @@ public class Account {
     /**
      * Creates an account instance given the specified parameters.
      *
-     * @param context          the context in which the method is called
+     * @param context the context in which the method is called
      * @param constantsWrapper the {@link ConstantsWrapper} instance necessary for building the
-     *                         instance
-     * @param username         the string defining the preferred username
-     * @param email            the string defining the user's email
-     * @param currentLeague    the string defining the user's current league
-     * @param trophies         the string defining the user's trophies
-     * @param stars            the string defining the user's stars
-     * @param matchesWon       the string defining the user's matches won
-     * @param totalMatches     the string defining the user's total matches played
-     * @param averageRating    the string defining the user's average rating
-     * @param maxTrophies      the string defining the user's max trophies achieved
+     * instance
+     * @param username the string defining the preferred username
+     * @param email the string defining the user's email
+     * @param currentLeague the string defining the user's current league
+     * @param trophies the string defining the user's trophies
+     * @param stars the string defining the user's stars
+     * @param matchesWon the string defining the user's matches won
+     * @param totalMatches the string defining the user's total matches played
+     * @param averageRating the string defining the user's average rating
+     * @param maxTrophies the string defining the user's max trophies achieved
      * @throws IllegalArgumentException if one of the parameters is null or invalid
-     * @throws IllegalStateException    if the account was already instantiated
+     * @throws IllegalStateException if the account was already instantiated
      */
     public static void createAccount(Context context, ConstantsWrapper constantsWrapper,
-                                     String username, String email, String currentLeague,
-                                     int trophies, int stars, int matchesWon, int totalMatches,
-                                     double averageRating, int maxTrophies,
-                                     List<ShopItem> itemsBought) {
+            String username, String email, String currentLeague,
+            int trophies, int stars, int matchesWon, int totalMatches,
+            double averageRating, int maxTrophies,
+            List<ShopItem> itemsBought) {
         checkPrecondition(context != null, "context is null");
         checkPrecondition(constantsWrapper != null, "constantsWrapper is null");
         checkPrecondition(username != null, "username is null");
@@ -239,7 +237,7 @@ public class Account {
     /**
      * Registers this account in Firebase and in the local database.
      */
-    public void registerAccount() {
+    void registerAccount() {
         FbDatabase.saveAccount(this);
         localDbHandler.saveAccount(this);
     }
@@ -248,9 +246,8 @@ public class Account {
      * Method that allows one to change trophies.
      *
      * @param change modifier of trophies
-     * @throws DatabaseException in case write to database fails
      */
-    public void changeTrophies(final int change) throws DatabaseException {
+    public void changeTrophies(final int change) {
         trophies = Math.max(0, trophies + change);
 
         FbDatabase.setAccountAttribute(userId, TROPHIES, trophies);
@@ -266,7 +263,6 @@ public class Account {
     }
 
     private void updateCurrentLeague() {
-        // Update current league
         for (League league : LEAGUES) {
             if (league.contains(trophies)) {
                 currentLeague = league.getName();
@@ -279,7 +275,7 @@ public class Account {
     /**
      * Adds a recently bought item to the account.
      *
-     * @param shopItem Item that would be added to the account
+     * @param shopItem {@link ShopItem} that should be added to the account
      */
     public void updateItemsBought(ShopItem shopItem) {
         checkPrecondition(shopItem != null, "Shop item is null");
@@ -288,6 +284,7 @@ public class Account {
 
         itemsBought.add(shopItem);
         sortItemsBought();
+
         localDbHandler.saveAccount(instance);
     }
 
@@ -300,7 +297,6 @@ public class Account {
      *
      * @param amount the amount to add
      * @throws IllegalArgumentException in case the balance becomes negative
-     * @throws DatabaseException        in case write to database fails
      */
     public void changeStars(final int amount) {
         int newStars = amount + stars;
@@ -314,8 +310,6 @@ public class Account {
 
     /**
      * Method that allows one to increase the number of matches won.
-     *
-     * @throws DatabaseException in case write to database fails
      */
     public void increaseMatchesWon() {
         FbDatabase.setAccountAttribute(userId, MATCHES_WON, ++matchesWon);
@@ -325,8 +319,6 @@ public class Account {
 
     /**
      * Method that allows one to increase the total number of matches.
-     *
-     * @throws DatabaseException in case write to database fails
      */
     public void increaseTotalMatches() {
         FbDatabase.setAccountAttribute(userId, MATCHES_TOTAL, ++totalMatches);
@@ -338,8 +330,8 @@ public class Account {
      * Method that allows one to change the average rating per game given a new rating. The rating
      * passed as parameter should be the total rating obtained after a match.
      *
-     * @throws IllegalArgumentException in case a rating <= 0 or > 20 is given
-     * @throws DatabaseException        in case write to database fails
+     * @throws IllegalArgumentException in case a rating < 0 or > 20 is given or the user total
+     * number of matches is less than 1
      */
     public void changeAverageRating(double rating) {
         checkPrecondition(0 <= rating && rating <= 20, "Wrong rating given");
@@ -356,7 +348,6 @@ public class Account {
      *
      * @param friendId String specifying FirebaseUser.UID of friend
      * @throws IllegalArgumentException in case the given friendId is null
-     * @throws DatabaseException        in case write to database fails
      */
     public void addFriend(final String friendId) {
         checkPrecondition(friendId != null, "Friend's friendId is null");
@@ -381,8 +372,8 @@ public class Account {
     /**
      * Updates current users and friends friendship-state.
      *
-     * @param friendId    id of friend
-     * @param stateUser   state that current user will save
+     * @param friendId id of friend
+     * @param stateUser state that current user will save
      * @param stateFriend state that friend will save
      */
     private void updateFriendship(String friendId, int stateUser, int stateFriend) {
@@ -401,8 +392,7 @@ public class Account {
      * Method that allows one to remove friends.
      *
      * @param friendId String specifying FirebaseUser.UID of friend
-     * @throws IllegalArgumentException in case the given usernameId is null
-     * @throws DatabaseException        in case write to database fails
+     * @throws IllegalArgumentException in case the given friendId is null
      */
     public void removeFriend(final String friendId) {
         checkPrecondition(friendId != null, "Friend's id is null");

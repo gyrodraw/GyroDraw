@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.annotation.SuppressLint;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,7 +12,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -19,15 +19,12 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-
 /**
- * BaseActivity allowing the purchase of items such as colors.
+ * This activity represents the shop and allows the purchase of items such as colors.
  */
 public class ShopActivity extends NoBackPressActivity {
 
@@ -129,13 +126,12 @@ public class ShopActivity extends NoBackPressActivity {
 
     }
 
-    @SuppressLint("DefaultLocale")
     private void touchItem(int index, ShopItem item) {
         buyDialog.setContentView(R.layout.shop_pop_up_buy);
 
         final TextView priceText = buyDialog.findViewById(R.id.priceText);
         priceText.setTypeface(typeMuro);
-        priceText.setText(String.format(Locale.getDefault(), "%d", item.getPriceItem()));
+        priceText.setText(String.format("%d", item.getPriceItem()));
 
         TextView colorText = buyDialog.findViewById(R.id.colorText);
         colorText.setTypeface(typeMuro);

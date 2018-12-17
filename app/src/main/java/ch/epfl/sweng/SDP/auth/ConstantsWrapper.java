@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * Wrapper class useful for testing.
  */
-public class ConstantsWrapper {
+public final class ConstantsWrapper {
 
     /**
      * Defines wrapper for testing interaction with FbDatabase.

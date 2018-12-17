@@ -9,11 +9,9 @@ import java.util.Queue;
 /**
  * Class modelling the bucket tool used in the drawing activities.
  */
-class BucketTool {
+final class BucketTool {
 
     private Bitmap image = null;
-
-    private int[] tolerance = new int[]{0, 0, 0};
 
     private int width = 0;
     private int height = 0;
@@ -127,6 +125,7 @@ class BucketTool {
         while (!(leftFillLoc < 0 || (pixelsChecked[pxIdx]) || !checkPixel(pxIdx)));
 
         leftFillLoc++;
+
         // Find right edge of color area
         int rightFillLoc = x;
         pxIdx = (width * y) + x;
@@ -143,6 +142,7 @@ class BucketTool {
         while (!(rightFillLoc >= width || pixelsChecked[pxIdx] || !checkPixel(pxIdx)));
 
         rightFillLoc--;
+
         // Add range to queue
         ranges.offer(new FloodFillRange(leftFillLoc, rightFillLoc, y));
     }
@@ -153,16 +153,14 @@ class BucketTool {
         int green = (pixels[px] >>> 8) & 0xff;
         int blue = pixels[px] & 0xff;
 
-        return (red >= (startColor[0] - tolerance[0])
-                && red <= (startColor[0] + tolerance[0])
-                && green >= (startColor[1] - tolerance[1])
-                && green <= (startColor[1] + tolerance[1])
-                && blue >= (startColor[2] - tolerance[2])
-                && blue <= (startColor[2] + tolerance[2]));
+        return (red >= startColor[0] && red <= startColor[0]
+                && green >= startColor[1] && green <= startColor[1]
+                && blue >= startColor[2] && blue <= startColor[2]);
     }
 
     // Represents a linear range to be filled and branched from.
     private class FloodFillRange {
+
         private int startX;
         private int endX;
         private int y;

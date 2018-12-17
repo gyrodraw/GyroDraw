@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -49,10 +50,10 @@ public class MainActivity extends NoBackPressActivity {
     }
 
     /**
-     * Checks if account exists and redirects to HomeActivity.
+     * Checks if account exists and redirects to {@link HomeActivity}.
      * Else shows the MainActivity.
      *
-     * @param dataSnapshot contains the response to evaluate
+     * @param dataSnapshot the snapshot containing the response to evaluate
      */
     @VisibleForTesting
     public void handleRedirection(DataSnapshot dataSnapshot) {

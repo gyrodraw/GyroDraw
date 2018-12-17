@@ -41,7 +41,7 @@ public final class RandomItemGenerator {
     }
 
     /**
-     * Picks a random item class for the offline mode (ADD_STARS excluded).
+     * Picks a random item class for the offline mode ({@link Items#ADD_STARS} excluded).
      */
     private static Items getRandomItemForOfflineMode() {
         return VALUES_OFFLINE_MODE.get(RANDOM.nextInt(VALUES_OFFLINE_MODE_SIZE));
@@ -50,6 +50,7 @@ public final class RandomItemGenerator {
     /**
      * Generates a random item at a random position.
      *
+     * @param paintView the {@link PaintView} where the item should be placed
      * @return the generated item
      */
     public static Item generateItem(PaintView paintView) {
@@ -75,6 +76,7 @@ public final class RandomItemGenerator {
     /**
      * Generates a random item (add stars excluded) at a random position.
      *
+     * @param paintView the {@link PaintView} where the item should be placed
      * @return the generated item
      */
     public static Item generateItemForOfflineMode(PaintView paintView) {

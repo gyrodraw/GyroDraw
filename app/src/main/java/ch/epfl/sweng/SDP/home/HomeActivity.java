@@ -1,5 +1,22 @@
 package ch.epfl.sweng.SDP.home;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAccountAttribute;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,14 +33,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
@@ -43,23 +52,12 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils.AnimMode;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAccountAttribute;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueColorId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueImageId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getLeagueTextId;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainAmplitude;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.getMainFrequency;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeToOfflineOnDisconnect;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Class representing the homepage of the app.
@@ -73,6 +71,9 @@ public class HomeActivity extends NoBackPressActivity {
     private static final int DRAW_BUTTON_FREQUENCY = 20;
     private static final int LEAGUE_IMAGE_FREQUENCY = 30;
     private static final double DRAW_BUTTON_AMPLITUDE = 0.2;
+    
+    private static final int NORMAL_MODE = 0;
+    private static final int SPECIAL_MODE = 1;
 
     private static boolean enableBackgroundAnimation = true;
 
@@ -96,7 +97,7 @@ public class HomeActivity extends NoBackPressActivity {
     };
 
     /**
-     * Disables the background animation. Call this method in every HomeActivity test.
+     * Disables the background animation. This method should be in every HomeActivity test.
      */
     @VisibleForTesting
     public static void disableBackgroundAnimation() {
@@ -108,6 +109,7 @@ public class HomeActivity extends NoBackPressActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         profileWindow = new Dialog(this);
+
         friendRequestWindow = new Dialog(this);
         friendRequestWindow.setCancelable(false);
 
@@ -169,7 +171,7 @@ public class HomeActivity extends NoBackPressActivity {
     }
 
     /**
-     * Changes the user's state on firebase to online.
+     * Changes the user's state on Firebase to online.
      */
     private void updateUserStatusOnFirebase() {
         String userId = Account.getInstance(getApplicationContext())
@@ -198,6 +200,10 @@ public class HomeActivity extends NoBackPressActivity {
         FbAuthentication.signOut(this, new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    final Toast toastSignOut = Toast.makeText(getApplicationContext(),
+                            "Signing out...", Toast.LENGTH_SHORT);
+                    toastSignOut.show();
+
                     // Update Firebase, delete the account instance and launch MainActivity
                     changeOnlineStatus(
                             Account.getInstance(getApplicationContext()).getUserId(),
@@ -207,7 +213,7 @@ public class HomeActivity extends NoBackPressActivity {
                                         @Nullable DatabaseError databaseError,
                                         @NonNull DatabaseReference databaseReference) {
                                     checkForDatabaseError(databaseError);
-                                    successfulSignOut();
+                                    successfulSignOut(toastSignOut);
                                 }
                             });
                 } else {
@@ -218,21 +224,12 @@ public class HomeActivity extends NoBackPressActivity {
         profileWindow.dismiss();
     }
 
-    private void successfulSignOut() {
-        Toast toastSignOut = makeAndShowToast("Signing out...");
-
+    private void successfulSignOut(Toast toast) {
         Account.deleteAccount();
-        toastSignOut.cancel();
+        toast.cancel();
         launchActivity(MainActivity.class);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
-    }
-
-    private Toast makeAndShowToast(String msg) {
-        assert msg != null;
-        Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
-        toast.show();
-        return toast;
     }
 
     private void setListener(final View view, final double amplitude, final int frequency) {
@@ -313,7 +310,7 @@ public class HomeActivity extends NoBackPressActivity {
         switch (resourceId) {
             case R.id.drawButton:
                 ((ImageView) view).setImageResource(R.drawable.draw_button);
-                launchOnlineGame(0);
+                launchOnlineGame(NORMAL_MODE);
                 break;
             case R.id.leaderboardButton:
                 launchActivity(LeaderboardActivity.class);
@@ -340,7 +337,7 @@ public class HomeActivity extends NoBackPressActivity {
                 launchActivity(DrawingOfflineActivity.class);
                 break;
             case R.id.mysteryButton:
-                launchOnlineGame(1);
+                launchOnlineGame(SPECIAL_MODE);
                 break;
             default:
         }
@@ -445,7 +442,7 @@ public class HomeActivity extends NoBackPressActivity {
      * Displays the friends request popup.
      *
      * @param name name of the user that sent the request
-     * @param id   id of the user that sent the request
+     * @param id id of the user that sent the request
      */
     @VisibleForTesting
     public void showFriendRequestPopup(String name, String id) {

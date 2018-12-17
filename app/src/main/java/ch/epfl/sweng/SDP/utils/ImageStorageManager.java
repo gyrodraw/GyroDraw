@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,16 +30,15 @@ public final class ImageStorageManager {
     }
 
     /**
-     * Retrieves image from local DB and saves it in local external storage.
+     * Retrieves the latest image from the local database and saves it in local external storage.
      * @param context activity context
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context) {
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
-        Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
+        LocalDbForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
         Account account = Account.getInstance(context);
         String imageName = account.getUsername() + account.getTotalMatches();
-        ImageStorageManager.writeImage(localImage, imageName, context);
+        ImageStorageManager.writeImage(localDbHandler.getLatestBitmapFromDb(), imageName, context);
     }
 
     /**
@@ -50,7 +50,6 @@ public final class ImageStorageManager {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void writeImage(Bitmap image, String imageName, final Context context) {
-
         File file = getFile(imageName);
 
         if (file.exists()) {
@@ -75,6 +74,7 @@ public final class ImageStorageManager {
      */
     static void writeFileToStorage(Bitmap image, File file) {
         Log.d("ImageStorageManager", "Saving image: " + file.getPath());
+
         // Save image in file directory
         try (FileOutputStream out = new FileOutputStream(file)) {
             image.compress(Bitmap.CompressFormat.PNG, 90, out);
@@ -94,8 +94,8 @@ public final class ImageStorageManager {
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/Gyrodraw");
         myDir.mkdirs();
-        String fname = "Image-" + imageName + ".png";
-        return new File(myDir, fname);
+        String fileName = "Image-" + imageName + ".png";
+        return new File(myDir, fileName);
     }
 
     /**

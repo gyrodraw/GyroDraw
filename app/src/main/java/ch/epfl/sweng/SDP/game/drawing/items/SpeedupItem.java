@@ -3,7 +3,7 @@ package ch.epfl.sweng.SDP.game.drawing.items;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
- * Immutable class representing an item which speeds up the player's cursor.
+ * Class representing an item which speeds up the player's cursor.
  */
 public class SpeedupItem extends DeactivableItem {
 

@@ -23,7 +23,8 @@ public final class SortUtils {
      * @param <K> Key type
      * @param <V> Value Type
      * @return The sorted map
-     * @see <a href="https://stackoverflow.com/questions/109383/sort-a-mapkey-value-by-values">StackOverflow answer</a>
+     * @see <a href="https://stackoverflow.com/questions/109383/sort-a-mapkey-value-by-values">StackOverflow
+     * answer</a>
      */
     public static <K, V> List<K> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());

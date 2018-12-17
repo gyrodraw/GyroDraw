@@ -20,7 +20,7 @@ public final class NetworkStatusHandler implements NetworkStateReceiverListener 
     private static boolean hasLeft = false;
 
     /**
-     * Initialize the dialog that pops up when disconnected.
+     * This constructor initializes the dialog that pops up when disconnected.
      * @param context Context of the activity
      */
     NetworkStatusHandler(final Context context) {

@@ -1,5 +1,8 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -7,18 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.firebase.database.DataSnapshot;
-
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
-
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+import com.google.firebase.database.DataSnapshot;
 
 /**
  * Class representing the account creation page.
@@ -72,7 +70,8 @@ public class AccountCreationActivity extends NoBackPressActivity {
     }
 
     /**
-     * Creates and registers an account with the given username and redirects the user to home.
+     * Creates and registers an account with the given username and redirects the user to {@link
+     * HomeActivity}.
      */
     @VisibleForTesting
     public void createAccountAndRedirect(String username) {

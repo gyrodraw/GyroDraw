@@ -227,7 +227,7 @@ public class AccountCreationActivityAndAccountTest {
     @Test
     public void testHandleResponseAndRedirect() {
         Account.deleteAccount();
-        activityRule.getActivity().handleResponseAndRedirect(USERNAME);
+        activityRule.getActivity().createAccountAndRedirect(USERNAME);
         assertThat(activityRule.getActivity().isFinishing(), is(true));
     }
 

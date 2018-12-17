@@ -113,8 +113,15 @@ public final class FbDatabase {
     }
 
     /**
-     * Retrieves a DataSnapshot of a user with the given id.
-     * Applies the listener if the user exists.
+     * Removes an attribute from a given user.
+     */
+    public static void removeAccountAttribute(String userId, AccountAttributes attribute) {
+        getReference(constructUsersPath(userId, attributeToPath(attribute))).removeValue();
+    }
+
+    /**
+     * Retrieves a DataSnapshot of a user with the given id. Applies the listener if the user
+     * exists.
      *
      * @param userId             id of user to get
      * @param valueEventListener action that should be taken after retrieving the user

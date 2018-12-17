@@ -1,25 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.mockito.Mockito.when;
-
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +15,21 @@ import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.RatingBar;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.storage.FirebaseStorage;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
@@ -45,17 +40,28 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
 import ch.epfl.sweng.SDP.utils.ImageSharer;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.storage.FirebaseStorage;
-import java.io.ByteArrayOutputStream;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -222,11 +228,8 @@ public class VotingPageActivityTest {
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
-                .setValue(USER_ID);
-        FbDatabase.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
-                .setValue(0);
-        SystemClock.sleep(2000);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, USERS, USER_ID);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, RANKING, 0);
     }
 
     @Test

@@ -29,6 +29,7 @@ import ch.epfl.sweng.SDP.matchmaking.Matchmaker;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
+import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
 
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
@@ -357,7 +358,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
 
         // Does not leave the room if the activity is stopped because
         // drawing activity is launched.
-        if (!isDrawingActivityLaunched && ConnectivityWrapper.isOnline(this)) {
+        if (!isDrawingActivityLaunched && !NetworkStatusHandler.getHasLeft()) {
             Matchmaker.getInstance(Account.getInstance(this)).leaveRoom(roomID);
             if (hasVoted) {
                 String wordVoted = isWord1Voted ? word1 : word2;
@@ -368,6 +369,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
             }
         }
 
+        NetworkStatusHandler.setHasLeft(false);
         removeAllListeners();
         finish();
     }

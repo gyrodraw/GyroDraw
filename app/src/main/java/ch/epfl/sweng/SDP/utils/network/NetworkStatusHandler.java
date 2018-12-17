@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.MainActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
  * Class that implements the interface for our network listener. It defines the methods
@@ -17,6 +19,7 @@ public final class NetworkStatusHandler implements NetworkStateReceiverListener 
 
     private final Dialog disconnectedDialog;
     private final Context context;
+    private static boolean hasLeft = false;
 
     /**
      * Initialize the dialog that pops up when disconnected.
@@ -38,6 +41,7 @@ public final class NetworkStatusHandler implements NetworkStateReceiverListener 
      */
     @Override
     public void networkUnavailable() {
+        hasLeft = true;
         disconnectedDialog.setContentView(R.layout.disconnected_pop_up);
         disconnectedDialog.findViewById(R.id.okDisconnectedButton)
                 .setOnClickListener(new View.OnClickListener() {
@@ -49,5 +53,13 @@ public final class NetworkStatusHandler implements NetworkStateReceiverListener 
             }
         });
         disconnectedDialog.show();
+    }
+
+    public static boolean getHasLeft() {
+        return hasLeft;
+    }
+
+    public static void setHasLeft(boolean hasLeftBool) {
+        hasLeft = hasLeftBool;
     }
 }

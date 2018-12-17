@@ -10,6 +10,8 @@ import android.support.annotation.VisibleForTesting;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.ONLINE_STATUS;
+
 /**
  * Connectivity wrapper that registers the network receiver and unregisters it. This class provides
  * also utility to update or check connectivity status.
@@ -64,12 +66,11 @@ public final class ConnectivityWrapper {
      * Sets the online flag to 1 when in-game. Allows to notify database that the player is still
      * here.
      *
-     * @param roomID   Room number of the game
+     * @param roomId   Room number of the game
      * @param username Username of the player
      */
-    public static void setOnlineStatusInGame(String roomID, String username) {
-        FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
-                + username).setValue(1);
+    public static void setOnlineStatusInGame(String roomId, String username) {
+        FbDatabase.setValueToUserInRoomAttribute(roomId, username, ONLINE_STATUS, 1);
     }
 
     /**

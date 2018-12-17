@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
@@ -25,6 +24,8 @@ import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
@@ -35,14 +36,9 @@ import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedba
  */
 public class DrawingOnlineActivity extends GyroDrawingActivity {
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
-
     private String winningWord;
 
     private String roomId;
-
-    private DatabaseReference timerRef;
-    private DatabaseReference stateRef;
 
     protected final ValueEventListener listenerTimer = new OnSuccessValueEventListener() {
         @Override
@@ -79,7 +75,8 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
-                                        timerRef.removeEventListener(listenerTimer);
+                                        FbDatabase.removeListenerFromRoomAttribute(roomId,
+                                                TIMER, listenerTimer);
 
                                         Intent intent = new Intent(getApplicationContext(),
                                                 VotingPageActivity.class);
@@ -117,11 +114,8 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
 
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
-        timerRef = FbDatabase.getReference(
-                TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
-        timerRef.addValueEventListener(listenerTimer);
-        stateRef = FbDatabase.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
-        stateRef.addValueEventListener(listenerState);
+        FbDatabase.setListenerToRoomAttribute(roomId, TIMER, listenerTimer);
+        FbDatabase.setListenerToRoomAttribute(roomId, STATE, listenerState);
 
         ConnectivityWrapper.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());
     }
@@ -136,8 +130,8 @@ public class DrawingOnlineActivity extends GyroDrawingActivity {
     }
 
     private void removeAllListeners() {
-        timerRef.removeEventListener(listenerTimer);
-        stateRef.removeEventListener(listenerState);
+        FbDatabase.removeListenerFromRoomAttribute(roomId, TIMER, listenerTimer);
+        FbDatabase.removeListenerFromRoomAttribute(roomId, STATE, listenerState);
     }
 
     /**

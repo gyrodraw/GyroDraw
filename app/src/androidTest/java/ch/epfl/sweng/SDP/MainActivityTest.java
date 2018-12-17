@@ -47,7 +47,7 @@ public class MainActivityTest {
     private static final String TEST_USERNAME = "TESTUSERNAME";
     private static final String TEST_EMAIL = "testEmail";
     private static final String TEST_USER_ID = "no_user";
-    private static final String TEST_LEAGUE = "leagueOne";
+    private static final String TEST_LEAGUE = "league1";
 
     @Rule
     public final ActivityTestRule<MainActivity> activityRule =

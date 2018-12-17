@@ -148,17 +148,6 @@ public final class LayoutUtils {
     }
 
     /**
-     * Sets listener and animation for exit button with a left slide transition.
-     *
-     * @param exitButton the exit button
-     * @param activity   the context of the exit button
-     */
-    public static void setSlideLeftExitListener(final View exitButton,
-                                                final BaseActivity activity) {
-        setExitListener(exitButton, activity, R.anim.slide_in_left, R.anim.slide_out_right);
-    }
-
-    /**
      * Gets the league's image id.
      *
      * @param league the requested league

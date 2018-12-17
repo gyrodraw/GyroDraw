@@ -68,7 +68,6 @@ public class VotingPageActivityTest {
 
     private static final String USER_ID = "userA";
     private static final String ROOM_ID_TEST = "0123457890";
-    private static final String TOP_ROOM_ID = "realRooms";
     private static final int PERMISSION_WRITE_STORAGE = 1;
 
     private DataSnapshot dataSnapshotMock;

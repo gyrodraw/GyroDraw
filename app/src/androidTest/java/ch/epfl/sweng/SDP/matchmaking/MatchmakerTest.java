@@ -39,7 +39,6 @@ public class MatchmakerTest {
         mockAccount = mock(Account.class);
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.removeValue()).thenReturn(mockTask);
-        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
         doNothing().when(mockReference)
                 .addListenerForSingleValueEvent(isA(ValueEventListener.class));
     }

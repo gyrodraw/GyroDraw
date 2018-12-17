@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -62,8 +61,6 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
-        FbDatabase.getReference("users.123456789.boughtItems.blue").removeValue();
-        SystemClock.sleep(2000);
         setStarsAndRefresh();
 
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);

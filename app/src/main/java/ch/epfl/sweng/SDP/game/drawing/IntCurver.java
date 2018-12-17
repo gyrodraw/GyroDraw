@@ -13,7 +13,7 @@ class IntCurver {
     private int[] values;
 
     /**
-     * @param curveIntensity    amount of values that should be stored
+     * @param curveIntensity    amount of values that should be remembered
      * @param initValue         initial value of the curver
      */
     IntCurver(int curveIntensity, int initValue) {

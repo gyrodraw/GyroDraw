@@ -272,8 +272,8 @@ public class PaintView extends View {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
         this.width = width;
         this.height = height;
-        circleX = new IntCurver(CURVE_INTENSITY, width / 2);
-        circleY = new IntCurver(CURVE_INTENSITY, height / 2);
+        circleX.setValue(width / 2);
+        circleY.setValue(height / 2);
         clear();
     }
 

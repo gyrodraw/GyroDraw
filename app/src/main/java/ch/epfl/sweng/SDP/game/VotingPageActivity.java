@@ -148,7 +148,8 @@ public class VotingPageActivity extends NoBackPressActivity {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
             if (value != null) {
-                timer.setText(value % 6 == 0 && value != 0 ? "6" : String.valueOf(value % 6));
+                timer.setText(value % 6 == 0 && value != 0 ? "5" :
+                        String.valueOf(Math.max(value % 6 - 1, 0)));
 
                 if (value != 30 && (value % 6) == 0 && value != 0) {
                     // Switch every 6 seconds

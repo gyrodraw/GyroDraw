@@ -34,8 +34,7 @@ public final class ImageStorageManager {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context) {
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(context,
-                                                                    null, 1);
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
         Bitmap localImage = localDbHandler.getLatestBitmapFromDb();
         Account account = Account.getInstance(context);
         String imageName = account.getUsername() + account.getTotalMatches();

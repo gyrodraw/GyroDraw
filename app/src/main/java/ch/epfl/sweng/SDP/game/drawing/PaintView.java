@@ -1,8 +1,5 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,13 +11,19 @@ import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbStorage;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-import java.util.LinkedList;
-import java.util.List;
+
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 
 /**
  * Class representing the view used for drawing.
@@ -47,8 +50,8 @@ public class PaintView extends View {
 
     private final Context context;
 
-    private IntCurver circleX = new IntCurver(CURVE_INTENSITY, 0);
-    private IntCurver circleY = new IntCurver(CURVE_INTENSITY, 0);
+    private final IntCurver circleX = new IntCurver(CURVE_INTENSITY, 0);
+    private final IntCurver circleY = new IntCurver(CURVE_INTENSITY, 0);
 
     private int width;
     private int height;

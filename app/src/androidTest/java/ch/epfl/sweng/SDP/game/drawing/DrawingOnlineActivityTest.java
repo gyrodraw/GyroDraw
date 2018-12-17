@@ -95,19 +95,9 @@ public class DrawingOnlineActivityTest {
     }
 
     @Test
-    public void testPaintViewGettersSetters() {
-        paintView.setCircle(10, 15);
+    public void testPaintViewRadiusGetterSetter() {
         paintView.setCircleRadius(12);
-        assertThat(paintView.getCircleX(), is(10));
-        assertThat(paintView.getCircleY(), is(15));
         assertThat(paintView.getCircleRadius(), is(12));
-    }
-
-    @Test
-    public void testSetCircleWorks() {
-        paintView.setCircle(30, -10);
-        assertThat(paintView.getCircleX(), is(30));
-        assertThat(paintView.getCircleY(), is(1));
     }
 
     @Test

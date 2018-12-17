@@ -35,6 +35,7 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     public static final String WORD_1 = "word1";
     public static final String WORD_2 = "word2";
     public static final String ROOM_ID = "roomID";
+    public static final String MODE = "mode";
 
     private static boolean enableWaitingAnimation = true;
     private static boolean isTesting = false;
@@ -64,10 +65,10 @@ public class LoadingScreenActivity extends NoBackPressActivity {
                     wordsVotesRef.removeEventListener(listenerWords);
                     Intent intent = new Intent(getApplicationContext(),
                             WaitingPageActivity.class);
-                    intent.putExtra("word1", word1);
-                    intent.putExtra("word2", word2);
-                    intent.putExtra("roomID", roomID);
-                    intent.putExtra("mode", gameMode);
+                    intent.putExtra(WORD_1, word1);
+                    intent.putExtra(WORD_2, word2);
+                    intent.putExtra(ROOM_ID, roomID);
+                    intent.putExtra(MODE, gameMode);
                     startActivity(intent);
                 }
             }

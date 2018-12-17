@@ -20,6 +20,8 @@ import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
 import static android.view.View.VISIBLE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
 
 
 /**
@@ -27,8 +29,6 @@ import static android.view.View.VISIBLE;
  * displayed.
  */
 public class LoginActivity extends NoBackPressActivity {
-
-    public static final String EMAIL = "email";
 
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_CODE_SIGN_IN = 42;
@@ -87,31 +87,31 @@ public class LoginActivity extends NoBackPressActivity {
             // New user
             Log.d(TAG, "New user");
             Intent intent = new Intent(this, AccountCreationActivity.class);
-            intent.putExtra(EMAIL, email);
+            intent.putExtra(attributeToPath(EMAIL), email);
             startActivity(intent);
             finish();
         } else {
             FbDatabase.getUserByEmail(email, new OnSuccessValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                // User already has an account on Firebase
-                                Log.d(TAG, "User already has an account on Firebase");
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // User already has an account on Firebase
+                        Log.d(TAG, "User already has an account on Firebase");
 
-                                cloneAccountFromFirebase(snapshot);
+                        cloneAccountFromFirebase(snapshot);
 
-                                handleUserStatus(errorMessage);
-                            } else {
-                                // User signed in but not did not create an account
-                                Log.d(TAG, "User signed in but not did not create an account");
-                                Intent intent = new Intent(getApplicationContext(),
-                                        AccountCreationActivity.class);
-                                intent.putExtra(EMAIL, email);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-                    });
+                        handleUserStatus(errorMessage);
+                    } else {
+                        // User signed in but not did not create an account
+                        Log.d(TAG, "User signed in but not did not create an account");
+                        Intent intent = new Intent(getApplicationContext(),
+                                AccountCreationActivity.class);
+                        intent.putExtra(attributeToPath(EMAIL), email);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            });
         }
     }
 

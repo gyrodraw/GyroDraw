@@ -71,7 +71,7 @@ function hasEveryoneVoted(snapshot) {
   return false;
 }
 
-function functionTimer (seconds, state, roomID, call, isWaiting) {
+function functionTimer (seconds, state, roomID, isWaiting, call) {
   return new Promise((resolve, reject) => {
     // This represents the maximum time allowed for firebase.
     if (seconds > 300) {
@@ -277,8 +277,8 @@ exports.onUsersChange = functions.database.ref(parentRoomID + "{roomID}/users").
   });
 });
 
-function startTimer(time, roomID, prevState, newState, nodeCreation) {
-  return functionTimer(time, prevState, roomID, elapsedTime => {
+function startTimer(time, roomID, prevState, newState, nodeCreation, isWaiting) {
+  return functionTimer(time, prevState, roomID, isWaiting, elapsedTime => {
     return admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(elapsedTime);
   })
   .then(totalTime => {

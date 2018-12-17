@@ -1,20 +1,19 @@
 package ch.epfl.sweng.SDP.firebase;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Helper class to upload and download images to/from Firebase Storage.
@@ -38,16 +37,14 @@ public final class FbStorage {
      * @return the {@link StorageTask} in charge of the upload
      */
     public static StorageTask<TaskSnapshot> sendBitmapToFirebaseStorage(
-            final Bitmap bitmap, final String imageName) {
+            final Bitmap bitmap, final String imageName, OnSuccessListener<UploadTask.TaskSnapshot> successListener) {
         checkPrecondition(bitmap != null, "bitmap is null");
         checkPrecondition(imageName != null, "imageName is null");
 
         StorageReference imageRef = STORAGE_REF.child(imageName);
 
-        ByteArrayOutputStream byteArrayOutputStream =
-                new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,
-                QUALITY, byteArrayOutputStream);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
 
         byte[] data = byteArrayOutputStream.toByteArray();
         UploadTask uploadTask = imageRef.putBytes(data);
@@ -57,12 +54,18 @@ public final class FbStorage {
             e.printStackTrace();
         }
 
-        return uploadTask.addOnFailureListener(new OnFailureListener() {
+        StorageTask<TaskSnapshot> task = uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.d(TAG, "Upload to Firebase Storage failed.");
             }
         });
+
+        if (successListener != null) {
+            task.addOnSuccessListener(successListener);
+        }
+
+        return task;
     }
 
     /**

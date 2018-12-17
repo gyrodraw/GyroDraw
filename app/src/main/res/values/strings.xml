@@ -52,17 +52,22 @@
     <string name="friendsFilter">Filter friends</string>
     <string name="buySuccess">Purchase Successful</string>
     <string name="buyError">Not enough stars</string>
-    <string name="error">Error</string>
     <string name="success">Success</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="new_friend_request">New friend request</string>
-    <string name="empty_battle_log">You have not played any games recently</string>
+    <string name="facebook_app_id">348464052628931</string>
+    <string name="empty_battle_log">You have not played any game recently</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="usernameValid">Valid username</string>
     <string name="usernameTooShort">Username is too short</string>
     <string name="usernameTooLong">Username is too long</string>
     <string name="usernameIllegalChar">Username must not contain</string>
-  <string name="already_logged_in">You have already logged in on another device! Waiting...</string>
+    <string name="successfulImageDownload">Successfully saved image to /Download/Gyrodraw</string>
+    <string name="already_logged_in">You have already logged in on another device! Waiting...</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="error">Error</string>
+    <string name="you_have_been_disconnected">You have been disconnected</string>
+    <string name="final_ranking">Final Ranking</string>
 </resources>

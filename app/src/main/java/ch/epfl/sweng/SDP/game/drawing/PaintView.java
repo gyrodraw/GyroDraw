@@ -370,6 +370,6 @@ public class PaintView extends View {
         // Use userId as the name for the image
         String imageName = Account.getInstance(context).getUserId() + ".jpg";
 
-        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageName);
+        return FbStorage.sendBitmapToFirebaseStorage(bitmap, imageName, null);
     }
 }

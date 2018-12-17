@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.home.battleLog;
 
+import static ch.epfl.sweng.SDP.utils.RankingUtils.addSignToNumber;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -8,11 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import java.util.List;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+import java.util.List;
 
 /**
  * Class that manages the view part of GameResult.
@@ -157,9 +157,8 @@ public final class GameResultLayout {
     }
 
     private TextView setReward(int reward) {
-        String prefix = reward >= 0 ? "+" : "";
-        TextView rewardView = styleView(prefix + String.valueOf(reward),
-                REWARD_SIZE, res.getColor(R.color.colorPrimaryDark), textParams);
+        TextView rewardView = styleView(addSignToNumber(reward), REWARD_SIZE,
+                res.getColor(R.color.colorPrimaryDark), textParams);
 
         rewardView.setGravity(Gravity.CENTER_VERTICAL);
         rewardView.setGravity(Gravity.START);

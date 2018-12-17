@@ -89,7 +89,8 @@
     <SeekBar
         android:id="@+id/brushWidthBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:max="100"
         android:minHeight="30dp"
         android:progress="50" />

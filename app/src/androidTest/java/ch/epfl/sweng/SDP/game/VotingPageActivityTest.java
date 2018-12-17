@@ -1,47 +1,18 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.os.SystemClock;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.RatingBar;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import java.io.ByteArrayOutputStream;
-
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.FbDatabase;
-import ch.epfl.sweng.SDP.firebase.RoomAttributes;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.BitmapManipulator;
-
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -49,16 +20,58 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
 
+import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.RatingBar;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.RoomAttributes;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.utils.BitmapManipulator;
+import ch.epfl.sweng.SDP.utils.ImageSharer;
+import ch.epfl.sweng.SDP.utils.ImageStorageManager;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.storage.FirebaseStorage;
+import java.io.ByteArrayOutputStream;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
 
     private static final String USER_ID = "userA";
     private static final String ROOM_ID_TEST = "0123457890";
     private static final String TOP_ROOM_ID = "realRooms";
+    private static final int PERMISSION_WRITE_STORAGE = 1;
 
     private DataSnapshot dataSnapshotMock;
     private DatabaseError databaseErrorMock;
     private StarAnimationView starsAnimation;
+
+    @Rule
+    public GrantPermissionRule runtimePermissionRule = GrantPermissionRule
+            .grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Rule
     public final ActivityTestRule<VotingPageActivity> activityRule =
@@ -95,10 +108,49 @@ public class VotingPageActivityTest {
     }
 
     @Test
-    public void ratingUsingRatingBarShouldBeSaved() {
+    public void testSharingImage() {
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
 
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        Bitmap bitmap = BitmapFactory.decodeResource(
+                activityRule.getActivity().getResources(), R.drawable.league_1);
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                activityRule.getActivity().getApplicationContext(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap, 2);
+        onView(withId(R.id.shareButton)).perform(click());
+        assertThat(myFragment.isVisible(), is(true));
+    }
+
+    @Test
+    public void testSaveImage() {
+        // Open fragment
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        // Save image
+        Bitmap bitmap = initializedBitmap();
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                activityRule.getActivity().getApplicationContext(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap, 2);
+        onView(withId(R.id.saveButton)).perform(click());
+        assertThat(myFragment.isVisible(), is(true));
+    }
+
+    @Test
+    public void ratingUsingRatingBarShouldBeSaved() {
         // To ensure that the rating value does not get above 20
-        FbDatabase.setValueToUserInRoomAttribute("0123457890", "userA",
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID,
                 RoomAttributes.RANKING, 0);
 
         short counter = activityRule.getActivity().getChangeDrawingCounter();
@@ -166,7 +218,7 @@ public class VotingPageActivityTest {
     public void startHomeActivityStartsHomeActivity() {
         SystemClock.sleep(1000);
         Intents.init();
-        activityRule.getActivity().startHomeActivity(null);
+        activityRule.getActivity().startHomeActivity();
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
@@ -254,8 +306,70 @@ public class VotingPageActivityTest {
         bitmap.compress(Bitmap.CompressFormat.JPEG,
                 1, byteArrayOutputStream);
         byte[] data = byteArrayOutputStream.toByteArray();
-        Bitmap newBitmap = BitmapManipulator
-                .decodeSampledBitmapFromByteArray(data, 0, data.length, 2, 2);
+        Bitmap newBitmap = BitmapManipulator.decodeSampledBitmapFromByteArray(
+                data, 0, data.length, 2, 2);
         assertThat(newBitmap, is(not(nullValue())));
+    }
+
+    @Test
+    public void testImageSharerShareToAppFails() {
+        ImageSharer imageSharer = ImageSharer.getInstance(activityRule.getActivity());
+        imageSharer.getUrlAndShare(FirebaseStorage.getInstance().getReference().child("TestImage"));
+        imageSharer.shareDrawingToFacebook(Uri.EMPTY);
+        assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(false));
+    }
+
+    @Test
+    public void testToastAfterSuccessfulDownload() {
+        activityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageStorageManager.successfullyDownloadedImageToast(activityRule.getActivity());
+            }
+        });
+
+        onView(withText(activityRule.getActivity().getString(R.string.successfulImageDownload)))
+                .inRoot(withDecorView(not(is(activityRule.getActivity()
+                        .getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testOnRequestWritePermissionsAccepted() {
+        // Open fragment
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        // Save image
+        Bitmap bitmap = initializedBitmap();
+        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
+                activityRule.getActivity().getApplicationContext(), null, 1);
+        localDbHandler.addBitmapToDb(bitmap, 2);
+        activityRule.getActivity().onRequestPermissionsResult(PERMISSION_WRITE_STORAGE,
+                new String[]{}, new int[]{});
+
+        assertThat(myFragment.isVisible(), is(true));
+    }
+
+    @Test
+    public void testOnRandomRequestPermissionsAccepted() {
+        SystemClock.sleep(1000);
+        when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
+        activityRule.getActivity().callOnStateChange(dataSnapshotMock);
+        SystemClock.sleep(2000);
+
+        RankingFragment myFragment = (RankingFragment) activityRule.getActivity()
+                .getSupportFragmentManager().findFragmentById(R.id.votingPageLayout);
+        assertThat(myFragment.isVisible(), is(true));
+
+        activityRule.getActivity().onRequestPermissionsResult(42,
+                new String[]{}, new int[]{});
+
+        assertThat(myFragment.isVisible(), is(true));
     }
 }

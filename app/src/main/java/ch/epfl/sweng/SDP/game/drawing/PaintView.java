@@ -121,8 +121,8 @@ public class PaintView extends View {
      * @param circleY the y position
      */
     public void setCircle(int circleX, int circleY) {
-        this.circleX.addValue(sanitizeCoordinate(circleX, width));
-        this.circleY.addValue(sanitizeCoordinate(circleY, height));
+        this.circleX.setValue(sanitizeCoordinate(circleX, width));
+        this.circleY.setValue(sanitizeCoordinate(circleY, height));
         if (isDrawing) {
             path.lineTo(this.circleX.getValue(), this.circleY.getValue());
         }

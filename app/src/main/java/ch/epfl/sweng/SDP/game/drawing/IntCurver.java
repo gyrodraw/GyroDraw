@@ -27,6 +27,13 @@ class IntCurver {
     }
 
     /**
+     * Resets the values to a given point.
+     */
+    void setValue(int value) {
+        Arrays.fill(values, value);
+    }
+
+    /**
      * Adds a value to the list of entries.
      */
     void addValue(int value) {

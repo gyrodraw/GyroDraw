@@ -36,8 +36,9 @@ public class PaintView extends View {
     private static final int CURVE_INTENSITY = 5;
 
     private boolean canDraw = true;
-    private boolean isDrawing = false;
     private boolean bucketMode = false;
+    @VisibleForTesting
+    public boolean isDrawing = false;
 
     private List<Paint> colors = new LinkedList<>();
     private Path path = new Path();

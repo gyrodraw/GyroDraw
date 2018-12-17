@@ -54,6 +54,7 @@ public class DrawingOfflineActivityWithItemsTest {
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
+        paintView.isDrawing = true;
         Account account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);

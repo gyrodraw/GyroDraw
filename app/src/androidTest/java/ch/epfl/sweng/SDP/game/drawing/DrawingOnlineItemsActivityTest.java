@@ -51,6 +51,7 @@ public class DrawingOnlineItemsActivityTest {
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
+        paintView.isDrawing = true;
         account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);

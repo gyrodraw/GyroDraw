@@ -13,8 +13,10 @@ class IntCurver {
     private int[] values;
 
     /**
-     * @param curveIntensity    amount of values that should be remembered
-     * @param initValue         initial value of the curver
+     * Constructor initializes the array with a given size and fills it with a given value.
+     *
+     * @param curveIntensity amount of values that should be remembered
+     * @param initValue      initial value of the curver
      */
     IntCurver(int curveIntensity, int initValue) {
         this.curveIntensity = curveIntensity;

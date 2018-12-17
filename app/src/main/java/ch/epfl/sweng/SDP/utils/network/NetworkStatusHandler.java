@@ -39,7 +39,7 @@ public final class NetworkStatusHandler implements NetworkStateReceiverListener 
      */
     @Override
     public void networkUnavailable() {
-        hasLeft = true;
+        setHasLeft(true);
         disconnectedDialog.setContentView(R.layout.disconnected_pop_up);
         disconnectedDialog.findViewById(R.id.okDisconnectedButton)
                 .setOnClickListener(new View.OnClickListener() {

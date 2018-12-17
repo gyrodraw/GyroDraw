@@ -2,6 +2,8 @@ package ch.epfl.sweng.SDP.game.drawing;
 
 import java.util.Arrays;
 
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
+
 /**
  * This class helps smoothing new values by remembering older values and returning an average.
  */
@@ -19,8 +21,9 @@ class IntCurver {
      * @param initValue      initial value of the curver
      */
     IntCurver(int curveIntensity, int initValue) {
-        this.curveIntensity = curveIntensity;
+        checkPrecondition(curveIntensity > 0, "CurveIntensity was not positive.");
 
+        this.curveIntensity = curveIntensity;
         values = new int[curveIntensity];
         Arrays.fill(values, initValue);
 
@@ -33,6 +36,7 @@ class IntCurver {
      */
     void setValue(int value) {
         Arrays.fill(values, value);
+        sum = curveIntensity * value;
     }
 
     /**

@@ -4,6 +4,8 @@ engines:
     checks:
       com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck:
         enabled: false
+      com.puppycrawl.tools.checkstyle.checks.naming.PackageNameCheck:
+        enabled: false
   sonar-java:
     enabled: true
     checks:

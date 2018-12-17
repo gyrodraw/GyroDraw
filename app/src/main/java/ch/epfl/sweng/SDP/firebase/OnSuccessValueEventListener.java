@@ -1,10 +1,11 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
-
 import android.support.annotation.NonNull;
+
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.checkForDatabaseError;
 
 /**
  * This class represents a {@link ValueEventListener} with a default implementation of {@code

@@ -326,11 +326,9 @@ public final class FbDatabase {
      * @param databaseError potential databaseError
      * @throws DatabaseException in case databaseError is non-null
      */
-    public static void checkForDatabaseError(@Nullable DatabaseError databaseError)
+    public static void checkForDatabaseError(DatabaseError databaseError)
             throws DatabaseException {
-        if (databaseError != null) {
-            throw databaseError.toException();
-        }
+        throw databaseError.toException();
     }
 
     /**
@@ -343,7 +341,9 @@ public final class FbDatabase {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError,
                                    @NonNull DatabaseReference databaseReference) {
-                checkForDatabaseError(databaseError);
+                if (databaseError != null) {
+                    checkForDatabaseError(databaseError);
+                }
             }
         };
     }

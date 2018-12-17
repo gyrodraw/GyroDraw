@@ -82,7 +82,7 @@ public class DrawingOfflineActivityWithItemsTest {
         Item item;
         do {
             addRandomItem();
-            SystemClock.sleep(5000);
+            SystemClock.sleep(10000);
             Map<Item, ImageView> displayedItems = activity.getDrawingItems().getDisplayedItems();
             item = (Item) displayedItems.keySet().toArray()[0];
         }

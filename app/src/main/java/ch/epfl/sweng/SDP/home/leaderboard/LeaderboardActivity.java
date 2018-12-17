@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
@@ -18,7 +18,7 @@ import ch.epfl.sweng.SDP.utils.LayoutUtils;
 /**
  * Class representing the leaderboard.
  */
-public class LeaderboardActivity extends BaseActivity {
+public class LeaderboardActivity extends NoBackPressActivity {
 
     private Leaderboard leaderboard;
     private long lastClickTime = 0;

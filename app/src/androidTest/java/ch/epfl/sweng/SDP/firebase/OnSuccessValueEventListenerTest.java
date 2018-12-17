@@ -1,15 +1,17 @@
 package ch.epfl.sweng.SDP.firebase;
 
-import static org.mockito.Mockito.when;
-
 import android.support.annotation.NonNull;
 import android.support.test.runner.AndroidJUnit4;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class OnSuccessValueEventListenerTest {

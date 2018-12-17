@@ -2,9 +2,9 @@ package ch.epfl.sweng.SDP.utils;
 
 import android.support.test.InstrumentationRegistry;
 
-import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-
 import org.junit.Test;
+
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

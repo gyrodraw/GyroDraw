@@ -3,11 +3,11 @@ package ch.epfl.sweng.SDP.game;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import java.util.ArrayList;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
 
 import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.disableLoadingAnimations;
 

@@ -63,9 +63,9 @@ public class DrawingOfflineActivityNoItemsTest {
 
     @Test
     public void testPencilTool() {
+        paintView.setPencil();
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
-        paintView.setPencil();
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
                 is(Color.WHITE));

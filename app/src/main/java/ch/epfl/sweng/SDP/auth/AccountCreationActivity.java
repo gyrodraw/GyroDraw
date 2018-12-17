@@ -64,15 +64,18 @@ public class AccountCreationActivity extends NoBackPressActivity {
                     if (snapshot.exists()) {
                         usernameTaken.setText(getString(R.string.usernameTaken));
                     } else {
-                        handleResponseAndRedirect(username);
+                        createAccountAndRedirect(username);
                     }
                 }
             });
         }
     }
 
+    /**
+     * Creates and registers an account with the given username and redirects the user to home.
+     */
     @VisibleForTesting
-    public void handleResponseAndRedirect(String username) {
+    public void createAccountAndRedirect(String username) {
         Account.createAccount(getApplicationContext(),
                 new ConstantsWrapper(), username, userEmail);
         Account.getInstance(getApplicationContext()).registerAccount();

@@ -71,7 +71,7 @@ function hasEveryoneVoted(snapshot) {
   return false;
 }
 
-function functionTimer (seconds, state, roomID, call) {
+function functionTimer (seconds, state, roomID, call, isWaiting) {
   return new Promise((resolve, reject) => {
     // This represents the maximum time allowed for firebase.
     if (seconds > 300) {
@@ -84,22 +84,24 @@ function functionTimer (seconds, state, roomID, call) {
 
     function onInterval() {
 
-      admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
-        // If a user leaves stop the timer and return to idle state.
-        if (snapshot.child("users").numChildren() < maxPlayers 
-          && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
-          stop = true;
-          clearInterval(interval);
-          call(0);
-          admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.Idle);
-          admin.database().ref(parentRoomID + roomID + "/playing").set(PlayingEnum.Idle);
-        }
+      if(isWaiting === true){
+        admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
+          // If a user leaves stop the timer and return to idle state.
+          if (snapshot.child("users").numChildren() < maxPlayers 
+            && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
+            stop = true;
+            clearInterval(interval);
+            call(0);
+            admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.Idle);
+            admin.database().ref(parentRoomID + roomID + "/playing").set(PlayingEnum.Idle);
+          }
 
-        if (hasEveryoneVoted(snapshot) === true 
-          && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
-          elapsedSeconds = seconds;
-        }
-      });
+          if (hasEveryoneVoted(snapshot) === true 
+            && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
+            elapsedSeconds = seconds;
+          }
+        });
+      }
 
       if (stop === true){
         stop = false;
@@ -382,7 +384,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
     case StateEnum.ChoosingWordsCountdown:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       playingRef.set(PlayingEnum.PlayingButJoinable);
-      return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage, true);
+      return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage, true, true);
 
     case StateEnum.DrawingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_DRAWING);
@@ -390,18 +392,18 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       createNode(roomID, "finished", 0);
       createNode(roomID, "uploadDrawing", 0);
       playingRef.set(PlayingEnum.Playing);
-      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload, false);
+      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload, false, false);
 
     case StateEnum.WaitingUpload:
       // Set timeout to pass to next activity to avoid infinites timeouts.
       setTimeout(() => {
         admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
-      } , 8000);
+      } , 5000);
       break;
 
     case StateEnum.VotingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_VOTING);
-      return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting, false);
+      return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting, false, false);
 
     case StateEnum.EndVoting:
 
@@ -419,7 +421,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
 
       setTimeout(() => {
         removeRoom(roomID);
-      }, 10000);
+      }, 8000);
 
       break;
     default:

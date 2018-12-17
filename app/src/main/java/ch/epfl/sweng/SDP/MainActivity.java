@@ -21,7 +21,7 @@ import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 /**
  * Class representing the first page shown to the user upon first app launch.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends NoBackPressActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

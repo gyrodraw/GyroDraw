@@ -13,6 +13,6 @@ public class NetworkStateReceiverTest {
     @Test
     public void testInternetConnection() {
         assertThat(ConnectivityWrapper.isOnline(InstrumentationRegistry.getContext()),
-                                        is(true));
+                is(true));
     }
 }

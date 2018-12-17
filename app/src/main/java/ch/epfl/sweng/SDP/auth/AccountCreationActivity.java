@@ -16,7 +16,8 @@ import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 
-import static ch.epfl.sweng.SDP.auth.LoginActivity.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
 
 /**
  * Class representing the account creation page.
@@ -33,7 +34,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setContentView(R.layout.activity_account_creation);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        userEmail = getIntent().getStringExtra(EMAIL);
+        userEmail = getIntent().getStringExtra(attributeToPath(EMAIL));
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);

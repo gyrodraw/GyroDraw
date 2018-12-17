@@ -18,7 +18,6 @@ import static ch.epfl.sweng.SDP.firebase.RoomAttributes.ONLINE_STATUS;
  */
 public final class ConnectivityWrapper {
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static NetworkStateReceiver networkStateReceiver = null;
 
     private ConnectivityWrapper() {

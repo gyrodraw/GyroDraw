@@ -39,7 +39,6 @@ public class DrawingOfflineActivityWithItemsTest {
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
     private DrawingOfflineActivity activity;
-    private Account account;
 
     @Rule
     public final ActivityTestRule<DrawingOfflineActivity> activityRule =
@@ -55,7 +54,7 @@ public class DrawingOfflineActivityWithItemsTest {
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
-        account = Account.getInstance(activityRule.getActivity());
+        Account account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(EMAIL);

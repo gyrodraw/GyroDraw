@@ -71,6 +71,7 @@ public class DrawingOnlineActivityTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
+        paintView.isDrawing = true;
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         Account.getInstance(activityRule.getActivity())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));

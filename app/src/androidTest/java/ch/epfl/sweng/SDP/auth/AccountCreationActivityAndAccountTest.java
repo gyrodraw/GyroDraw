@@ -224,6 +224,13 @@ public class AccountCreationActivityAndAccountTest {
                 TEST_EMAIL);
     }
 
+    @Test
+    public void testHandleResponseAndRedirect() {
+        Account.deleteAccount();
+        activityRule.getActivity().handleResponseAndRedirect(USERNAME);
+        assertThat(activityRule.getActivity().isFinishing(), is(true));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountWithNullContext() {
         Account.createAccount(null, new ConstantsWrapper(), USERNAME, null);

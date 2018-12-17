@@ -36,6 +36,7 @@ public class DrawingOfflineActivityNoItemsTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
+        paintView.isDrawing = true;
         Account.getInstance(activityRule.getActivity().getApplicationContext())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())
@@ -64,6 +65,7 @@ public class DrawingOfflineActivityNoItemsTest {
     public void testPencilTool() {
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
+        paintView.setPencil();
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
                 is(Color.WHITE));

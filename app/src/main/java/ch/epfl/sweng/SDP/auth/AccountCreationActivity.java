@@ -2,6 +2,7 @@ package ch.epfl.sweng.SDP.auth;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,15 +64,23 @@ public class AccountCreationActivity extends NoBackPressActivity {
                     if (snapshot.exists()) {
                         usernameTaken.setText(getString(R.string.usernameTaken));
                     } else {
-                        Account.createAccount(getApplicationContext(),
-                                new ConstantsWrapper(), username, userEmail);
-                        Account.getInstance(getApplicationContext()).registerAccount();
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        launchActivity(HomeActivity.class);
-                        finish();
+                        createAccountAndRedirect(username);
                     }
                 }
             });
         }
+    }
+
+    /**
+     * Creates and registers an account with the given username and redirects the user to home.
+     */
+    @VisibleForTesting
+    public void createAccountAndRedirect(String username) {
+        Account.createAccount(getApplicationContext(),
+                new ConstantsWrapper(), username, userEmail);
+        Account.getInstance(getApplicationContext()).registerAccount();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        launchActivity(HomeActivity.class);
+        finish();
     }
 }

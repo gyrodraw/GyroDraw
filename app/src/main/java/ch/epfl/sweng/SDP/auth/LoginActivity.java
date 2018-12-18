@@ -21,7 +21,6 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 
 import static android.view.View.VISIBLE;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
 
 
 /**
@@ -87,7 +86,7 @@ public class LoginActivity extends NoBackPressActivity {
             // New user
             Log.d(TAG, "New user");
             Intent intent = new Intent(this, AccountCreationActivity.class);
-            intent.putExtra(attributeToPath(EMAIL), email);
+            intent.putExtra(EMAIL, email);
             startActivity(intent);
             finish();
         } else {
@@ -106,7 +105,7 @@ public class LoginActivity extends NoBackPressActivity {
                         Log.d(TAG, "User signed in but not did not create an account");
                         Intent intent = new Intent(getApplicationContext(),
                                 AccountCreationActivity.class);
-                        intent.putExtra(attributeToPath(EMAIL), email);
+                        intent.putExtra(EMAIL, email);
                         startActivity(intent);
                         finish();
                     }

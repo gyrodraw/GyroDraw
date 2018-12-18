@@ -27,6 +27,7 @@ import java.io.IOException;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -38,23 +39,24 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
-
 @RunWith(AndroidJUnit4.class)
-public class DrawingOnlineTest {
+public class DrawingOnlineActivityTest {
 
     @Rule
-    public final ActivityTestRule<DrawingOnline> activityRule =
-            new ActivityTestRule<DrawingOnline>(DrawingOnline.class) {
+    public final ActivityTestRule<DrawingOnlineActivity> activityRule =
+            new ActivityTestRule<DrawingOnlineActivity>(DrawingOnlineActivity.class) {
 
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra("RoomID", "0123457890");
-                    intent.putExtra("WinningWord", "word1Mock");
+                    intent.putExtra(ROOM_ID, "0123457890");
+                    intent.putExtra(WINNING_WORD, "word1Mock");
 
                     return intent;
                 }
@@ -69,6 +71,7 @@ public class DrawingOnlineTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
+        paintView.isDrawing = true;
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         Account.getInstance(activityRule.getActivity())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
@@ -93,18 +96,9 @@ public class DrawingOnlineTest {
     }
 
     @Test
-    public void testPaintViewGettersSetters() {
-        paintView.setCircle(10, 15);
+    public void testPaintViewRadiusGetterSetter() {
         paintView.setCircleRadius(12);
-        assertThat(paintView.getCircleX(), is(10));
-        assertThat(paintView.getCircleY(), is(15));
         assertThat(paintView.getCircleRadius(), is(12));
-    }
-
-    public void testSetCircleWorks() {
-        paintView.setCircle(30, -10);
-        assertThat(paintView.getCircleX(), is(30));
-        assertThat(paintView.getCircleY(), is(1));
     }
 
     @Test
@@ -128,7 +122,7 @@ public class DrawingOnlineTest {
     public void testLocalDbHandler() {
         Bitmap bitmap = initializedBitmap();
 
-        LocalDbHandlerForImages localDbHandler =
+        LocalDbForImages localDbHandler =
                 new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
         localDbHandler.addBitmapToDb(bitmap, 2);
 

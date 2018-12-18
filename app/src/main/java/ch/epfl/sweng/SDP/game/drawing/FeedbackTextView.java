@@ -14,30 +14,35 @@ import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 /**
  * Helper class that defines the style of the text feedback.
  */
-class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
+final class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
+
+    private static final int TEXT_SIZE = 1;
 
     private FeedbackTextView(Context context, String text, int colorId) {
         super(context);
         setTextColor(context.getResources().getColor(colorId));
         setShadowLayer(10, 0, 0, context.getResources().getColor(R.color.colorPrimaryDark));
+
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        setTextSize(1);
+        setTextSize(TEXT_SIZE);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         setLayoutParams(layoutParams);
+
         Typeface typeMuro = TypefaceLibrary.getTypeMuro();
         setTypeface(typeMuro, Typeface.ITALIC);
+
         setText(text);
     }
 
     /**
-     * Creates a text feedback to inform the player which item has been picked up.
+     * Creates a text feedback to inform the player about which item has been picked up.
      *
-     * @param item            that was activated
+     * @param item            item that was activated
      * @param paintViewHolder the holder of the view
      * @param context         the context where we want to put the TextView
-     * @return feedback text
+     * @return a {@link TextView} containing the feedback text
      */
     static TextView itemTextFeedback(Item item, final RelativeLayout paintViewHolder,
                                      Context context) {
@@ -54,6 +59,7 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
                 paintViewHolder.removeView(feedback);
             }
         }.start();
+
         return feedback;
     }
 
@@ -61,7 +67,7 @@ class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
      * Creates a text feedback to inform the player that the time is over.
      *
      * @param context the context where we want to put the TextView
-     * @return feedback text
+     * @return a {@link TextView} containing the feedback text
      */
     static TextView timeIsUpTextFeedback(Context context) {
         final FeedbackTextView feedback = new FeedbackTextView(context, "TIME'S UP ! ",

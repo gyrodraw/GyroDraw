@@ -1,13 +1,10 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.os.SystemClock;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.LinearLayout;
-
-import com.google.firebase.database.DatabaseReference;
 
 import org.junit.After;
 import org.junit.Rule;
@@ -16,7 +13,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -28,13 +25,12 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.BOUGHT_ITEMS;
 
 @RunWith(AndroidJUnit4.class)
 public class ShopActivityTest {
 
     private static final String USER_ID = "no_user";
-    private static DatabaseReference usersRef = Database.getReference("users."
-            + USER_ID + ".boughtItems");
 
     @Rule
     public final ActivityTestRule<ShopActivity> mActivityRule =
@@ -42,7 +38,7 @@ public class ShopActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     ShopActivity.disableAnimations();
-                    usersRef.removeValue();
+                    FbDatabase.removeAccountAttribute(USER_ID, BOUGHT_ITEMS);
                 }
             };
 
@@ -65,9 +61,6 @@ public class ShopActivityTest {
 
     @Test
     public void testPressBuyItemSuccess() {
-        Database.constructBuilder(usersRef).addChildren("123456789.boughtItems.blue")
-                .build().removeValue();
-        SystemClock.sleep(2000);
         setStarsAndRefresh();
 
         LinearLayout layout = mActivityRule.getActivity().findViewById(R.id.shopItems);
@@ -92,8 +85,8 @@ public class ShopActivityTest {
             }
         });
 
-        onView(withId(R.id.shopBackgroundAnimation)).perform(swipeRight());
-        onView(withId(R.id.shopBackgroundAnimation)).perform(swipeLeft());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
         intended(hasComponent(HomeActivity.class.getName()));
 
         executeOnUiThread(new Runnable() {

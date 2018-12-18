@@ -2,28 +2,27 @@ package ch.epfl.sweng.SDP;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
 
 /**
  * Class representing the first page shown to the user upon first app launch.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends NoBackPressActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,38 +30,18 @@ public class MainActivity extends Activity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_loading_screen);
 
-        Glide.with(this).load(R.drawable.waiting_animation_dots)
-                .into((ImageView) findViewById(R.id.waitingAnimationDots));
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.waitingBackgroundAnimation));
+        GlideUtils.startDotsWaitingAnimation(this);
+        GlideUtils.startBackgroundAnimation(this);
 
         FirebaseApp.initializeApp(this);
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null && ConnectivityWrapper.isOnline(this)) {
-            Database.getReference("users").orderByChild("email")
-                    .equalTo(auth.getCurrentUser().getEmail())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            FbDatabase.getUserByEmail(auth.getCurrentUser().getEmail(),
+                    new OnSuccessValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                // Go to the home if the user has already logged in
-                                // and created an account
-                                cloneAccountFromFirebase(dataSnapshot);
-
-                                TextView errorMessage = findViewById(
-                                        R.id.errorMessage);
-                                errorMessage.setTypeface(typeMuro);
-
-                                handleUserStatus(errorMessage);
-                            } else {
-                                displayMainLayout();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            throw databaseError.toException();
+                            handleRedirection(dataSnapshot);
                         }
                     });
         } else {
@@ -70,10 +49,30 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * Checks if account exists and redirects to {@link HomeActivity}.
+     * Else shows the MainActivity.
+     *
+     * @param dataSnapshot the snapshot containing the response to evaluate
+     */
+    @VisibleForTesting
+    public void handleRedirection(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.exists()) {
+            cloneAccountFromFirebase(dataSnapshot);
+
+            TextView errorMessage = findViewById(
+                    R.id.errorMessage);
+            errorMessage.setTypeface(typeMuro);
+
+            handleUserStatus(errorMessage);
+        } else {
+            displayMainLayout();
+        }
+    }
+
     private void displayMainLayout() {
         setContentView(R.layout.activity_main);
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this);
 
         findViewById(R.id.login_button).setOnClickListener(
                 new OnClickListener() {

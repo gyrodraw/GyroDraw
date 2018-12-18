@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.leagues;
 
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;

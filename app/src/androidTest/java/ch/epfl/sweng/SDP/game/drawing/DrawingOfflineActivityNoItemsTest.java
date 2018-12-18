@@ -22,13 +22,13 @@ import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class DrawingOfflineNoItemsTest {
+public class DrawingOfflineActivityNoItemsTest {
 
     private PaintView paintView;
 
     @Rule
-    public final ActivityTestRule<DrawingOffline> activityRule =
-            new ActivityTestRule<>(DrawingOffline.class);
+    public final ActivityTestRule<DrawingOfflineActivity> activityRule =
+            new ActivityTestRule<>(DrawingOfflineActivity.class);
 
     /**
      * Initialise mock elements and get UI elements.
@@ -36,6 +36,7 @@ public class DrawingOfflineNoItemsTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
+        paintView.isDrawing = true;
         Account.getInstance(activityRule.getActivity().getApplicationContext())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())
@@ -56,12 +57,14 @@ public class DrawingOfflineNoItemsTest {
 
     @Test
     public void testBlackButton() {
+        paintView.setColor(0);
         onView(ViewMatchers.withId(R.id.blackButton)).perform(click());
         assertThat(paintView.getColor(), is(Color.BLACK));
     }
 
     @Test
     public void testPencilTool() {
+        paintView.isDrawing = false;
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
@@ -71,6 +74,7 @@ public class DrawingOfflineNoItemsTest {
 
     @Test
     public void testEraserTool() {
+        paintView.isDrawing = false;
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
@@ -78,7 +82,25 @@ public class DrawingOfflineNoItemsTest {
     }
 
     @Test
+    public void testToolsWhileDrawing() {
+        paintView.isDrawing = true;
+        paintView.setPencil();
+        assertThat(paintView.isDrawing, is(false));
+
+        paintView.isDrawing = true;
+        paintView.setEraser();
+        assertThat(paintView.isDrawing, is(false));
+
+        paintView.isDrawing = true;
+        paintView.setBucket();
+        assertThat(paintView.isDrawing, is(false));
+    }
+
+
+
+    @Test
     public void testBucketTool() {
+        paintView.isDrawing = false;
         activityRule.getActivity().clear(null);
         onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
@@ -88,7 +110,7 @@ public class DrawingOfflineNoItemsTest {
 
     @Test
     public void testChangeBrushWidth() {
-        int initWidth = paintView.getDrawWidth();
+        final int initWidth = paintView.getDrawWidth();
         SeekBar brushWidthBar = activityRule.getActivity().findViewById(R.id.brushWidthBar);
 
         brushWidthBar.setProgress(0);

@@ -5,16 +5,16 @@ import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import java.util.HashMap;
-import java.util.Random;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
+
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Class representing the drawing phase of an online game in special mode.
  */
-public class DrawingOnlineItems extends DrawingOnline {
+public class DrawingOnlineItemsActivity extends DrawingOnlineActivity {
 
     private DrawingItems drawingItems;
 
@@ -28,7 +28,7 @@ public class DrawingOnlineItems extends DrawingOnline {
     }
 
     /**
-     * Gets called when sensor data changed. Updates the paintViews' circle coordinates
+     * Gets called when the sensor data changes. Updates the paintViews' circle coordinates
      * and checks if there are collisions with any displayed items.
      * If there is, the item gets activated and removed from the displayedItems.
      *

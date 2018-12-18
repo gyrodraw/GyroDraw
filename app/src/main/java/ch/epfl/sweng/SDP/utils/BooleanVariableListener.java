@@ -13,7 +13,7 @@ public class BooleanVariableListener {
         bool = false;
     }
 
-    public boolean getBoo() {
+    public boolean getBool() {
         return bool;
     }
 
@@ -23,7 +23,7 @@ public class BooleanVariableListener {
      *
      * @param bool Value to be set.
      */
-    public void setBoo(boolean bool) {
+    public void setBool(boolean bool) {
         this.bool = bool;
         if (listener != null) {
             listener.onChange();

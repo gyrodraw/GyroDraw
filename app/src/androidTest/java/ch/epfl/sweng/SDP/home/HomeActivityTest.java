@@ -17,8 +17,10 @@ import org.junit.runner.RunWith;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.game.LoadingScreenActivity;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOffline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOfflineActivity;
 import ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.SDP.home.leagues.LeaguesActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 import ch.epfl.sweng.SDP.shop.ShopActivity;
 
@@ -72,7 +74,7 @@ public class HomeActivityTest {
 
     @Test
     public void testLocalDb() {
-        LocalDbHandlerForAccount localDbHandler = new LocalDbHandlerForAccount(
+        LocalDbForAccount localDbHandler = new LocalDbHandlerForAccount(
                 activityRule.getActivity(), null, 1);
         localDbHandler.saveAccount(Account.getInstance(activityRule.getActivity()));
         localDbHandler.retrieveAccount(Account.getInstance(activityRule.getActivity()));
@@ -99,7 +101,7 @@ public class HomeActivityTest {
     @Test
     public void testClickOnPracticeButtonOpensDrawingOffline() {
         onView(ViewMatchers.withId(R.id.practiceButton)).perform(click());
-        intended(hasComponent(DrawingOffline.class.getName()));
+        intended(hasComponent(DrawingOfflineActivity.class.getName()));
     }
 
     @Test
@@ -201,8 +203,8 @@ public class HomeActivityTest {
 
     @Test
     public void testSwipeRightOpensShop() {
-        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeLeft());
-        onView(withId(R.id.homeBackgroundAnimation)).perform(swipeRight());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
+        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
         intended(hasComponent(ShopActivity.class.getName()));
     }
 }

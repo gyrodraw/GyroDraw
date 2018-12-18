@@ -28,7 +28,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.DrawingOnline;
+import ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivity;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 
@@ -42,13 +42,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_1;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.WORD_2;
 import static ch.epfl.sweng.SDP.game.WaitingPageActivity.disableAnimations;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-
 
 @RunWith(AndroidJUnit4.class)
 public class WaitingPageActivityTest {
@@ -73,9 +75,9 @@ public class WaitingPageActivityTest {
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra("roomID", ROOM_ID_TEST);
-                    intent.putExtra("word1", "word1Mock");
-                    intent.putExtra("word2", "word2Mock");
+                    intent.putExtra(ROOM_ID, ROOM_ID_TEST);
+                    intent.putExtra(WORD_1, "word1Mock");
+                    intent.putExtra(WORD_2, "word2Mock");
 
                     return intent;
                 }
@@ -238,7 +240,7 @@ public class WaitingPageActivityTest {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(2);
         mActivityRule.getActivity().listenerState.onDataChange(dataSnapshotMock);
 
-        intended(hasComponent(DrawingOnline.class.getName()));
+        intended(hasComponent(DrawingOnlineActivity.class.getName()));
         Intents.release();
     }
 
@@ -336,7 +338,7 @@ public class WaitingPageActivityTest {
     @Test
     public void testOnReceiveNetworkDisabled() {
         when(connectivityManagerMock.getActiveNetworkInfo()).thenReturn(null);
-        when(((ConnectivityManager)spyContext.getSystemService(Context.CONNECTIVITY_SERVICE)))
+        when(((ConnectivityManager) spyContext.getSystemService(Context.CONNECTIVITY_SERVICE)))
                 .thenReturn(connectivityManagerMock);
 
         doAnswer(new Answer() {

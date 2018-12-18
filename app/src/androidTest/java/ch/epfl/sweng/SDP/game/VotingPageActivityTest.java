@@ -33,7 +33,8 @@ import java.io.ByteArrayOutputStream;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.RoomAttributes;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.SDP.utils.BitmapManipulator;
@@ -51,11 +52,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -63,7 +68,6 @@ public class VotingPageActivityTest {
 
     private static final String USER_ID = "userA";
     private static final String ROOM_ID_TEST = "0123457890";
-    private static final String TOP_ROOM_ID = "realRooms";
     private static final int PERMISSION_WRITE_STORAGE = 1;
 
     private DataSnapshot dataSnapshotMock;
@@ -90,7 +94,7 @@ public class VotingPageActivityTest {
                 @Override
                 protected Intent getActivityIntent() {
                     Intent intent = new Intent();
-                    intent.putExtra("RoomID", ROOM_ID_TEST);
+                    intent.putExtra(ROOM_ID, ROOM_ID_TEST);
                     return intent;
                 }
             };
@@ -151,8 +155,8 @@ public class VotingPageActivityTest {
     @Test
     public void ratingUsingRatingBarShouldBeSaved() {
         // To ensure that the rating value does not get above 20
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
-                .setValue(0);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID,
+                RoomAttributes.RANKING, 0);
 
         short counter = activityRule.getActivity().getChangeDrawingCounter();
         SystemClock.sleep(5000);
@@ -217,16 +221,14 @@ public class VotingPageActivityTest {
 
     @Test
     public void startHomeActivityStartsHomeActivity() {
+        SystemClock.sleep(1000);
         Intents.init();
         activityRule.getActivity().startHomeActivity();
         SystemClock.sleep(2000);
         intended(hasComponent(HomeActivity.class.getName()));
         Intents.release();
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".users." + USER_ID)
-                .setValue(USER_ID);
-        Database.getReference(TOP_ROOM_ID + "." + ROOM_ID_TEST + ".ranking." + USER_ID)
-                .setValue(0);
-        SystemClock.sleep(2000);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, USERS, USER_ID);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, RANKING, 0);
     }
 
     @Test
@@ -256,6 +258,7 @@ public class VotingPageActivityTest {
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(4);
         activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(6000);
+        assertThat(activityRule.getActivity().getDrawingsIds(), is(notNullValue()));
     }
 
     @Test
@@ -313,7 +316,7 @@ public class VotingPageActivityTest {
     @Test
     public void testImageSharerShareToAppFails() {
         ImageSharer imageSharer = ImageSharer.getInstance(activityRule.getActivity());
-        imageSharer.getUrl(FirebaseStorage.getInstance().getReference().child("TestImage"));
+        imageSharer.getUrlAndShare(FirebaseStorage.getInstance().getReference().child("TestImage"));
         imageSharer.shareDrawingToFacebook(Uri.EMPTY);
         assertThat(imageSharer.shareImageToFacebookApp(initializedBitmap()), is(false));
     }

@@ -1,11 +1,9 @@
 package ch.epfl.sweng.SDP.firebase;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -21,24 +19,29 @@ import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
  */
 public final class FbStorage {
 
-    private static final String TAG = "fbStorage";
     private static final int QUALITY = 20;
+
+    private static final StorageReference STORAGE_REF = FirebaseStorage.getInstance()
+            .getReference();
 
     private FbStorage() {
     }
 
     /**
-     * Uploads a given bitmap to Firebase Storage at given StorageReference.
+     * Uploads a given bitmap to Firebase Storage with the given name.
      *
-     * @param bitmap   the image to upload
-     * @param imageRef the name of the image
+     * @param bitmap          the image to upload
+     * @param imageName       the name of the image
+     * @param successListener optional {@link OnSuccessListener} to add to the task
      * @return the {@link StorageTask} in charge of the upload
      */
     public static StorageTask<TaskSnapshot> sendBitmapToFirebaseStorage(
-            final Bitmap bitmap, final StorageReference imageRef,
+            final Bitmap bitmap, final String imageName,
             OnSuccessListener<UploadTask.TaskSnapshot> successListener) {
         checkPrecondition(bitmap != null, "bitmap is null");
-        checkPrecondition(imageRef != null, "imageRef is null");
+        checkPrecondition(imageName != null, "imageName is null");
+
+        StorageReference imageRef = STORAGE_REF.child(imageName);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, byteArrayOutputStream);
@@ -51,17 +54,20 @@ public final class FbStorage {
             e.printStackTrace();
         }
 
-        StorageTask<TaskSnapshot> task = uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.d(TAG, "Upload to Firebase Storage failed.");
-            }
-        });
-
         if (successListener != null) {
-            task.addOnSuccessListener(successListener);
+            uploadTask.addOnSuccessListener(successListener);
         }
 
-        return task;
+        return uploadTask;
+    }
+
+    /**
+     * Removes from Firebase Storage the image corresponding to the given name. The image name has
+     * to contain the extension (imageName.jpg, for example).
+     *
+     * @param imageName the name of the image
+     */
+    public static void removeImage(String imageName) {
+        STORAGE_REF.child(imageName).delete();
     }
 }

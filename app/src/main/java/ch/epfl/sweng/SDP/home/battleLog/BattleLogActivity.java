@@ -1,26 +1,25 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.battleLog;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.ViewManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 import java.util.List;
-
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 /**
  * Class representing the battle log.
  */
-public class BattleLogActivity extends BaseActivity {
+public class BattleLogActivity extends NoBackPressActivity {
 
     private LinearLayout battleLogView;
 
@@ -32,8 +31,7 @@ public class BattleLogActivity extends BaseActivity {
 
         battleLogView = findViewById(R.id.battleLog);
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this);
 
         TextView exitButton = findViewById(R.id.exitButton);
         TextView emptyBattleLogText = findViewById(R.id.emptyBattleLogText);
@@ -55,23 +53,23 @@ public class BattleLogActivity extends BaseActivity {
     }
 
     /**
-     * Fetches the latest game results in the local database, convert them to views
-     * and add them to the layout.
+     * Fetches the latest game results in the local database, converts them to views
+     * and adds them to the layout.
      */
     private void fetchGameResults() {
-        LocalDbHandlerForGameResults localDb =
+        LocalDbForGameResults localDb =
                 new LocalDbHandlerForGameResults(this, null, 1);
         List<GameResult> gameResults = localDb.getGameResultsFromDb(this);
 
         for (GameResult gameResult : gameResults) {
             if (gameResult != null) {
-                battleLogView.addView(gameResult.toLayout());
+                battleLogView.addView(gameResult.toLayout(this));
             }
         }
     }
 
     /**
-     * Returnsthe number of game result currently displayed.
+     * Returns the number of game result currently displayed.
      */
     @VisibleForTesting
     public int getGameResultsCount() {

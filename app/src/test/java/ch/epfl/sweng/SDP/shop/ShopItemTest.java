@@ -10,20 +10,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ShopItemTest {
 
     @Test
-    public void setColorItemTest() {
-        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10, false);
-        shopItem.setColorItem(ColorsShop.YELLOW);
-        assertThat(shopItem.getColorItem(), is(ColorsShop.YELLOW));
-    }
-
-    @Test
-    public void setPriceItemTest() {
-        ShopItem shopItem = new ShopItem(ColorsShop.BLUE, 10, true);
-        shopItem.setPriceItem(20);
-        assertThat(shopItem.getPriceItem(), is(20));
-    }
-
-    @Test
     public void setOwnedItemTest() {
         ShopItem shopItem = new ShopItem(ColorsShop.RED, 10, false);
         shopItem.setOwned(true);

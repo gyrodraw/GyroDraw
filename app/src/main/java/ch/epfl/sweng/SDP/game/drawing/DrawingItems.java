@@ -8,15 +8,14 @@ import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.items.BumpingItem;
 import ch.epfl.sweng.SDP.game.drawing.items.Item;
+import ch.epfl.sweng.SDP.game.drawing.items.Items;
 import ch.epfl.sweng.SDP.game.drawing.items.RandomItemGenerator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Utility class containing methods related to the special items mode.
@@ -25,11 +24,11 @@ final class DrawingItems {
 
     private static final int INTERVAL = 10000;
 
-    private Context context;
+    private final Context context;
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
     private Map<Item, ImageView> displayedItems;
-    private Random random;
+    private final Random random;
 
     private CountDownTimer offlineModeTimer = new CountDownTimer(INTERVAL, INTERVAL) {
 
@@ -66,7 +65,7 @@ final class DrawingItems {
     }
 
     /**
-     * Return the feedback TextView of the given item.
+     * Returns the feedback {@link TextView} of the given item.
      *
      * @param item the given item
      * @return the associated feedback TextView
@@ -107,7 +106,7 @@ final class DrawingItems {
     }
 
     /**
-     * Generates a random item (add stars excluded) every INTERVAL seconds.
+     * Generates a random item ({@link Items#ADD_STARS} excluded) every INTERVAL seconds.
      */
     void generateItemsForOfflineMode() {
         offlineModeTimer.start();

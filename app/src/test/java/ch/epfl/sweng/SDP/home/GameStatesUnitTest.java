@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.home;
 
-import org.junit.Test;
-
 import ch.epfl.sweng.SDP.matchmaking.GameStates;
+
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,7 +12,7 @@ public class GameStatesUnitTest {
     @Test
     public void testConvertIntoEnum() {
         GameStates gameStates = GameStates.convertValueIntoState(0);
-        assertThat(gameStates, is(GameStates.HOMESTATE));
+        assertThat(gameStates, is(GameStates.HOME_STATE));
 
         gameStates = GameStates.convertValueIntoState(1);
         assertThat(gameStates, is(GameStates.CHOOSE_WORDS_TIMER_START));

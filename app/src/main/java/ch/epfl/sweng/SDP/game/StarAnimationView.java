@@ -10,10 +10,10 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import ch.epfl.sweng.SDP.R;
+
 import java.util.ArrayList;
 import java.util.Random;
-
-import ch.epfl.sweng.SDP.R;
 
 /**
  * Class representing the animation of stars when a player votes for the current picture.

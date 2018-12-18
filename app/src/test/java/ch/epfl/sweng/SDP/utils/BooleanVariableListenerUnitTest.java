@@ -19,8 +19,8 @@ public class BooleanVariableListenerUnitTest {
 
     @Test
     public void setValueTest() {
-        boolSpy.setBoo(true);
-        assertThat(boolSpy.getBoo(), is(true));
+        boolSpy.setBool(true);
+        assertThat(boolSpy.getBool(), is(true));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class BooleanVariableListenerUnitTest {
         };
 
         boolSpy.setListener(testChangeListener);
-        boolSpy.setBoo(true);
+        boolSpy.setBool(true);
         assertThat(boolSpy.getListener(), is(testChangeListener));
         assertThat(varTest, is(5));
     }

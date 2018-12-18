@@ -1,18 +1,16 @@
 package ch.epfl.sweng.SDP.utils;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.GrantPermissionRule;
-import android.support.v4.app.ActivityCompat;
 
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
 
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
 import static ch.epfl.sweng.SDP.utils.ImageStorageManager.writeFileToStorage;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

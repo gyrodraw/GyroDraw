@@ -1,9 +1,36 @@
 package ch.epfl.sweng.SDP;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.os.SystemClock;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
+
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
+import ch.epfl.sweng.SDP.auth.LoginActivity;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sweng.SDP.auth.LoginActivityTest.executeOnUiThread;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
@@ -14,53 +41,38 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.os.SystemClock;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.TextView;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
-import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
-import com.google.firebase.database.DataSnapshot;
-import java.util.HashMap;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
     private static final String TEST_USERNAME = "TESTUSERNAME";
     private static final String TEST_EMAIL = "testEmail";
     private static final String TEST_USER_ID = "no_user";
-    private static final String TEST_LEAGUE = "leagueOne";
+    private static final String TEST_LEAGUE = "league1";
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
+    public final ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<>(MainActivity.class);
 
     private MainActivity activity;
 
     // Add a monitor for the login activity
-    private final Instrumentation.ActivityMonitor monitor = getInstrumentation()
+    private final Instrumentation.ActivityMonitor loginMonitor = getInstrumentation()
             .addMonitor(LoginActivity.class.getName(), null, false);
+
+    // Add a monitor for the home activity
+    private final Instrumentation.ActivityMonitor homeMonitor = getInstrumentation()
+            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Before
     public void init() {
-        activity = mActivityRule.getActivity();
+        activity = activityRule.getActivity();
     }
 
     @Test
     public void testCanOpenLoginActivity() {
         onView(withId(R.id.login_button)).perform(click());
         Activity loginActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(monitor, 5000);
+                .waitForMonitorWithTimeout(loginMonitor, 5000);
         assertThat(loginActivity, is(not(nullValue())));
     }
 
@@ -78,7 +90,7 @@ public class MainActivityTest {
         activity.cloneAccountFromFirebase(snapshot);
 
         Account.deleteAccount();
-        LocalDbHandlerForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
+        LocalDbForAccount localDbHandlerForAccount = new LocalDbHandlerForAccount(
                 activity, null, 1);
         Account.createAccount(activity, new ConstantsWrapper(),
                 TEST_USERNAME, TEST_EMAIL);
@@ -90,7 +102,7 @@ public class MainActivityTest {
 
     @Test
     public void testHandleUserStatusOnline() {
-        changeOnlineStatus(TEST_USER_ID, ONLINE);
+        changeOnlineStatus(TEST_USER_ID, ONLINE, createCompletionListener());
         SystemClock.sleep(3000);
 
         TextView errorMessage = new TextView(activity);
@@ -100,12 +112,12 @@ public class MainActivityTest {
         assertThat(errorMessage.getText().toString(),
                 is(activity.getString(R.string.already_logged_in)));
         assertThat(errorMessage.getVisibility(), is(View.VISIBLE));
-        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        changeOnlineStatus(TEST_USER_ID, OFFLINE, createCompletionListener());
     }
 
     @Test
     public void testHandleUserStatusOffline() {
-        changeOnlineStatus(TEST_USER_ID, OFFLINE);
+        changeOnlineStatus(TEST_USER_ID, OFFLINE, createCompletionListener());
         SystemClock.sleep(3000);
 
         TextView errorMessage = new TextView(activity);
@@ -113,6 +125,45 @@ public class MainActivityTest {
         SystemClock.sleep(3000);
 
         assertThat(activity.isFinishing(), is(true));
+    }
+
+    @Test
+    public void testRedirectionToHome() {
+        HashMap<String, Object> values = new HashMap<>();
+        initializeAccountHashMap(values);
+
+        HashMap<String, HashMap<String, Object>> account = new HashMap<>();
+        account.put(TEST_USER_ID, values);
+
+        final DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.getValue()).thenReturn(account);
+
+        executeOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activityRule.getActivity().handleRedirection(snapshot);
+            }
+        });
+
+        Activity homeActivity = getInstrumentation()
+                .waitForMonitorWithTimeout(homeMonitor, 5000);
+        assertThat(homeActivity, is(nullValue()));
+    }
+
+    @Test
+    public void testRedirectionToMain() {
+
+        final DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.exists()).thenReturn(false);
+
+        executeOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activityRule.getActivity().handleRedirection(snapshot);
+            }
+        });
+
+        assertThat(this.activity.isFinishing(), is(false));
     }
 
     /**
@@ -150,5 +201,4 @@ public class MainActivityTest {
         assertThat(newAccount.getCurrentLeague(), is(equalTo(TEST_LEAGUE)));
         assertThat(newAccount.getMaxTrophies(), is(100));
     }
-
 }

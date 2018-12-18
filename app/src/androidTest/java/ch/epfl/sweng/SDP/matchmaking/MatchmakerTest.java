@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -25,7 +24,6 @@ public class MatchmakerTest {
     private static final String FAKE_USERNAME = "IAmNotFake";
     private static final String FAKE_ROOM = "Testroom";
     private static final String FAKE_LEAGUE = "league1";
-    private ConstantsWrapper mockConstantsWrapper;
     private Account mockAccount;
 
     /**
@@ -33,20 +31,17 @@ public class MatchmakerTest {
      */
     @Before
     public void init() {
-        mockConstantsWrapper = mock(ConstantsWrapper.class);
         DatabaseReference mockReference = mock(DatabaseReference.class);
         Task mockTask = mock(Task.class);
         mockAccount = mock(Account.class);
         when(mockReference.child(isA(String.class))).thenReturn(mockReference);
         when(mockReference.removeValue()).thenReturn(mockTask);
-        when(mockConstantsWrapper.getReference(isA(String.class))).thenReturn(mockReference);
         doNothing().when(mockReference)
                 .addListenerForSingleValueEvent(isA(ValueEventListener.class));
     }
 
     @Test
     public void testJoinRoom() {
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
         when(mockAccount.getUserId()).thenReturn(USER_ID);
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
         when(mockAccount.getCurrentLeague()).thenReturn(FAKE_LEAGUE);
@@ -56,7 +51,6 @@ public class MatchmakerTest {
 
     @Test
     public void testLeaveRoom() {
-        when(mockConstantsWrapper.getFirebaseUserId()).thenReturn(USER_ID);
         when(mockAccount.getUserId()).thenReturn(USER_ID);
         when(mockAccount.getUsername()).thenReturn(FAKE_USERNAME);
         when(mockAccount.getCurrentLeague()).thenReturn(FAKE_LEAGUE);

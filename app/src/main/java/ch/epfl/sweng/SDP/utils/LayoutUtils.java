@@ -6,15 +6,14 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import ch.epfl.sweng.SDP.Activity;
+import ch.epfl.sweng.SDP.BaseActivity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.BounceInterpolator;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.home.League;
+import ch.epfl.sweng.SDP.home.leagues.League;
 
-import static ch.epfl.sweng.SDP.home.League.createLeague1;
-import static ch.epfl.sweng.SDP.home.League.createLeague2;
-import static ch.epfl.sweng.SDP.home.League.createLeague3;
+import static ch.epfl.sweng.SDP.home.leagues.League.createLeague1;
+import static ch.epfl.sweng.SDP.home.leagues.League.createLeague2;
+import static ch.epfl.sweng.SDP.home.leagues.League.createLeague3;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
@@ -88,22 +87,22 @@ public final class LayoutUtils {
     /**
      * Determines if the given point is inside a view.
      *
-     * @param x    the x coordinate of the point
-     * @param y    the y coordinate of the point
+     * @param posX the posX coordinate of the point
+     * @param posY the posY coordinate of the point
      * @param view the object to compare
      * @return true if the point is within the view bounds, false otherwise
      */
-    public static boolean isPointInsideView(float x, float y, View view) {
+    public static boolean isPointInsideView(float posX, float posY, View view) {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
         int viewX = location[0];
         int viewY = location[1];
 
-        return (x > viewX && x < (viewX + view.getWidth()))
-                && (y > viewY && y < (viewY + view.getHeight()));
+        return (posX > viewX && posX < (viewX + view.getWidth()))
+                && (posY > viewY && posY < (viewY + view.getHeight()));
     }
 
-    private static void setExitListener(final View exitButton, final Activity activity,
+    private static void setExitListener(final View exitButton, final BaseActivity activity,
                                         final int inTranstionId, final int outTransitionId) {
         exitButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -133,7 +132,7 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setFadingExitListener(final View exitButton, final Activity activity) {
+    public static void setFadingExitListener(final View exitButton, final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.fade_in, R.anim.fade_out);
     }
 
@@ -143,18 +142,9 @@ public final class LayoutUtils {
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setSlideRightExitListener(final View exitButton, final Activity activity) {
+    public static void setSlideRightExitListener(final View exitButton,
+                                                 final BaseActivity activity) {
         setExitListener(exitButton, activity, R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    /**
-     * Sets listener and animation for exit button with a left slide transition.
-     *
-     * @param exitButton the exit button
-     * @param activity   the context of the exit button
-     */
-    public static void setSlideLeftExitListener(final View exitButton, final Activity activity) {
-        setExitListener(exitButton, activity, R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     /**

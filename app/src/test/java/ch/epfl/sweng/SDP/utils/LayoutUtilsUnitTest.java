@@ -1,10 +1,11 @@
 package ch.epfl.sweng.SDP.utils;
 
+import ch.epfl.sweng.SDP.R;
+
+import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import ch.epfl.sweng.SDP.R;
-import org.junit.Test;
 
 public class LayoutUtilsUnitTest {
 

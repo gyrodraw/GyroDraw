@@ -5,18 +5,17 @@ import android.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Comparator;
-import java.util.Objects;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
@@ -30,8 +29,8 @@ public class ShopItem {
     private static final int DEFAULT_PADDING = 30;
     private static final ShopItemComparator comparator = new ShopItemComparator();
 
-    private int price;
-    private ColorsShop color;
+    private final int price;
+    private final ColorsShop color;
     private boolean owned;
     private LinearLayout layout;
 
@@ -80,16 +79,6 @@ public class ShopItem {
 
     public LinearLayout getLayout() {
         return layout;
-    }
-
-    @VisibleForTesting
-    void setPriceItem(int price) {
-        this.price = price;
-    }
-
-    @VisibleForTesting
-    void setColorItem(ColorsShop color) {
-        this.color = color;
     }
 
     void setOwned(boolean owned) {

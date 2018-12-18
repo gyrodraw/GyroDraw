@@ -1,11 +1,14 @@
 package ch.epfl.sweng.SDP.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbStorage;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -16,31 +19,27 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import ch.epfl.sweng.SDP.Activity;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.FbStorage;
-
 /**
  * This class is responsible for sharing images to Facebook.
  */
 public class ImageSharer {
 
     private static ImageSharer instance;
-    private Activity activity;
+    private Context context;
 
-    private ImageSharer(Activity activity) {
-        this.activity = activity;
+    private ImageSharer(Context context) {
+        this.context = context;
     }
 
     /**
      * Gets this ImageSharer instance. Use this method to initialize the singleton.
      *
-     * @param activity activity calling this method
+     * @param context activity calling this method
      * @return ImageSharer instance
      */
-    public static ImageSharer getInstance(Activity activity) {
+    public static ImageSharer getInstance(Context context) {
         if (instance == null) {
-            instance = new ImageSharer(activity);
+            instance = new ImageSharer(context);
         }
         return instance;
     }
@@ -53,17 +52,17 @@ public class ImageSharer {
     }
 
     /**
-     * Use this method to set the activity. This method should also be used to prevent
+     * Sets the activity which uses the image sharer. This method should also be used to prevent
      * reference cycle by setting the activity to null when it's not used anymore.
      *
-     * @param activity the activity
+     * @param context the activity
      */
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setActivity(Context context) {
+        this.context = context;
     }
 
     /**
-     * Shares an image to facebook by opening a share dialog.
+     * Shares an image to Facebook by opening a share dialog.
      *
      * @param image the image to share
      */
@@ -78,38 +77,39 @@ public class ImageSharer {
     }
 
     /**
-     * Shares an image to facebook app.
+     * Shares an image to Facebook app.
      *
      * @param image the image to share
-     * @return true if ShareDialog was created, else false
+     * @return true if the {@link ShareDialog} was created, false otherwise
      */
     @VisibleForTesting
     public boolean shareImageToFacebookApp(Bitmap image) {
         SharePhoto photo = new SharePhoto.Builder().setBitmap(image).build();
         SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
 
-        if (activity != null) {
-            ShareDialog.show(activity, content);
+        if (context != null) {
+            ShareDialog.show((Activity) context, content);
             return true;
         }
         return false;
     }
 
     /**
-     * Uploads the image to firebase storage.
+     * Uploads the image to Firebase storage.
      *
      * @param image the image to upload
      */
     private void uploadImageToFireBase(Bitmap image) {
-        Account account = Account.getInstance(activity);
+        Account account = Account.getInstance(context);
         String imageName = "DRAWING_" + account.getTotalMatches()
                 + "_" + account.getUsername() + ".jpg";
+
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
-        FbStorage.sendBitmapToFirebaseStorage(image, ref,
+        FbStorage.sendBitmapToFirebaseStorage(image, imageName,
                 new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        getUrl(ref);
+                        getUrlAndShare(ref);
                     }
                 });
     }
@@ -120,7 +120,7 @@ public class ImageSharer {
      * @param ref the storage reference.
      */
     @VisibleForTesting
-    public void getUrl(StorageReference ref) {
+    public void getUrlAndShare(StorageReference ref) {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(final Uri uri) {
@@ -141,8 +141,8 @@ public class ImageSharer {
     @VisibleForTesting
     public void shareDrawingToFacebook(Uri uri) {
         ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentUrl(uri).build();
-        if (activity != null) {
-            ShareDialog.show(activity, linkContent);
+        if (context != null) {
+            ShareDialog.show((Activity) context, linkContent);
         }
     }
 

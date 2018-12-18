@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.battleLog;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.bitmapEqualsNewBitmap;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.compressBitmap;
-import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineTest.initializedBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.bitmapEqualsNewBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.compressBitmap;
+import static ch.epfl.sweng.SDP.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
 import static ch.epfl.sweng.SDP.home.leaderboard.LeaderboardActivityTest.testExitButtonBody;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,10 +36,10 @@ public class BattleLogActivityTest {
     private static final int RANK = 2;
     private static final int STARS = 15;
     private static final int TROPHIES = -5;
-    private final Bitmap DRAWING = initializedBitmap();
+    private final Bitmap drawing = initializedBitmap();
 
     private GameResult gameResult;
-    private LocalDbHandlerForGameResults localDbHandler;
+    private LocalDbForGameResults localDbHandler;
 
     @Rule
     public final ActivityTestRule<BattleLogActivity> activityRule =
@@ -49,8 +50,7 @@ public class BattleLogActivityTest {
      */
     @Before
     public void init() {
-        gameResult = new GameResult(rankedUsernames, RANK, STARS, TROPHIES, DRAWING,
-                activityRule.getActivity());
+        gameResult = new GameResult(rankedUsernames, RANK, STARS, TROPHIES, drawing);
         localDbHandler = new LocalDbHandlerForGameResults(
                 activityRule.getActivity(), null, 1);
     }
@@ -70,7 +70,7 @@ public class BattleLogActivityTest {
         assertThat(newGameResult.getRank(), is(RANK));
         assertThat(newGameResult.getStars(), is(STARS));
         assertThat(newGameResult.getTrophies(), is(TROPHIES));
-        Bitmap compressedDrawing = compressBitmap(DRAWING, 20);
+        Bitmap compressedDrawing = compressBitmap(drawing, 20);
         bitmapEqualsNewBitmap(compressedDrawing, newGameResult.getDrawing());
     }
 
@@ -80,7 +80,7 @@ public class BattleLogActivityTest {
         assertThat(gameResult.getRank(), is(RANK));
         assertThat(gameResult.getStars(), is(STARS));
         assertThat(gameResult.getTrophies(), is(TROPHIES));
-        bitmapEqualsNewBitmap(DRAWING, gameResult.getDrawing());
+        bitmapEqualsNewBitmap(drawing, gameResult.getDrawing());
     }
 
     @Test
@@ -93,13 +93,13 @@ public class BattleLogActivityTest {
 
     @Test
     public void testNullBitmapToDatabase() {
-        localDbHandler.addGameResultToDb(new GameResult(
-                rankedUsernames, RANK, STARS, TROPHIES, null, activityRule.getActivity()));
+        localDbHandler.addGameResultToDb(
+                new GameResult(rankedUsernames, RANK, STARS, TROPHIES, null));
         Activity activity = activityRule.getActivity();
-        Bitmap drawing = localDbHandler.getGameResultsFromDb(activity).get(0).getDrawing();
+        Bitmap defaultDrawing = localDbHandler.getGameResultsFromDb(activity).get(0).getDrawing();
         for (int i = 5; i < 10; i++) {
             for (int j = 5; j < 10; j++) {
-                assertThat(drawing.getPixel(i, j), is(0xFFFFFFFF));
+                assertThat(defaultDrawing.getPixel(i, j), is(0xFFFFFFFF));
             }
         }
     }

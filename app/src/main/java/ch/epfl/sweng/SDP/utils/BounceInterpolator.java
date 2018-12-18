@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.utils;
 
 import android.view.animation.Interpolator;
 
@@ -18,7 +18,7 @@ public final class BounceInterpolator implements Interpolator {
      * @param amplitude of animation
      * @param frequency of animation
      */
-    public BounceInterpolator(double amplitude, double frequency) {
+    BounceInterpolator(double amplitude, double frequency) {
         checkPrecondition(amplitude != 0,
                 "Amplitude should be different from 0");
 

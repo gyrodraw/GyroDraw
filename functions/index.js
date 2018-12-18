@@ -5,7 +5,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const maxPlayers = 5;
-const mockMaxPlayers = 3;
 const maxWords = 6;
 const numberRoomsPerLeague = 100;
 const minRank = -10;
@@ -24,8 +23,8 @@ var state = 0;
 admin.initializeApp();
 
 function checkUsersReady(path, snapshot) {
-  if(snapshot.child("users").numChildren() === maxPlayers) {
-    if(snapshot.child("state").val() === StateEnum.Idle ||
+  if (snapshot.child("users").numChildren() === maxPlayers) {
+    if (snapshot.child("state").val() === StateEnum.Idle ||
       snapshot.child("state").val() === StateEnum.EndVoting) {
       admin.database().ref(path + "/state").set(StateEnum.ChoosingWordsCountdown);
     }
@@ -40,7 +39,7 @@ function checkUsersReady(path, snapshot) {
 function checkNodeTrue(snapshot) {
   let ready = true;
   snapshot.forEach((child) => {
-    if(child.val() !== 1) {
+    if (child.val() !== 1) {
       ready = false;
     }
   });
@@ -51,7 +50,7 @@ function checkNodeTrue(snapshot) {
 function checkNodeTrueTesting(snapshot, howMany) {
   let count = 0;
   snapshot.forEach((child) => {
-    if(child.val() === 1) {
+    if (child.val() === 1) {
       count++;
     }
   });
@@ -59,29 +58,52 @@ function checkNodeTrueTesting(snapshot, howMany) {
   return count >= howMany;
 }
 
-function functionTimer (seconds, state, roomID, call) {
+function hasEveryoneVoted(snapshot) {
+  let sum = 0;
+  snapshot.child("words").forEach((child) => {
+    sum += child.val();
+  });
+
+  if (sum >= maxPlayers) {
+    return true;
+  }
+
+  return false;
+}
+
+function functionTimer (seconds, state, roomID, isWaiting, call) {
   return new Promise((resolve, reject) => {
+    // This represents the maximum time allowed for firebase.
     if (seconds > 300) {
         return;
     }
 
-    let interval = setInterval(onInterval, 1000);
     let elapsedSeconds = 0;
     let stop = false;
+    let interval = setInterval(onInterval, 1000);
 
-    function onInterval () {
+    function onInterval() {
 
-      admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
-        if(snapshot.child("users").numChildren() < maxPlayers && state === StateEnum.ChoosingWordsCountdown) {
-          stop = true;
-          clearInterval(interval);
-          call(0);
-          admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.Idle);
-          admin.database().ref(parentRoomID + roomID + "/playing").set(PlayingEnum.Idle);
-        }
-      });
+      if(isWaiting === true){
+        admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
+          // If a user leaves stop the timer and return to idle state.
+          if (snapshot.child("users").numChildren() < maxPlayers 
+            && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
+            stop = true;
+            clearInterval(interval);
+            call(0);
+            admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.Idle);
+            admin.database().ref(parentRoomID + roomID + "/playing").set(PlayingEnum.Idle);
+          }
 
-      if(stop === true){
+          if (hasEveryoneVoted(snapshot) === true 
+            && snapshot.child("state").val() === StateEnum.ChoosingWordsCountdown) {
+            elapsedSeconds = seconds;
+          }
+        });
+      }
+
+      if (stop === true){
         stop = false;
         throw new "Timer stopped";
       }
@@ -97,14 +119,13 @@ function functionTimer (seconds, state, roomID, call) {
       elapsedSeconds++;
     }
   }).catch(function(error) {
-    // log and rethrow
+    // Log and rethrow
     console.log(error);
     throw error;
   });
 }
 
 exports.joinGame = functions.https.onCall((data, context) => {
-  // Grab the text parameter.
   const id = data.id;
   const username = data.username;
   const league = data.league - 1;
@@ -125,30 +146,27 @@ exports.joinGame = functions.https.onCall((data, context) => {
       const playingVal = roomID.child("playing").val();
       roomsList.push(parseInt(roomID.key, 10));
 
-      // Check if the room is full, if the user already joined a room and if
+      // Checks if the room is full, if the user already joined a room and if
       // the game is not already playing
-      if(roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
-        && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true && roomGameMode === gameMode) {
+      if (roomID.child("users").numChildren() < maxPlayers && alreadyJoined === false
+        && playingVal !== PlayingEnum.Playing && isRoomInLeagueRange(roomID.key, league) === true 
+        && roomGameMode === gameMode) {
         const userCount = "user" +  (roomID.child("users").numChildren() + 1).toString();
         const path = parentRoomID + roomID.key;
         _roomID = roomID.key;
 
-        if(roomID.hasChild("users")) {
-          if(roomID.child("users/" + id).exists()) {
-            admin.database().ref(path).child("users/" + id).remove();
-          }
-          admin.database().ref(path).child("users").update({[id]:username});
-        } else {
-          if(roomID.child("users/" + id).exists()) {
-            admin.database().ref(path).child("users/" + id).remove();
-          }
-          admin.database().ref(path).update({"users":{[id]:username}});
+        // Removes the user and adds it again to trigger the event for the user fields.
+        if (roomID.child("users/" + id).exists() && roomID.hasChild("users")) {
+          admin.database().ref(path).child("users/" + id).remove();
         }
+
+        admin.database().ref(path).child("users").update({[id]:username});
+
         alreadyJoined = true;
       }
     });
   }).then(() => {
-    if(alreadyJoined === false) {
+    if (alreadyJoined === false) {
         _roomID = createRoomAndJoin(league, roomsList, username, id, gameMode);
     }
     console.log(_roomID);
@@ -157,7 +175,7 @@ exports.joinGame = functions.https.onCall((data, context) => {
 });
 
 function getLeagueFromTrophies(trophies) {
-  if(trophies >= 0 && trophies < 100) {
+  if (trophies >= 0 && trophies < 100) {
     return "league1";
   } else if (trophies >= 100 && trophies < 200) {
     return "league2"; 
@@ -183,7 +201,7 @@ function generateTwoRandomNumbers() {
   const firstNumber = getRandomInt(0, maxWords - 1);
   let secondNumber = firstNumber;
 
-  while(firstNumber === secondNumber) {
+  while (firstNumber === secondNumber) {
     secondNumber = getRandomInt(0, maxWords - 1);
   }
 
@@ -206,7 +224,7 @@ function generateRoomID(league, roomsList) {
   let roomID;
   do {
     roomID = Math.floor(Math.random()*(maxRoomID - minRoomID + 1) + minRoomID);
-  } while(roomsList.includes(roomID))
+  } while (roomsList.includes(roomID))
 
   return roomID;
 }
@@ -233,7 +251,7 @@ function removeRoomData(roomID) {
 
 function removeRoom(roomID) {
   // Do not remove the testing room
-  if(roomID !== "0123457890") {
+  if (roomID !== "0123457890") {
     admin.database().ref(parentRoomID + roomID).remove();
   }
 }
@@ -243,39 +261,40 @@ exports.onUsersChange = functions.database.ref(parentRoomID + "{roomID}/users").
   let isRoomRemoved = false;
   return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
 
-    if(snapshot.hasChild("words") && !snapshot.hasChild("users")) {
-      // Remove the words because the room is empty
+    if (snapshot.hasChild("words") && !snapshot.hasChild("users")) {
+      // Removes the words because the room is empty
       admin.database().ref(parentRoomID + roomID + "/words").remove();
       removeRoom(roomID);
       isRoomRemoved = true;
-    }
-    else if(snapshot.hasChild("users") && !snapshot.hasChild("words")) {
-      // Generate the words
+    } else if(snapshot.hasChild("users") && !snapshot.hasChild("words")) {
+      // Generates the words
       addWordsToDatabase(roomID);
     }
 
-    if(isRoomRemoved === false) {
+    if (isRoomRemoved === false) {
       checkUsersReady(parentRoomID + roomID, snapshot);
     }
   });
 });
 
-function startTimer(time, roomID, prevState, newState, nodeCreation) {
-  return functionTimer(time, prevState, roomID, elapsedTime => {
-          return admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(elapsedTime);
-      })
-      .then(totalTime => {
-          return console.log('Timer of ' + totalTime + ' has finished.');
-      })
-      .then(() => {
-        if(nodeCreation === true) {
-          return createNode(roomID, "onlineStatus", 0);
-        } else {
-          return checkOnlineNode(roomID);
-        }
-      })
-      .then(() => admin.database().ref(parentRoomID + roomID + "/state").set(newState))
-      .catch(error => console.error(error));
+function startTimer(time, roomID, prevState, newState, nodeCreation, isWaiting) {
+  return functionTimer(time, prevState, roomID, isWaiting, elapsedTime => {
+    return admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(elapsedTime);
+  })
+  .then(totalTime => {
+      return console.log('Timer of ' + totalTime + ' has finished.');
+  })
+  .then(() => {
+
+    // A new node needs to be created after the game starts. Otherwise just checks the node.
+    if(nodeCreation === true) {
+      return createNode(roomID, "onlineStatus", 0);
+    } else {
+      return checkOnlineNode(roomID);
+    }
+  })
+  .then(() => admin.database().ref(parentRoomID + roomID + "/state").set(newState))
+  .catch(error => console.error(error));
 }
 
 function createNode(roomID, node, value) {
@@ -298,7 +317,7 @@ function updateUser(userID) {
       let totalMatches;
 
       return admin.database().ref("users/" + userID + "/trophies").transaction((currentValue) => {
-        newTrophies = currentValue + minRank;
+        newTrophies = Math.max(currentValue + minRank, 0);
         return newTrophies;
       })
       .then(() => {
@@ -329,7 +348,7 @@ function updateDisconnectedUsers(snapshotRanking, roomID) {
     });
   }).then(() => {
       return snapshotRanking.forEach((child) => {
-        if(child.val() === -1) {
+        if (child.val() === -1) {
           updateUser(dict[child.key]);
         }
     });
@@ -340,13 +359,16 @@ function checkOnlineNode(roomID) {
   return admin.database().ref(parentRoomID + roomID + "/onlineStatus").once('value', (snapshot) => {
     snapshot.forEach((child) => {
       console.log(child.val());
-      if(child.val() === 0) {
+      if (child.val() === 0) {
         admin.database().ref(parentRoomID + roomID + "/ranking/" + child.key).set(-1);
       }
     });
   }).then(() => {return createNode(roomID, "onlineStatus", 0)});
 }
 
+/**
+* Defines the different tasks that server has to do when state is updated. 
+*/
 exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").onWrite((change, context) => {
   const roomID = context.params.roomID;
   state = change.after.val();
@@ -362,7 +384,7 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
     case StateEnum.ChoosingWordsCountdown:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_CHOOSE_WORDS);
       playingRef.set(PlayingEnum.PlayingButJoinable);
-      return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage, true);
+      return startTimer(WAITING_TIME_CHOOSE_WORDS, roomID, StateEnum.ChoosingWordsCountdown, StateEnum.DrawingPage, true, true);
 
     case StateEnum.DrawingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_DRAWING);
@@ -370,18 +392,18 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
       createNode(roomID, "finished", 0);
       createNode(roomID, "uploadDrawing", 0);
       playingRef.set(PlayingEnum.Playing);
-      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload, false);
+      return startTimer(WAITING_TIME_DRAWING, roomID, StateEnum.DrawingPage, StateEnum.WaitingUpload, false, false);
 
     case StateEnum.WaitingUpload:
-      // Set timeout to pass to next activity
+      // Set timeout to pass to next activity to avoid infinites timeouts.
       setTimeout(() => {
         admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
-      } , 8000);
+      } , 5000);
       break;
 
     case StateEnum.VotingPage:
       admin.database().ref(parentRoomID + roomID + "/timer/observableTime").set(WAITING_TIME_VOTING);
-      return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting, false);
+      return startTimer(WAITING_TIME_VOTING, roomID, StateEnum.VotingPage, StateEnum.EndVoting, false, false);
 
     case StateEnum.EndVoting:
 
@@ -397,10 +419,9 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
         return updateDisconnectedUsers(snapshot, roomID);
       });
 
-      // removed for now in order to test online more easily
-      /*setTimeout(() => {
-        removeRoom();
-      }, 5000);*/
+      setTimeout(() => {
+        removeRoom(roomID);
+      }, 8000);
 
       break;
     default:
@@ -410,19 +431,25 @@ exports.onStateUpdate = functions.database.ref(parentRoomID + "{roomID}/state").
   return 0;
 });
 
+/**
+* Checks if every user entered the last state of the game (ranking page). If it is the case remove the room. 
+*/
 exports.onFinishedUpdate = functions.database.ref(parentRoomID + "{roomID}/finished").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
-    if(checkNodeTrue(snapshot.child("finished")) === true && roomID !== "0123457890" && snapshot.child("state").val() === StateEnum.EndVoting) {
+    if (checkNodeTrue(snapshot.child("finished")) === true && roomID !== "0123457890" && snapshot.child("state").val() === StateEnum.EndVoting) {
       removeRoom(roomID);
     }
   });
 });
 
+/**
+* Checks if every user uploaded their drawings. If it is the case proceed to the next state. 
+*/
 exports.onUploadDrawingUpdate = functions.database.ref(parentRoomID + "{roomID}/uploadDrawing").onWrite((change, context) => {
   const roomID = context.params.roomID;
   return admin.database().ref(parentRoomID + roomID).once('value', (snapshot) => {
-    if(checkNodeTrue(snapshot.child("uploadDrawing")) === true && snapshot.child("state").val() === StateEnum.WaitingUpload) {
+    if (checkNodeTrue(snapshot.child("uploadDrawing")) === true && snapshot.child("state").val() === StateEnum.WaitingUpload) {
       admin.database().ref(parentRoomID + roomID + "/state").set(StateEnum.VotingPage);
     }
   })

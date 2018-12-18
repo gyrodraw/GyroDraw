@@ -1,5 +1,11 @@
 package ch.epfl.sweng.SDP.game;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.FINISHED;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -14,42 +20,30 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForGameResults;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.RankingUtils;
+import ch.epfl.sweng.SDP.utils.SortUtils;
+import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.home.GameResult;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForGameResults;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import ch.epfl.sweng.SDP.utils.RankingUtils;
-import ch.epfl.sweng.SDP.utils.SortUtils;
-import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
-
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.
  */
 public class RankingFragment extends ListFragment {
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
     private String roomId;
-
-    private DatabaseReference rankingRef;
-    private DatabaseReference finishedRef;
 
     private Map<String, Integer> finalRanking;
 
@@ -73,9 +67,6 @@ public class RankingFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        rankingRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".ranking");
-        finishedRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".finished");
-
         ((TextView) getActivity().findViewById(R.id.rankingTitle))
                 .setTypeface(TypefaceLibrary.getTypeMuro());
 
@@ -94,6 +85,7 @@ public class RankingFragment extends ListFragment {
      * @param roomId      the id of the room.
      * @param drawings    the users drawings.
      * @param playerNames the usernames of the players.
+     * @param activity    the activity instantiating the fragment
      */
     public void putExtra(String roomId, Bitmap[] drawings, String[] playerNames,
                          VotingPageActivity activity) {
@@ -113,51 +105,47 @@ public class RankingFragment extends ListFragment {
     }
 
     private void retrieveFinalRanking() {
+        FbDatabase.getRoomAttribute(roomId, RANKING,
+                new OnSuccessValueEventListener() {
 
-        rankingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        finalRanking = new HashMap<>();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.getValue(Integer.class) != null && ds.getKey() != null) {
+                                finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                            }
+                        }
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                finalRanking = new HashMap<>();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.getValue(Integer.class) != null && ds.getKey() != null) {
-                        finalRanking.put(ds.getKey(), ds.getValue(Integer.class));
+                        // Sort the rankings (stars)
+                        Integer[] rankings = (finalRanking.values().toArray(
+                                new Integer[0]));
+                        Arrays.sort(rankings, Collections.reverseOrder());
+
+                        int rankForUser = 0;
+                        if (dataSnapshot.child(account.getUsername()).getValue(int.class) != null) {
+                            rankForUser = dataSnapshot.child(account.getUsername())
+                                    .getValue(int.class);
+                        }
+
+                        Integer[] trophies = RankingUtils.generateTrophiesFromRanking(rankings);
+                        Integer[] positions = RankingUtils.generatePositionsFromRanking(rankings);
+                        List<String> usernames = SortUtils.sortByValue(finalRanking);
+
+                        int trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
+
+                        Boolean won = usernames.get(0).equals(account.getUsername());
+                        updateUserStats(rankForUser, trophiesForUser, won);
+                        createAndStoreGameResult(usernames, usernames.indexOf(
+                                account.getUsername()), rankForUser, trophiesForUser);
+
+                        String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
+                        ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
+                                tmpUserNames, rankings, trophies, drawings, positions);
+                        setListAdapter(adapter);
+                        setFinishedCollectingRanking();
                     }
-                }
-
-                // Sort the rankings (stars)
-                Integer[] rankings = (finalRanking.values().toArray(
-                        new Integer[0]));
-                Arrays.sort(rankings, Collections.reverseOrder());
-
-                int rankForUser = 0;
-                if (dataSnapshot.child(account.getUsername()).getValue(int.class) != null) {
-                    rankForUser = dataSnapshot.child(account.getUsername()).getValue(int.class);
-                }
-
-                Integer[] trophies = RankingUtils.generateTrophiesFromRanking(rankings);
-                Integer[] positions = RankingUtils.generatePositionsFromRanking(rankings);
-                List<String> usernames = SortUtils.sortByValue(finalRanking);
-
-                int trophiesForUser = trophies[usernames.indexOf(account.getUsername())];
-
-                Boolean won = usernames.get(0).equals(account.getUsername());
-                updateUserStats(Math.max(rankForUser, 0), trophiesForUser, won);
-                createAndStoreGameResult(usernames, usernames.indexOf(account.getUsername()),
-                        rankForUser, trophiesForUser);
-
-                String[] tmpUserNames = usernames.toArray(new String[usernames.size()]);
-                ArrayAdapter<String> adapter = new RankingAdapter(getActivity(),
-                        tmpUserNames, rankings, trophies, drawings, positions);
-                setListAdapter(adapter);
-                setFinishedCollectingRanking();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });
+                });
     }
 
     private void updateUserStats(int starIncrease, int trophiesIncrease, boolean won) {
@@ -174,22 +162,20 @@ public class RankingFragment extends ListFragment {
      * Create a game result and save the result into the local database.
      */
     public void createAndStoreGameResult(List<String> names, int rank, int stars, int trophies) {
-
         String userNameId = account.getUsername();
 
         Bitmap drawing = drawings[getIndexForUserName(userNameId)];
 
         if (drawing != null) {
-            GameResult gameResult = new GameResult(names, rank, stars, trophies,
-                    drawing, this.getActivity());
-            LocalDbHandlerForGameResults localDb =
+            GameResult gameResult = new GameResult(names, rank, stars, trophies, drawing);
+            LocalDbForGameResults localDb =
                     new LocalDbHandlerForGameResults(this.getActivity(), null, 1);
             localDb.addGameResultToDb(gameResult);
         }
     }
 
     private void setFinishedCollectingRanking() {
-        finishedRef.child(account.getUsername()).setValue(1);
+        FbDatabase.setValueToUserInRoomAttribute(roomId, account.getUsername(), FINISHED, 1);
     }
 
     private class RankingAdapter extends ArrayAdapter<String> {

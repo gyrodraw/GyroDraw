@@ -1,22 +1,22 @@
 package ch.epfl.sweng.SDP.utils.network;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.ONLINE_STATUS;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.VisibleForTesting;
-
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.game.WaitingPageActivity;
 
 /**
- * Connectivity wrapper that registers the network receiver and unregisters it. This class provides
- * also utility to update or check connectivity status.
+ * A wrapper class that registers and unregisters the network receiver. It provides
+ * also utility methods to update or check connectivity status.
  */
 public final class ConnectivityWrapper {
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
     private static NetworkStateReceiver networkStateReceiver = null;
 
     private ConnectivityWrapper() {
@@ -64,12 +64,11 @@ public final class ConnectivityWrapper {
      * Sets the online flag to 1 when in-game. Allows to notify database that the player is still
      * here.
      *
-     * @param roomID   Room number of the game
+     * @param roomId   Room number of the game
      * @param username Username of the player
      */
-    public static void setOnlineStatusInGame(String roomID, String username) {
-        Database.getReference(TOP_ROOM_NODE_ID + "." + roomID + ".onlineStatus."
-                + username).setValue(1);
+    public static void setOnlineStatusInGame(String roomId, String username) {
+        FbDatabase.setValueToUserInRoomAttribute(roomId, username, ONLINE_STATUS, 1);
     }
 
     /**

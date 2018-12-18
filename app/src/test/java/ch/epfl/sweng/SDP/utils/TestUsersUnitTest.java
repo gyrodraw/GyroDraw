@@ -1,9 +1,9 @@
 package ch.epfl.sweng.SDP.utils;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class TestUsersUnitTest {
 
@@ -17,12 +17,12 @@ public class TestUsersUnitTest {
         assertThat(TestUsers.isTestUser("PICASSO"), is(false));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIsTestUserWithNullId() {
         TestUsers.isTestUser(null);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIsTestUserWithEmptyId() {
         TestUsers.isTestUser("");
     }

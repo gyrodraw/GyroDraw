@@ -1,6 +1,7 @@
 package ch.epfl.sweng.SDP.shop;
 
-import android.annotation.SuppressLint;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,30 +9,24 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
+import ch.epfl.sweng.SDP.NoBackPressActivity;
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
+import ch.epfl.sweng.SDP.utils.LayoutUtils;
+import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ch.epfl.sweng.SDP.BaseActivity;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.home.HomeActivity;
-import ch.epfl.sweng.SDP.utils.LayoutUtils;
-import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
-
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-
 /**
- * Activity allowing the purchase of items such as colors.
+ * This activity represents the shop and allows the purchase of items such as colors.
  */
-public class ShopActivity extends BaseActivity {
+public class ShopActivity extends NoBackPressActivity {
 
     private static boolean enableAnimations = true;
 
@@ -45,9 +40,8 @@ public class ShopActivity extends BaseActivity {
         this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         setContentView(R.layout.activity_shop);
 
-        ImageView backgroundAnimation = findViewById(R.id.shopBackgroundAnimation);
         if (enableAnimations) {
-            Glide.with(this).load(R.drawable.background_animation).into(backgroundAnimation);
+            GlideUtils.startBackgroundAnimation(this);
         }
 
         buyDialog = new Dialog(this);
@@ -63,7 +57,7 @@ public class ShopActivity extends BaseActivity {
         addColorsToShop();
         LayoutUtils.setSlideRightExitListener(exitButton, this);
 
-        backgroundAnimation.setOnTouchListener(new OnSwipeTouchListener(this) {
+        findViewById(R.id.backgroundAnimation).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeLeft() {
                 launchActivity(HomeActivity.class);
@@ -132,13 +126,12 @@ public class ShopActivity extends BaseActivity {
 
     }
 
-    @SuppressLint("DefaultLocale")
     private void touchItem(int index, ShopItem item) {
         buyDialog.setContentView(R.layout.shop_pop_up_buy);
 
         final TextView priceText = buyDialog.findViewById(R.id.priceText);
         priceText.setTypeface(typeMuro);
-        priceText.setText(String.format(Locale.getDefault(), "%d", item.getPriceItem()));
+        priceText.setText(String.format("%d", item.getPriceItem()));
 
         TextView colorText = buyDialog.findViewById(R.id.colorText);
         colorText.setTypeface(typeMuro);

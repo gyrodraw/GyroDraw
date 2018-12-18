@@ -1,20 +1,19 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.leagues;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 
-import com.bumptech.glide.Glide;
-
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 
 /**
  * Class representing the leagues' list which can be opened from the {@link HomeActivity}.
  */
-public class LeaguesActivity extends BaseActivity {
+public class LeaguesActivity extends NoBackPressActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,7 @@ public class LeaguesActivity extends BaseActivity {
                 findViewById(R.id.league2Difficulty), findViewById(R.id.league3Difficulty),
                 findViewById(R.id.exitButton));
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.leaguesBackgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this);
         LayoutUtils.setFadingExitListener(findViewById(R.id.exitButton), this);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }

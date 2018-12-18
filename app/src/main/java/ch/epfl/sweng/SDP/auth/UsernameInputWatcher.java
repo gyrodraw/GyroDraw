@@ -1,24 +1,25 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static java.lang.String.format;
+
 import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.TextView;
-
 import ch.epfl.sweng.SDP.R;
 
 /**
  * This class is a listener which can be applied to the username input
  * box to check if the entered username contains problematic chars or not.
  */
-class UsernameInputWatcher implements TextWatcher {
+final class UsernameInputWatcher implements TextWatcher {
 
     private final TextView feedback;
     private final Button createAccount;
     private final Resources resources;
 
-    public UsernameInputWatcher(TextView feedback, Button createAccount, Resources resources) {
+    UsernameInputWatcher(TextView feedback, Button createAccount, Resources resources) {
         this.feedback = feedback;
         this.createAccount = createAccount;
         this.resources = resources;
@@ -49,7 +50,7 @@ class UsernameInputWatcher implements TextWatcher {
 
     private boolean check(boolean condition, int errorCode, String append) {
         if (!condition) {
-            feedback.setText(getString(errorCode) + append);
+            feedback.setText(format("%s%s", resources.getString(errorCode), append));
         }
         return condition;
     }
@@ -74,9 +75,5 @@ class UsernameInputWatcher implements TextWatcher {
 
     private void disableButton() {
         enableButton(false, R.color.colorLightGrey);
-    }
-
-    private String getString(int id) {
-        return resources.getString(id);
     }
 }

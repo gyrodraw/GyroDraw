@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
-public class DrawingOfflineWithItemsTest {
+public class DrawingOfflineActivityWithItemsTest {
 
     private static final String USER_ID = "123456789";
     private static final String USERNAME = "testUser";
@@ -38,12 +38,11 @@ public class DrawingOfflineWithItemsTest {
 
     private RelativeLayout paintViewHolder;
     private PaintView paintView;
-    private DrawingOffline activity;
-    private Account account;
+    private DrawingOfflineActivity activity;
 
     @Rule
-    public final ActivityTestRule<DrawingOffline> activityRule =
-            new ActivityTestRule<>(DrawingOffline.class);
+    public final ActivityTestRule<DrawingOfflineActivity> activityRule =
+            new ActivityTestRule<>(DrawingOfflineActivity.class);
 
     /**
      * Initializes variables.
@@ -55,7 +54,8 @@ public class DrawingOfflineWithItemsTest {
         paintViewHolder = activity.getDrawingItems().getPaintViewHolder();
         paintView = activity.getDrawingItems().getPaintView();
         paintView.setCircle(0, 0);
-        account = Account.getInstance(activityRule.getActivity());
+        paintView.isDrawing = true;
+        Account account = Account.getInstance(activityRule.getActivity());
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(EMAIL);
@@ -83,7 +83,7 @@ public class DrawingOfflineWithItemsTest {
         Item item;
         do {
             addRandomItem();
-            SystemClock.sleep(5000);
+            SystemClock.sleep(10000);
             Map<Item, ImageView> displayedItems = activity.getDrawingItems().getDisplayedItems();
             item = (Item) displayedItems.keySet().toArray()[0];
         }

@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import org.junit.After;
@@ -20,14 +18,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.shop.ColorsShop;
 import ch.epfl.sweng.SDP.shop.ShopItem;
@@ -151,12 +149,6 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
-    public void testSetUsersRef() {
-        DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
-        account.setUsersRef(databaseReference);
-    }
-
-    @Test
     public void testIncreaseMatchesWon() {
         account.increaseMatchesWon();
         assertThat(account.getMatchesWon(), is(1));
@@ -207,9 +199,7 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     private void friendsTestHelper(int state) {
-        Database.getReference(USERS_TAG
-                + USER_ID + TEST_FRIEND_TAG)
-                .setValue(state);
+        FbDatabase.setFriendValue(USER_ID, TEST_FRIEND, state);
         setListenerAndAssertToFirebaseForFriendsTest(true,
                 USERS_TAG + USER_ID + TEST_FRIEND_TAG);
         account.addFriend(TEST_FRIEND);
@@ -232,6 +222,13 @@ public class AccountCreationActivityAndAccountTest {
         Account.createAccount(activityRule.getActivity(), new ConstantsWrapper(),
                 USERNAME,
                 TEST_EMAIL);
+    }
+
+    @Test
+    public void testHandleResponseAndRedirect() {
+        Account.deleteAccount();
+        activityRule.getActivity().createAccountAndRedirect(USERNAME);
+        assertThat(activityRule.getActivity().isFinishing(), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -415,20 +412,15 @@ public class AccountCreationActivityAndAccountTest {
         final CountingIdlingResource countingResource =
                 new CountingIdlingResource("WaitForFirebase");
         countingResource.increment();
-        final ValueEventListener valueEventListener = new ValueEventListener() {
+        final ValueEventListener valueEventListener = new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 assertThat(dataSnapshot.exists(), is(state));
                 countingResource.decrement();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
         };
 
-        Database.getReference(path)
+        FbDatabase.getReference(path)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 

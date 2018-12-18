@@ -1,13 +1,13 @@
 package ch.epfl.sweng.SDP.shop;
 
-import org.junit.Test;
+import ch.epfl.sweng.SDP.R;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.sweng.SDP.R;
+import org.junit.Test;
 
 import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
 import static org.hamcrest.CoreMatchers.is;

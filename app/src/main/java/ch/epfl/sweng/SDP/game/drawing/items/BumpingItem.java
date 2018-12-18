@@ -26,8 +26,8 @@ public class BumpingItem extends Item {
      * there was a collision. So instead it places the paintView outside
      * of its radius again.
      *
-     * @param   paintView reference to compare with
-     * @return  always false, because this item will never be removed
+     * @param paintView reference to compare with
+     * @return always false, because this item will never be removed
      */
     @Override
     public boolean collision(PaintView paintView) {

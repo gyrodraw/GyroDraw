@@ -18,9 +18,9 @@ public final class RankingUtils {
      * Generates an array corresponding to the trophy distribution according
      * to the ranking array given as parameter.
      *
-     * @param ranking The sorted ranking array corresponding to the stars that each player
+     * @param ranking the sorted ranking array corresponding to the stars that each player
      *                earned
-     * @return Returns the trophy array
+     * @return the trophy array
      */
     public static Integer[] generateTrophiesFromRanking(Integer[] ranking) {
         Integer[] trophies = new Integer[ranking.length];
@@ -43,9 +43,9 @@ public final class RankingUtils {
      * Generates an array corresponding to the final position distribution according
      * to the ranking array given as parameter.
      *
-     * @param ranking The sorted ranking array corresponding to the stars that each player
+     * @param ranking the sorted ranking array corresponding to the stars that each player
      *                earned
-     * @return Returns the position array
+     * @return the position array
      */
     public static Integer[] generatePositionsFromRanking(Integer[] ranking) {
         Integer[] positions = new Integer[ranking.length];

@@ -14,12 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.GameResult;
+import ch.epfl.sweng.SDP.home.battleLog.GameResult;
 
 /**
  * Local database handler for storing and retrieving the user's game results.
  */
-public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
+public final class LocalDbHandlerForGameResults extends SQLiteOpenHelper
+        implements LocalDbForGameResults {
 
     private static final String DATABASE_NAME = "gameResults.db";
     private static final String TABLE_NAME = "gameResults";
@@ -68,11 +69,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
-     * Adds a game result to the local db.
-     *
-     * @param gameResult to insert
-     */
+    @Override
     public void addGameResultToDb(GameResult gameResult) {
         // Convert the drawing to a byte array
         Bitmap bitmap = gameResult.getDrawing();
@@ -102,11 +99,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
         db.close();
     }
 
-    /**
-     * Retrieves the 10th most recent game results from the table.
-     *
-     * @return the newest game result
-     */
+    @Override
     public List<GameResult> getGameResultsFromDb(Context context) {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 10";
 
@@ -136,8 +129,7 @@ public class LocalDbHandlerForGameResults extends SQLiteOpenHelper {
                         .decodeResource(context.getResources(), R.drawable.default_image);
             }
 
-            recentResults.add(
-                    new GameResult(rankedUsername, rank, stars, trophies, drawing, context));
+            recentResults.add(new GameResult(rankedUsername, rank, stars, trophies, drawing));
         }
         while (cursor.moveToNext());
 

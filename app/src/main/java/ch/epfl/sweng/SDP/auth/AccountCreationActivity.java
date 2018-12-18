@@ -1,25 +1,27 @@
 package ch.epfl.sweng.SDP.auth;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.firebase.Database;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
-import com.bumptech.glide.Glide;
+import ch.epfl.sweng.SDP.utils.GlideUtils;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * Class representing the account creation page.
  */
-public class AccountCreationActivity extends BaseActivity {
+public class AccountCreationActivity extends NoBackPressActivity {
 
     private EditText usernameInput;
     private TextView usernameTaken;
@@ -31,7 +33,7 @@ public class AccountCreationActivity extends BaseActivity {
         setContentView(R.layout.activity_account_creation);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        userEmail = getIntent().getStringExtra("email");
+        userEmail = getIntent().getStringExtra(attributeToPath(EMAIL));
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);
@@ -39,8 +41,7 @@ public class AccountCreationActivity extends BaseActivity {
         setTypeFace(typeMuro, findViewById(R.id.createAccount), findViewById(R.id.usernameInput),
                 findViewById(R.id.usernameTaken));
 
-        Glide.with(this).load(R.drawable.background_animation)
-                .into((ImageView) findViewById(R.id.backgroundAnimation));
+        GlideUtils.startBackgroundAnimation(this);
 
         ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(
                 new UsernameInputWatcher((TextView) findViewById(R.id.usernameTaken),
@@ -54,28 +55,31 @@ public class AccountCreationActivity extends BaseActivity {
         final String username = usernameInput.getText().toString().toUpperCase();
 
         if (!username.isEmpty()) {
-            Database.getReference("users").orderByChild("username").equalTo(username)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            FbDatabase.getUserByUsername(username, new OnSuccessValueEventListener() {
 
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                usernameTaken.setText(getString(R.string.usernameTaken));
-                            } else {
-                                Account.createAccount(getApplicationContext(),
-                                        new ConstantsWrapper(), username, userEmail);
-                                Account.getInstance(getApplicationContext()).registerAccount();
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                launchActivity(HomeActivity.class);
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            throw databaseError.toException();
-                        }
-                    });
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        usernameTaken.setText(getString(R.string.usernameTaken));
+                    } else {
+                        createAccountAndRedirect(username);
+                    }
+                }
+            });
         }
+    }
+
+    /**
+     * Creates and registers an account with the given username and redirects the user to {@link
+     * HomeActivity}.
+     */
+    @VisibleForTesting
+    public void createAccountAndRedirect(String username) {
+        Account.createAccount(getApplicationContext(),
+                new ConstantsWrapper(), username, userEmail);
+        Account.getInstance(getApplicationContext()).registerAccount();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        launchActivity(HomeActivity.class);
+        finish();
     }
 }

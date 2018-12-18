@@ -12,16 +12,25 @@ import java.util.Set;
 /**
  * Utility class for checking device's connectivity.
  */
-public class NetworkStateReceiver extends BroadcastReceiver {
+public final class NetworkStateReceiver extends BroadcastReceiver {
 
     private Set<NetworkStateReceiverListener> listeners;
     private Boolean connected;
 
+    /**
+     * Constructor.
+     */
     public NetworkStateReceiver() {
         listeners = new HashSet<>();
         connected = null;
     }
 
+    /**
+     * Method called when our receiver detects a new connection state. This method detects the
+     * connectivity state and notify to all listeners the new state.
+     * @param context context of the application
+     * @param intent connectivity Intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null || intent.getExtras() == null) {
@@ -29,13 +38,13 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         }
 
         ConnectivityManager manager = (ConnectivityManager) context
-                                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = manager.getActiveNetworkInfo();
 
         if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
             connected = true;
         } else if (intent.getBooleanExtra(ConnectivityManager
-                                            .EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
+                .EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
             connected = false;
         }
 
@@ -43,7 +52,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     private void notifyStateToAll() {
-        for(NetworkStateReceiverListener listener : listeners) {
+        for (NetworkStateReceiverListener listener : listeners) {
             notifyState(listener);
         }
     }
@@ -79,7 +88,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         listeners.remove(listener);
     }
 
-    public Set<NetworkStateReceiverListener> getListeners() {
-        return listeners;
+    Set<NetworkStateReceiverListener> getListeners() {
+        return new HashSet<>(listeners);
     }
 }

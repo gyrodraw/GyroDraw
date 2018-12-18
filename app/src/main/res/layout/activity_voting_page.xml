@@ -19,7 +19,7 @@
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/votingBackgroundAnimation"
+        android:id="@+id/backgroundAnimation"
         style="@style/BackGroundImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,11 +35,10 @@
         android:layout_height="wrap_content"
         android:progressDrawable="@drawable/custom_rating_bar"
         android:stepSize="1.0"
-        app:layout_constraintBottom_toBottomOf="@+id/votingBackgroundAnimation"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundAnimation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerNameView"
-        app:layout_constraintVertical_bias="0.132" />
+        app:layout_constraintTop_toBottomOf="@+id/playerNameView"/>
 
     <ImageView
         android:id="@+id/drawing"

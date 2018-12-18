@@ -1,54 +1,46 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
+import static ch.epfl.sweng.SDP.game.WaitingPageActivity.WINNING_WORD;
+import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
+
 import android.content.Intent;
-
-import android.content.IntentFilter;
-import android.graphics.Typeface;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.TextView;
-
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.auth.Account;
+import ch.epfl.sweng.SDP.firebase.FbDatabase;
+import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.SDP.game.VotingPageActivity;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
+import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.SDP.matchmaking.GameStates;
+import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.auth.Account;
-import ch.epfl.sweng.SDP.firebase.Database;
-import ch.epfl.sweng.SDP.game.VotingPageActivity;
-import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.SDP.matchmaking.GameStates;
-import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import ch.epfl.sweng.SDP.utils.network.NetworkStatusHandler;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiver;
-import ch.epfl.sweng.SDP.utils.network.NetworkStateReceiverListener;
-
-import static ch.epfl.sweng.SDP.game.drawing.FeedbackTextView.timeIsUpTextFeedback;
-import static java.lang.String.format;
-
 /**
  * Class representing the drawing phase of an online game in normal mode.
  */
-public class DrawingOnline extends GyroDrawingActivity {
+public class DrawingOnlineActivity extends GyroDrawingActivity {
 
-    private static final String TOP_ROOM_NODE_ID = "realRooms";
+    private static final String TAG = "DrawingOnlineActivity";
 
     private String winningWord;
 
     private String roomId;
 
-    private DatabaseReference timerRef;
-    private DatabaseReference stateRef;
-
-    protected final ValueEventListener listenerTimer = new ValueEventListener() {
+    protected final ValueEventListener listenerTimer = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer value = dataSnapshot.getValue(Integer.class);
@@ -57,14 +49,9 @@ public class DrawingOnline extends GyroDrawingActivity {
                 ((TextView) findViewById(R.id.timeRemaining)).setText(String.valueOf(value));
             }
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
-        }
     };
 
-    protected final ValueEventListener listenerState = new ValueEventListener() {
+    protected final ValueEventListener listenerState = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             Integer state = dataSnapshot.getValue(Integer.class);
@@ -72,28 +59,28 @@ public class DrawingOnline extends GyroDrawingActivity {
                 GameStates stateEnum = GameStates.convertValueIntoState(state);
                 switch (stateEnum) {
                     case WAITING_UPLOAD:
-                        DrawingOnline.this.runOnUiThread(new Runnable() {
+                        DrawingOnlineActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
-                                paintViewHolder.addView(timeIsUpTextFeedback(DrawingOnline.this));
+                                paintViewHolder
+                                        .addView(timeIsUpTextFeedback(DrawingOnlineActivity.this));
                             }
                         });
                         uploadDrawing().addOnCompleteListener(
                                 new OnCompleteListener<TaskSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<TaskSnapshot> task) {
-                                        Database.getReference(
-                                                format("%s.%s.uploadDrawing.%s", TOP_ROOM_NODE_ID,
-                                                        roomId,
-                                                        Account.getInstance(getApplicationContext())
-                                                                .getUsername())).setValue(1);
+                                        FbDatabase.setValueToUserInRoomAttribute(roomId,
+                                                Account.getInstance(getApplicationContext())
+                                                        .getUsername(), UPLOAD_DRAWING, 1);
                                         Log.d(TAG, "Upload completed");
 
                                         Log.d(TAG, winningWord);
-                                        timerRef.removeEventListener(listenerTimer);
+                                        FbDatabase.removeListenerFromRoomAttribute(roomId,
+                                                TIMER, listenerTimer);
 
                                         Intent intent = new Intent(getApplicationContext(),
                                                 VotingPageActivity.class);
-                                        intent.putExtra("RoomID", roomId);
+                                        intent.putExtra(ROOM_ID, roomId);
                                         startActivity(intent);
                                     }
                                 });
@@ -101,11 +88,6 @@ public class DrawingOnline extends GyroDrawingActivity {
                     default:
                 }
             }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            // Does nothing for the moment
         }
     };
 
@@ -123,8 +105,8 @@ public class DrawingOnline extends GyroDrawingActivity {
 
         Intent intent = getIntent();
 
-        roomId = intent.getStringExtra("RoomID");
-        winningWord = intent.getStringExtra("WinningWord");
+        roomId = intent.getStringExtra(ROOM_ID);
+        winningWord = intent.getStringExtra(WINNING_WORD);
 
         TextView wordView = findViewById(R.id.winningWord);
         wordView.setText(winningWord);
@@ -132,10 +114,8 @@ public class DrawingOnline extends GyroDrawingActivity {
 
         ((TextView) findViewById(R.id.timeRemaining)).setTypeface(typeMuro);
 
-        timerRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".timer.observableTime");
-        timerRef.addValueEventListener(listenerTimer);
-        stateRef = Database.getReference(TOP_ROOM_NODE_ID + "." + roomId + ".state");
-        stateRef.addValueEventListener(listenerState);
+        FbDatabase.setListenerToRoomAttribute(roomId, TIMER, listenerTimer);
+        FbDatabase.setListenerToRoomAttribute(roomId, STATE, listenerState);
 
         ConnectivityWrapper.setOnlineStatusInGame(roomId, Account.getInstance(this).getUsername());
     }
@@ -150,8 +130,8 @@ public class DrawingOnline extends GyroDrawingActivity {
     }
 
     private void removeAllListeners() {
-        timerRef.removeEventListener(listenerTimer);
-        stateRef.removeEventListener(listenerState);
+        FbDatabase.removeListenerFromRoomAttribute(roomId, TIMER, listenerTimer);
+        FbDatabase.removeListenerFromRoomAttribute(roomId, STATE, listenerState);
     }
 
     /**
@@ -160,15 +140,15 @@ public class DrawingOnline extends GyroDrawingActivity {
      * @return the {@link StorageTask} in charge of the upload
      */
     private StorageTask<TaskSnapshot> uploadDrawing() {
-        LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
+        LocalDbForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
         paintView.saveCanvasInDb(localDbHandler);
         return paintView.saveCanvasInStorage();
     }
 
     /**
-     * Method that call onDataChange on the UI thread.
+     * Method that calls {@code listenerTimer.onDataChange()} on the UI thread.
      *
-     * @param dataSnapshot Snapshot of the database (mock snapshot in out case).
+     * @param dataSnapshot Snapshot of the database (mock snapshot in our case).
      */
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void callOnDataChangeTimer(final DataSnapshot dataSnapshot) {

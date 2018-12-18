@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Local database handler for storing and retrieving the user's images.
  */
-public class LocalDbHandlerForImages extends SQLiteOpenHelper {
+public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements LocalDbForImages {
 
     private static final String DATABASE_NAME = "myImages.db";
     private static final String TABLE_NAME = "myImages";
@@ -56,11 +56,7 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
-     * Adds a bitmap to the local db.
-     *
-     * @param bitmap to insert
-     */
+    @Override
     public void addBitmapToDb(Bitmap bitmap, int quality) {
         if (bitmap != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -86,11 +82,7 @@ public class LocalDbHandlerForImages extends SQLiteOpenHelper {
         }
     }
 
-    /**
-     * Retrieves the most recent bitmap from the table.
-     *
-     * @return the newest bitmap
-     */
+    @Override
     public Bitmap getLatestBitmapFromDb() {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
 

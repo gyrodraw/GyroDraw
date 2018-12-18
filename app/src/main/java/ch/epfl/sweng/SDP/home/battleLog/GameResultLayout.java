@@ -1,29 +1,33 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.battleLog;
 
-import android.annotation.SuppressLint;
+import static ch.epfl.sweng.SDP.utils.RankingUtils.addSignToNumber;
+
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-import static ch.epfl.sweng.SDP.utils.RankingUtils.addSignToNumber;
+import java.util.List;
 
 /**
- * Class representing a game result.
+ * Class that manages the view part of GameResult.
  */
-public class GameResult {
+public final class GameResultLayout {
+
+    private static final int USERNAME_SIZE = 20;
+    private static final int REWARD_SIZE = 15;
+
+    private final Context context;
+    private final GameResult result;
+    private final Resources res;
+    private final Typeface typeMuro;
+
+    private final LinearLayout layout;
 
     private static final LayoutParams rankListParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -40,40 +44,14 @@ public class GameResult {
     private static final LayoutParams imagesParams =
             new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 
-    private static final int USERNAME_SIZE = 20;
-    private static final int REWARD_SIZE = 15;
-
-    private final List<String> rankedUsername;
-    private final int rank;
-    private final int stars;
-    private final int trophies;
-    private final Bitmap drawing;
-
-    private Context context;
-    private Resources res;
-    private Typeface typeMuro;
-
     /**
-     * Creates a new game result.
+     * Creates a layout from the given game result.
      *
-     * @param rankedUsername the list of usernames in ranking order
-     * @param rank           the rank of the user
-     * @param stars          the stars won during this game
-     * @param trophies       the trophies won during this game
-     * @param drawing        the drawing of the user
-     * @param context        the context of the caller
+     * @param result  the game result
+     * @param context the context of the caller
      */
-    public GameResult(List<String> rankedUsername, int rank, int stars,
-                      int trophies, Bitmap drawing, Context context) {
-        checkPrecondition(0 <= rank && rank < rankedUsername.size(),
-                "Rank is out of bounds");
-        checkPrecondition(rankedUsername.size() <= 5,
-                "The number of username is bigger than 5");
-        this.rankedUsername = rankedUsername;
-        this.rank = rank;
-        this.drawing = drawing;
-        this.stars = stars;
-        this.trophies = trophies;
+    GameResultLayout(GameResult result, Context context) {
+        this.result = result;
         this.context = context;
 
         res = context.getResources();
@@ -82,50 +60,36 @@ public class GameResult {
         rankListParams.setMargins(0, 0, 0, 30);
         rankParams.setMargins(0, 0, 0, 10);
         rewardFragmentParams.setMargins(20, 0, 0, 0);
+
+        layout = setLayout();
     }
 
-    public List<String> getRankedUsername() {
-        return new ArrayList<>(rankedUsername);
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public int getStars() {
-        return stars;
-    }
-
-    public int getTrophies() {
-        return trophies;
-    }
-
-    public Bitmap getDrawing() {
-        return drawing == null ? null : drawing.copy(Bitmap.Config.ARGB_8888, false);
+    public LinearLayout getLayout() {
+        return layout;
     }
 
     /**
-     * Converts this game result into a LinearLayout
+     * Creates the LinearLayout corresponding to the game result
      * that will be displayed in the log battle.
      *
      * @return LinearLayout that will be displayed
      */
-    @SuppressLint("NewApi")
-    LinearLayout toLayout() {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setLayoutParams(rankListParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
+    private LinearLayout setLayout() {
+        LinearLayout newLayout = new LinearLayout(context);
+        newLayout.setLayoutParams(rankListParams);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        List<String> rankedUsername = result.getRankedUsername();
 
         for (int i = 0; i < rankedUsername.size(); i++) {
             String prefix = (i + 1) + ". ";
-            if (i == rank) {
-                layout.addView(userLayout());
+            if (i == result.getRank()) {
+                newLayout.addView(userLayout());
             } else {
-                layout.addView(rankLayout(prefix + rankedUsername.get(i)));
+                newLayout.addView(rankLayout(prefix + rankedUsername.get(i)));
             }
         }
 
-        return layout;
+        return newLayout;
     }
 
     private LinearLayout rankLayout(String username) {
@@ -163,15 +127,17 @@ public class GameResult {
         textFragment.setLayoutParams(textFragmentParams);
 
         textFragment.addView(setRankAndUsername());
-        textFragment.addView(setRewardFragment(stars, R.drawable.star));
-        textFragment.addView(setRewardFragment(trophies, R.drawable.trophy));
+        textFragment.addView(setRewardFragment(result.getStars(), R.drawable.star));
+        textFragment.addView(setRewardFragment(result.getTrophies(), R.drawable.trophy));
 
         return textFragment;
     }
 
     private TextView setRankAndUsername() {
-        TextView rankAndUsername = styleView((rank + 1) + ". " + rankedUsername.get(rank),
-                USERNAME_SIZE, res.getColor(R.color.colorPrimaryDark), usernameParams);
+        int rank = result.getRank();
+        TextView rankAndUsername = styleView((rank + 1) + ". "
+                        + result.getRankedUsername().get(rank), USERNAME_SIZE,
+                res.getColor(R.color.colorPrimaryDark), usernameParams);
 
         rankAndUsername.setGravity(Gravity.CENTER_VERTICAL);
         rankAndUsername.setGravity(Gravity.START);
@@ -213,7 +179,7 @@ public class GameResult {
         ImageView drawingView = new ImageView(context);
 
         drawingView.setLayoutParams(imagesParams);
-        drawingView.setImageBitmap(drawing);
+        drawingView.setImageBitmap(result.getDrawing());
 
         return drawingView;
     }

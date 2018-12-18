@@ -1,4 +1,4 @@
-package ch.epfl.sweng.SDP.home;
+package ch.epfl.sweng.SDP.home.leagues;
 
 import org.junit.Test;
 

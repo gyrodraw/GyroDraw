@@ -1,5 +1,7 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
+import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
+
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -13,25 +15,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
-import com.google.android.gms.common.util.ArrayUtils;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import ch.epfl.sweng.SDP.BaseActivity;
+import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.shop.ShopItem;
-
-import static ch.epfl.sweng.SDP.shop.ColorsShop.getColorIdFromString;
+import com.google.android.gms.common.util.ArrayUtils;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Abstract class representing the drawing page of the game.
  */
-public abstract class DrawingActivity extends BaseActivity {
-
-    protected static final String TAG = "DrawingActivity";
+public abstract class DrawingActivity extends NoBackPressActivity {
 
     static final int MIN_WIDTH = 10;
     static final int CURR_WIDTH = 20;
@@ -192,23 +187,23 @@ public abstract class DrawingActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.pencilButton:
                 paintView.setPencil();
-                pencilButton.setImageResource(R.drawable.pencil_selected);
-                eraserButton.setImageResource(R.drawable.eraser);
-                bucketButton.setImageResource(R.drawable.bucket);
+                setResources(R.drawable.pencil_selected, R.drawable.eraser, R.drawable.bucket);
                 break;
             case R.id.eraserButton:
                 paintView.setEraser();
-                pencilButton.setImageResource(R.drawable.pencil);
-                eraserButton.setImageResource(R.drawable.eraser_selected);
-                bucketButton.setImageResource(R.drawable.bucket);
+                setResources(R.drawable.pencil, R.drawable.eraser_selected, R.drawable.bucket);
                 break;
             case R.id.bucketButton:
                 paintView.setBucket();
-                pencilButton.setImageResource(R.drawable.pencil);
-                eraserButton.setImageResource(R.drawable.eraser);
-                bucketButton.setImageResource(R.drawable.bucket_selected);
+                setResources(R.drawable.pencil, R.drawable.eraser, R.drawable.bucket_selected);
                 break;
             default:
         }
+    }
+
+    private void setResources(int pencil, int eraser, int bucket) {
+        pencilButton.setImageResource(pencil);
+        eraserButton.setImageResource(eraser);
+        bucketButton.setImageResource(bucket);
     }
 }

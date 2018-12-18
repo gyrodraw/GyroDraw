@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * Class representing the drawing via gyroscope page of the game.
+ * Abstract class representing the drawing via gyroscope page of the game.
  */
 public abstract class GyroDrawingActivity extends DrawingActivity implements SensorEventListener {
+
+    private static final String TAG = "GyroDrawingActivity";
 
     private SensorManager sensorManager;
 

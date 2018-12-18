@@ -1,15 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -17,17 +7,31 @@ import android.os.SystemClock;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.TextView;
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.home.HomeActivity;
+
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.home.HomeActivity;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.createCompletionListener;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.changeOnlineStatus;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(JUnit4.class)
 public class LoginActivityTest {
@@ -83,7 +87,8 @@ public class LoginActivityTest {
 
     @Test
     public void testSuccessfulLoginExistingUser() {
-        changeOnlineStatus(Account.getInstance(loginActivity).getUserId(), OFFLINE);
+        changeOnlineStatus(Account.getInstance(loginActivity).getUserId(), OFFLINE,
+                createCompletionListener());
         SystemClock.sleep(3000);
         Account.deleteAccount();
         Mockito.when(mockIdpResponse.isNewUser()).thenReturn(false);
@@ -128,7 +133,10 @@ public class LoginActivityTest {
                 loginActivity.getResources().getString(expectedErrorMessageId))));
     }
 
-    private void executeOnUiThread(Runnable runnable) {
+    /**
+     * Executes a runnable on the UI thread.
+     */
+    public static void executeOnUiThread(Runnable runnable) {
         try {
             runOnUiThread(runnable);
         } catch (Throwable throwable) {

@@ -96,7 +96,6 @@ public class DrawingOfflineActivityNoItemsTest {
 
     @Test
     public void testBucketTool() {
-        paintView.isDrawing = false;
         activityRule.getActivity().clear(null);
         onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());

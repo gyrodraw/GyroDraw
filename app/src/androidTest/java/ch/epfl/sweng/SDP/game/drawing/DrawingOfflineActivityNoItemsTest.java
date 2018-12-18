@@ -36,7 +36,6 @@ public class DrawingOfflineActivityNoItemsTest {
     @Before
     public void init() {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
-        paintView.isDrawing = true;
         Account.getInstance(activityRule.getActivity().getApplicationContext())
                 .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())
@@ -63,7 +62,6 @@ public class DrawingOfflineActivityNoItemsTest {
 
     @Test
     public void testPencilTool() {
-        paintView.setPencil();
         onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
@@ -78,6 +76,23 @@ public class DrawingOfflineActivityNoItemsTest {
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
                 is(Color.WHITE));
     }
+
+    @Test
+    public void testToolsWhileDrawing() {
+        paintView.isDrawing = true;
+        paintView.setPencil();
+        assertThat(paintView.isDrawing, is(false));
+
+        paintView.isDrawing = true;
+        paintView.setEraser();
+        assertThat(paintView.isDrawing, is(false));
+
+        paintView.isDrawing = true;
+        paintView.setBucket();
+        assertThat(paintView.isDrawing, is(false));
+    }
+
+
 
     @Test
     public void testBucketTool() {

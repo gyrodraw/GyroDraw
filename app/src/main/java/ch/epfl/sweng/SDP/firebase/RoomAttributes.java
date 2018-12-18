@@ -5,6 +5,8 @@ package ch.epfl.sweng.SDP.firebase;
  */
 public final class RoomAttributes {
 
+    private RoomAttributes() {}
+
     public static final String FINISHED = "finished";
     public static final String GAME_MODE = "gameMode";
     public static final String ONLINE_STATUS = "onlineStatus";

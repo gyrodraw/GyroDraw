@@ -1,7 +1,7 @@
 package ch.epfl.sweng.SDP.firebase;
 
 /**
- * Enum representing all the room's attributes.
+ * Class representing all the room's attributes.
  */
 public final class RoomAttributes {
 

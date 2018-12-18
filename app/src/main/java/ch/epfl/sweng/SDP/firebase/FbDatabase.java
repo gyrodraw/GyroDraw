@@ -106,7 +106,7 @@ public final class FbDatabase {
      * Same as {@link #setAccountAttribute}, but with a default completionListener.
      *
      * @param userId    id of user whose attribute to modify
-     * @param attribute enum to determine which attribute to modify
+     * @param attribute which attribute to modify
      * @param newValue  new value to be inserted for attribute
      */
     public static void setAccountAttribute(String userId,
@@ -218,7 +218,7 @@ public final class FbDatabase {
      * Sets a listener to an attribute of a given user.
      *
      * @param userId             id of user whose attribute will be observed
-     * @param attribute          enum to determine which attribute to observe
+     * @param attribute          which attribute to observe
      * @param valueEventListener listener to add
      */
     public static void setListenerToAccountAttribute(String userId, String attribute,
@@ -231,7 +231,7 @@ public final class FbDatabase {
      * Removes the listener to an attribute of a given user.
      *
      * @param userId             id of user whose attribute won't be observed anymore
-     * @param attribute          enum to determine which attribute's listener to remove
+     * @param attribute          which attribute's listener to remove
      * @param valueEventListener listener to remove
      */
     public static void removeListenerFromAccountAttribute(
@@ -244,7 +244,7 @@ public final class FbDatabase {
      * Gets an attribute from a given room in the database.
      *
      * @param roomId             id of the room to get the attribute from
-     * @param attribute          attribute to get
+     * @param attribute          which attribute to get
      * @param valueEventListener listener to run on completion
      */
     public static void getRoomAttribute(String roomId, String attribute,
@@ -285,7 +285,7 @@ public final class FbDatabase {
      * Sets a listener to an attribute of a given room.
      *
      * @param roomId             id of room whose attribute will be observed
-     * @param attribute          enum to determine which attribute to observe
+     * @param attribute          which attribute to observe
      * @param valueEventListener listener to handle response
      */
     public static void setListenerToRoomAttribute(String roomId, String attribute,

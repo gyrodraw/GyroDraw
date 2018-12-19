@@ -31,7 +31,7 @@ import static ch.epfl.sweng.SDP.game.drawing.DrawingActivity.MIN_WIDTH;
 public class PaintView extends View {
 
     private static final int QUALITY = 20;
-    private static final float INIT_SPEED = 5;
+    private static final float INIT_SPEED = 14;
     private static final int CIRCLE_STROKE = 15;
     private static final int CURVE_INTENSITY = 5;
 

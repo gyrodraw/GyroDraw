@@ -19,8 +19,7 @@ public class OnSuccessValueEventListenerTest {
     @Test(expected = DatabaseException.class)
     public void testOnCancelledThrowsException() {
         DatabaseError mockError = Mockito.mock(DatabaseError.class);
-        DatabaseException mockException = Mockito.mock(DatabaseException.class);
-        when(mockError.toException()).thenReturn(mockException);
+        when(mockError.toException()).thenReturn(new DatabaseException("Test Exception"));
 
         OnSuccessValueEventListener listener = new OnSuccessValueEventListener() {
             @Override

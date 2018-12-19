@@ -31,7 +31,7 @@ final class UsernameInputWatcher implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence username, int start, int count, int after) {
-        // Needs to be implemented, but we don't need it.
+        disableButton();
     }
 
     @Override
@@ -45,10 +45,11 @@ final class UsernameInputWatcher implements TextWatcher {
     }
 
     private void validate(String username) {
-        disableButton();
         if (checkAll(username)) {
             feedback.setText(resources.getString(R.string.usernameValid));
             enableButton(true, R.color.colorDrawYellow);
+        } else {
+            disableButton();
         }
     }
 

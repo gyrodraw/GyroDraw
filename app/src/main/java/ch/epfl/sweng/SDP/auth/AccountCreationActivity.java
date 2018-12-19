@@ -79,8 +79,8 @@ public class AccountCreationActivity extends NoBackPressActivity {
         Account.createAccount(getApplicationContext(),
                 new ConstantsWrapper(), username, userEmail);
         Account.getInstance(getApplicationContext()).registerAccount();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         launchActivity(HomeActivity.class);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

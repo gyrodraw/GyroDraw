@@ -117,7 +117,7 @@ final class Leaderboard {
                 wantedPlayers.clear();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     if (s != null && !TestUsers.isTestUser(s.getKey())
-                            && (s.getValue(int.class) == FRIENDS)) {
+                            && s.getValue(int.class) == FRIENDS) {
                         findAndAddPlayer(s.getKey());
                     }
                 }

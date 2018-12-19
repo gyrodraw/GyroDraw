@@ -5,13 +5,13 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const maxPlayers = 5;
-const maxWords = 6;
+const maxWords = 12;
 const numberRoomsPerLeague = 100;
 const minRank = -10;
 
 // Waiting times
 const WAITING_TIME_CHOOSE_WORDS = 10;
-const WAITING_TIME_DRAWING = 10;
+const WAITING_TIME_DRAWING = 60;
 const WAITING_TIME_VOTING = 30;
 
 const parentRoomID = "realRooms/";

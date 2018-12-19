@@ -79,7 +79,7 @@ final class UsernameInputWatcher implements TextWatcher {
         createAccount.setBackgroundColor(resources.getColor(colorId));
     }
 
-    private void disableButton() {
+    void disableButton() {
         enableButton(false, R.color.colorLightGrey);
     }
 }

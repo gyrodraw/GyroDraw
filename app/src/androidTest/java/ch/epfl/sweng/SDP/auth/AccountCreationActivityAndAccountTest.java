@@ -388,6 +388,12 @@ public class AccountCreationActivityAndAccountTest {
     }
 
     @Test
+    public void testCreateAccountWithPoints() {
+        testIllegalUsernameGivesCorrectError("MAX.MUSTER",
+                R.string.usernameIllegalChar, " points");
+    }
+
+    @Test
     public void testCreateAccountWithEmptyUsername() {
         onView(withId(R.id.usernameInput)).perform(typeText("T"));
         onView(withId(R.id.usernameInput)).perform(pressKey(KeyEvent.KEYCODE_DEL),

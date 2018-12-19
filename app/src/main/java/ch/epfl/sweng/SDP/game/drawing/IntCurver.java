@@ -1,8 +1,8 @@
 package ch.epfl.sweng.SDP.game.drawing;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import java.util.Arrays;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * This class helps smoothing new cursor position values by remembering older values and returning

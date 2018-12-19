@@ -1,19 +1,22 @@
 package ch.epfl.sweng.SDP.home.leaderboard;
 
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
-import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.LinearLayout;
+
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.LinkedList;
+import java.util.TreeSet;
+
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.FriendsRequestState;
 import ch.epfl.sweng.SDP.utils.TestUsers;
-import com.google.firebase.database.DataSnapshot;
-import java.util.LinkedList;
-import java.util.TreeSet;
+
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getAllFriends;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUserById;
+import static ch.epfl.sweng.SDP.firebase.FbDatabase.getUsers;
 
 /**
  * Helper class to manage and display data from Firebase.
@@ -109,7 +112,8 @@ final class Leaderboard {
      */
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
-        getAllFriends(Account.getInstance(context).getUserId(), new OnSuccessValueEventListener() {
+        final String userId = Account.getInstance(context).getUserId();
+        getAllFriends(userId, new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allPlayers.clear();
@@ -120,6 +124,7 @@ final class Leaderboard {
                         findAndAddPlayer(s.getKey());
                     }
                 }
+                findAndAddPlayer(userId);
             }
         });
     }

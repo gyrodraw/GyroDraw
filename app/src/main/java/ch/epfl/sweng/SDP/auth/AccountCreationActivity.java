@@ -27,6 +27,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
     private EditText usernameInput;
     private TextView usernameTaken;
     private String userEmail;
+    private UsernameInputWatcher usernameWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +45,9 @@ public class AccountCreationActivity extends NoBackPressActivity {
 
         GlideUtils.startBackgroundAnimation(this);
 
-        ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(
-                new UsernameInputWatcher((TextView) findViewById(R.id.usernameTaken),
-                        (Button) findViewById(R.id.createAccount), getResources()));
+        usernameWatcher = new UsernameInputWatcher(usernameTaken,
+                (Button) findViewById(R.id.createAccount), getResources());
+        ((TextView) findViewById(R.id.usernameInput)).addTextChangedListener(usernameWatcher);
     }
 
     /**
@@ -60,6 +61,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    usernameWatcher.disableButton();
                     if (snapshot.exists()) {
                         usernameTaken.setText(getString(R.string.usernameTaken));
                     } else {
@@ -79,8 +81,8 @@ public class AccountCreationActivity extends NoBackPressActivity {
         Account.createAccount(getApplicationContext(),
                 new ConstantsWrapper(), username, userEmail);
         Account.getInstance(getApplicationContext()).registerAccount();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         launchActivity(HomeActivity.class);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

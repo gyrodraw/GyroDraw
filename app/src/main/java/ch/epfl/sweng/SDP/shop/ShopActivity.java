@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.shop;
 
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +10,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -19,9 +22,8 @@ import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.OnSwipeTouchListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
 
 /**
  * This activity represents the shop and allows the purchase of items such as colors.

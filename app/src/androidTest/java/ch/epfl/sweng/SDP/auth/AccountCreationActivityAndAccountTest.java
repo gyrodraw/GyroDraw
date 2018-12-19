@@ -348,7 +348,7 @@ public class AccountCreationActivityAndAccountTest {
 
     @Test
     public void testCreateAccountWithTooShortUsername() {
-        testIllegalUsernameGivesCorrectError("MAX", R.string.usernameTooShort, "");
+        testIllegalUsernameGivesCorrectError("MA", R.string.usernameTooShort, "");
     }
 
     @Test
@@ -385,6 +385,12 @@ public class AccountCreationActivityAndAccountTest {
     public void testCreateAccountWithQuotes() {
         testIllegalUsernameGivesCorrectError("MAX\'MUSTER",
                 R.string.usernameIllegalChar, " '");
+    }
+
+    @Test
+    public void testCreateAccountWithPoints() {
+        testIllegalUsernameGivesCorrectError("MAX.MUSTER",
+                R.string.usernameIllegalChar, " points");
     }
 
     @Test

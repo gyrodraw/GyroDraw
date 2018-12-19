@@ -1,11 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.FINISHED;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
-import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -20,6 +14,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
@@ -31,12 +34,12 @@ import ch.epfl.sweng.SDP.utils.LayoutUtils;
 import ch.epfl.sweng.SDP.utils.RankingUtils;
 import ch.epfl.sweng.SDP.utils.SortUtils;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-import com.google.firebase.database.DataSnapshot;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.FINISHED;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.SDP.utils.LayoutUtils.pressButton;
 
 /**
  * A custom {@link ListFragment} used for displaying the final ranking at the end of the game.

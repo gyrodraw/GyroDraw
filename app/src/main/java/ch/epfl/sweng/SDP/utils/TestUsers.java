@@ -1,10 +1,10 @@
 package ch.epfl.sweng.SDP.utils;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * This class contains the IDs of all users on Firebase that were created for testing purposes. It

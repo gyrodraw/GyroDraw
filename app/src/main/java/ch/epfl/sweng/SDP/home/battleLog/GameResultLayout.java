@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.home.battleLog;
 
-import static ch.epfl.sweng.SDP.utils.RankingUtils.addSignToNumber;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -10,9 +8,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import java.util.List;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-import java.util.List;
+
+import static ch.epfl.sweng.SDP.utils.RankingUtils.addSignToNumber;
 
 /**
  * Class that manages the view part of GameResult.

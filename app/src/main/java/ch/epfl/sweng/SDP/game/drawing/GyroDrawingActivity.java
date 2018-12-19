@@ -31,7 +31,7 @@ public abstract class GyroDrawingActivity extends DrawingActivity implements Sen
         // Register accelerometer sensor listener
         Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometer != null) {
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         } else {
             Log.d(TAG, "We couldn't find the accelerometer on device.");
         }

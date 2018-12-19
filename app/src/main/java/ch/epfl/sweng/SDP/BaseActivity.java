@@ -1,9 +1,5 @@
 package ch.epfl.sweng.SDP;
 
-import static android.view.View.VISIBLE;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
-import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -16,6 +12,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.HashMap;
+
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
@@ -27,8 +28,10 @@ import ch.epfl.sweng.SDP.shop.Shop;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 import ch.epfl.sweng.SDP.utils.OnlineStatus;
 import ch.epfl.sweng.SDP.utils.TypefaceLibrary;
-import com.google.firebase.database.DataSnapshot;
-import java.util.HashMap;
+
+import static android.view.View.VISIBLE;
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
+import static ch.epfl.sweng.SDP.utils.OnlineStatus.ONLINE;
 
 /**
  * Class containing useful and widely used methods. It should be inherited by all the other

@@ -109,17 +109,19 @@ final class Leaderboard {
      */
     private void fetchFriendsFromFirebase() {
         allFriends.clear();
-        getAllFriends(Account.getInstance(context).getUserId(), new OnSuccessValueEventListener() {
+        final String userId = Account.getInstance(context).getUserId();
+        getAllFriends(userId, new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allPlayers.clear();
                 wantedPlayers.clear();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     if (s != null && !TestUsers.isTestUser(s.getKey())
-                            && s.getValue(int.class) == FRIENDS) {
+                            && (s.getValue(int.class) == FRIENDS)) {
                         findAndAddPlayer(s.getKey());
                     }
                 }
+                findAndAddPlayer(userId);
             }
         });
     }

@@ -327,7 +327,9 @@ public final class FbDatabase {
      * @param databaseError potential databaseError
      */
     public static void checkForDatabaseError(DatabaseError databaseError) {
-        throw databaseError.toException();
+        if (databaseError != null) {
+            throw databaseError.toException();
+        }
     }
 
     /**

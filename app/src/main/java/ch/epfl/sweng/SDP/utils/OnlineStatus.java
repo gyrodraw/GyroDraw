@@ -2,9 +2,9 @@ package ch.epfl.sweng.SDP.utils;
 
 import com.google.firebase.database.DatabaseReference;
 
-import ch.epfl.sweng.SDP.firebase.AccountAttributes;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
@@ -47,8 +47,7 @@ public enum OnlineStatus {
         checkPrecondition(status == OFFLINE || status == ONLINE,
                 "Wrong status given");
 
-        FbDatabase.setAccountAttribute(userId,
-                AccountAttributes.STATUS, status.ordinal(), listener);
+        FbDatabase.setAccountAttribute(userId, STATUS, status.ordinal(), listener);
     }
 
     /**

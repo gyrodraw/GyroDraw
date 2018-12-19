@@ -1,8 +1,5 @@
 package ch.epfl.sweng.SDP.auth;
 
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -10,13 +7,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
 import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
-import com.google.firebase.database.DataSnapshot;
+
+import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
 
 /**
  * Class representing the account creation page.
@@ -33,7 +34,7 @@ public class AccountCreationActivity extends NoBackPressActivity {
         setContentView(R.layout.activity_account_creation);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        userEmail = getIntent().getStringExtra(attributeToPath(EMAIL));
+        userEmail = getIntent().getStringExtra(EMAIL);
 
         usernameInput = findViewById(R.id.usernameInput);
         usernameTaken = findViewById(R.id.usernameTaken);

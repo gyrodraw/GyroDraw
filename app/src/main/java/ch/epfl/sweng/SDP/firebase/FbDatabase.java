@@ -18,12 +18,10 @@ import static ch.epfl.sweng.SDP.firebase.AccountAttributes.EMAIL;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.FRIENDS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.STATUS;
 import static ch.epfl.sweng.SDP.firebase.AccountAttributes.USERNAME;
-import static ch.epfl.sweng.SDP.firebase.AccountAttributes.attributeToPath;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.FINISHED;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.attributeToPath;
 import static ch.epfl.sweng.SDP.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
@@ -80,12 +78,12 @@ public final class FbDatabase {
      * Gets an attribute from a given user in the database.
      *
      * @param userId             id of the user to get the attribute from
-     * @param attribute          enum to determine which attribute to get
+     * @param attribute          which attribute to get
      * @param valueEventListener listener to handle response
      */
-    public static void getAccountAttribute(String userId, AccountAttributes attribute,
+    public static void getAccountAttribute(String userId, String attribute,
                                            ValueEventListener valueEventListener) {
-        getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        getReference(constructUsersPath(userId, attribute))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -93,14 +91,14 @@ public final class FbDatabase {
      * Modifies (or inserts) the value of a given attribute in the database.
      *
      * @param userId             id of the user whose attribute to modify
-     * @param attribute          enum to determine which attribute to modify
+     * @param attribute          which attribute to modify
      * @param newValue           new value to be inserted for attribute
      * @param completionListener listener to handle response
      */
     public static void setAccountAttribute(
-            String userId, AccountAttributes attribute, Object newValue,
+            String userId, String attribute, Object newValue,
             DatabaseReference.CompletionListener completionListener) {
-        getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        getReference(constructUsersPath(userId, attribute))
                 .setValue(newValue, completionListener);
     }
 
@@ -108,19 +106,19 @@ public final class FbDatabase {
      * Same as {@link #setAccountAttribute}, but with a default completionListener.
      *
      * @param userId    id of user whose attribute to modify
-     * @param attribute enum to determine which attribute to modify
+     * @param attribute which attribute to modify
      * @param newValue  new value to be inserted for attribute
      */
     public static void setAccountAttribute(String userId,
-                                           AccountAttributes attribute, Object newValue) {
+                                           String attribute, Object newValue) {
         setAccountAttribute(userId, attribute, newValue, createCompletionListener());
     }
 
     /**
      * Removes an attribute from a given user.
      */
-    public static void removeAccountAttribute(String userId, AccountAttributes attribute) {
-        getReference(constructUsersPath(userId, attributeToPath(attribute))).removeValue();
+    public static void removeAccountAttribute(String userId, String attribute) {
+        getReference(constructUsersPath(userId, attribute)).removeValue();
     }
 
     /**
@@ -142,7 +140,7 @@ public final class FbDatabase {
      * @param valueEventListener action that should be taken after retrieving the user
      */
     public static void getUserByUsername(String username, ValueEventListener valueEventListener) {
-        USERS_REFERENCE.orderByChild(attributeToPath(USERNAME)).equalTo(username)
+        USERS_REFERENCE.orderByChild(USERNAME).equalTo(username)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -154,7 +152,7 @@ public final class FbDatabase {
      * @param valueEventListener action that should be taken after retrieving the user
      */
     public static void getUserByEmail(String email, ValueEventListener valueEventListener) {
-        USERS_REFERENCE.orderByChild(attributeToPath(EMAIL)).equalTo(email)
+        USERS_REFERENCE.orderByChild(EMAIL).equalTo(email)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -166,7 +164,7 @@ public final class FbDatabase {
      * @param valueEventListener action that should be taken after retrieving the friends
      */
     public static void getAllFriends(String userId, ValueEventListener valueEventListener) {
-        getReference(constructUsersPath(userId, attributeToPath(FRIENDS)))
+        getReference(constructUsersPath(userId, FRIENDS))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -177,7 +175,7 @@ public final class FbDatabase {
      */
     public static void getFriend(String userId, String friendId,
                                  ValueEventListener valueEventListener) {
-        getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        getReference(constructUsersPath(userId, FRIENDS, friendId))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -189,7 +187,7 @@ public final class FbDatabase {
      * @param newValue new status of friendship
      */
     public static void setFriendValue(String userId, String friendId, int newValue) {
-        getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        getReference(constructUsersPath(userId, FRIENDS, friendId))
                 .setValue(newValue, createCompletionListener());
     }
 
@@ -200,7 +198,7 @@ public final class FbDatabase {
      * @param friendId id of friend to be removed
      */
     public static void removeFriend(String userId, String friendId) {
-        getReference(constructUsersPath(userId, attributeToPath(FRIENDS), friendId))
+        getReference(constructUsersPath(userId, FRIENDS, friendId))
                 .removeValue(createCompletionListener());
     }
 
@@ -211,7 +209,7 @@ public final class FbDatabase {
      * @param item   item that will be inserted
      */
     public static void setShopItemValue(String userId, ShopItem item) {
-        getReference(constructUsersPath(userId, attributeToPath(BOUGHT_ITEMS),
+        getReference(constructUsersPath(userId, BOUGHT_ITEMS,
                 item.getColorItem().toString()))
                 .setValue(item.getPriceItem(), createCompletionListener());
     }
@@ -220,12 +218,12 @@ public final class FbDatabase {
      * Sets a listener to an attribute of a given user.
      *
      * @param userId             id of user whose attribute will be observed
-     * @param attribute          enum to determine which attribute to observe
+     * @param attribute          which attribute to observe
      * @param valueEventListener listener to add
      */
-    public static void setListenerToAccountAttribute(String userId, AccountAttributes attribute,
+    public static void setListenerToAccountAttribute(String userId, String attribute,
                                                      ValueEventListener valueEventListener) {
-        getReference(constructUsersPath(userId, attributeToPath(attribute)))
+        getReference(constructUsersPath(userId, attribute))
                 .addValueEventListener(valueEventListener);
     }
 
@@ -233,12 +231,12 @@ public final class FbDatabase {
      * Removes the listener to an attribute of a given user.
      *
      * @param userId             id of user whose attribute won't be observed anymore
-     * @param attribute          enum to determine which attribute's listener to remove
+     * @param attribute          which attribute's listener to remove
      * @param valueEventListener listener to remove
      */
     public static void removeListenerFromAccountAttribute(
-            String userId, AccountAttributes attribute, ValueEventListener valueEventListener) {
-        getReference(constructUsersPath(userId, attributeToPath(attribute)))
+            String userId, String attribute, ValueEventListener valueEventListener) {
+        getReference(constructUsersPath(userId, attribute))
                 .removeEventListener(valueEventListener);
     }
 
@@ -246,12 +244,12 @@ public final class FbDatabase {
      * Gets an attribute from a given room in the database.
      *
      * @param roomId             id of the room to get the attribute from
-     * @param attribute          attribute to get
+     * @param attribute          which attribute to get
      * @param valueEventListener listener to run on completion
      */
-    public static void getRoomAttribute(String roomId, RoomAttributes attribute,
+    public static void getRoomAttribute(String roomId, String attribute,
                                         ValueEventListener valueEventListener) {
-        getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+        getReference(constructRoomsPath(roomId, attribute))
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -264,8 +262,8 @@ public final class FbDatabase {
      * @param newValue  associated to the user
      */
     public static void setValueToUserInRoomAttribute(String roomId, String username,
-                                                     RoomAttributes attribute, Object newValue) {
-        getReference(constructRoomsPath(roomId, attributeToPath(attribute), username))
+                                                     String attribute, Object newValue) {
+        getReference(constructRoomsPath(roomId, attribute, username))
                 .setValue(newValue);
     }
 
@@ -276,17 +274,10 @@ public final class FbDatabase {
      * @param account user that should be deleted
      */
     public static void removeUserFromRoom(String roomId, Account account) {
-        getReference(constructRoomsPath(roomId,
-                attributeToPath(USERS), account.getUserId()))
-                .removeValue();
-        getReference(constructRoomsPath(roomId,
-                attributeToPath(RANKING), account.getUsername()))
-                .removeValue();
-        getReference(constructRoomsPath(roomId,
-                attributeToPath(FINISHED), account.getUsername()))
-                .removeValue();
-        getReference(constructRoomsPath(roomId,
-                attributeToPath(UPLOAD_DRAWING), account.getUsername()))
+        getReference(constructRoomsPath(roomId, USERS, account.getUserId())).removeValue();
+        getReference(constructRoomsPath(roomId, RANKING, account.getUsername())).removeValue();
+        getReference(constructRoomsPath(roomId, FINISHED, account.getUsername())).removeValue();
+        getReference(constructRoomsPath(roomId, UPLOAD_DRAWING, account.getUsername()))
                 .removeValue();
     }
 
@@ -294,30 +285,29 @@ public final class FbDatabase {
      * Sets a listener to an attribute of a given room.
      *
      * @param roomId             id of room whose attribute will be observed
-     * @param attribute          enum to determine which attribute to observe
+     * @param attribute          which attribute to observe
      * @param valueEventListener listener to handle response
      */
-    public static void setListenerToRoomAttribute(String roomId, RoomAttributes attribute,
+    public static void setListenerToRoomAttribute(String roomId, String attribute,
                                                   ValueEventListener valueEventListener) {
-        getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+        getReference(constructRoomsPath(roomId, attribute))
                 .addValueEventListener(valueEventListener);
     }
 
     /**
      * Removes a listener from an attribute of a given room.
      */
-    public static void removeListenerFromRoomAttribute(String roomId, RoomAttributes attribute,
+    public static void removeListenerFromRoomAttribute(String roomId, String attribute,
                                                        ValueEventListener valueEventListener) {
-        getReference(constructRoomsPath(roomId, attributeToPath(attribute)))
+        getReference(constructRoomsPath(roomId, attribute))
                 .removeEventListener(valueEventListener);
     }
 
     /**
      * Returns the {@link DatabaseReference} of an attribute in a given room.
      */
-    public static DatabaseReference getRoomAttributeReference(String roomId,
-                                                              RoomAttributes attribute) {
-        return getReference(constructRoomsPath(roomId, attributeToPath(attribute)));
+    public static DatabaseReference getRoomAttributeReference(String roomId, String attribute) {
+        return getReference(constructRoomsPath(roomId, attribute));
     }
 
     /**
@@ -326,7 +316,7 @@ public final class FbDatabase {
      * @param userId id of user whose online value will be set to offline upon disconnection
      */
     public static void changeToOfflineOnDisconnect(String userId) {
-        FbDatabase.getReference(constructUsersPath(userId, attributeToPath(STATUS)))
+        FbDatabase.getReference(constructUsersPath(userId, STATUS))
                 .onDisconnect()
                 .setValue(OFFLINE.ordinal());
     }

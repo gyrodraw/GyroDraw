@@ -12,7 +12,6 @@ import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
 import static ch.epfl.sweng.SDP.firebase.RoomAttributes.WORDS;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.attributeToPath;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -21,16 +20,16 @@ public class RoomAttributesUnitTest {
 
     @Test
     public void testAttributeToPathReturnsCorrectPath() {
-        assertThat(attributeToPath(FINISHED), is(equalTo("finished")));
-        assertThat(attributeToPath(GAME_MODE), is(equalTo("gameMode")));
-        assertThat(attributeToPath(ONLINE_STATUS), is(equalTo("onlineStatus")));
-        assertThat(attributeToPath(PLAYING), is(equalTo("playing")));
-        assertThat(attributeToPath(RANKING), is(equalTo("ranking")));
-        assertThat(attributeToPath(STATE), is(equalTo("state")));
-        assertThat(attributeToPath(TIMER), is(equalTo("timer.observableTime")));
-        assertThat(attributeToPath(UPLOAD_DRAWING), is(equalTo("uploadDrawing")));
-        assertThat(attributeToPath(USERS), is(equalTo("users")));
-        assertThat(attributeToPath(WORDS), is(equalTo("words")));
+        assertThat(FINISHED, is(equalTo("finished")));
+        assertThat(GAME_MODE, is(equalTo("gameMode")));
+        assertThat(ONLINE_STATUS, is(equalTo("onlineStatus")));
+        assertThat(PLAYING, is(equalTo("playing")));
+        assertThat(RANKING, is(equalTo("ranking")));
+        assertThat(STATE, is(equalTo("state")));
+        assertThat(TIMER, is(equalTo("timer.observableTime")));
+        assertThat(UPLOAD_DRAWING, is(equalTo("uploadDrawing")));
+        assertThat(USERS, is(equalTo("users")));
+        assertThat(WORDS, is(equalTo("words")));
     }
 
 }

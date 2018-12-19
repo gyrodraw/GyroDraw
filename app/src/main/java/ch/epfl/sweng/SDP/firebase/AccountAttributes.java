@@ -3,49 +3,24 @@ package ch.epfl.sweng.SDP.firebase;
 import ch.epfl.sweng.SDP.auth.Account;
 
 /**
- * Enum representing all the {@link Account}'s attributes.
+ * Class representing all the {@link Account}'s attributes.
  */
-public enum AccountAttributes {
-    USER_ID, USERNAME, EMAIL, STARS, TROPHIES, LEAGUE, MATCHES_WON, MATCHES_TOTAL,
-    AVERAGE_RATING, MAX_TROPHIES, FRIENDS, STATUS, BOUGHT_ITEMS;
+public final class AccountAttributes {
 
-    /**
-     * Converts the given {@link AccountAttributes} to a string which can be used in a path (for a
-     * Firebase Database query, for example).
-     *
-     * @param accountAttribute the account attribute to convert
-     * @return a string representing the given attribute
-     */
-    public static String attributeToPath(AccountAttributes accountAttribute) {
-        switch (accountAttribute) {
-            case USER_ID:
-                return "userId";
-            case USERNAME:
-                return "username";
-            case EMAIL:
-                return "email";
-            case STARS:
-                return "stars";
-            case TROPHIES:
-                return "trophies";
-            case LEAGUE:
-                return "currentLeague";
-            case MATCHES_WON:
-                return "matchesWon";
-            case MATCHES_TOTAL:
-                return "totalMatches";
-            case AVERAGE_RATING:
-                return "averageRating";
-            case MAX_TROPHIES:
-                return "maxTrophies";
-            case FRIENDS:
-                return "friends";
-            case STATUS:
-                return "online";
-            case BOUGHT_ITEMS:
-                return "boughtItems";
-            default:
-                throw new IllegalArgumentException("Unknown attribute");
-        }
-    }
+    private AccountAttributes() {}
+
+    public static final String USER_ID = "userId";
+    public static final String USERNAME = "username";
+    public static final String EMAIL = "email";
+    public static final String STARS = "stars";
+    public static final String TROPHIES = "trophies";
+    public static final String LEAGUE = "currentLeague";
+    public static final String MATCHES_WON = "matchesWon";
+    public static final String MATCHES_TOTAL = "totalMatches";
+    public static final String AVERAGE_RATING = "averageRating";
+    public static final String MAX_TROPHIES = "maxTrophies";
+    public static final String FRIENDS = "friends";
+    public static final String STATUS = "online";
+    public static final String BOUGHT_ITEMS = "boughtItems";
+
 }

@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -16,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
 

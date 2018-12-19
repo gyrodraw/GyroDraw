@@ -1,13 +1,14 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
-
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.game.drawing.PaintView;
+
+import static ch.epfl.sweng.SDP.utils.Preconditions.checkPrecondition;
 
 /**
  * Abstract class representing an item.

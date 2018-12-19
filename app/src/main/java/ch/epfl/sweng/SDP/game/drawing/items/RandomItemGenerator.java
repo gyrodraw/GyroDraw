@@ -1,12 +1,12 @@
 package ch.epfl.sweng.SDP.game.drawing.items;
 
-import ch.epfl.sweng.SDP.game.drawing.PaintView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import ch.epfl.sweng.SDP.game.drawing.PaintView;
 
 /**
  * Class representing a random {@link Item} generator.

@@ -1,7 +1,5 @@
 package ch.epfl.sweng.SDP.utils;
 
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -13,12 +11,16 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForImages;
-import java.io.File;
-import java.io.FileOutputStream;
+
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 /**
  * This class is responsible for saving images to the device storage.

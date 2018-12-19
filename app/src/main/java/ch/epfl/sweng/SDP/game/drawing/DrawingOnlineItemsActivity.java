@@ -5,11 +5,11 @@ import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import ch.epfl.sweng.SDP.R;
-import ch.epfl.sweng.SDP.game.drawing.items.Item;
-
 import java.util.HashMap;
 import java.util.Random;
+
+import ch.epfl.sweng.SDP.R;
+import ch.epfl.sweng.SDP.game.drawing.items.Item;
 
 /**
  * Class representing the drawing phase of an online game in special mode.

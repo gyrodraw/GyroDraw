@@ -1,11 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
-import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
-import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -19,6 +13,17 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+
 import ch.epfl.sweng.SDP.NoBackPressActivity;
 import ch.epfl.sweng.SDP.R;
 import ch.epfl.sweng.SDP.auth.Account;
@@ -35,14 +40,12 @@ import ch.epfl.sweng.SDP.utils.GlideUtils;
 import ch.epfl.sweng.SDP.utils.ImageSharer;
 import ch.epfl.sweng.SDP.utils.ImageStorageManager;
 import ch.epfl.sweng.SDP.utils.network.ConnectivityWrapper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import java.util.HashMap;
+
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.RANKING;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.STATE;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.TIMER;
+import static ch.epfl.sweng.SDP.firebase.RoomAttributes.USERS;
+import static ch.epfl.sweng.SDP.game.LoadingScreenActivity.ROOM_ID;
 
 /**
  * Class representing the voting phase of an online game, where players vote for the drawings.

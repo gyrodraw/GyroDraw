@@ -109,8 +109,8 @@ class Player implements Comparable {
         LinearLayout entry = addViews(new LinearLayout(context),
                 new View[]{usernameView, trophiesView, leagueView, friendsButton});
 
-        entry.setBackgroundColor(res.getColor(isCurrentUser ?
-                R.color.colorDrawYellow : R.color.colorLightGrey));
+        entry.setBackgroundColor(res.getColor(
+                isCurrentUser ? R.color.colorDrawYellow : R.color.colorLightGrey));
         entry.setPadding(30, 10, 30, 10);
 
         return entry;

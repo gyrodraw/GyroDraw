@@ -1,6 +1,5 @@
 package ch.epfl.sweng.SDP.game;
 
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -61,8 +60,6 @@ public class LoadingScreenActivityTest {
         activityRule.getActivity().areWordsReady.setBool(true);
         activityRule.getActivity().listenerRoomReady.onChange();
 
-        FbDatabase.setFriendValue(TEST_USER_ID, TEST_USER_ID, 2);
-        SystemClock.sleep(2000);
         FbDatabase.getAccountAttribute(TEST_USER_ID, FRIENDS,
                 new OnSuccessValueEventListener() {
                     @Override

@@ -8,13 +8,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import java.util.ArrayList;
 
 import ch.epfl.sweng.SDP.firebase.FbDatabase;
 import ch.epfl.sweng.SDP.firebase.OnSuccessValueEventListener;
@@ -39,20 +36,8 @@ public class LoadingScreenActivityTest {
 
             };
 
-    @After
-    public void end() {
-        activityRule.getActivity().isRoomReady.setBool(false);
-        activityRule.getActivity().areWordsReady.setBool(false);
-    }
-
     @Test
     public void testWordsReady() {
-        ArrayList<String> words = new ArrayList<>();
-        activityRule.getActivity().areWordsReady(words);
-    }
-
-    @Test
-    public void localTests() {
         activityRule.getActivity().wordsVotesRef = Mockito.mock(DatabaseReference.class);
         Mockito.doNothing().when(activityRule.getActivity().wordsVotesRef)
                 .removeEventListener(isA(ValueEventListener.class));

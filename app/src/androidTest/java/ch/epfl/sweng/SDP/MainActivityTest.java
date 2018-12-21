@@ -136,18 +136,19 @@ public class MainActivityTest {
         account.put(TEST_USER_ID, values);
 
         final DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.exists()).thenReturn(true);
         when(snapshot.getValue()).thenReturn(account);
+
+        final DataSnapshot snapshot2 = Mockito.mock(DataSnapshot.class);
+        when(snapshot2.exists()).thenReturn(false);
 
         executeOnUiThread(new Runnable() {
             @Override
             public void run() {
                 activityRule.getActivity().handleRedirection(snapshot);
+                activityRule.getActivity().handleRedirection(snapshot2);
             }
         });
-
-        Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(homeMonitor, 5000);
-        assertThat(homeActivity, is(nullValue()));
     }
 
     @Test

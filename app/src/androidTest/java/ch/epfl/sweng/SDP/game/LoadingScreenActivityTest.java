@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.isA;
 @RunWith(AndroidJUnit4.class)
 public class LoadingScreenActivityTest {
 
-    private static final String TEST_USER_ID = "123456789";
+    private static final String USER_ID = "123456789";
 
     @Rule
     public final ActivityTestRule<LoadingScreenActivity> activityRule =
@@ -60,7 +60,7 @@ public class LoadingScreenActivityTest {
         activityRule.getActivity().areWordsReady.setBool(true);
         activityRule.getActivity().listenerRoomReady.onChange();
 
-        FbDatabase.getAccountAttribute(TEST_USER_ID, FRIENDS,
+        FbDatabase.getAccountAttribute(USER_ID, FRIENDS,
                 new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

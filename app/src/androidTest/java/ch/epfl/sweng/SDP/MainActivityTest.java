@@ -21,7 +21,6 @@ import java.util.HashMap;
 import ch.epfl.sweng.SDP.auth.Account;
 import ch.epfl.sweng.SDP.auth.ConstantsWrapper;
 import ch.epfl.sweng.SDP.auth.LoginActivity;
-import ch.epfl.sweng.SDP.home.HomeActivity;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbForAccount;
 import ch.epfl.sweng.SDP.localDatabase.LocalDbHandlerForAccount;
 
@@ -58,10 +57,6 @@ public class MainActivityTest {
     // Add a monitor for the login activity
     private final Instrumentation.ActivityMonitor loginMonitor = getInstrumentation()
             .addMonitor(LoginActivity.class.getName(), null, false);
-
-    // Add a monitor for the home activity
-    private final Instrumentation.ActivityMonitor homeMonitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
 
     @Before
     public void init() {
@@ -136,18 +131,19 @@ public class MainActivityTest {
         account.put(TEST_USER_ID, values);
 
         final DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.exists()).thenReturn(true);
         when(snapshot.getValue()).thenReturn(account);
+
+        final DataSnapshot snapshot2 = Mockito.mock(DataSnapshot.class);
+        when(snapshot2.exists()).thenReturn(false);
 
         executeOnUiThread(new Runnable() {
             @Override
             public void run() {
                 activityRule.getActivity().handleRedirection(snapshot);
+                activityRule.getActivity().handleRedirection(snapshot2);
             }
         });
-
-        Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(homeMonitor, 5000);
-        assertThat(homeActivity, is(nullValue()));
     }
 
     @Test

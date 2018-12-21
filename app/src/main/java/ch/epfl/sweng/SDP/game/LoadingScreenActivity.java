@@ -42,38 +42,43 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     private String roomID = null;
     private int gameMode = 0;
 
-    private BooleanVariableListener isRoomReady = new BooleanVariableListener();
-    private BooleanVariableListener areWordsReady = new BooleanVariableListener();
+    @VisibleForTesting
+    public BooleanVariableListener isRoomReady = new BooleanVariableListener();
+    @VisibleForTesting
+    public BooleanVariableListener areWordsReady = new BooleanVariableListener();
 
     private boolean hasLeft = false;
 
     private boolean isWord1Ready = false;
     private boolean isWord2Ready = false;
 
-    private DatabaseReference wordsVotesRef;
+    @VisibleForTesting
+    public DatabaseReference wordsVotesRef;
 
     private String word1 = null;
     private String word2 = null;
 
-    private BooleanVariableListener.ChangeListener listenerRoomReady =
-        new BooleanVariableListener.ChangeListener() {
-            @Override
-            public void onChange() {
-                if (areWordsReady.getBool() && isRoomReady.getBool()) {
-                    // Start new activity
-                    wordsVotesRef.removeEventListener(listenerWords);
-                    Intent intent = new Intent(getApplicationContext(),
-                            WaitingPageActivity.class);
-                    intent.putExtra(WORD_1, word1);
-                    intent.putExtra(WORD_2, word2);
-                    intent.putExtra(ROOM_ID, roomID);
-                    intent.putExtra(GAME_MODE, gameMode);
-                    startActivity(intent);
+    @VisibleForTesting
+    public BooleanVariableListener.ChangeListener listenerRoomReady =
+            new BooleanVariableListener.ChangeListener() {
+                @Override
+                public void onChange() {
+                    if (areWordsReady.getBool() && isRoomReady.getBool()) {
+                        // Start new activity
+                        wordsVotesRef.removeEventListener(listenerWords);
+                        Intent intent = new Intent(getApplicationContext(),
+                                WaitingPageActivity.class);
+                        intent.putExtra(WORD_1, word1);
+                        intent.putExtra(WORD_2, word2);
+                        intent.putExtra(ROOM_ID, roomID);
+                        intent.putExtra(GAME_MODE, gameMode);
+                        startActivity(intent);
+                    }
                 }
-            }
-    };
+            };
 
-    private final ValueEventListener listenerWords = new OnSuccessValueEventListener() {
+    @VisibleForTesting
+    public final ValueEventListener listenerWords = new OnSuccessValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             ArrayList<String> words = new ArrayList<>();

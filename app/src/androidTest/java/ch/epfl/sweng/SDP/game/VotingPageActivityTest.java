@@ -114,6 +114,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void testSharingImage() {
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, RANKING, 0);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, USERS, USER_ID);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
         activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
@@ -129,6 +131,9 @@ public class VotingPageActivityTest {
         localDbHandler.addBitmapToDb(bitmap, 2);
         onView(withId(R.id.shareButton)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
+        onView(withId(R.id.homeButton)).perform(click());
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, RANKING, 0);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, USERS, USER_ID);
     }
 
     @Test
@@ -167,6 +172,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesBigNumber() {
+        new StarAnimationView(activityRule.getActivity());
+        new StarAnimationView(activityRule.getActivity(), null, 0);
         int previousStars = starsAnimation.getNumStars();
         setStarsAnimationToVisible();
         starsAnimation.onSizeChanged(100, 100, 100, 100);

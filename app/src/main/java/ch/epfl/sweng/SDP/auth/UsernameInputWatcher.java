@@ -17,7 +17,7 @@ import static java.lang.String.format;
 final class UsernameInputWatcher implements TextWatcher {
 
     private static final int MIN_CHARS = 3;
-    private static final int MAX_CHARS = 15;
+    private static final int MAX_CHARS = 12;
 
     private final TextView feedback;
     private final Button createAccount;

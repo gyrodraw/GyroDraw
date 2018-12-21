@@ -1,5 +1,6 @@
 package ch.epfl.sweng.SDP.game;
 
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,6 +26,8 @@ import static org.mockito.ArgumentMatchers.isA;
 
 @RunWith(AndroidJUnit4.class)
 public class LoadingScreenActivityTest {
+
+    private static final String TEST_USER_ID = "123456789";
 
     @Rule
     public final ActivityTestRule<LoadingScreenActivity> activityRule =
@@ -58,7 +61,9 @@ public class LoadingScreenActivityTest {
         activityRule.getActivity().areWordsReady.setBool(true);
         activityRule.getActivity().listenerRoomReady.onChange();
 
-        FbDatabase.getAccountAttribute("123456789", FRIENDS,
+        FbDatabase.setFriendValue(TEST_USER_ID, TEST_USER_ID, 2);
+        SystemClock.sleep(2000);
+        FbDatabase.getAccountAttribute(TEST_USER_ID, FRIENDS,
                 new OnSuccessValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

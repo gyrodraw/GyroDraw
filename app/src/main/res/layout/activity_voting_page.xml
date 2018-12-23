@@ -93,7 +93,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="20" />
 
-    <ch.epfl.sweng.SDP.game.StarAnimationView
+    <ch.epfl.sweng.GyroDraw.game.StarAnimationView
         android:id="@+id/starsAnimation"
         style="@style/BackGroundImageView"
         android:layout_width="match_parent"

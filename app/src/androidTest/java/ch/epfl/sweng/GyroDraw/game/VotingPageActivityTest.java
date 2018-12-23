@@ -1,46 +1,5 @@
 package ch.epfl.sweng.GyroDraw.game;
 
-import android.Manifest;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.SystemClock;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.RatingBar;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.storage.FirebaseStorage;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import java.io.ByteArrayOutputStream;
-
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.auth.ConstantsWrapper;
-import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
-import ch.epfl.sweng.GyroDraw.firebase.RoomAttributes;
-import ch.epfl.sweng.GyroDraw.home.HomeActivity;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.GyroDraw.utils.BitmapManipulator;
-import ch.epfl.sweng.GyroDraw.utils.ImageSharer;
-import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -62,6 +21,43 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
+
+import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.RatingBar;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.auth.ConstantsWrapper;
+import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
+import ch.epfl.sweng.GyroDraw.firebase.RoomAttributes;
+import ch.epfl.sweng.GyroDraw.home.HomeActivity;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.GyroDraw.utils.BitmapManipulator;
+import ch.epfl.sweng.GyroDraw.utils.ImageSharer;
+import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.storage.FirebaseStorage;
+import java.io.ByteArrayOutputStream;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class VotingPageActivityTest {
@@ -114,6 +110,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void testSharingImage() {
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, RANKING, 0);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, USERS, USER_ID);
         when(dataSnapshotMock.getValue(Integer.class)).thenReturn(6);
         activityRule.getActivity().callOnStateChange(dataSnapshotMock);
         SystemClock.sleep(2000);
@@ -129,6 +127,9 @@ public class VotingPageActivityTest {
         localDbHandler.addBitmapToDb(bitmap, 2);
         onView(withId(R.id.shareButton)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
+        onView(withId(R.id.homeButton)).perform(click());
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, RANKING, 0);
+        FbDatabase.setValueToUserInRoomAttribute(ROOM_ID_TEST, USER_ID, USERS, USER_ID);
     }
 
     @Test
@@ -167,6 +168,8 @@ public class VotingPageActivityTest {
 
     @Test
     public void addStarsHandlesBigNumber() {
+        new StarAnimationView(activityRule.getActivity());
+        new StarAnimationView(activityRule.getActivity(), null, 0);
         int previousStars = starsAnimation.getNumStars();
         setStarsAnimationToVisible();
         starsAnimation.onSizeChanged(100, 100, 100, 100);

@@ -59,10 +59,6 @@ public class MainActivityTest {
     private final Instrumentation.ActivityMonitor loginMonitor = getInstrumentation()
             .addMonitor(LoginActivity.class.getName(), null, false);
 
-    // Add a monitor for the home activity
-    private final Instrumentation.ActivityMonitor homeMonitor = getInstrumentation()
-            .addMonitor(HomeActivity.class.getName(), null, false);
-
     @Before
     public void init() {
         activity = activityRule.getActivity();
@@ -136,18 +132,19 @@ public class MainActivityTest {
         account.put(TEST_USER_ID, values);
 
         final DataSnapshot snapshot = Mockito.mock(DataSnapshot.class);
+        when(snapshot.exists()).thenReturn(true);
         when(snapshot.getValue()).thenReturn(account);
+
+        final DataSnapshot snapshot2 = Mockito.mock(DataSnapshot.class);
+        when(snapshot2.exists()).thenReturn(false);
 
         executeOnUiThread(new Runnable() {
             @Override
             public void run() {
                 activityRule.getActivity().handleRedirection(snapshot);
+                activityRule.getActivity().handleRedirection(snapshot2);
             }
         });
-
-        Activity homeActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(homeMonitor, 5000);
-        assertThat(homeActivity, is(nullValue()));
     }
 
     @Test

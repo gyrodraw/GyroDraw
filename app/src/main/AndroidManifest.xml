@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ch.epfl.sweng.SDP">
+    package="ch.epfl.sweng.GyroDraw">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -40,7 +40,7 @@
             tools:replace="android:value" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="ch.epfl.sweng.GyroDraw.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,43 +48,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".auth.LoginActivity"
+            android:name="ch.epfl.sweng.GyroDraw.auth.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.HomeActivity"
+            android:name="ch.epfl.sweng.GyroDraw.home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.WaitingPageActivity"
+            android:name="ch.epfl.sweng.GyroDraw.game.WaitingPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOnlineActivity"
+            android:name="ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".auth.AccountCreationActivity"
+            android:name="ch.epfl.sweng.GyroDraw.auth.AccountCreationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.VotingPageActivity"
+            android:name="ch.epfl.sweng.GyroDraw.game.VotingPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.leaderboard.LeaderboardActivity"
+            android:name="ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.battleLog.BattleLogActivity"
+            android:name="ch.epfl.sweng.GyroDraw.home.battleLog.BattleLogActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.leagues.LeaguesActivity"
+            android:name="ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.LoadingScreenActivity"
+            android:name="ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ShopActivity"
+            android:name="ch.epfl.sweng.GyroDraw.shop.ShopActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOfflineActivity"
+            android:name="ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".game.drawing.DrawingOnlineItemsActivity"
+            android:name="ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineItemsActivity"
             android:screenOrientation="portrait" />
     </application>
 </manifest>

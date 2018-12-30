@@ -142,6 +142,8 @@ exports.joinGame = functions.https.onCall((data, context) => {
   return admin.database().ref(parentRoomID).once('value', (snapshot) => {
     return snapshot.forEach((roomID) => {
 
+      promises = [];
+
       // Retrieve the room game mode
       var roomGameMode = roomID.val().gameMode;
       console.log("Game mode:" + roomGameMode);
@@ -160,13 +162,16 @@ exports.joinGame = functions.https.onCall((data, context) => {
 
         // Removes the user and adds it again to trigger the event for the user fields.
         if (roomID.child("users/" + id).exists() && roomID.hasChild("users")) {
-          admin.database().ref(path).child("users/" + id).remove();
+          promises.push(admin.database().ref(path).child("users/" + id).remove());
         }
 
-        admin.database().ref(path).child("users").update({[id]:username});
+        promises.push(admin.database().ref(path).child("users").update({[id]:username}));
 
         alreadyJoined = true;
       }
+
+      return Promise.all(promises).then(_ => true);
+
     });
   }).then(() => {
     if (alreadyJoined === false) {
@@ -245,8 +250,10 @@ function createRoomAndJoin(league, roomsList, username, id, gameMode) {
 function removeRoom(roomID) {
   // Do not remove the testing room
   if (roomID !== "0123457890") {
-    admin.database().ref(parentRoomID + roomID).remove();
+    return admin.database().ref(parentRoomID + roomID).remove();
   }
+
+  return 0;
 }
 
 exports.onUsersChange = functions.database.ref(parentRoomID + "{roomID}/users").onWrite((change, context) => {

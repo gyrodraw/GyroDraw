@@ -1,49 +1,5 @@
 package ch.epfl.sweng.GyroDraw.home;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.GyroDraw.MainActivity;
-import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.firebase.FbAuthentication;
-import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
-import ch.epfl.sweng.GyroDraw.firebase.OnSuccessValueEventListener;
-import ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity;
-import ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity;
-import ch.epfl.sweng.GyroDraw.home.battleLog.BattleLogActivity;
-import ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity;
-import ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForAccount;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.GyroDraw.shop.ShopActivity;
-import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
-import ch.epfl.sweng.GyroDraw.utils.LayoutUtils.AnimMode;
-import ch.epfl.sweng.GyroDraw.utils.OnSwipeTouchListener;
-import ch.epfl.sweng.GyroDraw.utils.network.ConnectivityWrapper;
-
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.FRIENDS;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.USERNAME;
 import static ch.epfl.sweng.GyroDraw.firebase.FbDatabase.checkForDatabaseError;
@@ -60,6 +16,49 @@ import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.ONLINE;
 import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.changeOnlineStatus;
 import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.changeToOfflineOnDisconnect;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import ch.epfl.sweng.GyroDraw.MainActivity;
+import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.firebase.FbAuthentication;
+import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
+import ch.epfl.sweng.GyroDraw.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity;
+import ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity;
+import ch.epfl.sweng.GyroDraw.home.battleLog.BattleLogActivity;
+import ch.epfl.sweng.GyroDraw.home.gallery.GalleryActivity;
+import ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.GyroDraw.shop.ShopActivity;
+import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
+import ch.epfl.sweng.GyroDraw.utils.LayoutUtils.AnimMode;
+import ch.epfl.sweng.GyroDraw.utils.OnSwipeTouchListener;
+import ch.epfl.sweng.GyroDraw.utils.network.ConnectivityWrapper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Class representing the homepage of the app.
@@ -320,6 +319,9 @@ public class HomeActivity extends NoBackPressActivity {
             case R.id.shopButton:
                 launchActivity(ShopActivity.class);
                 break;
+            case R.id.galleryButton:
+                launchActivity(GalleryActivity.class);
+                break;
             case R.id.battleLogButton:
                 launchActivity(BattleLogActivity.class);
                 break;
@@ -343,6 +345,10 @@ public class HomeActivity extends NoBackPressActivity {
                 break;
             default:
         }
+    }
+
+    public void openGallery(View view) {
+        launchActivity(GalleryActivity.class);
     }
 
     private void launchOnlineGame(int gameMode) {

@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
+import ch.epfl.sweng.GyroDraw.R;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Local database handler for storing and retrieving the user's images.
@@ -100,7 +102,42 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
         } else {
             bitmap = null;
         }
+
         db.close();
         return bitmap;
+    }
+
+    @Override
+    public List<Bitmap> getBitmapsFromDb(Context context) {
+        String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 10";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        ArrayList<Bitmap> recentBitmaps = new ArrayList<>();
+
+        if (cursor == null || !cursor.moveToFirst()) {
+            return recentBitmaps;
+        }
+
+        do {
+            byte[] byteArray = cursor.getBlob(2);
+
+            Bitmap drawing;
+
+            if (byteArray != null) {
+                drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            } else {
+                // Use default image
+                drawing = BitmapFactory
+                        .decodeResource(context.getResources(), R.drawable.default_image);
+            }
+
+            recentBitmaps.add(drawing);
+        } while (cursor.moveToNext());
+
+        cursor.close();
+        db.close();
+        return recentBitmaps;
     }
 }

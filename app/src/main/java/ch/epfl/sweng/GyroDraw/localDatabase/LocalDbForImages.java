@@ -1,6 +1,8 @@
 package ch.epfl.sweng.GyroDraw.localDatabase;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import java.util.List;
 
 /**
  * Interface representing a generic handler for the local database, responsible of operations
@@ -21,4 +23,11 @@ public interface LocalDbForImages {
      * @return the newest bitmap
      */
     Bitmap getLatestBitmapFromDb();
+
+    /**
+     * TODO
+     * @param context
+     * @return
+     */
+    List<Bitmap> getBitmapsFromDb(Context context);
 }

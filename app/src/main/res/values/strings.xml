@@ -5,7 +5,7 @@
     <string name="test_name">Max Muster</string>
     <string name="username_taken">Username is already taken.</string>
     <string name="database_error">Database error. Try again.</string>
-    <string name="app_name">Gyrodraw</string>
+    <string name="app_name">GyroDraw</string>
     <string name="no_internet">No Internet connection</string>
     <string name="unknown_error">Unknown error</string>
     <string name="error_message">Error message</string>

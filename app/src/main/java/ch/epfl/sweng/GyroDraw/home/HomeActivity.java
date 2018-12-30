@@ -133,6 +133,7 @@ public class HomeActivity extends NoBackPressActivity {
         final Button usernameButton = findViewById(R.id.usernameButton);
         final ImageView leaderboardButton = findViewById(R.id.leaderboardButton);
         final ImageView shopButton = findViewById(R.id.shopButton);
+        final ImageView galleryButton = findViewById(R.id.galleryButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
@@ -153,6 +154,7 @@ public class HomeActivity extends NoBackPressActivity {
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());
         setListener(shopButton, getMainAmplitude(), getMainFrequency());
+        setListener(galleryButton, getMainAmplitude(), getMainFrequency());
         setListener(battleLogButton, getMainAmplitude(), getMainFrequency());
         setListener(trophiesButton, getMainAmplitude(), getMainFrequency());
         setListener(starsButton, getMainAmplitude(), getMainFrequency());
@@ -345,10 +347,6 @@ public class HomeActivity extends NoBackPressActivity {
                 break;
             default:
         }
-    }
-
-    public void openGallery(View view) {
-        launchActivity(GalleryActivity.class);
     }
 
     private void launchOnlineGame(int gameMode) {

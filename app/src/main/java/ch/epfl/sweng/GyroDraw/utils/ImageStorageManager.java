@@ -1,5 +1,7 @@
 package ch.epfl.sweng.GyroDraw.utils;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -11,16 +13,12 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileOutputStream;
-
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
-
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * This class is responsible for saving images to the device storage.
@@ -36,11 +34,22 @@ public final class ImageStorageManager {
      * @param context activity context
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void saveImage(Context context) {
+    public static void saveImageFromDb(Context context) {
         LocalDbForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
         Account account = Account.getInstance(context);
         String imageName = account.getUsername() + account.getTotalMatches();
         ImageStorageManager.writeImage(localDbHandler.getLatestBitmapFromDb(), imageName, context);
+    }
+
+    /**
+     * Saves the given image in local external storage.
+     * @param context activity context
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void saveImage(Context context, Bitmap bitmap) {
+        Account account = Account.getInstance(context);
+        String imageName = account.getUsername() + account.getTotalMatches();
+        ImageStorageManager.writeImage(bitmap, imageName, context);
     }
 
     /**

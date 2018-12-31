@@ -160,22 +160,26 @@ exports.joinGame = functions.https.onCall((data, context) => {
         const path = parentRoomID + roomID.key;
         _roomID = roomID.key;
 
+        alreadyJoined = true;
+
         // Removes the user and adds it again to trigger the event for the user fields.
         if (roomID.child("users/" + id).exists() && roomID.hasChild("users")) {
-          promises.push(admin.database().ref(path).child("users/" + id).remove());
+          return (admin.database().ref(path).child("users/" + id).remove())
+                  .then(() => {
+                    return admin.database().ref(path).child("users").update({[id]:username});
+                  });
         }
 
-        promises.push(admin.database().ref(path).child("users").update({[id]:username}));
-
-        alreadyJoined = true;
+        return admin.database().ref(path).child("users").update({[id]:username});
       }
 
-      return Promise.all(promises).then(_ => true);
+      return 0;
 
     });
   }).then(() => {
     if (alreadyJoined === false) {
-        _roomID = createRoomAndJoin(league, roomsList, username, id, gameMode);
+        _roomID = generateRoomID(league, roomsList).toString();
+        joinCreatedRoom(_roomID, username, id, gameMode);
     }
     console.log(_roomID);
     return _roomID;
@@ -246,6 +250,17 @@ function createRoomAndJoin(league, roomsList, username, id, gameMode) {
 
   return roomID.toString();
 }
+
+function joinCreatedRoom(roomID, username, id, gameMode) {
+  let promises = [];
+  let roomObj = {[roomID]:{gameMode : gameMode, state : 0, playing : 0, timer :{observableTime:WAITING_TIME_CHOOSE_WORDS}}};
+
+  promises.push(admin.database().ref(parentRoomID).update(roomObj));
+  promises.push(admin.database().ref(parentRoomID + roomID).update({"users":{[id]:username}}));
+
+  return Promise.all(promises).then(_ => true);
+}
+
 
 function removeRoom(roomID) {
   // Do not remove the testing room

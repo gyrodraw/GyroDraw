@@ -21,8 +21,8 @@ public interface LocalDbForGameResults {
 
     /**
      * Retrieves the 10th most recent game results from the table.
-     *
-     * @return the newest game result
+     * @param context the context invoking this method
+     * @return the newest game results
      */
     List<GameResult> getGameResultsFromDb(Context context);
 }

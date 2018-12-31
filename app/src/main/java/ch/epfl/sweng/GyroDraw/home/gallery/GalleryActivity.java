@@ -1,6 +1,7 @@
 package ch.epfl.sweng.GyroDraw.home.gallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,9 +23,17 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.List;
 
 /**
- * TODO
+ * Class representing the gallery, where users can see the pictures they drew.
  */
 public class GalleryActivity extends NoBackPressActivity {
+
+    private static final int COLUMNS = 3;
+
+    private static List<Bitmap> bitmaps;
+
+    public static List<Bitmap> getBitmaps() {
+        return bitmaps;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,37 +43,45 @@ public class GalleryActivity extends NoBackPressActivity {
         ((TextView) findViewById(R.id.galleryText)).setTypeface(typeMuro);
 
         TextView exitButton = findViewById(R.id.crossText);
+        exitButton.setTypeface(typeMuro);
         LayoutUtils.setFadingExitListener(exitButton, this);
 
-        RecyclerView mRecyclerView = findViewById(R.id.galleryList);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mRecyclerView.setHasFixedSize(true);
+        RecyclerView recyclerView = findViewById(R.id.galleryList);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
+        recyclerView.setHasFixedSize(true);
 
         LocalDbForImages dbHandler = new LocalDbHandlerForImages(this, null, 1);
-        GalleryAdapter mAdapter = new GalleryAdapter(this, dbHandler.getBitmapsFromDb(this));
-        mRecyclerView.setAdapter(mAdapter);
+        bitmaps = dbHandler.getBitmapsFromDb(this);
+        GalleryAdapter adapter = new GalleryAdapter(this, bitmaps);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
+                new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(getApplicationContext(),
+                                FullscreenImageActivity.class);
+                        intent.putExtra("pos", position);
+                        startActivity(intent);
+                    }
+                }));
     }
 
 
     private class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private Context context;
-        private List<Bitmap> data;
+        private final Context context;
+        private final List<Bitmap> data;
 
         private GalleryAdapter(Context context, List<Bitmap> data) {
             this.context = context;
             this.data = data;
         }
 
-
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder viewHolder;
-            View v = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.gallery_item, parent, false);
-            viewHolder = new ItemHolder(v);
-
-            return viewHolder;
+            return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.gallery_item, parent, false));
         }
 
         @Override
@@ -73,7 +90,7 @@ public class GalleryActivity extends NoBackPressActivity {
                     .transition(new DrawableTransitionOptions().crossFade())
                     .apply(new RequestOptions()
                             .override(200, 200)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                     .thumbnail(0.5f)
                     .into(((ItemHolder) holder).mImg);
         }

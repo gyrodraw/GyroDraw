@@ -89,6 +89,11 @@
       android:screenOrientation="portrait"/>
     <activity android:name=".home.gallery.GalleryActivity">
     </activity>
+    <activity
+      android:label="@string/title_activity_fullscreen"
+      android:name=".home.gallery.FullscreenImageActivity"
+      android:theme="@style/AppTheme">
+    </activity>
   </application>
 
 </manifest>

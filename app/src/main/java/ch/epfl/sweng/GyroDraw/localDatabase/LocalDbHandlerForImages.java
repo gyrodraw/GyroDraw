@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import ch.epfl.sweng.GyroDraw.R;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
      * Helper class to save images in local database.
      */
     public LocalDbHandlerForImages(Context context, SQLiteDatabase.CursorFactory factory,
-                                   int dbVersion) {
+            int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
@@ -48,7 +47,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db         database to look in
+     * @param db database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -109,7 +108,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
 
     @Override
     public List<Bitmap> getBitmapsFromDb(Context context) {
-        String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 10";
+        String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 20";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -123,17 +122,10 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
         do {
             byte[] byteArray = cursor.getBlob(2);
 
-            Bitmap drawing;
-
             if (byteArray != null) {
-                drawing = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            } else {
-                // Use default image
-                drawing = BitmapFactory
-                        .decodeResource(context.getResources(), R.drawable.default_image);
+                recentBitmaps.add(BitmapFactory.decodeByteArray(byteArray, 0,
+                        byteArray.length));
             }
-
-            recentBitmaps.add(drawing);
         } while (cursor.moveToNext());
 
         cursor.close();

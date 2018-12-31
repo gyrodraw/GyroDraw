@@ -18,16 +18,16 @@ public interface LocalDbForImages {
     void addBitmapToDb(Bitmap bitmap, int quality);
 
     /**
-     * Retrieves the most recent bitmap from the table.
+     * Retrieves the most recent bitmap from the local db.
      *
      * @return the newest bitmap
      */
     Bitmap getLatestBitmapFromDb();
 
     /**
-     * TODO
-     * @param context
-     * @return
+     * Retrieves the 20th most recent bitmaps from the local db.
+     * @param context the context invoking this method
+     * @return the newest bitmaps
      */
     List<Bitmap> getBitmapsFromDb(Context context);
 }

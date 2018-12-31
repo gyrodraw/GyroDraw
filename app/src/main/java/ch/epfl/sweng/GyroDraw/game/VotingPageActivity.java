@@ -104,7 +104,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveImage(View view) {
         if (ImageStorageManager.hasExternalWritePermissions(this)) {
-            ImageStorageManager.saveImage(this);
+            ImageStorageManager.saveImageFromDb(this);
         } else {
             savingModeRequest = true;
             ImageStorageManager.askForStoragePermission(this);

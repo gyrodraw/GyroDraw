@@ -6,7 +6,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+/**
+ * Class representing an {@link OnItemClickListener} for the recycler view used in the gallery.
+ */
+class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
     private final OnItemClickListener listener;
 
@@ -39,7 +42,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
     }
 
     public interface OnItemClickListener {

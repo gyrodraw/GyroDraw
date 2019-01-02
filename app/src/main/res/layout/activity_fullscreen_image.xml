@@ -5,21 +5,43 @@
   android:id="@+id/main_content"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:fitsSystemWindows="true"
   tools:context="ch.epfl.sweng.GyroDraw.home.gallery.FullscreenImageActivity">
+
+  <ImageView
+    android:id="@+id/backgroundImage"
+    style="@style/BackGroundImageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:alpha="1.0"
+    app:srcCompat="@drawable/home_background"
+    tools:ignore="ContentDescription" />
+
+  <ImageView
+    android:id="@+id/backgroundAnimation"
+    style="@style/BackGroundImageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:alpha="0.8"
+    app:srcCompat="@drawable/background_animation"
+    tools:ignore="ContentDescription" />
 
   <android.support.v4.view.ViewPager
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-  <android.support.design.widget.FloatingActionButton
-    android:id="@+id/floatingActionButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+  <ImageView
+    android:id="@+id/saveButton"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
     android:layout_margin="@dimen/fab_margin"
-    android:layout_gravity="end|bottom"
-    app:srcCompat="@android:drawable/ic_menu_save"/>
+    android:layout_gravity="start|bottom"
+    app:srcCompat="@drawable/save_button"
+    tools:ignore="ContentDescription"/>
 
 </android.support.design.widget.CoordinatorLayout>

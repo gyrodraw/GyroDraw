@@ -52,6 +52,7 @@ public class GalleryActivity extends NoBackPressActivity {
 
         LocalDbForImages dbHandler = new LocalDbHandlerForImages(this, null, 1);
         bitmaps = dbHandler.getBitmapsFromDb(this);
+
         GalleryAdapter adapter = new GalleryAdapter(this, bitmaps);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,

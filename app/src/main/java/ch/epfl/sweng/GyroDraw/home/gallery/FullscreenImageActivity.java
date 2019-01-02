@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import ch.epfl.sweng.GyroDraw.BaseActivity;
 import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
 import com.bumptech.glide.Glide;
 import java.util.List;
@@ -29,6 +29,8 @@ public class FullscreenImageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen_image);
 
+        GlideUtils.startBackgroundAnimation(this);
+
         final int pos = getIntent().getIntExtra("pos", 0);
 
         final List<Bitmap> bitmaps = GalleryActivity.getBitmaps();
@@ -39,19 +41,22 @@ public class FullscreenImageActivity extends BaseActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(pos);
 
-        FloatingActionButton button = findViewById(R.id.floatingActionButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageView saveButton = findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                ImageStorageManager.saveImage(getApplicationContext(), bitmaps.get(pos));
+                if (ImageStorageManager.hasExternalWritePermissions(FullscreenImageActivity.this)) {
+                    ImageStorageManager.saveImage(FullscreenImageActivity.this, bitmaps.get(pos));
+                } else {
+                    ImageStorageManager.askForStoragePermission(FullscreenImageActivity.this);
+                }
             }
         });
-
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A placeholder fragment containing the {@link ImageView} for the picture.
      */
     public static class PlaceholderFragment extends Fragment {
 

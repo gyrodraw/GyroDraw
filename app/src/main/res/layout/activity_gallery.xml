@@ -1,46 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  tools:context=".home.gallery.GalleryActivity">
-
-  <RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <TextView
-      android:id="@+id/galleryText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/crossText"
-      android:layout_centerHorizontal="true"
-      android:text="@string/gallery"
-      android:textColor="@color/colorLightGrey"
-      android:textSize="30sp" />
+    <ImageView
+        android:id="@+id/backgroundImage"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="1.0"
+        app:srcCompat="@drawable/home_background"
+        tools:ignore="ContentDescription" />
 
-    <TextView
-      android:id="@+id/crossText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_marginEnd="16dp"
-      android:layout_marginTop="16dp"
-      android:includeFontPadding="false"
-      android:text="@string/cross"
-      android:textColor="@color/colorDrawYellow"
-      android:textSize="30sp"
-      android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-  </RelativeLayout>
+    <ImageView
+        android:id="@+id/backgroundAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.8"
+        app:srcCompat="@drawable/background_animation"
+        tools:ignore="ContentDescription" />
 
-  <android.support.v7.widget.RecyclerView
-    android:id="@+id/galleryList"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <ImageView
+        android:id="@+id/darkAlpha"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkAlpha" />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"
+        tools:context=".home.gallery.GalleryActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/galleryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/crossText"
+                android:layout_centerHorizontal="true"
+                android:text="@string/gallery"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/crossText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:includeFontPadding="false"
+                android:text="@string/cross"
+                android:textColor="@color/colorDrawYellow"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/galleryList"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </LinearLayout>
+</RelativeLayout>

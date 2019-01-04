@@ -12,12 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 import ch.epfl.sweng.GyroDraw.BaseActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
-import com.bumptech.glide.Glide;
-import java.util.List;
 
 /**
  * Class representing the activity displaying fullscreen an image in the gallery.
@@ -27,6 +30,7 @@ public class FullscreenImageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_fullscreen_image);
 
         GlideUtils.startBackgroundAnimation(this);
@@ -85,7 +89,7 @@ public class FullscreenImageActivity extends BaseActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater
                     .inflate(R.layout.gallery_fullscreen_fragment, container, false);
 

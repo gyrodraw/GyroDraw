@@ -1,47 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/main_content"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context="ch.epfl.sweng.GyroDraw.home.gallery.FullscreenImageActivity">
-
-  <ImageView
-    android:id="@+id/backgroundImage"
-    style="@style/BackGroundImageView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:alpha="1.0"
-    app:srcCompat="@drawable/home_background"
-    tools:ignore="ContentDescription" />
+    tools:context="ch.epfl.sweng.GyroDraw.home.gallery.FullscreenImageActivity">
 
-  <ImageView
-    android:id="@+id/backgroundAnimation"
-    style="@style/BackGroundImageView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:alpha="0.8"
-    app:srcCompat="@drawable/background_animation"
-    tools:ignore="ContentDescription" />
+    <ImageView
+        android:id="@+id/backgroundImage"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="1.0"
+        app:srcCompat="@drawable/home_background"
+        tools:ignore="ContentDescription" />
 
-  <android.support.v4.view.ViewPager
-    android:id="@+id/container"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <ImageView
+        android:id="@+id/backgroundAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.8"
+        app:srcCompat="@drawable/background_animation"
+        tools:ignore="ContentDescription" />
 
-  <ImageView
-    android:id="@+id/saveButton"
-    android:layout_width="50dp"
-    android:layout_height="50dp"
-    android:layout_margin="@dimen/fab_margin"
-    android:layout_gravity="start|bottom"
-    app:srcCompat="@drawable/save_button"
-    tools:ignore="ContentDescription"/>
+    <ImageView
+        android:id="@+id/darkAlpha"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkAlpha" />
+
+    <RelativeLayout
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/colorPrimaryDark">
+
+        <TextView
+            android:id="@+id/crossText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:includeFontPadding="false"
+            android:text="@string/cross"
+            android:textColor="@color/colorDrawYellow"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <ImageView
+            android:id="@+id/saveButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="start|bottom"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@drawable/save_button"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

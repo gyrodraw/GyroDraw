@@ -44,21 +44,6 @@
         android:layout_marginBottom="32dp"
         android:background="@color/colorPrimaryDark">
 
-        <TextView
-            android:id="@+id/crossText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:includeFontPadding="false"
-            android:text="@string/cross"
-            android:textColor="@color/colorDrawYellow"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <android.support.v4.view.ViewPager
             android:id="@+id/container"
             android:layout_width="wrap_content"
@@ -76,6 +61,21 @@
             android:layout_marginBottom="16dp"
             app:srcCompat="@drawable/save_button"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/crossText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:includeFontPadding="false"
+            android:text="@string/cross"
+            android:textColor="@color/colorDrawYellow"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </RelativeLayout>
 

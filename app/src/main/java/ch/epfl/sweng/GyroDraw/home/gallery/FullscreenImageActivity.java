@@ -12,20 +12,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import ch.epfl.sweng.GyroDraw.BaseActivity;
+import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
+import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 
 /**
  * Class representing the activity displaying fullscreen an image in the gallery.
  */
-public class FullscreenImageActivity extends BaseActivity {
+public class FullscreenImageActivity extends NoBackPressActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,10 @@ public class FullscreenImageActivity extends BaseActivity {
         setContentView(R.layout.activity_fullscreen_image);
 
         GlideUtils.startBackgroundAnimation(this);
+
+        TextView exitButton = findViewById(R.id.crossText);
+        exitButton.setTypeface(typeMuro);
+        LayoutUtils.setFadingExitListener(exitButton, this, GalleryActivity.class);
 
         final int pos = getIntent().getIntExtra("pos", 0);
 

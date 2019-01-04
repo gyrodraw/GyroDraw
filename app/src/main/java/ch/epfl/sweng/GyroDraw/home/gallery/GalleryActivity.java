@@ -11,16 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
+
+import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
+import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 
 /**
  * Class representing the gallery, where users can see the pictures they drew.
@@ -41,11 +45,13 @@ public class GalleryActivity extends NoBackPressActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_gallery);
 
+        GlideUtils.startBackgroundAnimation(this);
+
         ((TextView) findViewById(R.id.galleryText)).setTypeface(typeMuro);
 
         TextView exitButton = findViewById(R.id.crossText);
         exitButton.setTypeface(typeMuro);
-        LayoutUtils.setFadingExitListener(exitButton, this);
+        LayoutUtils.setFadingExitHomeListener(exitButton, this);
 
         RecyclerView recyclerView = findViewById(R.id.galleryList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));

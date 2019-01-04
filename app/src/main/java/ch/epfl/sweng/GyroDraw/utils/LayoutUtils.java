@@ -103,7 +103,8 @@ public final class LayoutUtils {
     }
 
     private static void setExitListener(final View exitButton, final BaseActivity activity,
-                                        final int inTranstionId, final int outTransitionId) {
+                                        final int inTranstionId, final int outTransitionId,
+                                        final Class activityClass) {
         exitButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -114,7 +115,7 @@ public final class LayoutUtils {
                     case MotionEvent.ACTION_UP:
                         bounceButton(view, activity);
                         if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
-                            activity.launchActivity(HomeActivity.class);
+                            activity.launchActivity(activityClass);
                             activity.overridePendingTransition(inTranstionId, outTransitionId);
                             activity.finish();
                         }
@@ -127,24 +128,38 @@ public final class LayoutUtils {
     }
 
     /**
-     * Sets listener and animation for exit button with a fade transition.
+     * Sets listener and animation for exit button to the home page with a fade transition.
      *
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setFadingExitListener(final View exitButton, final BaseActivity activity) {
-        setExitListener(exitButton, activity, R.anim.fade_in, R.anim.fade_out);
+    public static void setFadingExitHomeListener(final View exitButton,
+                                                 final BaseActivity activity) {
+        setExitListener(exitButton, activity, R.anim.fade_in, R.anim.fade_out, HomeActivity.class);
     }
 
     /**
-     * Sets listener and animation for exit button with a right slide transition.
+     * Sets listener and animation for exit button to the home page with a right slide transition.
      *
      * @param exitButton the exit button
      * @param activity   the context of the exit button
      */
-    public static void setSlideRightExitListener(final View exitButton,
-                                                 final BaseActivity activity) {
-        setExitListener(exitButton, activity, R.anim.slide_in_right, R.anim.slide_out_left);
+    public static void setSlideRightExitHomeListener(final View exitButton,
+                                                     final BaseActivity activity) {
+        setExitListener(exitButton, activity, R.anim.slide_in_right, R.anim.slide_out_left,
+                HomeActivity.class);
+    }
+
+    /**
+     * Sets listener and animation for exit button with a fade transition.
+     *
+     * @param exitButton    the exit button
+     * @param activity      the context of the exit button
+     * @param activityClass the targeted class
+     */
+    public static void setFadingExitListener(final View exitButton, final BaseActivity activity,
+                                             final Class activityClass) {
+        setExitListener(exitButton, activity, R.anim.fade_in, R.anim.fade_out, activityClass);
     }
 
     /**

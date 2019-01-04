@@ -57,7 +57,7 @@ public class ShopActivity extends NoBackPressActivity {
 
         fillShop();
         addColorsToShop();
-        LayoutUtils.setSlideRightExitListener(exitButton, this);
+        LayoutUtils.setSlideRightExitHomeListener(exitButton, this);
 
         findViewById(R.id.backgroundAnimation).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override

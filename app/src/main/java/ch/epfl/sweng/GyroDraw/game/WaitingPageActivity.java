@@ -198,7 +198,7 @@ public class WaitingPageActivity extends NoBackPressActivity {
                 findViewById(R.id.buttonWord2), findViewById(R.id.voteText),
                 findViewById(R.id.waitingTime), findViewById(R.id.leaveButton));
 
-        LayoutUtils.setFadingExitListener(findViewById(R.id.leaveButton), this);
+        LayoutUtils.setFadingExitHomeListener(findViewById(R.id.leaveButton), this);
 
         findViewById(R.id.waitingTime).setVisibility(View.GONE);
     }

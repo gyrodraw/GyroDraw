@@ -32,6 +32,7 @@ import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 public class GalleryActivity extends NoBackPressActivity {
 
     private static final int COLUMNS = 3;
+    public static final String POS = "pos";
 
     private static List<Bitmap> bitmaps;
 
@@ -69,7 +70,7 @@ public class GalleryActivity extends NoBackPressActivity {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(),
                                 FullscreenImageActivity.class);
-                        intent.putExtra("pos", position);
+                        intent.putExtra(POS, position);
                         startActivity(intent);
                     }
                 }));

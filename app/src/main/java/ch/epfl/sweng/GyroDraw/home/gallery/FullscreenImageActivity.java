@@ -1,5 +1,9 @@
 package ch.epfl.sweng.GyroDraw.home.gallery;
 
+import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.askForStoragePermission;
+import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.hasExternalWritePermissions;
+import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.saveImage;
+
 import android.graphics.Bitmap;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -13,17 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import java.util.List;
-
-import ch.epfl.sweng.GyroDraw.BaseActivity;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
-import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
+import com.bumptech.glide.Glide;
+import java.util.List;
 
 /**
  * Class representing the activity displaying fullscreen an image in the gallery.
@@ -42,7 +41,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         exitButton.setTypeface(typeMuro);
         LayoutUtils.setFadingExitListener(exitButton, this, GalleryActivity.class);
 
-        final int pos = getIntent().getIntExtra("pos", 0);
+        final int pos = getIntent().getIntExtra(GalleryActivity.POS, 0);
 
         final List<Bitmap> bitmaps = GalleryActivity.getBitmaps();
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(
@@ -57,10 +56,10 @@ public class FullscreenImageActivity extends NoBackPressActivity {
             @RequiresApi(api = VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                if (ImageStorageManager.hasExternalWritePermissions(FullscreenImageActivity.this)) {
-                    ImageStorageManager.saveImage(FullscreenImageActivity.this, bitmaps.get(pos));
+                if (hasExternalWritePermissions(FullscreenImageActivity.this)) {
+                    saveImage(FullscreenImageActivity.this, bitmaps.get(pos));
                 } else {
-                    ImageStorageManager.askForStoragePermission(FullscreenImageActivity.this);
+                    askForStoragePermission(FullscreenImageActivity.this);
                 }
             }
         });

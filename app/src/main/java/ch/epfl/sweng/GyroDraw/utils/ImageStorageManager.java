@@ -19,6 +19,7 @@ import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Calendar;
 
 /**
  * This class is responsible for saving images to the device storage.
@@ -31,6 +32,7 @@ public final class ImageStorageManager {
 
     /**
      * Retrieves the latest image from the local database and saves it in local external storage.
+     *
      * @param context activity context
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -43,21 +45,23 @@ public final class ImageStorageManager {
 
     /**
      * Saves the given image in local external storage.
+     *
      * @param context activity context
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context, Bitmap bitmap) {
         Account account = Account.getInstance(context);
-        String imageName = account.getUsername() + account.getTotalMatches();
+        String imageName =
+                account.getUsername() + "-" + Calendar.getInstance().getTime();
         ImageStorageManager.writeImage(bitmap, imageName, context);
     }
 
     /**
      * Saves an image to the device file system.
      *
-     * @param image     the image to save.
+     * @param image the image to save.
      * @param imageName the filename of the image.
-     * @param context  the activity.
+     * @param context the activity.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void writeImage(Bitmap image, String imageName, final Context context) {
@@ -81,7 +85,7 @@ public final class ImageStorageManager {
      * Writes an image to the storage.
      *
      * @param image the image to store.
-     * @param file  the file path.
+     * @param file the file path.
      */
     static void writeFileToStorage(Bitmap image, File file) {
         Log.d("ImageStorageManager", "Saving image: " + file.getPath());
@@ -122,6 +126,7 @@ public final class ImageStorageManager {
 
     /**
      * Asks permissions for writing in external files.
+     *
      * @param context context of the application
      */
     public static void askForStoragePermission(Context context) {
@@ -131,8 +136,8 @@ public final class ImageStorageManager {
     }
 
     /**
-     * Checks if storage permissions are granted.
-     * If permissions are revoked it requests permission.
+     * Checks if storage permissions are granted. If permissions are revoked it requests
+     * permission.
      *
      * @param context activity context
      * @return a boolean indicating if permissions are granted or not.

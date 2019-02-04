@@ -14,12 +14,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
+import ch.epfl.sweng.GyroDraw.utils.ImageSharer;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 import com.bumptech.glide.Glide;
 import java.util.List;
@@ -28,6 +30,9 @@ import java.util.List;
  * Class representing the activity displaying fullscreen an image in the gallery.
  */
 public class FullscreenImageActivity extends NoBackPressActivity {
+
+    private boolean sharingMode = false;
+    private boolean savingModeRequest = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +64,41 @@ public class FullscreenImageActivity extends NoBackPressActivity {
                 if (hasExternalWritePermissions(FullscreenImageActivity.this)) {
                     saveImage(FullscreenImageActivity.this, bitmaps.get(pos));
                 } else {
+                    savingModeRequest = true;
                     askForStoragePermission(FullscreenImageActivity.this);
                 }
             }
         });
+
+        ImageView shareButton = findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharingMode = true;
+                ImageSharer.getInstance(FullscreenImageActivity.this)
+                        .shareImageToFacebook(bitmaps.get(pos));
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (sharingMode) {
+            sharingMode = false;
+            return;
+        }
+
+        if (savingModeRequest) {
+            savingModeRequest = false;
+            return;
+        }
+
+        ImageSharer sharer = ImageSharer.getInstance();
+        if (sharer != null) {
+            sharer.setActivity(null);
+        }
     }
 
     /**
@@ -95,7 +131,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                Bundle savedInstanceState) {
             View rootView = inflater
                     .inflate(R.layout.gallery_fullscreen_fragment, container, false);
 

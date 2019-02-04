@@ -7,10 +7,11 @@ import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.saveImage;
 import android.graphics.Bitmap;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,12 +50,14 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         final int pos = getIntent().getIntExtra(GalleryActivity.POS, 0);
 
         final List<Bitmap> bitmaps = GalleryActivity.getBitmaps();
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(
+        ImagesPagerAdapter imagesPagerAdapter = new ImagesPagerAdapter(
                 getSupportFragmentManager(), bitmaps);
 
-        ViewPager mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(pos);
+        ViewPager viewPager = findViewById(R.id.container);
+        viewPager.setAdapter(imagesPagerAdapter);
+        viewPager.setCurrentItem(pos);
+
+        final Bitmap image = bitmaps.get(pos);
 
         ImageView saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +65,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
             @Override
             public void onClick(View view) {
                 if (hasExternalWritePermissions(FullscreenImageActivity.this)) {
-                    saveImage(FullscreenImageActivity.this, bitmaps.get(pos));
+                    saveImage(FullscreenImageActivity.this, image);
                 } else {
                     savingModeRequest = true;
                     askForStoragePermission(FullscreenImageActivity.this);
@@ -75,8 +78,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
             @Override
             public void onClick(View view) {
                 sharingMode = true;
-                ImageSharer.getInstance(FullscreenImageActivity.this)
-                        .shareImageToFacebook(bitmaps.get(pos));
+                ImageSharer.getInstance(FullscreenImageActivity.this).shareImageToFacebook(image);
             }
         });
     }
@@ -116,7 +118,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         }
 
         /**
-         * Returns a new instance of this fragment for the given section number.
+         * Returns a new instance of this fragment for the given bitmap.
          */
         public static PlaceholderFragment newInstance(Bitmap bitmap) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -145,16 +147,24 @@ public class FullscreenImageActivity extends NoBackPressActivity {
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the
-     * sections/tabs/pages.
+     * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one of the
+     * images.
      */
-    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class ImagesPagerAdapter extends FragmentStatePagerAdapter {
 
-        private List<Bitmap> data;
+        private final List<Bitmap> data;
 
-        private SectionsPagerAdapter(FragmentManager fm, List<Bitmap> data) {
+        private ImagesPagerAdapter(FragmentManager fm, List<Bitmap> data) {
             super(fm);
             this.data = data;
+        }
+
+        @Override
+        public Parcelable saveState() {
+            Bundle bundle = (Bundle) super.saveState();
+            bundle.putParcelableArray("states",
+                    null); // Never maintain any states from the base class, just null it out
+            return bundle;
         }
 
         @Override

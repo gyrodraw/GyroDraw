@@ -39,7 +39,8 @@ public final class ImageStorageManager {
     public static void saveImageFromDb(Context context) {
         LocalDbForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
         Account account = Account.getInstance(context);
-        String imageName = account.getUsername() + account.getTotalMatches();
+        String imageName = "DRAWING_" + account.getTotalMatches()
+                + "_" + account.getUsername() + ".jpg";
         ImageStorageManager.writeImage(localDbHandler.getLatestBitmapFromDb(), imageName, context);
     }
 
@@ -51,8 +52,8 @@ public final class ImageStorageManager {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context, Bitmap bitmap) {
         Account account = Account.getInstance(context);
-        String imageName =
-                account.getUsername() + "-" + Calendar.getInstance().getTime();
+        String imageName = "DRAWING_" + account.getUsername() + "_" +
+                Calendar.getInstance().getTime() + ".jpg";
         ImageStorageManager.writeImage(bitmap, imageName, context);
     }
 

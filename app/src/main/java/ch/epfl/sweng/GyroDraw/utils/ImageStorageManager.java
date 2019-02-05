@@ -52,8 +52,8 @@ public final class ImageStorageManager {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context, Bitmap bitmap) {
         Account account = Account.getInstance(context);
-        String imageName = "DRAWING_" + account.getUsername() + "_" +
-                Calendar.getInstance().getTime() + ".jpg";
+        String imageName = "DRAWING_" + account.getUsername() + "_"
+                + Calendar.getInstance().getTime() + ".jpg";
         ImageStorageManager.writeImage(bitmap, imageName, context);
     }
 

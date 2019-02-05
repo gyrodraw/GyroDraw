@@ -104,7 +104,7 @@ public class GalleryActivity extends NoBackPressActivity {
                             .override(200, 200)
                             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                     .thumbnail(0.5f)
-                    .into(((ItemHolder) holder).mImg);
+                    .into(((ItemHolder) holder).imageView);
         }
 
         @Override
@@ -118,11 +118,11 @@ public class GalleryActivity extends NoBackPressActivity {
      */
     private static class ItemHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView mImg;
+        private final ImageView imageView;
 
         private ItemHolder(View itemView) {
             super(itemView);
-            mImg = itemView.findViewById(R.id.itemImage);
+            imageView = itemView.findViewById(R.id.itemImage);
         }
     }
 }

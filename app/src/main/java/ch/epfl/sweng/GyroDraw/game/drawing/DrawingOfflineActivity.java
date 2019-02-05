@@ -24,7 +24,6 @@ import java.util.Random;
  */
 public class DrawingOfflineActivity extends GyroDrawingActivity {
 
-    private static final String TAG = "DrawingOfflineActivity";
     private ImageView mysteryButton;
     private DrawingItems drawingItems;
     private boolean isToggled;

@@ -128,6 +128,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         }
 
         public PlaceholderFragment() {
+            // Conventions suggest that it should be provided but not used
         }
 
         @Override

@@ -20,16 +20,16 @@ class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
         this.gestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
-                    public boolean onSingleTapUp(MotionEvent e) {
+                    public boolean onSingleTapUp(MotionEvent motionEvent) {
                         return true;
                     }
                 });
     }
 
     @Override
-    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-        View childView = view.findChildViewUnder(e.getX(), e.getY());
-        if (childView != null && listener != null && gestureDetector.onTouchEvent(e)) {
+    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        View childView = view.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+        if (childView != null && listener != null && gestureDetector.onTouchEvent(motionEvent)) {
             listener.onItemClick(childView, view.getChildLayoutPosition(childView));
             return true;
         }
@@ -38,10 +38,12 @@ class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
     @Override
     public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        // Not useful here
     }
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        // Not useful here
     }
 
     /**

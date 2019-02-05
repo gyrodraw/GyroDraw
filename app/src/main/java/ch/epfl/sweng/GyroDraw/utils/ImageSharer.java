@@ -104,8 +104,8 @@ public class ImageSharer {
      */
     private void uploadImageToFirebase(Bitmap image) {
         Account account = Account.getInstance(context);
-        String imageName = "DRAWING_" + account.getUsername() + "_" +
-                Calendar.getInstance().getTime() + ".jpg";
+        String imageName = "DRAWING_" + account.getUsername() + "_"
+                + Calendar.getInstance().getTime() + ".jpg";
 
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
         FbStorage.sendBitmapToFirebaseStorage(image, imageName,

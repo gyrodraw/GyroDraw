@@ -25,6 +25,7 @@ import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.ImageSharer;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 import com.bumptech.glide.Glide;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,8 +60,13 @@ public class FullscreenImageActivity extends NoBackPressActivity {
 
         final Bitmap image = bitmaps.get(pos);
 
+        setSaveButtonListener(image);
+        setShareButtonListener(image);
+    }
+
+    private void setSaveButtonListener(final Bitmap image) {
         ImageView saveButton = findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        saveButton.setOnClickListener(new OnClickListener() {
             @RequiresApi(api = VERSION_CODES.O)
             @Override
             public void onClick(View view) {
@@ -72,7 +78,9 @@ public class FullscreenImageActivity extends NoBackPressActivity {
                 }
             }
         });
+    }
 
+    private void setShareButtonListener(final Bitmap image) {
         ImageView shareButton = findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -143,29 +151,29 @@ public class FullscreenImageActivity extends NoBackPressActivity {
      */
     private class ImagesPagerAdapter extends FragmentStatePagerAdapter {
 
-        private final List<Bitmap> data;
+        private final List<Bitmap> bitmaps;
 
-        private ImagesPagerAdapter(FragmentManager fm, List<Bitmap> data) {
+        private ImagesPagerAdapter(FragmentManager fm, List<Bitmap> bitmaps) {
             super(fm);
-            this.data = data;
+            this.bitmaps = new ArrayList<>(bitmaps);
         }
 
         @Override
         public Parcelable saveState() {
             Bundle bundle = (Bundle) super.saveState();
             bundle.putParcelableArray("states",
-                    null); // Never maintain any states from the base class, just null it out
+                    null); // Never maintain any states
             return bundle;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PlaceholderFragment.newInstance(data.get(position));
+            return PlaceholderFragment.newInstance(bitmaps.get(position));
         }
 
         @Override
         public int getCount() {
-            return data.size();
+            return bitmaps.size();
         }
     }
 }

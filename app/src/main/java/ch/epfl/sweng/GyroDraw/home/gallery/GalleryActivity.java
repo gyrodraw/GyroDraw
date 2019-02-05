@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
@@ -32,12 +33,13 @@ import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 public class GalleryActivity extends NoBackPressActivity {
 
     private static final int COLUMNS = 3;
+
     public static final String POS = "pos";
 
     private static List<Bitmap> bitmaps;
 
     public static List<Bitmap> getBitmaps() {
-        return bitmaps;
+        return new ArrayList<>(bitmaps);
     }
 
     @Override
@@ -65,7 +67,6 @@ public class GalleryActivity extends NoBackPressActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
                 new RecyclerItemClickListener.OnItemClickListener() {
-
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(),
@@ -76,15 +77,17 @@ public class GalleryActivity extends NoBackPressActivity {
                 }));
     }
 
-
+    /**
+     * A {@link RecyclerView.Adapter} used to manage the different pictures in the gallery.
+     */
     private class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private final Context context;
-        private final List<Bitmap> data;
+        private final List<Bitmap> images;
 
-        private GalleryAdapter(Context context, List<Bitmap> data) {
+        private GalleryAdapter(Context context, List<Bitmap> images) {
             this.context = context;
-            this.data = data;
+            this.images = new ArrayList<>(images);
         }
 
         @Override
@@ -95,28 +98,31 @@ public class GalleryActivity extends NoBackPressActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Glide.with(context).load(data.get(position))
+            Glide.with(context).load(images.get(position))
                     .transition(new DrawableTransitionOptions().crossFade())
                     .apply(new RequestOptions()
                             .override(200, 200)
                             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                     .thumbnail(0.5f)
-                    .into(((ItemHolder) holder).mImg);
+                    .into(((ItemHolder) holder).imageView);
         }
 
         @Override
         public int getItemCount() {
-            return data.size();
+            return images.size();
         }
     }
 
+    /**
+     * A {@link RecyclerView.ViewHolder} used to hold an {@link ImageView}.
+     */
     private static class ItemHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView mImg;
+        private final ImageView imageView;
 
         private ItemHolder(View itemView) {
             super(itemView);
-            mImg = itemView.findViewById(R.id.itemImage);
+            imageView = itemView.findViewById(R.id.itemImage);
         }
     }
 }

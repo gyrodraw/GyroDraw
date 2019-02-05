@@ -113,7 +113,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        ArrayList<Bitmap> recentBitmaps = new ArrayList<>();
+        List<Bitmap> recentBitmaps = new ArrayList<>();
 
         if (cursor == null || !cursor.moveToFirst()) {
             return recentBitmaps;

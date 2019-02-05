@@ -62,6 +62,18 @@
             app:srcCompat="@drawable/save_button"
             tools:ignore="ContentDescription" />
 
+        <ImageView
+          android:id="@+id/shareButton"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentBottom="true"
+          android:layout_gravity="end|bottom"
+          android:layout_marginStart="16dp"
+          android:layout_marginBottom="16dp"
+          app:srcCompat="@drawable/share_button"
+          tools:ignore="ContentDescription" />
+
         <TextView
             android:id="@+id/crossText"
             android:layout_width="wrap_content"

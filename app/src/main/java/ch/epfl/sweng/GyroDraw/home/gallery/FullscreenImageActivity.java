@@ -7,27 +7,34 @@ import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.saveImage;
 import android.graphics.Bitmap;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
+import ch.epfl.sweng.GyroDraw.utils.ImageSharer;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
 import com.bumptech.glide.Glide;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class representing the activity displaying fullscreen an image in the gallery.
  */
 public class FullscreenImageActivity extends NoBackPressActivity {
+
+    private boolean sharingMode = false;
+    private boolean savingModeRequest = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,25 +51,64 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         final int pos = getIntent().getIntExtra(GalleryActivity.POS, 0);
 
         final List<Bitmap> bitmaps = GalleryActivity.getBitmaps();
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(
+        ImagesPagerAdapter imagesPagerAdapter = new ImagesPagerAdapter(
                 getSupportFragmentManager(), bitmaps);
 
-        ViewPager mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(pos);
+        ViewPager viewPager = findViewById(R.id.container);
+        viewPager.setAdapter(imagesPagerAdapter);
+        viewPager.setCurrentItem(pos);
 
+        final Bitmap image = bitmaps.get(pos);
+
+        setSaveButtonListener(image);
+        setShareButtonListener(image);
+    }
+
+    private void setSaveButtonListener(final Bitmap image) {
         ImageView saveButton = findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        saveButton.setOnClickListener(new OnClickListener() {
             @RequiresApi(api = VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 if (hasExternalWritePermissions(FullscreenImageActivity.this)) {
-                    saveImage(FullscreenImageActivity.this, bitmaps.get(pos));
+                    saveImage(FullscreenImageActivity.this, image);
                 } else {
+                    savingModeRequest = true;
                     askForStoragePermission(FullscreenImageActivity.this);
                 }
             }
         });
+    }
+
+    private void setShareButtonListener(final Bitmap image) {
+        ImageView shareButton = findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharingMode = true;
+                ImageSharer.getInstance(FullscreenImageActivity.this).shareImageToFacebook(image);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (sharingMode) {
+            sharingMode = false;
+            return;
+        }
+
+        if (savingModeRequest) {
+            savingModeRequest = false;
+            return;
+        }
+
+        ImageSharer sharer = ImageSharer.getInstance();
+        if (sharer != null) {
+            sharer.setActivity(null);
+        }
     }
 
     /**
@@ -71,31 +117,23 @@ public class FullscreenImageActivity extends NoBackPressActivity {
     public static class PlaceholderFragment extends Fragment {
 
         private Bitmap bitmap;
-        private static final String ARG_BITMAP = "bitmap";
-
-        @Override
-        public void setArguments(Bundle args) {
-            super.setArguments(args);
-            this.bitmap = args.getParcelable(ARG_BITMAP);
-        }
 
         /**
-         * Returns a new instance of this fragment for the given section number.
+         * Returns a new instance of this fragment for the given bitmap.
          */
         public static PlaceholderFragment newInstance(Bitmap bitmap) {
             PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putParcelable(ARG_BITMAP, bitmap);
-            fragment.setArguments(args);
+            fragment.bitmap = bitmap;
             return fragment;
         }
 
         public PlaceholderFragment() {
+            // Conventions suggest that it should be provided but not used
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                Bundle savedInstanceState) {
             View rootView = inflater
                     .inflate(R.layout.gallery_fullscreen_fragment, container, false);
 
@@ -109,26 +147,34 @@ public class FullscreenImageActivity extends NoBackPressActivity {
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the
-     * sections/tabs/pages.
+     * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one of the
+     * images.
      */
-    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class ImagesPagerAdapter extends FragmentStatePagerAdapter {
 
-        private List<Bitmap> data;
+        private final List<Bitmap> bitmaps;
 
-        private SectionsPagerAdapter(FragmentManager fm, List<Bitmap> data) {
+        private ImagesPagerAdapter(FragmentManager fm, List<Bitmap> bitmaps) {
             super(fm);
-            this.data = data;
+            this.bitmaps = new ArrayList<>(bitmaps);
+        }
+
+        @Override
+        public Parcelable saveState() {
+            Bundle bundle = (Bundle) super.saveState();
+            bundle.putParcelableArray("states",
+                    null); // Never maintain any states
+            return bundle;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PlaceholderFragment.newInstance(data.get(position));
+            return PlaceholderFragment.newInstance(bitmaps.get(position));
         }
 
         @Override
         public int getCount() {
-            return data.size();
+            return bitmaps.size();
         }
     }
 }

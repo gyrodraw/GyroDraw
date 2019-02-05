@@ -109,22 +109,13 @@ public class FullscreenImageActivity extends NoBackPressActivity {
     public static class PlaceholderFragment extends Fragment {
 
         private Bitmap bitmap;
-        private static final String ARG_BITMAP = "bitmap";
-
-        @Override
-        public void setArguments(Bundle args) {
-            super.setArguments(args);
-            this.bitmap = args.getParcelable(ARG_BITMAP);
-        }
 
         /**
          * Returns a new instance of this fragment for the given bitmap.
          */
         public static PlaceholderFragment newInstance(Bitmap bitmap) {
             PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putParcelable(ARG_BITMAP, bitmap);
-            fragment.setArguments(args);
+            fragment.bitmap = bitmap;
             return fragment;
         }
 

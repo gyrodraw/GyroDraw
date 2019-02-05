@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            app:srcCompat="@drawable/battle_log_button"
+            app:srcCompat="@drawable/gallery_button"
             tools:ignore="ContentDescription" />
 
     </LinearLayout>

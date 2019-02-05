@@ -17,7 +17,7 @@ class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
     RecyclerItemClickListener(Context context, OnItemClickListener listener) {
         this.listener = listener;
-        gestureDetector = new GestureDetector(context,
+        this.gestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapUp(MotionEvent e) {
@@ -44,7 +44,17 @@ class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
     }
 
+    /**
+     * Interface representing a listener for an item click.
+     */
     public interface OnItemClickListener {
+
+        /**
+         * Processes a click on an item at the given position and contained in the given view.
+         *
+         * @param view the item's view container
+         * @param position the item's position
+         */
         void onItemClick(View view, int position);
     }
 }

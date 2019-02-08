@@ -1,0 +1,82 @@
+package ch.epfl.sweng.GyroDraw.home.gallery;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
+import android.graphics.Bitmap;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.home.HomeActivity;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(AndroidJUnit4.class)
+public class GalleryAndFullscreenImageActivityTest {
+
+    @Rule
+    public final ActivityTestRule<GalleryActivity> activityRule = new ActivityTestRule<>(
+            GalleryActivity.class);
+
+    @Before
+    public void init() {
+        Intents.init();
+        LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(
+                activityRule.getActivity(), null, 1);
+        dbHandler.addBitmapToDb(Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888), 2);
+    }
+
+    @After
+    public void release() {
+        Intents.release();
+    }
+
+    @Test
+    public void clickOnItemOpensFullscreenImageActivity() {
+        openFullscreenImageActivity();
+        intended(hasComponent(FullscreenImageActivity.class.getName()));
+    }
+
+    @Test
+    public void clickOnExitCrossOpensHomeActivity() {
+        onView(withId(R.id.crossText)).perform(click());
+        intended(hasComponent(HomeActivity.class.getName()));
+    }
+
+    ////////// FullscreenImageActiivity /////////////
+
+    @Test
+    public void clickOnExitCrossOpensGalleryActivity() {
+        openFullscreenImageActivity();
+        onView(withId(R.id.crossText)).perform(click());
+        intended(hasComponent(GalleryActivity.class.getName()));
+    }
+    
+    @Test
+    public void testSaveButton() {
+        openFullscreenImageActivity();
+        onView(withId(R.id.saveButton)).perform(click());
+        intended(hasComponent(FullscreenImageActivity.class.getName()));
+    }
+
+    @Test
+    public void testShareButton() {
+        openFullscreenImageActivity();
+        onView(withId(R.id.shareButton)).perform(click());
+        intended(hasComponent(FullscreenImageActivity.class.getName()));
+    }
+
+    private void openFullscreenImageActivity() {
+        onView(withId(R.id.galleryList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+    }
+}

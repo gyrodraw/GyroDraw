@@ -58,7 +58,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
     }
 
     @Override
-    public void addBitmapToDb(Bitmap bitmap, int quality) {
+    public void addBitmap(Bitmap bitmap, int quality) {
         if (bitmap != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
@@ -78,13 +78,19 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
             SQLiteDatabase db = this.getWritableDatabase();
 
             db.insert(TABLE_NAME, null, values);
-
             db.close();
         }
     }
 
     @Override
-    public Bitmap getLatestBitmapFromDb() {
+    public void removeAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        db.close();
+    }
+
+    @Override
+    public Bitmap getLatestBitmap() {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -107,7 +113,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
     }
 
     @Override
-    public List<Bitmap> getBitmapsFromDb(Context context) {
+    public List<Bitmap> getBitmaps(Context context) {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 20";
 
         SQLiteDatabase db = this.getWritableDatabase();

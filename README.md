@@ -6,6 +6,6 @@
 
 ## Download
 
-Gyrodraw can be downloaded from:
+GyroDraw can be downloaded from:
 
 - [Github Releases](https://github.com/gyrodraw/GyroDraw/releases)

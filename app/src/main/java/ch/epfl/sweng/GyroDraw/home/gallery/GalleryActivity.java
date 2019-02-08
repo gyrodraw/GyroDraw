@@ -1,5 +1,6 @@
 package ch.epfl.sweng.GyroDraw.home.gallery;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,25 +8,24 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing the gallery, where users can see the pictures they drew.
@@ -42,6 +42,7 @@ public class GalleryActivity extends NoBackPressActivity {
         return new ArrayList<>(bitmaps);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +57,22 @@ public class GalleryActivity extends NoBackPressActivity {
         exitButton.setTypeface(typeMuro);
         LayoutUtils.setFadingExitHomeListener(exitButton, this);
 
-        RecyclerView recyclerView = findViewById(R.id.galleryList);
+        final RecyclerView recyclerView = findViewById(R.id.galleryList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setHasFixedSize(true);
 
-        LocalDbForImages dbHandler = new LocalDbHandlerForImages(this, null, 1);
-        bitmaps = dbHandler.getBitmapsFromDb(this);
+        final LocalDbForImages dbHandler = new LocalDbHandlerForImages(this, null, 1);
+        bitmaps = dbHandler.getBitmaps(this);
+
+        ImageView deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dbHandler.removeAll();
+                recreate();
+                return true;
+            }
+        });
 
         GalleryAdapter adapter = new GalleryAdapter(this, bitmaps);
         recyclerView.setAdapter(adapter);

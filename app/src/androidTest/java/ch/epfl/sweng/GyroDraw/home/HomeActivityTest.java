@@ -1,29 +1,5 @@
 package ch.epfl.sweng.GyroDraw.home;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.os.SystemClock;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity;
-import ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity;
-import ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity;
-import ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForAccount;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.GyroDraw.shop.ShopActivity;
-
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -44,6 +20,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.os.SystemClock;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity;
+import ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity;
+import ch.epfl.sweng.GyroDraw.home.gallery.GalleryActivity;
+import ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.GyroDraw.shop.ShopActivity;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
@@ -171,6 +170,12 @@ public class HomeActivityTest {
     public void testLaunchShop() {
         onView(withId(R.id.shopButton)).perform(click());
         intended(hasComponent(ShopActivity.class.getName()));
+    }
+
+    @Test
+    public void testLaunchGallery() {
+        onView(withId(R.id.galleryButton)).perform(click());
+        intended(hasComponent(GalleryActivity.class.getName()));
     }
 
     @Test

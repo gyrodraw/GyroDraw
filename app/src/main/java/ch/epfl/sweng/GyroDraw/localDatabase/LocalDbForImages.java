@@ -15,19 +15,24 @@ public interface LocalDbForImages {
      *
      * @param bitmap to insert
      */
-    void addBitmapToDb(Bitmap bitmap, int quality);
+    void addBitmap(Bitmap bitmap, int quality);
+
+    /**
+     * Removes all the bitmaps stored in the local db.
+     */
+    void removeAll();
 
     /**
      * Retrieves the most recent bitmap from the local db.
      *
      * @return the newest bitmap
      */
-    Bitmap getLatestBitmapFromDb();
+    Bitmap getLatestBitmap();
 
     /**
      * Retrieves the 20th most recent bitmaps from the local db.
      * @param context the context invoking this method
      * @return the newest bitmaps
      */
-    List<Bitmap> getBitmapsFromDb(Context context);
+    List<Bitmap> getBitmaps(Context context);
 }

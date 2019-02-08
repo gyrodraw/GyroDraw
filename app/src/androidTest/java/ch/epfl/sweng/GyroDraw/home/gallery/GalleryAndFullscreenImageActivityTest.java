@@ -32,7 +32,7 @@ public class GalleryAndFullscreenImageActivityTest {
         Intents.init();
         LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity(), null, 1);
-        dbHandler.addBitmapToDb(Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888), 2);
+        dbHandler.addBitmap(Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888), 2);
     }
 
     @After
@@ -60,7 +60,7 @@ public class GalleryAndFullscreenImageActivityTest {
         onView(withId(R.id.crossText)).perform(click());
         intended(hasComponent(GalleryActivity.class.getName()));
     }
-    
+
     @Test
     public void testSaveButton() {
         openFullscreenImageActivity();

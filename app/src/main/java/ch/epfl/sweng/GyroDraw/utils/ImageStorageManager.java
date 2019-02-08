@@ -41,7 +41,7 @@ public final class ImageStorageManager {
         Account account = Account.getInstance(context);
         String imageName = "DRAWING_" + account.getTotalMatches()
                 + "_" + account.getUsername() + ".jpg";
-        ImageStorageManager.writeImage(localDbHandler.getLatestBitmapFromDb(), imageName, context);
+        ImageStorageManager.writeImage(localDbHandler.getLatestBitmap(), imageName, context);
     }
 
     /**

@@ -93,7 +93,7 @@ public class VotingPageActivity extends NoBackPressActivity {
     public void shareImage(View view) {
         sharingMode = true;
         LocalDbForImages localDbHandler = new LocalDbHandlerForImages(this, null, 1);
-        ImageSharer.getInstance(this).shareImageToFacebook(localDbHandler.getLatestBitmapFromDb());
+        ImageSharer.getInstance(this).shareImageToFacebook(localDbHandler.getLatestBitmap());
     }
 
     /**
@@ -387,7 +387,7 @@ public class VotingPageActivity extends NoBackPressActivity {
                                     // Get the image from the local database instead
                                     LocalDbForImages localDbHandler = new LocalDbHandlerForImages(
                                             getApplicationContext(), null, 1);
-                                    storeBitmap(localDbHandler.getLatestBitmapFromDb(), currentId);
+                                    storeBitmap(localDbHandler.getLatestBitmap(), currentId);
                                 } else {
                                     refs[i] = storage.getReference().child(currentId + ".jpg");
 

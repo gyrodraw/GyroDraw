@@ -124,7 +124,7 @@ public class VotingPageActivityTest {
                 activityRule.getActivity().getResources(), R.drawable.league_1);
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap, 2);
+        localDbHandler.addBitmap(bitmap, 2);
         onView(withId(R.id.shareButton)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
         onView(withId(R.id.homeButton)).perform(click());
@@ -148,7 +148,7 @@ public class VotingPageActivityTest {
         Bitmap bitmap = initializedBitmap();
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap, 2);
+        localDbHandler.addBitmap(bitmap, 2);
         onView(withId(R.id.saveButton)).perform(click());
         assertThat(myFragment.isVisible(), is(true));
     }
@@ -354,7 +354,7 @@ public class VotingPageActivityTest {
         Bitmap bitmap = initializedBitmap();
         LocalDbHandlerForImages localDbHandler = new LocalDbHandlerForImages(
                 activityRule.getActivity().getApplicationContext(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap, 2);
+        localDbHandler.addBitmap(bitmap, 2);
         activityRule.getActivity().onRequestPermissionsResult(PERMISSION_WRITE_STORAGE,
                 new String[]{}, new int[]{});
 

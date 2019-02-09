@@ -67,7 +67,7 @@ public class GalleryActivity extends NoBackPressActivity {
         ImageView deleteButton = findViewById(R.id.deleteButton);
         deleteButton.setOnTouchListener(new OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {
                 dbHandler.removeAll();
                 recreate();
                 return true;

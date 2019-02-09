@@ -52,7 +52,7 @@ public class GalleryAndFullscreenImageActivityTest {
         intended(hasComponent(HomeActivity.class.getName()));
     }
 
-    ////////// FullscreenImageActiivity /////////////
+    ////////// FullscreenImageActivity /////////////
 
     @Test
     public void clickOnExitCrossOpensGalleryActivity() {

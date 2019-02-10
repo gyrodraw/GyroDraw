@@ -4,8 +4,6 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -206,10 +204,10 @@ public class HomeActivityTest {
         assertThat(homeActivity, is(not(nullValue())));
     }
 
-    @Test
-    public void testSwipeRightOpensShop() {
-        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
-        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
-        intended(hasComponent(ShopActivity.class.getName()));
-    }
+//    @Test
+//    public void testSwipeRightOpensShop() {
+//        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
+//        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
+//        intended(hasComponent(ShopActivity.class.getName()));
+//    }
 }

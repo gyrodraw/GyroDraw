@@ -61,20 +61,6 @@ public class GalleryAndFullscreenImageActivityTest {
         intended(hasComponent(GalleryActivity.class.getName()));
     }
 
-    @Test
-    public void testSaveButton() {
-        openFullscreenImageActivity();
-        onView(withId(R.id.saveButton)).perform(click());
-        intended(hasComponent(FullscreenImageActivity.class.getName()));
-    }
-
-    @Test
-    public void testShareButton() {
-        openFullscreenImageActivity();
-        onView(withId(R.id.shareButton)).perform(click());
-        intended(hasComponent(FullscreenImageActivity.class.getName()));
-    }
-
     private void openFullscreenImageActivity() {
         onView(withId(R.id.galleryList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));

@@ -65,9 +65,12 @@ public class GalleryAndFullscreenImageActivityTest {
     }
 
     @Test
-    public void testSaveAndDeleteButton() {
+    public void testSaveShareAndDeleteButton() {
         openFullscreenImageActivity();
         onView(withId(R.id.saveButton)).perform(click());
+        intended(hasComponent(FullscreenImageActivity.class.getName()));
+
+        onView(withId(R.id.shareButton)).perform(click());
         intended(hasComponent(FullscreenImageActivity.class.getName()));
 
         onView(withId(R.id.crossText)).perform(click());
@@ -75,13 +78,6 @@ public class GalleryAndFullscreenImageActivityTest {
         onView(withId(R.id.deleteButton)).perform(click());
         assertThat(((RecyclerView) activityRule.getActivity().findViewById(R.id.galleryList))
                 .getAdapter().getItemCount(), is(0));
-    }
-
-    @Test
-    public void testShareButton() {
-        openFullscreenImageActivity();
-        onView(withId(R.id.shareButton)).perform(click());
-        intended(hasComponent(FullscreenImageActivity.class.getName()));
     }
 
     /**

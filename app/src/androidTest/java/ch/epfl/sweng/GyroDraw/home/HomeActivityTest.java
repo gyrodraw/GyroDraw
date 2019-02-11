@@ -203,11 +203,4 @@ public class HomeActivityTest {
                 .waitForMonitorWithTimeout(monitor, 3000);
         assertThat(homeActivity, is(not(nullValue())));
     }
-
-//    @Test
-//    public void testSwipeRightOpensShop() {
-//        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
-//        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
-//        intended(hasComponent(ShopActivity.class.getName()));
-//    }
 }

@@ -9,7 +9,7 @@ android:
         - android-22
         # The system image, to run an emulator during the tests
         - sys-img-armeabi-v7a-android-22
-before_script: 
+before_script:
   # Set up Code Climate test reporter
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -25,7 +25,7 @@ before_script:
   - adb shell input keyevent 82
 script:
   - chmod +x ./gradlew
-  - travis_wait 50 ./gradlew connectedCheck jacocoTestReport
+  - travis_wait 60 ./gradlew connectedCheck jacocoTestReport
 after_script:
   # Report test coverage to Code Climate
   - export JACOCO_SOURCE_PATH=app/src/main/java/

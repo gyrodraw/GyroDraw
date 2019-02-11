@@ -1,6 +1,5 @@
 package ch.epfl.sweng.GyroDraw.home.gallery;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,9 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,7 +40,6 @@ public class GalleryActivity extends NoBackPressActivity {
         return new ArrayList<>(bitmaps);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +62,11 @@ public class GalleryActivity extends NoBackPressActivity {
         bitmaps = dbHandler.getBitmaps(this);
 
         ImageView deleteButton = findViewById(R.id.deleteButton);
-        deleteButton.setOnTouchListener(new OnTouchListener() {
+        deleteButton.setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
+            public void onClick(View view) {
                 dbHandler.removeAll();
                 recreate();
-                return true;
             }
         });
 

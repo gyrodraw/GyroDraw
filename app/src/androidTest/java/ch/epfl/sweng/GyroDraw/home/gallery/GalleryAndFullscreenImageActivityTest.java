@@ -36,13 +36,6 @@ public class GalleryAndFullscreenImageActivityTest {
         final GalleryActivity activity = activityRule.getActivity();
         LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(activity, null, 1);
         dbHandler.addBitmap(Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888), 2);
-
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activity.recreate();
-            }
-        });
     }
 
     @After
@@ -72,16 +65,7 @@ public class GalleryAndFullscreenImageActivityTest {
     }
 
     @Test
-    public void testSaveShareAndDeleteButton() {
-        openFullscreenImageActivity();
-        onView(withId(R.id.saveButton)).perform(click());
-        intended(hasComponent(FullscreenImageActivity.class.getName()));
-
-        onView(withId(R.id.shareButton)).perform(click());
-        intended(hasComponent(FullscreenImageActivity.class.getName()));
-
-        onView(withId(R.id.crossText)).perform(click());
-
+    public void testDeleteButton() {
         onView(withId(R.id.deleteButton)).perform(click());
         assertThat(((RecyclerView) activityRule.getActivity().findViewById(R.id.galleryList))
                 .getAdapter().getItemCount(), is(0));

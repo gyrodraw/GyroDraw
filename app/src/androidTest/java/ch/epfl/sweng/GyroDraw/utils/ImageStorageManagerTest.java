@@ -1,20 +1,21 @@
 package ch.epfl.sweng.GyroDraw.utils;
 
-import android.Manifest;
-import android.os.Environment;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.GrantPermissionRule;
-
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.io.File;
-
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
 import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.writeFileToStorage;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
+import android.Manifest;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.GrantPermissionRule;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
+import java.io.File;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class ImageStorageManagerTest {
 
@@ -39,5 +40,14 @@ public class ImageStorageManagerTest {
         File file = ImageStorageManager.getFile("testFile");
         writeFileToStorage(initializedBitmap(), file);
         assertThat(file.getPath(), is(equalTo(fileName)));
+    }
+
+    @Test
+    public void testSaveImage() {
+        ImageStorageManager.saveImage(InstrumentationRegistry.getContext(),
+                Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888));
+        LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(
+                InstrumentationRegistry.getContext(), null, 1);
+        assertThat(dbHandler.getLatestBitmap(), is(notNullValue()));
     }
 }

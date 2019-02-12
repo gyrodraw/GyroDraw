@@ -7,6 +7,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
 import android.graphics.Bitmap;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -17,6 +18,8 @@ import android.support.v7.widget.RecyclerView;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.home.HomeActivity;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.GyroDraw.utils.ImageStorageManager;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,6 +65,21 @@ public class GalleryAndFullscreenImageActivityTest {
         openFullscreenImageActivity();
         onView(withId(R.id.crossText)).perform(click());
         intended(hasComponent(GalleryActivity.class.getName()));
+    }
+
+    @Test
+    public void testSaveImage() {
+        activityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageStorageManager.saveImage(activityRule.getActivity(),
+                        Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888));
+            }
+        });
+
+        LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(
+                activityRule.getActivity(), null, 1);
+        assertThat(dbHandler.getLatestBitmap(), Matchers.is(notNullValue()));
     }
 
     @Test

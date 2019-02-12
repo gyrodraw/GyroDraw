@@ -33,9 +33,16 @@ public class GalleryAndFullscreenImageActivityTest {
     @Before
     public void init() {
         Intents.init();
-        LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(
-                activityRule.getActivity(), null, 1);
+        final GalleryActivity activity = activityRule.getActivity();
+        LocalDbHandlerForImages dbHandler = new LocalDbHandlerForImages(activity, null, 1);
         dbHandler.addBitmap(Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888), 2);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.recreate();
+            }
+        });
     }
 
     @After

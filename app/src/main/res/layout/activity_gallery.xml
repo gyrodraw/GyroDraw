@@ -34,6 +34,7 @@
         android:background="@color/darkAlpha" />
 
     <LinearLayout
+        android:id="@+id/galleryLinearLayout"
         android:layout_width="350dp"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
@@ -84,6 +85,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </RelativeLayout>
+
+        <TextView
+          android:id="@+id/emptyGalleryText"
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginBottom="25dp"
+          android:layout_marginTop="25dp"
+          android:gravity="center"
+          android:text="@string/emptyGalleryText"
+          android:textColor="@color/colorDrawYellow"
+          android:textSize="25sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/galleryList"

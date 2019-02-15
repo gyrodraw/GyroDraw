@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
@@ -54,6 +56,9 @@ public class GalleryActivity extends NoBackPressActivity {
         exitButton.setTypeface(typeMuro);
         LayoutUtils.setFadingExitHomeListener(exitButton, this);
 
+        TextView emptyGalleryText = findViewById(R.id.emptyGalleryText);
+        emptyGalleryText.setTypeface(typeMuro);
+
         final RecyclerView recyclerView = findViewById(R.id.galleryList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setHasFixedSize(true);
@@ -82,6 +87,10 @@ public class GalleryActivity extends NoBackPressActivity {
                         startActivity(intent);
                     }
                 }));
+
+        // Hide or display the empty gallery text
+        LinearLayout galleryLayout = findViewById(R.id.galleryLinearLayout);
+        ((ViewManager) galleryLayout).removeView(bitmaps.isEmpty() ? recyclerView : emptyGalleryText);
     }
 
     /**

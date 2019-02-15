@@ -72,4 +72,5 @@
   <string name="final_ranking">Final Ranking</string>
   <string name="gallery">Gallery</string>
   <string name="title_activity_fullscreen">FullscreenActivity</string>
+  <string name="emptyGalleryText">You don\'t have any pictures yet</string>
 </resources>

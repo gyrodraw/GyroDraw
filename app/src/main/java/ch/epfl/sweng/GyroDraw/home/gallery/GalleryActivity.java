@@ -90,7 +90,8 @@ public class GalleryActivity extends NoBackPressActivity {
 
         // Hide or display the empty gallery text
         LinearLayout galleryLayout = findViewById(R.id.galleryLinearLayout);
-        ((ViewManager) galleryLayout).removeView(bitmaps.isEmpty() ? recyclerView : emptyGalleryText);
+        ((ViewManager) galleryLayout)
+                .removeView(bitmaps.isEmpty() ? recyclerView : emptyGalleryText);
     }
 
     /**

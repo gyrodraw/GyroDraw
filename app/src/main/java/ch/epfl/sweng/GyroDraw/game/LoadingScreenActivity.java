@@ -1,18 +1,11 @@
 package ch.epfl.sweng.GyroDraw.game;
 
+import static ch.epfl.sweng.GyroDraw.home.HomeActivity.GAME_MODE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
@@ -23,8 +16,12 @@ import ch.epfl.sweng.GyroDraw.home.HomeActivity;
 import ch.epfl.sweng.GyroDraw.matchmaking.Matchmaker;
 import ch.epfl.sweng.GyroDraw.utils.BooleanVariableListener;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
-
-import static ch.epfl.sweng.GyroDraw.home.HomeActivity.GAME_MODE;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
 
 /**
  * Class encapsulating methods necessary for communicating with the backend before showing to the
@@ -180,5 +177,10 @@ public class LoadingScreenActivity extends NoBackPressActivity {
     protected void onPause() {
         super.onPause();
         finish();
+    }
+
+    @VisibleForTesting
+    String getRoomId() {
+        return roomID;
     }
 }

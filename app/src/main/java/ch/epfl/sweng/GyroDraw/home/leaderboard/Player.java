@@ -116,7 +116,9 @@ class Player implements Comparable {
         LinearLayout entry = addViews(new LinearLayout(context),
                 new View[]{usernameView, trophiesView, leagueView, friendsButton});
 
-        createAndAddOnlineView(res, entry);
+        if (isFriend && !isCurrentUser) {
+            createAndAddOnlineView(res, entry);
+        }
 
         entry.setBackgroundColor(res.getColor(
                 isCurrentUser ? R.color.colorDrawYellow : R.color.colorLightGrey));
@@ -126,25 +128,23 @@ class Player implements Comparable {
     }
 
     private void createAndAddOnlineView(Resources res, LinearLayout entry) {
-        if (isFriend && !isCurrentUser) {
-            final TextView onlineView = new TextView(context);
-            styleView(onlineView, "Online", res.getColor(R.color.colorGreen),
-                    new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
-            onlineView.setPadding(0, 10, 0, 10);
-            onlineView.setVisibility(GONE);
-            FbDatabase.getUserOnlineStatus(userId, new OnSuccessValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Integer data = dataSnapshot.getValue(Integer.class);
-                    if (data != null) {
-                        OnlineStatus onlineStatus = OnlineStatus.fromInteger(data);
-                        onlineView.setVisibility(
-                                onlineStatus == OnlineStatus.ONLINE ? VISIBLE : GONE);
-                    }
+        final TextView onlineView = new TextView(context);
+        styleView(onlineView, "Online", res.getColor(R.color.colorGreen),
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+        onlineView.setPadding(0, 10, 0, 10);
+        onlineView.setVisibility(GONE);
+        FbDatabase.getUserOnlineStatus(userId, new OnSuccessValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer data = dataSnapshot.getValue(Integer.class);
+                if (data != null) {
+                    OnlineStatus onlineStatus = OnlineStatus.fromInteger(data);
+                    onlineView.setVisibility(
+                            onlineStatus == OnlineStatus.ONLINE ? VISIBLE : GONE);
                 }
-            });
-            entry.addView(onlineView, 1);
-        }
+            }
+        });
+        entry.addView(onlineView, 1);
     }
 
     private LinearLayout addViews(LinearLayout layout, View[] views) {

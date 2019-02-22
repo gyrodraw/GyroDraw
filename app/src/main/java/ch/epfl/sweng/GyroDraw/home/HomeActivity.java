@@ -135,6 +135,10 @@ public class HomeActivity extends NoBackPressActivity {
         final ImageView shopButton = findViewById(R.id.shopButton);
         final ImageView galleryButton = findViewById(R.id.galleryButton);
         final ImageView battleLogButton = findViewById(R.id.battleLogButton);
+        final TextView shopText = findViewById(R.id.shopText);
+        final TextView galleryText = findViewById(R.id.galleryText);
+        final TextView leaderboardText = findViewById(R.id.leaderboardText);
+        final TextView battleLogText = findViewById(R.id.battleLogText);
         final ImageView trophiesButton = findViewById(R.id.trophiesButton);
         final TextView trophiesCount = findViewById(R.id.trophiesCount);
         final ImageView starsButton = findViewById(R.id.starsButton);
@@ -150,6 +154,10 @@ public class HomeActivity extends NoBackPressActivity {
         usernameButton.setTypeface(typeMuro);
         trophiesCount.setTypeface(typeMuro);
         starsCount.setTypeface(typeMuro);
+        shopText.setTypeface(typeMuro);
+        galleryText.setTypeface(typeMuro);
+        leaderboardText.setTypeface(typeMuro);
+        battleLogText.setTypeface(typeMuro);
 
         setListener(drawButton, DRAW_BUTTON_AMPLITUDE, DRAW_BUTTON_FREQUENCY);
         setListener(leaderboardButton, getMainAmplitude(), getMainFrequency());

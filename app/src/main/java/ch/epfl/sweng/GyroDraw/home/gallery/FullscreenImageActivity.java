@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,17 +53,31 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         final int pos = getIntent().getIntExtra(GalleryActivity.POS, 0);
 
         final List<Bitmap> bitmaps = GalleryActivity.getBitmaps();
-        ImagesPagerAdapter imagesPagerAdapter = new ImagesPagerAdapter(
+        final ImagesPagerAdapter imagesPagerAdapter = new ImagesPagerAdapter(
                 getSupportFragmentManager(), bitmaps);
 
         ViewPager viewPager = findViewById(R.id.container);
         viewPager.setAdapter(imagesPagerAdapter);
         viewPager.setCurrentItem(pos);
+        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
+                Fragment fragment = imagesPagerAdapter.getRegisteredFragment(position);
+                setSaveButtonListener(((PlaceholderFragment) fragment).bitmap);
+                setShareButtonListener(((PlaceholderFragment) fragment).bitmap);
+            }
 
-        final Bitmap image = bitmaps.get(pos);
+            @Override
+            public void onPageSelected(int position) {
+                // Not useful
+            }
 
-        setSaveButtonListener(image);
-        setShareButtonListener(image);
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Not useful
+            }
+        });
     }
 
     private void setSaveButtonListener(final Bitmap image) {
@@ -153,6 +169,7 @@ public class FullscreenImageActivity extends NoBackPressActivity {
     private class ImagesPagerAdapter extends FragmentStatePagerAdapter {
 
         private final List<Bitmap> bitmaps;
+        private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
         private ImagesPagerAdapter(FragmentManager fm, List<Bitmap> bitmaps) {
             super(fm);
@@ -160,10 +177,26 @@ public class FullscreenImageActivity extends NoBackPressActivity {
         }
 
         @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
+        }
+
+        @Override
         public Parcelable saveState() {
             Bundle bundle = (Bundle) super.saveState();
-            bundle.putParcelableArray("states",
-                    null); // Never maintain any states
+            bundle.putParcelableArray("states", null); // Never maintain any states
             return bundle;
         }
 

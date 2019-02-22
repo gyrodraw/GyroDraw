@@ -120,7 +120,7 @@ class Player implements Comparable {
                 new View[]{usernameView, trophiesView, leagueView, friendsButton});
 
         if (isFriend && !isCurrentUser) {
-            createAndAddOnlineView(res, entry, usernameView);
+            createAndAddOnlineView(entry, usernameView);
         }
 
         entry.setBackgroundColor(res.getColor(
@@ -130,7 +130,7 @@ class Player implements Comparable {
         return entry;
     }
 
-    private void createAndAddOnlineView(final Resources res, final LinearLayout entry, final TextView usernameView) {
+    private void createAndAddOnlineView(final LinearLayout entry, final TextView usernameView) {
         FbDatabase.getUserOnlineStatus(userId, new OnSuccessValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -138,15 +138,14 @@ class Player implements Comparable {
                 if (data != null) {
                     OnlineStatus onlineStatus = OnlineStatus.fromInteger(data);
                     if (onlineStatus == OnlineStatus.ONLINE) {
-                        final TextView onlineView = new TextView(context);
-                        styleView(onlineView, "O", res.getColor(R.color.colorGreen),
-                                new LinearLayout.LayoutParams(0,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-                        onlineView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
-                        usernameView.setLayoutParams(
-                                new LinearLayout.LayoutParams(0,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+                        ImageView onlineView = new ImageView(context);
+                        onlineView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                                LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                        onlineView.setImageResource(R.drawable.online);
                         onlineView.setPadding(0, 10, 0, 10);
+
+                        usernameView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT, 4));
                         entry.addView(onlineView, 1);
                     }
                 }

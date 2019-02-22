@@ -40,7 +40,7 @@ public final class ImageStorageManager {
         LocalDbForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
         Account account = Account.getInstance(context);
         String imageName = "DRAWING_" + account.getTotalMatches()
-                + "_" + account.getUsername() + ".jpg";
+                + "_" + account.getUsername();
         ImageStorageManager.writeImage(localDbHandler.getLatestBitmap(), imageName, context);
     }
 
@@ -53,7 +53,7 @@ public final class ImageStorageManager {
     public static void saveImage(Context context, Bitmap bitmap) {
         Account account = Account.getInstance(context);
         String imageName = "DRAWING_" + account.getUsername() + "_"
-                + Calendar.getInstance().getTime() + ".jpg";
+                + Calendar.getInstance().getTime();
         ImageStorageManager.writeImage(bitmap, imageName, context);
     }
 

@@ -7,23 +7,30 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-import java.util.ArrayList;
-import java.util.List;
+
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.pressButton;
 
 /**
  * Class representing the gallery, where users can see the pictures they drew.
@@ -62,11 +69,26 @@ public class GalleryActivity extends NoBackPressActivity {
         bitmaps = dbHandler.getBitmaps(this);
 
         ImageView deleteButton = findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new OnClickListener() {
+        deleteButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                dbHandler.removeAll();
-                recreate();
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, GalleryActivity.this);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, GalleryActivity.this);
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            dbHandler.removeAll();
+                            bitmaps = dbHandler.getBitmaps(GalleryActivity.this);
+                            GalleryAdapter adapter =
+                                    new GalleryAdapter(GalleryActivity.this, bitmaps);
+                            recyclerView.setAdapter(adapter);
+                        }
+                        break;
+                    default:
+                }
+                return true;
             }
         });
 

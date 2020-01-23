@@ -1,5 +1,8 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
+import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.MIN_WIDTH;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,19 +14,13 @@ import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbStorage;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
-
-import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.CURR_WIDTH;
-import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.MIN_WIDTH;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class representing the view used for drawing.
@@ -34,6 +31,9 @@ public class PaintView extends View {
     private static final float INIT_SPEED = 14;
     private static final int CIRCLE_STROKE = 15;
     private static final int CURVE_INTENSITY = 5;
+
+    private int index;
+    private final LinkedList<Bitmap> bitmaps;
 
     private boolean canDraw = true;
     private boolean bucketMode = false;
@@ -71,6 +71,10 @@ public class PaintView extends View {
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+
+        index = 0;
+
+        bitmaps = new LinkedList<>();
 
         colors.add(getPaintWithColor(Color.BLACK));
 
@@ -250,6 +254,28 @@ public class PaintView extends View {
         color = previousColor;
     }
 
+    public void undo() {
+        if (index < bitmaps.size() - 1) {
+            if (isDrawing) {
+                drawEnd();
+            }
+
+            bitmap = bitmaps.get(++index);
+            canvas = new Canvas(bitmap);
+        }
+    }
+
+    public void redo() {
+        if (index > 0) {
+            if (isDrawing) {
+                drawEnd();
+            }
+
+            bitmap = bitmaps.get(--index);
+            canvas = new Canvas(bitmap);
+        }
+    }
+
     /**
      * Keeps coordinates within screen boundaries.
      *
@@ -268,6 +294,9 @@ public class PaintView extends View {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
+        for (int i = 0; i < 3; i++) {
+            bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
+        }
     }
 
     @Override
@@ -346,6 +375,9 @@ public class PaintView extends View {
         path.lineTo(circleX.getValue(), circleY.getValue());
         canvas.drawPath(path, colors.get(color));
         path.reset();
+        
+        bitmaps.removeLast();
+        bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
     }
 
     /**

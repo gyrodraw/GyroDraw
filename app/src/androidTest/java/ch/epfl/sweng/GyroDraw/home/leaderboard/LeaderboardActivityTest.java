@@ -1,5 +1,18 @@
 package ch.epfl.sweng.GyroDraw.home.leaderboard;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertThat;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,32 +28,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
 import ch.epfl.sweng.GyroDraw.home.FriendsRequestState;
 import ch.epfl.sweng.GyroDraw.home.HomeActivity;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.junit.Assert.assertThat;
+import java.util.ArrayList;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardActivityTest {
@@ -83,7 +80,7 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsButtonReceivedIsInitializedCorrectly() {
         Player player = new Player(context, USER_ID, USERNAME,
-                0L, "leagueOne", false);
+                0L, "leagueOne", false, false);
         FriendsButton friendsButton = new FriendsButton(
                 context, player, 1, false);
         friendsButton.initializeImageCorrespondingToFriendsState(
@@ -96,7 +93,7 @@ public class LeaderboardActivityTest {
     public void testFriendsButtonReceivedIsUpdatedCorrectly() {
         FriendsButton friendsButton = new FriendsButton(
                 context, new Player(context, USER_ID + "1", USERNAME,
-                0L, "leagueThree", false), 2, false);
+                0L, "leagueThree", false, false), 2, false);
         friendsButton.setImageAndUpdateFriendsState(
                 FriendsRequestState.RECEIVED.ordinal());
         assertDrawablesAreIdentical(friendsButton.getDrawable(),

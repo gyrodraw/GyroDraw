@@ -356,7 +356,7 @@ public class PaintView extends View {
             drawEnd();
         }
         canDraw = false;
-        localDbHandler.addBitmapToDb(bitmap, QUALITY);
+        localDbHandler.addBitmap(bitmap, QUALITY);
     }
 
     /**

@@ -7,9 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Local database handler for storing and retrieving the user's images.
@@ -26,7 +27,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
      * Helper class to save images in local database.
      */
     public LocalDbHandlerForImages(Context context, SQLiteDatabase.CursorFactory factory,
-                                   int dbVersion) {
+            int dbVersion) {
         super(context, DATABASE_NAME, factory, dbVersion);
     }
 
@@ -46,7 +47,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
     /**
      * If there exists already a table with this name, which has lower version, drop it.
      *
-     * @param db         database to look in
+     * @param db database to look in
      * @param oldVersion old version number
      * @param newVersion new version number
      */
@@ -57,7 +58,7 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
     }
 
     @Override
-    public void addBitmapToDb(Bitmap bitmap, int quality) {
+    public void addBitmap(Bitmap bitmap, int quality) {
         if (bitmap != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
@@ -77,13 +78,19 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
             SQLiteDatabase db = this.getWritableDatabase();
 
             db.insert(TABLE_NAME, null, values);
-
             db.close();
         }
     }
 
     @Override
-    public Bitmap getLatestBitmapFromDb() {
+    public void removeAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        db.close();
+    }
+
+    @Override
+    public Bitmap getLatestBitmap() {
         String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -100,7 +107,35 @@ public final class LocalDbHandlerForImages extends SQLiteOpenHelper implements L
         } else {
             bitmap = null;
         }
+
         db.close();
         return bitmap;
+    }
+
+    @Override
+    public List<Bitmap> getBitmaps(Context context) {
+        String query = "Select * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 20";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Bitmap> recentBitmaps = new ArrayList<>();
+
+        if (cursor == null || !cursor.moveToFirst()) {
+            return recentBitmaps;
+        }
+
+        do {
+            byte[] byteArray = cursor.getBlob(2);
+
+            if (byteArray != null) {
+                recentBitmaps.add(BitmapFactory.decodeByteArray(byteArray, 0,
+                        byteArray.length));
+            }
+        } while (cursor.moveToNext());
+
+        cursor.close();
+        db.close();
+        return recentBitmaps;
     }
 }

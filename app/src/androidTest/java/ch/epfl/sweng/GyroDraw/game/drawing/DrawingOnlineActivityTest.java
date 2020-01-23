@@ -124,10 +124,10 @@ public class DrawingOnlineActivityTest {
 
         LocalDbForImages localDbHandler =
                 new LocalDbHandlerForImages(activityRule.getActivity(), null, 1);
-        localDbHandler.addBitmapToDb(bitmap, 2);
+        localDbHandler.addBitmap(bitmap, 2);
 
         bitmap = compressBitmap(bitmap, 2);
-        Bitmap newBitmap = localDbHandler.getLatestBitmapFromDb();
+        Bitmap newBitmap = localDbHandler.getLatestBitmap();
 
         bitmapEqualsNewBitmap(bitmap, newBitmap);
     }

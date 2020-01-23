@@ -1,25 +1,22 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
+
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.Random;
-
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.game.drawing.items.Item;
 import ch.epfl.sweng.GyroDraw.home.HomeActivity;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
-
-import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Class representing the offline practice mode. The user has the choice of
@@ -27,7 +24,6 @@ import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
  */
 public class DrawingOfflineActivity extends GyroDrawingActivity {
 
-    private static final String TAG = "DrawingOfflineActivity";
     private ImageView mysteryButton;
     private DrawingItems drawingItems;
     private boolean isToggled;
@@ -75,7 +71,6 @@ public class DrawingOfflineActivity extends GyroDrawingActivity {
         LocalDbForImages localDbHandlerForImages =
                 new LocalDbHandlerForImages(this, null, 1);
         paintView.saveCanvasInDb(localDbHandlerForImages);
-        Log.d(TAG, "Exiting drawing view");
     }
 
     /**

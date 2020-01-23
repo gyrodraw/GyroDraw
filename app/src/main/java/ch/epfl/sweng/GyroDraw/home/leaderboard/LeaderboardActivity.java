@@ -35,7 +35,7 @@ public class LeaderboardActivity extends NoBackPressActivity {
 
         final EditText searchField = findViewById(R.id.searchField);
         TextView exitButton = findViewById(R.id.exitButton);
-        LayoutUtils.setFadingExitListener(exitButton, this);
+        LayoutUtils.setFadingExitHomeListener(exitButton, this);
         exitButton.setTypeface(typeMuro);
         searchField.setTypeface(typeMuro);
 

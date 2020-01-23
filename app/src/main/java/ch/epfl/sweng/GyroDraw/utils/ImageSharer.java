@@ -20,6 +20,7 @@ import com.google.firebase.storage.UploadTask;
 
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbStorage;
+import java.util.Calendar;
 
 /**
  * This class is responsible for sharing images to Facebook.
@@ -74,7 +75,7 @@ public class ImageSharer {
             shareImageToFacebookApp(image);
         } else {
             // Facebook app not installed, use web instead.
-            uploadImageToFireBase(image);
+            uploadImageToFirebase(image);
         }
     }
 
@@ -101,10 +102,10 @@ public class ImageSharer {
      *
      * @param image the image to upload
      */
-    private void uploadImageToFireBase(Bitmap image) {
+    private void uploadImageToFirebase(Bitmap image) {
         Account account = Account.getInstance(context);
-        String imageName = "DRAWING_" + account.getTotalMatches()
-                + "_" + account.getUsername() + ".jpg";
+        String imageName = "DRAWING_" + account.getUsername() + "_"
+                + Calendar.getInstance().getTime() + ".jpg";
 
         final StorageReference ref = FirebaseStorage.getInstance().getReference().child(imageName);
         FbStorage.sendBitmapToFirebaseStorage(image, imageName,

@@ -85,6 +85,7 @@ public class GalleryAndFullscreenImageActivityTest {
     @Test
     public void testDeleteButton() {
         onView(withId(R.id.deleteButton)).perform(click());
+        onView(withId(R.id.yesButton)).perform(click());
         onView(withId(R.id.emptyGalleryText)).check(matches(isDisplayed()));
     }
 

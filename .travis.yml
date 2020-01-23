@@ -11,7 +11,7 @@ android:
     - extra-google-google_play_services
     # The system image, to run an emulator during the tests
     - sys-img-x86-android-26
-    - sys-img-armeabi-v7a-android-17
+    - sys-img-armeabi-v7a-android-26
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
@@ -24,7 +24,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
   # Emulator Management: Create, Start and Wait
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a -c 100M
+  - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a -c 100M
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   # Disable animations / transitions

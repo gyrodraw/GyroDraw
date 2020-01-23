@@ -41,24 +41,13 @@
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/pop_up_background"
         android:orientation="vertical"
         tools:context=".home.gallery.GalleryActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ImageView
-              android:id="@+id/deleteButton"
-              android:layout_alignParentStart="true"
-              android:layout_width="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginStart="16dp"
-              android:clickable="true"
-              android:focusable="true"
-              android:layout_height="wrap_content"
-              android:src="@drawable/com_facebook_close"/>
 
             <TextView
                 android:id="@+id/galleryText"
@@ -87,23 +76,41 @@
         </RelativeLayout>
 
         <TextView
-          android:id="@+id/emptyGalleryText"
-          android:layout_width="300dp"
-          android:layout_height="match_parent"
-          android:layout_gravity="center"
-          android:layout_marginBottom="25dp"
-          android:layout_marginTop="25dp"
-          android:gravity="center"
-          android:text="@string/emptyGalleryText"
-          android:textColor="@color/colorDrawYellow"
-          android:textSize="25sp" />
+            android:id="@+id/emptyGalleryText"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:gravity="center"
+            android:text="@string/emptyGalleryText"
+            android:textColor="@color/colorDrawYellow"
+            android:textSize="25sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/galleryList"
-            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:background="@color/colorDarkGrey"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/trash_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/galleryLinearLayout" />
+
     </LinearLayout>
+
 </RelativeLayout>

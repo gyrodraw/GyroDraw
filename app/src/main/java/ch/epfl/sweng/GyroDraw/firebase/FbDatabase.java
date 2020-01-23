@@ -1,18 +1,5 @@
 package ch.epfl.sweng.GyroDraw.firebase;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.DatabaseReference.CompletionListener;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.shop.ShopItem;
-
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.BOUGHT_ITEMS;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.EMAIL;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.FRIENDS;
@@ -24,6 +11,17 @@ import static ch.epfl.sweng.GyroDraw.firebase.RoomAttributes.UPLOAD_DRAWING;
 import static ch.epfl.sweng.GyroDraw.firebase.RoomAttributes.USERS;
 import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.GyroDraw.utils.Preconditions.checkPrecondition;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.shop.ShopItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DatabaseReference.CompletionListener;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Utility wrapper class over {@link FirebaseDatabase}.
@@ -157,6 +155,18 @@ public final class FbDatabase {
     }
 
     /**
+     * Retrieves a {@link DataSnapshot} of a user with the given id and applies the listener to its
+     * online attribute.
+     *
+     * @param userId             id of user to get
+     * @param valueEventListener action that should be taken after retrieving the user's online
+     *                           status
+     */
+    public static void getUserOnlineStatus(String userId, ValueEventListener valueEventListener) {
+        USERS_REFERENCE.child(userId).child(STATUS).addValueEventListener(valueEventListener);
+    }
+
+    /**
      * Retrieves a {@link DataSnapshot} of all friends from the user with the given id. Applies the
      * listener on the snapshot.
      *
@@ -169,7 +179,7 @@ public final class FbDatabase {
     }
 
     /**
-     * Gets data if users are friends and applies the given listener.
+     * Gets data if users are friends and applies the given listener for single value event.
      *
      * @param valueEventListener how to handle response
      */

@@ -10,25 +10,32 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-import java.util.ArrayList;
-import java.util.List;
+
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.pressButton;
 
 /**
  * Class representing the gallery, where users can see the pictures they drew.
@@ -59,7 +66,9 @@ public class GalleryActivity extends NoBackPressActivity {
         confirmationPopup = new Dialog(this);
 
         TextView exitButton = findViewById(R.id.crossText);
+
         exitButton.setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.galleryText)).setTypeface(typeMuro);
         LayoutUtils.setFadingExitHomeListener(exitButton, this);
 
         TextView emptyGalleryText = findViewById(R.id.emptyGalleryText);
@@ -73,10 +82,22 @@ public class GalleryActivity extends NoBackPressActivity {
         bitmaps = dbHandler.getBitmaps(this);
 
         ImageView deleteButton = findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new OnClickListener() {
+        deleteButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                showConfirmationPopup(dbHandler);
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, GalleryActivity.this);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, GalleryActivity.this);
+                        if (isPointInsideView(event.getRawX(), event.getRawY(), view)) {
+                            showConfirmationPopup(dbHandler);
+                        }
+                        break;
+                    default:
+                }
+                return true;
             }
         });
 
@@ -95,22 +116,22 @@ public class GalleryActivity extends NoBackPressActivity {
 
         // Hide or display the empty gallery text
         LinearLayout galleryLayout = findViewById(R.id.galleryLinearLayout);
-        ((ViewManager) galleryLayout)
-                .removeView(bitmaps.isEmpty() ? recyclerView : emptyGalleryText);
+        galleryLayout.removeView(bitmaps.isEmpty() ? recyclerView : emptyGalleryText);
     }
 
     private void showConfirmationPopup(final LocalDbForImages dbHandler) {
         confirmationPopup.setContentView(R.layout.delete_images_confirmation_pop_up);
 
-        confirmationPopup.findViewById(R.id.yesButton).setOnClickListener(new OnClickListener() {
+        confirmationPopup.findViewById(R.id.yesButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dbHandler.removeAll();
+                confirmationPopup.dismiss();
                 recreate();
             }
         });
 
-        confirmationPopup.findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
+        confirmationPopup.findViewById(R.id.noButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmationPopup.dismiss();

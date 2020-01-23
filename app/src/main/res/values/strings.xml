@@ -73,4 +73,7 @@
   <string name="gallery">Gallery</string>
   <string name="title_activity_fullscreen">FullscreenActivity</string>
   <string name="emptyGalleryText">You don\'t have any pictures yet</string>
+  <string name="are_you_sure_gallery">Do you really want to delete the whole gallery?</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
 </resources>

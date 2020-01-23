@@ -122,19 +122,40 @@ public class GalleryActivity extends NoBackPressActivity {
     private void showConfirmationPopup(final LocalDbForImages dbHandler) {
         confirmationPopup.setContentView(R.layout.delete_images_confirmation_pop_up);
 
-        confirmationPopup.findViewById(R.id.yesButton).setOnClickListener(new View.OnClickListener() {
+        final Context context = this;
+        confirmationPopup.findViewById(R.id.yesButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                dbHandler.removeAll();
-                confirmationPopup.dismiss();
-                recreate();
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, context);
+                        dbHandler.removeAll();
+                        confirmationPopup.dismiss();
+                        recreate();
+                        break;
+                    default:
+                }
+                return true;
             }
         });
 
-        confirmationPopup.findViewById(R.id.noButton).setOnClickListener(new View.OnClickListener() {
+        confirmationPopup.findViewById(R.id.noButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                confirmationPopup.dismiss();
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        pressButton(view, LayoutUtils.AnimMode.CENTER, context);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        bounceButton(view, context);
+                        confirmationPopup.dismiss();
+                        break;
+                    default:
+                }
+                return true;
             }
         });
 

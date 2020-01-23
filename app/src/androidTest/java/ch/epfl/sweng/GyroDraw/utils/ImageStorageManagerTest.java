@@ -2,8 +2,8 @@ package ch.epfl.sweng.GyroDraw.utils;
 
 import android.Manifest;
 import android.os.Environment;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.GrantPermissionRule;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;

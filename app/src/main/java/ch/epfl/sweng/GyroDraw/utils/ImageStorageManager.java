@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,7 +20,7 @@ import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 /**
  * This class is responsible for saving images to the device storage.

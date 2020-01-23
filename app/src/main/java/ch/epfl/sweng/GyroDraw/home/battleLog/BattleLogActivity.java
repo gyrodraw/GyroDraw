@@ -1,7 +1,7 @@
 package ch.epfl.sweng.GyroDraw.home.battleLog;
 
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.view.ViewManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;

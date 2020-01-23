@@ -1,7 +1,7 @@
 package ch.epfl.sweng.GyroDraw.home.leaderboard;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.widget.LinearLayout;
 
 import com.google.firebase.database.DataSnapshot;

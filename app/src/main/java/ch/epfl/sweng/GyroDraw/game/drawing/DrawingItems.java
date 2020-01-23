@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.os.CountDownTimer;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;

@@ -8,10 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.SystemClock;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.firebase.database.DataSnapshot;
 
@@ -32,13 +32,13 @@ import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
 import ch.epfl.sweng.GyroDraw.shop.ShopItem;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity.ROOM_ID;
 import static ch.epfl.sweng.GyroDraw.game.WaitingPageActivity.WINNING_WORD;
 import static org.hamcrest.MatcherAssert.assertThat;

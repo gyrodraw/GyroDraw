@@ -9,9 +9,9 @@ import static ch.epfl.sweng.GyroDraw.home.HomeActivity.GAME_MODE;
 import static org.mockito.ArgumentMatchers.isA;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.annotation.NonNull;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
 import ch.epfl.sweng.GyroDraw.firebase.OnSuccessValueEventListener;
 import com.google.firebase.database.DataSnapshot;

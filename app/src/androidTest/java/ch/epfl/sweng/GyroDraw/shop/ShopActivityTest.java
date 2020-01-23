@@ -1,8 +1,8 @@
 package ch.epfl.sweng.GyroDraw.shop;
 
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -16,15 +16,15 @@ import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
 import ch.epfl.sweng.GyroDraw.home.HomeActivity;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.action.ViewActions.swipeRight;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.BOUGHT_ITEMS;
 
 @RunWith(AndroidJUnit4.class)

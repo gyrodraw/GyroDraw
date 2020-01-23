@@ -1,8 +1,8 @@
 package ch.epfl.sweng.GyroDraw.auth;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;

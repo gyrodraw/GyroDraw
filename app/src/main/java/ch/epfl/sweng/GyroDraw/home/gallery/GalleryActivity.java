@@ -1,8 +1,11 @@
 package ch.epfl.sweng.GyroDraw.home.gallery;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,8 +36,9 @@ import java.util.List;
 public class GalleryActivity extends NoBackPressActivity {
 
     private static final int COLUMNS = 3;
-
     public static final String POS = "pos";
+
+    private Dialog confirmationPopup;
 
     private static List<Bitmap> bitmaps;
 
@@ -51,6 +55,8 @@ public class GalleryActivity extends NoBackPressActivity {
         GlideUtils.startBackgroundAnimation(this);
 
         ((TextView) findViewById(R.id.galleryText)).setTypeface(typeMuro);
+
+        confirmationPopup = new Dialog(this);
 
         TextView exitButton = findViewById(R.id.crossText);
         exitButton.setTypeface(typeMuro);
@@ -70,8 +76,7 @@ public class GalleryActivity extends NoBackPressActivity {
         deleteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHandler.removeAll();
-                recreate();
+                showConfirmationPopup(dbHandler);
             }
         });
 
@@ -92,6 +97,28 @@ public class GalleryActivity extends NoBackPressActivity {
         LinearLayout galleryLayout = findViewById(R.id.galleryLinearLayout);
         ((ViewManager) galleryLayout)
                 .removeView(bitmaps.isEmpty() ? recyclerView : emptyGalleryText);
+    }
+
+    private void showConfirmationPopup(final LocalDbForImages dbHandler) {
+        confirmationPopup.setContentView(R.layout.delete_images_confirmation_pop_up);
+
+        confirmationPopup.findViewById(R.id.yesButton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHandler.removeAll();
+                recreate();
+            }
+        });
+
+        confirmationPopup.findViewById(R.id.noButton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmationPopup.dismiss();
+            }
+        });
+
+        confirmationPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        confirmationPopup.show();
     }
 
     /**

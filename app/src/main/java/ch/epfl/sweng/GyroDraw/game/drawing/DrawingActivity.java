@@ -1,11 +1,12 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
+import static ch.epfl.sweng.GyroDraw.shop.ColorsShop.getColorIdFromString;
+
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.VisibleForTesting;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,18 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
-import com.google.android.gms.common.util.ArrayUtils;
-
-import java.util.LinkedList;
-import java.util.List;
-
+import androidx.annotation.VisibleForTesting;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.shop.ShopItem;
-
-import static ch.epfl.sweng.GyroDraw.shop.ColorsShop.getColorIdFromString;
+import com.google.android.gms.common.util.ArrayUtils;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Abstract class representing the drawing page of the game.

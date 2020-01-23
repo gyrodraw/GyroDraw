@@ -14,7 +14,7 @@ import ch.epfl.sweng.GyroDraw.utils.TypefaceLibrary;
 /**
  * Helper class that defines the style of the text feedback.
  */
-final class FeedbackTextView extends android.support.v7.widget.AppCompatTextView {
+final class FeedbackTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private static final int TEXT_SIZE = 1;
 

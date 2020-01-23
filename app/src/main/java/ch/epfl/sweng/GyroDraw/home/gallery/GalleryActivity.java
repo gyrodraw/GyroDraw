@@ -1,5 +1,9 @@
 package ch.epfl.sweng.GyroDraw.home.gallery;
 
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.bounceButton;
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
+import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.pressButton;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,35 +11,27 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
 import ch.epfl.sweng.GyroDraw.utils.GlideUtils;
 import ch.epfl.sweng.GyroDraw.utils.LayoutUtils;
-
-import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.bounceButton;
-import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.isPointInsideView;
-import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.pressButton;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing the gallery, where users can see the pictures they drew.
@@ -123,41 +119,43 @@ public class GalleryActivity extends NoBackPressActivity {
         confirmationPopup.setContentView(R.layout.delete_images_confirmation_pop_up);
 
         final Context context = this;
-        confirmationPopup.findViewById(R.id.yesButton).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view, LayoutUtils.AnimMode.CENTER, context);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, context);
-                        dbHandler.removeAll();
-                        confirmationPopup.dismiss();
-                        recreate();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+        confirmationPopup.findViewById(R.id.yesButton)
+                .setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                pressButton(view, LayoutUtils.AnimMode.CENTER, context);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                bounceButton(view, context);
+                                dbHandler.removeAll();
+                                confirmationPopup.dismiss();
+                                recreate();
+                                break;
+                            default:
+                        }
+                        return true;
+                    }
+                });
 
-        confirmationPopup.findViewById(R.id.noButton).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressButton(view, LayoutUtils.AnimMode.CENTER, context);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        bounceButton(view, context);
-                        confirmationPopup.dismiss();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+        confirmationPopup.findViewById(R.id.noButton)
+                .setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                pressButton(view, LayoutUtils.AnimMode.CENTER, context);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                bounceButton(view, context);
+                                confirmationPopup.dismiss();
+                                break;
+                            default:
+                        }
+                        return true;
+                    }
+                });
 
         confirmationPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         confirmationPopup.show();

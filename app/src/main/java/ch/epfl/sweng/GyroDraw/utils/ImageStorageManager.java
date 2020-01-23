@@ -1,16 +1,14 @@
 package ch.epfl.sweng.GyroDraw.utils;
 
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
+import static androidx.core.app.ActivityCompat.requestPermissions;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
-import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 import ch.epfl.sweng.GyroDraw.R;
@@ -35,7 +33,6 @@ public final class ImageStorageManager {
      *
      * @param context activity context
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImageFromDb(Context context) {
         LocalDbForImages localDbHandler = new LocalDbHandlerForImages(context, null, 1);
         Account account = Account.getInstance(context);
@@ -49,7 +46,6 @@ public final class ImageStorageManager {
      *
      * @param context activity context
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void saveImage(Context context, Bitmap bitmap) {
         Account account = Account.getInstance(context);
         String imageName = "DRAWING_" + account.getUsername() + "_"
@@ -64,7 +60,6 @@ public final class ImageStorageManager {
      * @param imageName the filename of the image.
      * @param context the activity.
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private static void writeImage(Bitmap image, String imageName, final Context context) {
         File file = getFile(imageName);
 
@@ -131,7 +126,7 @@ public final class ImageStorageManager {
      * @param context context of the application
      */
     public static void askForStoragePermission(Context context) {
-        ActivityCompat.requestPermissions((Activity) context, new String[]{
+        requestPermissions((Activity) context, new String[]{
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
     }

@@ -1,6 +1,6 @@
 package ch.epfl.sweng.GyroDraw.game;
 
-import android.support.test.espresso.IdlingResource;
+import androidx.test.espresso.IdlingResource;
 import android.view.View;
 
 public class ViewVisibilityIdlingResource implements IdlingResource {

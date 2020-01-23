@@ -1,6 +1,6 @@
 package ch.epfl.sweng.GyroDraw.utils;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Class representing a listener for boolean variables.

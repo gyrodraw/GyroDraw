@@ -80,7 +80,7 @@ public class LeaderboardActivityTest {
     @Test
     public void testFriendsButtonReceivedIsInitializedCorrectly() {
         Player player = new Player(context, USER_ID, USERNAME,
-                0L, "leagueOne", false);
+                0L, "leagueOne", false, false);
         FriendsButton friendsButton = new FriendsButton(
                 context, player, 1, false);
         friendsButton.initializeImageCorrespondingToFriendsState(
@@ -93,7 +93,7 @@ public class LeaderboardActivityTest {
     public void testFriendsButtonReceivedIsUpdatedCorrectly() {
         FriendsButton friendsButton = new FriendsButton(
                 context, new Player(context, USER_ID + "1", USERNAME,
-                0L, "leagueThree", false), 2, false);
+                0L, "leagueThree", false, false), 2, false);
         friendsButton.setImageAndUpdateFriendsState(
                 FriendsRequestState.RECEIVED.ordinal());
         assertDrawablesAreIdentical(friendsButton.getDrawable(),

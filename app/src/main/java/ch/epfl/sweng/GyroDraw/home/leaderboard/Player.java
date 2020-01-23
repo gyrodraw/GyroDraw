@@ -2,6 +2,7 @@ package ch.epfl.sweng.GyroDraw.home.leaderboard;
 
 import android.content.Context;
 import android.content.res.Resources;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,6 +15,10 @@ import java.util.LinkedList;
 
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.firebase.AccountAttributes;
+import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
+import ch.epfl.sweng.GyroDraw.firebase.OnSuccessValueEventListener;
+import ch.epfl.sweng.GyroDraw.utils.OnlineStatus;
 import ch.epfl.sweng.GyroDraw.utils.TestUsers;
 import ch.epfl.sweng.GyroDraw.utils.TypefaceLibrary;
 
@@ -21,11 +26,12 @@ import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.LEAGUE;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.TROPHIES;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.USERNAME;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.USER_ID;
+import static ch.epfl.sweng.GyroDraw.home.FriendsRequestState.FRIENDS;
+import static ch.epfl.sweng.GyroDraw.home.FriendsRequestState.fromInteger;
 import static ch.epfl.sweng.GyroDraw.utils.LayoutUtils.getLeagueImageId;
 
 /**
- * Helper class to manage and display user data from Firebase.
- * Needs to be package-private.
+ * Helper class to manage and display user data from Firebase. Needs to be package-private.
  */
 class Player implements Comparable {
 
@@ -35,15 +41,17 @@ class Player implements Comparable {
     private final Long trophies;
     private final String league;
     private int rank;
+    private final boolean isFriend;
     private final boolean isCurrentUser;
 
     Player(Context context, String userId, String username, Long trophies, String league,
-           boolean isCurrentUser) {
+           boolean isFriend, boolean isCurrentUser) {
         this.context = context;
         this.userId = userId;
         this.username = username;
         this.trophies = trophies;
         this.league = league;
+        this.isFriend = isFriend;
         this.isCurrentUser = isCurrentUser;
     }
 
@@ -52,8 +60,7 @@ class Player implements Comparable {
     }
 
     /**
-     * Allows one to call sort on a collection of Players. Sorts collection in descending
-     * order.
+     * Allows one to call sort on a collection of Players. Sorts collection in descending order.
      *
      * @param object Player to compare
      * @return 1 if this is larger, -1 if this is smaller, 0 else
@@ -69,6 +76,7 @@ class Player implements Comparable {
 
     /**
      * Returns true if the player name contains the given string, false otherwise.
+     *
      * @param query the string to search for in the player name
      * @return true if the player name contains the given string, false otherwise
      */
@@ -87,14 +95,14 @@ class Player implements Comparable {
         Resources res = context.getResources();
         styleView(usernameView, rank + ". " + username, res.getColor(
                 isCurrentUser ? R.color.colorPrimaryDark : R.color.colorDrawYellow),
-                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 5));
         usernameView.setPadding(0, 10, 0, 10);
 
         TextView trophiesView = new TextView(context);
         styleView(trophiesView, trophies.toString(),
                 res.getColor(R.color.colorPrimaryDark),
                 new LinearLayout.LayoutParams(0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 2));
+                        LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
         trophiesView.setTextAlignment(RelativeLayout.TEXT_ALIGNMENT_TEXT_END);
 
@@ -109,11 +117,38 @@ class Player implements Comparable {
         LinearLayout entry = addViews(new LinearLayout(context),
                 new View[]{usernameView, trophiesView, leagueView, friendsButton});
 
+        if (isFriend && !isCurrentUser) {
+            createAndAddOnlineView(entry, usernameView);
+        }
+
         entry.setBackgroundColor(res.getColor(
                 isCurrentUser ? R.color.colorDrawYellow : R.color.colorLightGrey));
         entry.setPadding(30, 10, 30, 10);
 
         return entry;
+    }
+
+    private void createAndAddOnlineView(final LinearLayout entry, final TextView usernameView) {
+        FbDatabase.getUserOnlineStatus(userId, new OnSuccessValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer data = dataSnapshot.getValue(Integer.class);
+                if (data != null) {
+                    OnlineStatus onlineStatus = OnlineStatus.fromInteger(data);
+                    if (onlineStatus == OnlineStatus.ONLINE) {
+                        ImageView onlineView = new ImageView(context);
+                        onlineView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                                LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                        onlineView.setImageResource(R.drawable.online);
+                        onlineView.setPadding(0, 10, 0, 10);
+
+                        usernameView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT, 4));
+                        entry.addView(onlineView, 1);
+                    }
+                }
+            }
+        });
     }
 
     private LinearLayout addViews(LinearLayout layout, View[] views) {
@@ -138,13 +173,13 @@ class Player implements Comparable {
     }
 
     /**
-     * Checks if the received player is not a test-user and if all values are available.
-     * Then adds the player to allPlayers.
+     * Checks if the received player is not a test-user and if all values are available. Then adds
+     * the player to allPlayers.
      *
      * @param snapshot to convert
      */
     static void convertSnapshotToPlayerAndAddToList(Context context, DataSnapshot snapshot,
-                                                     LinkedList<Player> players) {
+                                                    LinkedList<Player> players) {
         String userId = snapshot.child(USER_ID).getValue(String.class);
         String username = snapshot.child(USERNAME).getValue(String.class);
         Long trophies = snapshot.child(TROPHIES).getValue(Long.class);
@@ -154,7 +189,14 @@ class Player implements Comparable {
                 && username != null
                 && trophies != null
                 && league != null) {
-            Player temp = new Player(context, userId, username, trophies, league,
+            boolean isFriend = false;
+            for (DataSnapshot friend : snapshot.child(AccountAttributes.FRIENDS).getChildren()) {
+                if (friend.getKey().equals(Account.getInstance(context).getUserId())
+                        && fromInteger(friend.getValue(int.class)) == FRIENDS) {
+                    isFriend = true;
+                }
+            }
+            Player temp = new Player(context, userId, username, trophies, league, isFriend,
                     username.equals(
                             Account.getInstance(context)
                                     .getUsername()));

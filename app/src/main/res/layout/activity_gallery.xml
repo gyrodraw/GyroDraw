@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="1.0"
+        app:srcCompat="@drawable/home_background"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/backgroundAnimation"
+        style="@style/BackGroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.8"
+        app:srcCompat="@drawable/background_animation"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/darkAlpha"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkAlpha" />
+
+    <LinearLayout
+        android:id="@+id/galleryLinearLayout"
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/pop_up_background"
+        android:orientation="vertical"
+        tools:context=".home.gallery.GalleryActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/galleryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/crossText"
+                android:layout_centerHorizontal="true"
+                android:text="@string/gallery"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/crossText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:includeFontPadding="false"
+                android:text="@string/cross"
+                android:textColor="@color/colorDrawYellow"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/emptyGalleryText"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:gravity="center"
+            android:text="@string/emptyGalleryText"
+            android:textColor="@color/colorDrawYellow"
+            android:textSize="25sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/galleryList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:background="@color/colorDarkGrey"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/trash_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/galleryLinearLayout" />
+
+    </LinearLayout>
+
+</RelativeLayout>

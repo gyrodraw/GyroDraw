@@ -41,8 +41,8 @@
         android:id="@+id/trophiesButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintEnd_toStartOf="@+id/trophiesCount"
@@ -55,8 +55,8 @@
         android:id="@+id/starsButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintEnd_toStartOf="@+id/starsCount"
@@ -83,9 +83,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/leagueImage"
         app:layout_constraintEnd_toStartOf="@id/leagueImage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/rightIcons">
+        app:layout_constraintTop_toTopOf="@id/leagueImage">
 
         <ImageView
             android:id="@+id/shopButton"
@@ -96,16 +97,40 @@
             app:srcCompat="@drawable/shop_button"
             tools:ignore="ContentDescription" />
 
+        <TextView
+            android:id="@+id/shopText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="@string/shop"
+            android:textColor="@color/colorWhite" />
+
+        <ImageView
+            android:id="@+id/galleryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/gallery_button"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/galleryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/gallery"
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/rightIcons"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/leagueImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/leagueImage"
@@ -114,22 +139,40 @@
         <ImageView
             android:id="@+id/leaderboardButton"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:scaleType="fitStart"
             app:srcCompat="@drawable/leaderboard_button"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/leaderboardText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/leaderboard"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp" />
 
         <ImageView
             android:id="@+id/battleLogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:clickable="true"
             android:focusable="true"
             app:srcCompat="@drawable/battle_log_button"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/battleLogText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/battle_log"
+            android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 

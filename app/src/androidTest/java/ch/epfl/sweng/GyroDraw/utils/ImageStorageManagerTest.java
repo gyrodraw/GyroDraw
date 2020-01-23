@@ -1,5 +1,11 @@
 package ch.epfl.sweng.GyroDraw.utils;
 
+import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
+import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.writeFileToStorage;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import android.Manifest;
 import android.os.Environment;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -7,14 +13,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.File;
-
-import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivityTest.initializedBitmap;
-import static ch.epfl.sweng.GyroDraw.utils.ImageStorageManager.writeFileToStorage;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class ImageStorageManagerTest {
 

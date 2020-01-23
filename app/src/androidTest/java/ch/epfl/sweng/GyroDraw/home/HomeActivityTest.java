@@ -5,7 +5,6 @@ import android.app.Instrumentation;
 import android.os.SystemClock;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
@@ -44,6 +43,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+
+import androidx.test.rule.ActivityTestRule;
+import ch.epfl.sweng.GyroDraw.home.gallery.GalleryActivity;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {
@@ -174,6 +176,12 @@ public class HomeActivityTest {
     }
 
     @Test
+    public void testLaunchGallery() {
+        onView(withId(R.id.galleryButton)).perform(click());
+        intended(hasComponent(GalleryActivity.class.getName()));
+    }
+
+    @Test
     public void testCrossClosesPopUp() {
         openAndClosePopUp(R.id.crossText);
     }
@@ -199,12 +207,5 @@ public class HomeActivityTest {
         Activity homeActivity = getInstrumentation()
                 .waitForMonitorWithTimeout(monitor, 3000);
         assertThat(homeActivity, is(not(nullValue())));
-    }
-
-    @Test
-    public void testSwipeRightOpensShop() {
-        onView(withId(R.id.backgroundAnimation)).perform(swipeLeft());
-        onView(withId(R.id.backgroundAnimation)).perform(swipeRight());
-        intended(hasComponent(ShopActivity.class.getName()));
     }
 }

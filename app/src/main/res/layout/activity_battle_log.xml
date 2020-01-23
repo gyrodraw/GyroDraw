@@ -36,10 +36,12 @@
     <LinearLayout
         android:id="@+id/gameResults"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:background="@color/colorPrimaryDark"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/pop_up_background"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -61,10 +63,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:includeFontPadding="false"
                 android:text="@string/cross"
                 android:textColor="@color/colorDrawYellow"
@@ -77,10 +77,10 @@
         <TextView
             android:id="@+id/emptyBattleLogText"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginBottom="25dp"
             android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
             android:gravity="center"
             android:text="@string/empty_battle_log"
             android:textColor="@color/colorDrawYellow"
@@ -89,13 +89,13 @@
         <ScrollView
             android:id="@+id/scrollBattleLog"
             android:layout_width="match_parent"
-            android:layout_height="468dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,18 +105,17 @@
                 android:id="@+id/battleLog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchField">
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/searchField"></LinearLayout>
         </ScrollView>
     </LinearLayout>
 </RelativeLayout>

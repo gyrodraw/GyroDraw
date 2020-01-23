@@ -35,7 +35,7 @@ public class BattleLogActivity extends NoBackPressActivity {
 
         TextView exitButton = findViewById(R.id.exitButton);
         TextView emptyBattleLogText = findViewById(R.id.emptyBattleLogText);
-        LayoutUtils.setFadingExitListener(exitButton, this);
+        LayoutUtils.setFadingExitHomeListener(exitButton, this);
 
         exitButton.setTypeface(typeMuro);
         emptyBattleLogText.setTypeface(typeMuro);

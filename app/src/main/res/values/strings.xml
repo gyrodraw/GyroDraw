@@ -49,7 +49,7 @@
     <string name="leave">Leave</string>
     <string name="practice">PRACTICE !</string>
     <string name="special">SPECIAL !</string>
-    <string name="friendsFilter">Filter friends</string>
+    <string name="friendsFilter">Friends</string>
     <string name="buySuccess">Purchase Successful</string>
     <string name="buyError">Not enough stars</string>
     <string name="success">Success</string>
@@ -65,9 +65,17 @@
     <string name="usernameTooLong">Username is too long</string>
     <string name="usernameIllegalChar">Username must not contain</string>
     <string name="successfulImageDownload">Successfully saved image to /Download/Gyrodraw</string>
-    <string name="already_logged_in">You have already logged in on another device! Waiting...</string>
+    <string name="already_logged_in">You have already logged in on another device! Waiting…</string>
     <string name="disconnected">Disconnected</string>
     <string name="error">Error</string>
     <string name="you_have_been_disconnected">You have been disconnected</string>
     <string name="final_ranking">Final Ranking</string>
+    <string name="gallery">Gallery</string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="emptyGalleryText">You don\'t have any pictures yet</string>
+    <string name="are_you_sure_gallery">Do you really want to delete the whole gallery?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="shop">Shop</string>
+    <string name="leaderboard">Leaderboard</string>
 </resources>

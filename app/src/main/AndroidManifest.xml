@@ -93,6 +93,7 @@
         <activity
             android:name=".home.gallery.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
     </application>
 

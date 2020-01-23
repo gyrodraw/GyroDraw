@@ -31,6 +31,7 @@ public class PaintView extends View {
     private static final float INIT_SPEED = 14;
     private static final int CIRCLE_STROKE = 15;
     private static final int CURVE_INTENSITY = 5;
+    private static final int MAX_UNDO_COUNT = 5;
 
     private int index;
     private final LinkedList<Bitmap> bitmaps;
@@ -260,7 +261,7 @@ public class PaintView extends View {
                 drawEnd();
             }
 
-            bitmap = bitmaps.get(++index);
+            bitmap = bitmaps.get(++index).copy(bitmap.getConfig(), true);
             canvas = new Canvas(bitmap);
         }
     }
@@ -271,7 +272,7 @@ public class PaintView extends View {
                 drawEnd();
             }
 
-            bitmap = bitmaps.get(--index);
+            bitmap = bitmaps.get(--index).copy(bitmap.getConfig(), true);
             canvas = new Canvas(bitmap);
         }
     }
@@ -294,9 +295,7 @@ public class PaintView extends View {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
-        for (int i = 0; i < 3; i++) {
-            bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
-        }
+        bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
     }
 
     @Override
@@ -340,6 +339,7 @@ public class PaintView extends View {
                                 bitmap.getPixel(circleX.getValue(), circleY.getValue()),
                                 colors.get(color).getColor())
                                 .floodFill(circleX.getValue(), circleY.getValue());
+                        updateBitmaps();
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -375,9 +375,16 @@ public class PaintView extends View {
         path.lineTo(circleX.getValue(), circleY.getValue());
         canvas.drawPath(path, colors.get(color));
         path.reset();
-        
-        bitmaps.removeLast();
+        updateBitmaps();
+    }
+
+    private void updateBitmaps() {
+        for (int i = 0; i < index; i++) {
+            bitmaps.removeFirst();
+        }
+        index = 0;
         bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
+        if (bitmaps.size() > MAX_UNDO_COUNT) bitmaps.removeLast();
     }
 
     /**

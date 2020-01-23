@@ -55,13 +55,13 @@ public class GalleryActivity extends NoBackPressActivity {
 
         GlideUtils.startBackgroundAnimation(this);
 
-        ((TextView) findViewById(R.id.galleryText)).setTypeface(typeMuro);
-
+        final RecyclerView recyclerView = findViewById(R.id.galleryList);
         TextView exitButton = findViewById(R.id.crossText);
+
         exitButton.setTypeface(typeMuro);
+        ((TextView) findViewById(R.id.galleryText)).setTypeface(typeMuro);
         LayoutUtils.setFadingExitHomeListener(exitButton, this);
 
-        final RecyclerView recyclerView = findViewById(R.id.galleryList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setHasFixedSize(true);
 

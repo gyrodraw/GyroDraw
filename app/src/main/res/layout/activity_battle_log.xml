@@ -41,7 +41,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/pop_up_background"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -77,10 +77,10 @@
         <TextView
             android:id="@+id/emptyBattleLogText"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginBottom="25dp"
             android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
             android:gravity="center"
             android:text="@string/empty_battle_log"
             android:textColor="@color/colorDrawYellow"

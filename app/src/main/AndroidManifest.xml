@@ -1,99 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="ch.epfl.sweng.GyroDraw">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="ch.epfl.sweng.GyroDraw">
 
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.VIBRATE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-  <application
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:launchMode="singleInstance"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme">
-    <provider
-      android:authorities="com.facebook.app.FacebookContentProvider348464052628931"
-      android:exported="true"
-      android:name="com.facebook.FacebookContentProvider"/>
-    <provider
-      android:authorities="com.example.myapp.fileprovider"
-      android:exported="false"
-      android:grantUriPermissions="true"
-      android:name="android.support.v4.content.FileProvider">
-      <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/filepaths"/>
-    </provider>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:launchMode="singleInstance"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider348464052628931"
+            android:exported="true" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.myapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
-    <meta-data
-      android:name="com.facebook.sdk.ApplicationId"
-      android:value="@string/facebook_app_id"
-      tools:replace="android:value"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"
+            tools:replace="android:value" />
 
-    <activity
-      android:name=".MainActivity"
-      android:screenOrientation="portrait">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-    <activity
-      android:name=".auth.LoginActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".home.HomeActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".game.WaitingPageActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".game.drawing.DrawingOnlineActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".auth.AccountCreationActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".game.VotingPageActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".home.leaderboard.LeaderboardActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".home.battleLog.BattleLogActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".home.leagues.LeaguesActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".game.LoadingScreenActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".shop.ShopActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".game.drawing.DrawingOfflineActivity"
-      android:screenOrientation="portrait"/>
-    <activity
-      android:name=".game.drawing.DrawingOnlineItemsActivity"
-      android:screenOrientation="portrait"/>
-    <activity android:name=".home.gallery.GalleryActivity">
-    </activity>
-    <activity
-      android:label="@string/title_activity_fullscreen"
-      android:name=".home.gallery.FullscreenImageActivity"
-      android:theme="@style/AppTheme">
-    </activity>
-  </application>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".auth.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.WaitingPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.drawing.DrawingOnlineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".auth.AccountCreationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.VotingPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.leaderboard.LeaderboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.battleLog.BattleLogActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.leagues.LeaguesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.LoadingScreenActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.ShopActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.drawing.DrawingOfflineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.drawing.DrawingOnlineItemsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.gallery.GalleryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.gallery.FullscreenImageActivity"
+            android:label="@string/title_activity_fullscreen"
+            android:theme="@style/AppTheme"></activity>
+    </application>
 
 </manifest>

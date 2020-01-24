@@ -63,15 +63,8 @@ public class DrawingOfflineActivityNoItemsTest {
     @Test
     public void testPencilTool() {
         paintView.isDrawing = false;
+        onView(ViewMatchers.withId(R.id.bucketButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
-        onView(ViewMatchers.withId(R.id.paintView)).perform(click());
-        assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
-                is(Color.WHITE));
-    }
-
-    @Test
-    public void testEraserTool() {
-        paintView.isDrawing = false;
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
                 is(Color.WHITE));

@@ -28,8 +28,8 @@ import java.util.List;
  */
 public abstract class DrawingActivity extends NoBackPressActivity {
 
-    private static final int[] DEFAULT_COLORS = new int[]{R.color.colorWhite, R.color.colorRed,
-            R.color.colorGreen, R.color.colorBlue, R.color.colorYellow};
+    private static final int[] DEFAULT_COLORS = new int[]{R.color.colorWhite, R.color.colorBlue,
+            R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
 
     static final int MIN_WIDTH = 10;
     static final int CURR_WIDTH = 20;

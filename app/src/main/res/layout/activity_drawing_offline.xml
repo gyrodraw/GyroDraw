@@ -42,7 +42,7 @@
       android:layout_marginBottom="10dp"
       android:layout_weight="1"
       android:onClick="toolClickHandler"
-      app:srcCompat="@drawable/eraser" />
+      app:srcCompat="@drawable/undo" />
 
     <ImageView
       android:id="@+id/redoButton"
@@ -52,7 +52,7 @@
       android:layout_marginBottom="10dp"
       android:layout_weight="1"
       android:onClick="toolClickHandler"
-      app:srcCompat="@drawable/eraser" />
+      app:srcCompat="@drawable/redo" />
 
     <ImageView
       android:id="@+id/mysteryModeButton"

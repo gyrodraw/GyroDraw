@@ -1,26 +1,24 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
-import android.graphics.Color;
-import android.os.SystemClock;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.rule.ActivityTestRule;
-import android.widget.SeekBar;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
-import ch.epfl.sweng.GyroDraw.shop.ShopItem;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.CURR_WIDTH;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.MIN_WIDTH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
+import android.graphics.Color;
+import android.os.SystemClock;
+import android.widget.SeekBar;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.rule.ActivityTestRule;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
+import ch.epfl.sweng.GyroDraw.shop.ShopItem;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class DrawingOfflineActivityNoItemsTest {
 
@@ -38,9 +36,9 @@ public class DrawingOfflineActivityNoItemsTest {
         paintView = activityRule.getActivity().findViewById(R.id.paintView);
         paintView.isDrawing = true;
         Account.getInstance(activityRule.getActivity().getApplicationContext())
-                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
+                .updateItemsBought(new ShopItem(ColorsShop.CYAN, 200));
         Account.getInstance(activityRule.getActivity().getApplicationContext())
-                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
+                .updateItemsBought(new ShopItem(ColorsShop.PURPLE, 100));
     }
 
     @Test
@@ -65,7 +63,6 @@ public class DrawingOfflineActivityNoItemsTest {
     @Test
     public void testPencilTool() {
         paintView.isDrawing = false;
-        onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.pencilButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
@@ -75,7 +72,6 @@ public class DrawingOfflineActivityNoItemsTest {
     @Test
     public void testEraserTool() {
         paintView.isDrawing = false;
-        onView(ViewMatchers.withId(R.id.eraserButton)).perform(click());
         onView(ViewMatchers.withId(R.id.paintView)).perform(click());
         assertThat(paintView.getBitmap().getPixel(paintView.getCircleX(), paintView.getCircleY()),
                 is(Color.WHITE));
@@ -88,14 +84,9 @@ public class DrawingOfflineActivityNoItemsTest {
         assertThat(paintView.isDrawing, is(false));
 
         paintView.isDrawing = true;
-        paintView.setEraser();
-        assertThat(paintView.isDrawing, is(false));
-
-        paintView.isDrawing = true;
         paintView.setBucket();
         assertThat(paintView.isDrawing, is(false));
     }
-
 
 
     @Test

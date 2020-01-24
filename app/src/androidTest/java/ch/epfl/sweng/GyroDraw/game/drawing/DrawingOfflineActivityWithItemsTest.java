@@ -1,16 +1,17 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertThat;
+
 import android.os.SystemClock;
-import androidx.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.util.Map;
-
+import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.game.drawing.items.BumpingItem;
@@ -21,14 +22,10 @@ import ch.epfl.sweng.GyroDraw.game.drawing.items.SpeedupItem;
 import ch.epfl.sweng.GyroDraw.game.drawing.items.SwapAxisItem;
 import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
 import ch.epfl.sweng.GyroDraw.shop.ShopItem;
-
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertThat;
+import java.util.Map;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class DrawingOfflineActivityWithItemsTest {
 
@@ -59,8 +56,8 @@ public class DrawingOfflineActivityWithItemsTest {
         account.setUserId(USER_ID);
         account.setUsername(USERNAME);
         account.setEmail(EMAIL);
-        account.updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
-        account.updateItemsBought(new ShopItem(ColorsShop.RED, 100));
+        account.updateItemsBought(new ShopItem(ColorsShop.CYAN, 200));
+        account.updateItemsBought(new ShopItem(ColorsShop.PURPLE, 100));
     }
 
     @Test

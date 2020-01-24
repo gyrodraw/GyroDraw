@@ -234,17 +234,6 @@ public class PaintView extends View {
     }
 
     /**
-     * Selects the eraser tool.
-     */
-    public void setEraser() {
-        bucketMode = false;
-        if (isDrawing) {
-            drawEnd();
-        }
-        color = colors.size() - 1;
-    }
-
-    /**
      * Selects the bucket tool.
      */
     public void setBucket() {
@@ -357,22 +346,14 @@ public class PaintView extends View {
     }
 
     public void undo() {
-        if (index < bitmaps.size() - 1) {
-            if (isDrawing) {
-                drawEnd();
-            }
-
+        if (!isDrawing && index < bitmaps.size() - 1) {
             bitmap = bitmaps.get(++index).copy(bitmap.getConfig(), true);
             canvas = new Canvas(bitmap);
         }
     }
 
     public void redo() {
-        if (index > 0) {
-            if (isDrawing) {
-                drawEnd();
-            }
-
+        if (!isDrawing && index > 0) {
             bitmap = bitmaps.get(--index).copy(bitmap.getConfig(), true);
             canvas = new Canvas(bitmap);
         }

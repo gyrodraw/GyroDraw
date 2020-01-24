@@ -39,7 +39,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
     private ImageView[] colorButtons;
 
     private ImageView pencilButton;
-    private ImageView eraserButton;
     private ImageView bucketButton;
 
     private int px;
@@ -57,7 +56,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         pencilButton = findViewById(R.id.pencilButton);
-        eraserButton = findViewById(R.id.eraserButton);
         bucketButton = findViewById(R.id.bucketButton);
 
         LinearLayout layout = findViewById(R.id.colorLayout);

@@ -1,37 +1,5 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.os.SystemClock;
-import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.google.firebase.database.DataSnapshot;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.game.VotingPageActivity;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
-import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
-import ch.epfl.sweng.GyroDraw.shop.ShopItem;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -44,6 +12,34 @@ import static ch.epfl.sweng.GyroDraw.game.WaitingPageActivity.WINNING_WORD;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.os.SystemClock;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.game.VotingPageActivity;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForImages;
+import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
+import ch.epfl.sweng.GyroDraw.shop.ShopItem;
+import com.google.firebase.database.DataSnapshot;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 @RunWith(AndroidJUnit4.class)
 public class DrawingOnlineActivityTest {
@@ -74,9 +70,9 @@ public class DrawingOnlineActivityTest {
         paintView.isDrawing = true;
         dataSnapshotMock = Mockito.mock(DataSnapshot.class);
         Account.getInstance(activityRule.getActivity())
-                .updateItemsBought(new ShopItem(ColorsShop.BLUE, 200));
+                .updateItemsBought(new ShopItem(ColorsShop.CYAN, 200));
         Account.getInstance(activityRule.getActivity())
-                .updateItemsBought(new ShopItem(ColorsShop.RED, 100));
+                .updateItemsBought(new ShopItem(ColorsShop.PURPLE, 100));
     }
 
     @Test
@@ -167,7 +163,7 @@ public class DrawingOnlineActivityTest {
     /**
      * Assert if the two bitmaps have the same pixels.
      *
-     * @param bitmap    the first bitmap
+     * @param bitmap the first bitmap
      * @param newBitmap the second bitmap
      */
     public static void bitmapEqualsNewBitmap(Bitmap bitmap, Bitmap newBitmap) {
@@ -181,7 +177,7 @@ public class DrawingOnlineActivityTest {
     /**
      * Compress a bitmap to the given quality.
      *
-     * @param bitmap  the given bitmap
+     * @param bitmap the given bitmap
      * @param quality the given quality
      * @return the compressed bitmap
      */

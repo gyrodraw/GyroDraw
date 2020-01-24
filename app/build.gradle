@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
-    implementation 'org.mockito:mockito-android:3.2.4'
+    androidTestImplementation 'org.mockito:mockito-android:3.2.4'
     testImplementation 'org.mockito:mockito-core:3.2.4'
     implementation 'org.apache.commons:commons-lang3:3.5'
     androidTestImplementation 'androidx.test:core:1.2.0'

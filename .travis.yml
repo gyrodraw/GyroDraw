@@ -15,10 +15,8 @@ android:
         - 'google-gdk-license-.+'
 before_install:
   - yes | sdkmanager "platforms;android-28"
-  # ​- yes | sdkmanager --install "build-tools;28.0.3"​
+  ​- yes | sdkmanager "build-tools;28.0.3"​
 before_script:
-  - yes | sdkmanager "platforms;android-28"
-  # ​- yes | sdkmanager --install "build-tools;28.0.3"​
   # Set up Code Climate test reporter
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter

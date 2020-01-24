@@ -28,7 +28,7 @@ import java.util.List;
  */
 public abstract class DrawingActivity extends NoBackPressActivity {
 
-    private static final int[] defaultColors = new int[]{R.color.colorWhite, R.color.colorRed,
+    private static final int[] DEFAULT_COLORS = new int[]{R.color.colorWhite, R.color.colorRed,
             R.color.colorGreen, R.color.colorBlue, R.color.colorYellow};
 
     static final int MIN_WIDTH = 10;
@@ -68,23 +68,18 @@ public abstract class DrawingActivity extends NoBackPressActivity {
 
         colorButtons = new ImageView[myItems.size() + 6];
         colorButtons[0] = findViewById(R.id.blackButton);
-        colorButtons[1] = findViewById(R.id.whiteButton);
-        colorButtons[2] = findViewById(R.id.redButton);
-        colorButtons[3] = findViewById(R.id.greenButton);
-        colorButtons[4] = findViewById(R.id.blueButton);
-        colorButtons[5] = findViewById(R.id.yellowButton);
+
+        px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
+                getResources().getDisplayMetrics());
 
         for (int i = 1; i < 6; i++) {
-            colors.add(defaultColors[i - 1]);
-            ImageView colorView = createColorImageView(defaultColors[i - 1]);
+            colors.add(DEFAULT_COLORS[i - 1]);
+            ImageView colorView = createColorImageView(DEFAULT_COLORS[i - 1]);
             // Adds the view to the layout
             layout.addView(colorView);
 
             colorButtons[i] = colorView;
         }
-
-        px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
-                getResources().getDisplayMetrics());
 
         for (int i = 0; i < myItems.size(); ++i) {
             ShopItem item = myItems.get(i);

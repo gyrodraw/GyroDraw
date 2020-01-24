@@ -1,7 +1,7 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
 import android.os.SystemClock;
-import android.support.test.rule.ActivityTestRule;
+import androidx.test.rule.ActivityTestRule;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -22,7 +22,7 @@ import ch.epfl.sweng.GyroDraw.game.drawing.items.SwapAxisItem;
 import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
 import ch.epfl.sweng.GyroDraw.shop.ShopItem;
 
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.greaterThan;

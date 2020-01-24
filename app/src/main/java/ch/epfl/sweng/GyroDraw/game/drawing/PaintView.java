@@ -10,10 +10,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.SystemClock;
-import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.VisibleForTesting;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbStorage;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
@@ -384,7 +384,9 @@ public class PaintView extends View {
         }
         index = 0;
         bitmaps.push(bitmap.copy(bitmap.getConfig(), false));
-        if (bitmaps.size() > MAX_UNDO_COUNT) bitmaps.removeLast();
+        if (bitmaps.size() > MAX_UNDO_COUNT) {
+            bitmaps.removeLast();
+        }
     }
 
     /**

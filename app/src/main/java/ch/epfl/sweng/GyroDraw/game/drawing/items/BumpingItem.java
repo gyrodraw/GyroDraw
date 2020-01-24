@@ -2,7 +2,7 @@ package ch.epfl.sweng.GyroDraw.game.drawing.items;
 
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.widget.ImageView;
 
 import ch.epfl.sweng.GyroDraw.R;

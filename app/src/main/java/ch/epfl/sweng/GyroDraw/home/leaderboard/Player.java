@@ -2,7 +2,7 @@ package ch.epfl.sweng.GyroDraw.home.leaderboard;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,8 +22,6 @@ import ch.epfl.sweng.GyroDraw.utils.OnlineStatus;
 import ch.epfl.sweng.GyroDraw.utils.TestUsers;
 import ch.epfl.sweng.GyroDraw.utils.TypefaceLibrary;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.LEAGUE;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.TROPHIES;
 import static ch.epfl.sweng.GyroDraw.firebase.AccountAttributes.USERNAME;

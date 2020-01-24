@@ -2,8 +2,8 @@ package ch.epfl.sweng.GyroDraw.game.drawing;
 
 import android.graphics.Color;
 import android.os.SystemClock;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.rule.ActivityTestRule;
 import android.widget.SeekBar;
 
 import org.junit.Before;
@@ -15,8 +15,8 @@ import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.shop.ColorsShop;
 import ch.epfl.sweng.GyroDraw.shop.ShopItem;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.CURR_WIDTH;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.MIN_WIDTH;
 import static org.hamcrest.MatcherAssert.assertThat;

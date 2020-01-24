@@ -1,6 +1,6 @@
 package ch.epfl.sweng.GyroDraw.firebase;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;

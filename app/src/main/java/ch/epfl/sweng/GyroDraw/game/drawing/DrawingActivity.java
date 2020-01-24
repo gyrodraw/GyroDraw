@@ -28,6 +28,9 @@ import java.util.List;
  */
 public abstract class DrawingActivity extends NoBackPressActivity {
 
+    private static final int[] defaultColors = new int[]{R.color.colorWhite, R.color.colorRed,
+            R.color.colorGreen, R.color.colorBlue, R.color.colorYellow};
+
     static final int MIN_WIDTH = 10;
     static final int CURR_WIDTH = 20;
 
@@ -39,7 +42,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
     private ImageView[] colorButtons;
 
     private ImageView pencilButton;
-    private ImageView eraserButton;
     private ImageView bucketButton;
 
     private int px;
@@ -57,7 +59,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         pencilButton = findViewById(R.id.pencilButton);
-        eraserButton = findViewById(R.id.eraserButton);
         bucketButton = findViewById(R.id.bucketButton);
 
         LinearLayout layout = findViewById(R.id.colorLayout);
@@ -65,8 +66,22 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
         List<Integer> colors = new LinkedList<>();
 
-        colorButtons = new ImageView[myItems.size() + 1];
+        colorButtons = new ImageView[myItems.size() + 6];
         colorButtons[0] = findViewById(R.id.blackButton);
+        colorButtons[1] = findViewById(R.id.whiteButton);
+        colorButtons[2] = findViewById(R.id.redButton);
+        colorButtons[3] = findViewById(R.id.greenButton);
+        colorButtons[4] = findViewById(R.id.blueButton);
+        colorButtons[5] = findViewById(R.id.yellowButton);
+
+        for (int i = 1; i < 6; i++) {
+            colors.add(defaultColors[i - 1]);
+            ImageView colorView = createColorImageView(defaultColors[i - 1]);
+            // Adds the view to the layout
+            layout.addView(colorView);
+
+            colorButtons[i] = colorView;
+        }
 
         px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
                 getResources().getDisplayMetrics());
@@ -79,7 +94,7 @@ public abstract class DrawingActivity extends NoBackPressActivity {
             // Adds the view to the layout
             layout.addView(colorView);
 
-            colorButtons[i + 1] = colorView;
+            colorButtons[i + 6] = colorView;
         }
 
         paintViewHolder = findViewById(R.id.paintViewHolder);

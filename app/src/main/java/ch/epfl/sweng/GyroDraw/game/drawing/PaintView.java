@@ -1,8 +1,5 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
-import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.CURR_WIDTH;
-import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.MIN_WIDTH;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,14 +10,20 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import androidx.annotation.VisibleForTesting;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbStorage;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-import java.util.LinkedList;
-import java.util.List;
+
+import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.CURR_WIDTH;
+import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingActivity.MIN_WIDTH;
 
 /**
  * Class representing the view used for drawing.
@@ -58,7 +61,6 @@ public class PaintView extends View {
     private int height;
     private int circleRadius;
     private int color = 0;
-    private int previousColor = 0;
     private int drawWidth = CURR_WIDTH + MIN_WIDTH;
     private float speed;
     private long lastClickTime = 0;
@@ -67,7 +69,7 @@ public class PaintView extends View {
      * Constructor for the view.
      *
      * @param context Context of class
-     * @param attrs Attributes of class
+     * @param attrs   Attributes of class
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -216,10 +218,7 @@ public class PaintView extends View {
             path.moveTo(circleX.getValue(), circleY.getValue());
         }
 
-        if (this.color != colors.size() - 1) {
-            this.color = color;
-        }
-        previousColor = color;
+        this.color = color;
     }
 
     /**
@@ -227,10 +226,6 @@ public class PaintView extends View {
      */
     public void setPencil() {
         bucketMode = false;
-        if (isDrawing) {
-            drawEnd();
-        }
-        color = previousColor;
     }
 
     /**
@@ -241,14 +236,13 @@ public class PaintView extends View {
         if (isDrawing) {
             drawEnd();
         }
-        color = previousColor;
     }
 
     /**
      * Keeps coordinates within screen boundaries.
      *
      * @param coordinate coordinate to sanitize
-     * @param maxBound maximum bound
+     * @param maxBound   maximum bound
      * @return sanitized coordinate
      */
     private int sanitizeCoordinate(int coordinate, int maxBound) {

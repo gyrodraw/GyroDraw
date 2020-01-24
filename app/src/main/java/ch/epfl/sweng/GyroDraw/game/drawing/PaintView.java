@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.SystemClock;
-import androidx.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.google.firebase.storage.UploadTask.TaskSnapshot;
 import java.util.LinkedList;
 import java.util.List;
 
+import androidx.annotation.VisibleForTesting;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.firebase.FbStorage;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForImages;
@@ -34,6 +34,10 @@ public class PaintView extends View {
     private static final float INIT_SPEED = 14;
     private static final int CIRCLE_STROKE = 15;
     private static final int CURVE_INTENSITY = 5;
+    private static final int MAX_UNDO_COUNT = 10;
+
+    private int index;
+    private final LinkedList<Bitmap> bitmaps;
 
     private boolean canDraw = true;
     private boolean bucketMode = false;
@@ -57,7 +61,6 @@ public class PaintView extends View {
     private int height;
     private int circleRadius;
     private int color = 0;
-    private int previousColor = 0;
     private int drawWidth = CURR_WIDTH + MIN_WIDTH;
     private float speed;
     private long lastClickTime = 0;
@@ -66,11 +69,15 @@ public class PaintView extends View {
      * Constructor for the view.
      *
      * @param context Context of class
-     * @param attrs Attributes of class
+     * @param attrs   Attributes of class
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+
+        index = 0;
+
+        bitmaps = new LinkedList<>();
 
         colors.add(getPaintWithColor(Color.BLACK));
 
@@ -211,10 +218,7 @@ public class PaintView extends View {
             path.moveTo(circleX.getValue(), circleY.getValue());
         }
 
-        if (this.color != colors.size() - 1) {
-            this.color = color;
-        }
-        previousColor = color;
+        this.color = color;
     }
 
     /**
@@ -222,21 +226,6 @@ public class PaintView extends View {
      */
     public void setPencil() {
         bucketMode = false;
-        if (isDrawing) {
-            drawEnd();
-        }
-        color = previousColor;
-    }
-
-    /**
-     * Selects the eraser tool.
-     */
-    public void setEraser() {
-        bucketMode = false;
-        if (isDrawing) {
-            drawEnd();
-        }
-        color = colors.size() - 1;
     }
 
     /**
@@ -247,14 +236,13 @@ public class PaintView extends View {
         if (isDrawing) {
             drawEnd();
         }
-        color = previousColor;
     }
 
     /**
      * Keeps coordinates within screen boundaries.
      *
      * @param coordinate coordinate to sanitize
-     * @param maxBound maximum bound
+     * @param maxBound   maximum bound
      * @return sanitized coordinate
      */
     private int sanitizeCoordinate(int coordinate, int maxBound) {
@@ -268,6 +256,7 @@ public class PaintView extends View {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
+        bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
     }
 
     @Override
@@ -311,6 +300,7 @@ public class PaintView extends View {
                                 bitmap.getPixel(circleX.getValue(), circleY.getValue()),
                                 colors.get(color).getColor())
                                 .floodFill(circleX.getValue(), circleY.getValue());
+                        updateBitmaps();
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -346,6 +336,32 @@ public class PaintView extends View {
         path.lineTo(circleX.getValue(), circleY.getValue());
         canvas.drawPath(path, colors.get(color));
         path.reset();
+        updateBitmaps();
+    }
+
+    public void undo() {
+        if (!isDrawing && index < bitmaps.size() - 1) {
+            bitmap = bitmaps.get(++index).copy(bitmap.getConfig(), true);
+            canvas = new Canvas(bitmap);
+        }
+    }
+
+    public void redo() {
+        if (!isDrawing && index > 0) {
+            bitmap = bitmaps.get(--index).copy(bitmap.getConfig(), true);
+            canvas = new Canvas(bitmap);
+        }
+    }
+
+    private void updateBitmaps() {
+        for (int i = 0; i < index; i++) {
+            bitmaps.removeFirst();
+        }
+        index = 0;
+        bitmaps.push(bitmap.copy(bitmap.getConfig(), false));
+        if (bitmaps.size() > MAX_UNDO_COUNT) {
+            bitmaps.removeLast();
+        }
     }
 
     /**

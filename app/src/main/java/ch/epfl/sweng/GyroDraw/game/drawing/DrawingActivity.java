@@ -1,12 +1,11 @@
 package ch.epfl.sweng.GyroDraw.game.drawing;
 
-import static ch.epfl.sweng.GyroDraw.shop.ColorsShop.getColorIdFromString;
-
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,19 +13,29 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+
+import com.google.android.gms.common.util.ArrayUtils;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
 import androidx.annotation.VisibleForTesting;
 import ch.epfl.sweng.GyroDraw.NoBackPressActivity;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.auth.Account;
 import ch.epfl.sweng.GyroDraw.shop.ShopItem;
-import com.google.android.gms.common.util.ArrayUtils;
-import java.util.LinkedList;
-import java.util.List;
+
+import static ch.epfl.sweng.GyroDraw.shop.ColorsShop.getColorIdFromString;
 
 /**
  * Abstract class representing the drawing page of the game.
  */
 public abstract class DrawingActivity extends NoBackPressActivity {
+
+    private static final int[] DEFAULT_COLORS = new int[]{R.color.colorWhite, R.color.colorBlue,
+            R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
 
     static final int MIN_WIDTH = 10;
     static final int CURR_WIDTH = 20;
@@ -39,7 +48,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
     private ImageView[] colorButtons;
 
     private ImageView pencilButton;
-    private ImageView eraserButton;
     private ImageView bucketButton;
 
     private int px;
@@ -57,7 +65,6 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         pencilButton = findViewById(R.id.pencilButton);
-        eraserButton = findViewById(R.id.eraserButton);
         bucketButton = findViewById(R.id.bucketButton);
 
         LinearLayout layout = findViewById(R.id.colorLayout);
@@ -65,18 +72,35 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         List<ShopItem> myItems = Account.getInstance(this).getItemsBought();
         List<Integer> colors = new LinkedList<>();
 
-        colorButtons = new ImageView[myItems.size() + 1];
+        colorButtons = new ImageView[myItems.size() + DEFAULT_COLORS.length + 1];
         colorButtons[0] = findViewById(R.id.blackButton);
 
         px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
                 getResources().getDisplayMetrics());
 
-        for (int i = 0; i < myItems.size(); ++i) {
-            ShopItem item = myItems.get(i);
-            int color = getColorIdFromString(item.getColorItem().toString());
+        for (int color : DEFAULT_COLORS) {
             colors.add(color);
-            ImageView colorView = createColorImageView(color);
-            // Adds the view to the layout
+        }
+
+        for (ShopItem item : myItems) {
+            colors.add(getColorIdFromString(item.getColorItem().toString()));
+        }
+
+        Collections.sort(colors, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer i1, Integer i2) {
+                float[] i1HSV = new float[3];
+                float[] i2HSV = new float[3];
+
+                Color.colorToHSV(getResources().getColor(i1), i1HSV);
+                Color.colorToHSV(getResources().getColor(i2), i2HSV);
+
+                return Float.compare(i1HSV[0], i2HSV[0]);
+            }
+        });
+
+        for (int i = 0; i < colors.size(); i++) {
+            ImageView colorView = createColorImageView(colors.get(i));
             layout.addView(colorView);
 
             colorButtons[i + 1] = colorView;
@@ -187,23 +211,24 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         switch (view.getId()) {
             case R.id.pencilButton:
                 paintView.setPencil();
-                setResources(R.drawable.pencil_selected, R.drawable.eraser, R.drawable.bucket);
-                break;
-            case R.id.eraserButton:
-                paintView.setEraser();
-                setResources(R.drawable.pencil, R.drawable.eraser_selected, R.drawable.bucket);
+                setResources(R.drawable.pencil_selected, R.drawable.bucket);
                 break;
             case R.id.bucketButton:
                 paintView.setBucket();
-                setResources(R.drawable.pencil, R.drawable.eraser, R.drawable.bucket_selected);
+                setResources(R.drawable.pencil, R.drawable.bucket_selected);
+                break;
+            case R.id.undoButton:
+                paintView.undo();
+                break;
+            case R.id.redoButton:
+                paintView.redo();
                 break;
             default:
         }
     }
 
-    private void setResources(int pencil, int eraser, int bucket) {
+    private void setResources(int pencil, int bucket) {
         pencilButton.setImageResource(pencil);
-        eraserButton.setImageResource(eraser);
         bucketButton.setImageResource(bucket);
     }
 }

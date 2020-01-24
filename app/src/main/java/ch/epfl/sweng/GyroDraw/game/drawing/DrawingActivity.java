@@ -187,7 +187,11 @@ public abstract class DrawingActivity extends NoBackPressActivity {
         switch (view.getId()) {
             case R.id.pencilButton:
                 paintView.setPencil();
-                setResources(R.drawable.pencil_selected, R.drawable.eraser, R.drawable.bucket);
+                setResources(R.drawable.pencil_selected, R.drawable.bucket);
+                break;
+            case R.id.bucketButton:
+                paintView.setBucket();
+                setResources(R.drawable.pencil, R.drawable.bucket_selected);
                 break;
             case R.id.undoButton:
                 paintView.undo();
@@ -195,17 +199,12 @@ public abstract class DrawingActivity extends NoBackPressActivity {
             case R.id.redoButton:
                 paintView.redo();
                 break;
-            case R.id.bucketButton:
-                paintView.setBucket();
-                setResources(R.drawable.pencil, R.drawable.eraser, R.drawable.bucket_selected);
-                break;
             default:
         }
     }
 
-    private void setResources(int pencil, int eraser, int bucket) {
+    private void setResources(int pencil, int bucket) {
         pencilButton.setImageResource(pencil);
-        eraserButton.setImageResource(eraser);
         bucketButton.setImageResource(bucket);
     }
 }

@@ -31,7 +31,7 @@ public class PaintView extends View {
     private static final float INIT_SPEED = 14;
     private static final int CIRCLE_STROKE = 15;
     private static final int CURVE_INTENSITY = 5;
-    private static final int MAX_UNDO_COUNT = 5;
+    private static final int MAX_UNDO_COUNT = 10;
 
     private int index;
     private final LinkedList<Bitmap> bitmaps;
@@ -261,8 +261,7 @@ public class PaintView extends View {
                 drawEnd();
             }
 
-            bitmap = bitmaps.get(++index).copy(bitmap.getConfig(), true);
-            canvas = new Canvas(bitmap);
+            ++index;
         }
     }
 
@@ -272,8 +271,7 @@ public class PaintView extends View {
                 drawEnd();
             }
 
-            bitmap = bitmaps.get(--index).copy(bitmap.getConfig(), true);
-            canvas = new Canvas(bitmap);
+            --index;
         }
     }
 
@@ -335,6 +333,7 @@ public class PaintView extends View {
                         lastClickTime = SystemClock.elapsedRealtime();
                         path.moveTo(circleX.getValue(), circleY.getValue());
                         // Apply the flood fill algorithm
+                        copyBitmap();
                         new BucketTool(bitmap,
                                 bitmap.getPixel(circleX.getValue(), circleY.getValue()),
                                 colors.get(color).getColor())
@@ -363,6 +362,7 @@ public class PaintView extends View {
     }
 
     private void drawStart() {
+        copyBitmap();
         isDrawing = true;
         circleRadius = drawWidth / 2;
         path.reset();
@@ -378,12 +378,17 @@ public class PaintView extends View {
         updateBitmaps();
     }
 
+    private void copyBitmap() {
+        bitmap = bitmaps.get(index).copy(bitmap.getConfig(), true);
+        canvas = new Canvas(bitmap);
+    }
+
     private void updateBitmaps() {
         for (int i = 0; i < index; i++) {
             bitmaps.removeFirst();
         }
         index = 0;
-        bitmaps.push(bitmap.copy(bitmap.getConfig(), true));
+        bitmaps.push(bitmap.copy(bitmap.getConfig(), false));
         if (bitmaps.size() > MAX_UNDO_COUNT) bitmaps.removeLast();
     }
 

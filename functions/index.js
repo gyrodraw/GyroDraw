@@ -4,13 +4,13 @@ const functions = require('firebase-functions');
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin');
 
-const maxPlayers = 5;
+const maxPlayers = 2;
 const numberRoomsPerLeague = 100;
 const minRank = -10;
 
 // Waiting times
 const WAITING_TIME_CHOOSE_WORDS = 10;
-const WAITING_TIME_DRAWING = 90;
+const WAITING_TIME_DRAWING = 180;
 const WAITING_TIME_VOTING = 30;
 
 const parentRoomID = "realRooms/";

@@ -255,26 +255,6 @@ public class PaintView extends View {
         color = previousColor;
     }
 
-    public void undo() {
-        if (index < bitmaps.size() - 1) {
-            if (isDrawing) {
-                drawEnd();
-            }
-
-            ++index;
-        }
-    }
-
-    public void redo() {
-        if (index > 0) {
-            if (isDrawing) {
-                drawEnd();
-            }
-
-            --index;
-        }
-    }
-
     /**
      * Keeps coordinates within screen boundaries.
      *
@@ -333,7 +313,6 @@ public class PaintView extends View {
                         lastClickTime = SystemClock.elapsedRealtime();
                         path.moveTo(circleX.getValue(), circleY.getValue());
                         // Apply the flood fill algorithm
-                        copyBitmap();
                         new BucketTool(bitmap,
                                 bitmap.getPixel(circleX.getValue(), circleY.getValue()),
                                 colors.get(color).getColor())
@@ -362,7 +341,6 @@ public class PaintView extends View {
     }
 
     private void drawStart() {
-        copyBitmap();
         isDrawing = true;
         circleRadius = drawWidth / 2;
         path.reset();
@@ -378,9 +356,26 @@ public class PaintView extends View {
         updateBitmaps();
     }
 
-    private void copyBitmap() {
-        bitmap = bitmaps.get(index).copy(bitmap.getConfig(), true);
-        canvas = new Canvas(bitmap);
+    public void undo() {
+        if (index < bitmaps.size() - 1) {
+            if (isDrawing) {
+                drawEnd();
+            }
+
+            bitmap = bitmaps.get(++index).copy(bitmap.getConfig(), true);
+            canvas = new Canvas(bitmap);
+        }
+    }
+
+    public void redo() {
+        if (index > 0) {
+            if (isDrawing) {
+                drawEnd();
+            }
+
+            bitmap = bitmaps.get(--index).copy(bitmap.getConfig(), true);
+            canvas = new Canvas(bitmap);
+        }
     }
 
     private void updateBitmaps() {

@@ -3,9 +3,10 @@ package ch.epfl.sweng.GyroDraw.game;
 import static ch.epfl.sweng.GyroDraw.firebase.RoomAttributes.WORDS;
 import static ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity.disableLoadingAnimations;
 
-import android.support.annotation.NonNull;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.content.Intent;
+import androidx.annotation.NonNull;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import ch.epfl.sweng.GyroDraw.firebase.FbDatabase;
 import ch.epfl.sweng.GyroDraw.firebase.OnSuccessValueEventListener;
 import com.google.firebase.database.DataSnapshot;

@@ -1,6 +1,6 @@
 package ch.epfl.sweng.GyroDraw.firebase;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;

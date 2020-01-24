@@ -1,6 +1,6 @@
 package ch.epfl.sweng.GyroDraw.utils;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 

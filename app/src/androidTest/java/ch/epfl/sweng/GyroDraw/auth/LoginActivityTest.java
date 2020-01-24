@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.rule.ActivityTestRule;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.ErrorCodes;
@@ -22,8 +22,8 @@ import org.mockito.Mockito;
 import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.home.HomeActivity;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static ch.epfl.sweng.GyroDraw.firebase.FbDatabase.createCompletionListener;
 import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.OFFLINE;
 import static ch.epfl.sweng.GyroDraw.utils.OnlineStatus.changeOnlineStatus;

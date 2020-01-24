@@ -1,16 +1,41 @@
 package ch.epfl.sweng.GyroDraw.home;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressBack;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.os.SystemClock;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import ch.epfl.sweng.GyroDraw.R;
+import ch.epfl.sweng.GyroDraw.auth.Account;
+import ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity;
+import ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity;
+import ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity;
+import ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForAccount;
+import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForAccount;
+import ch.epfl.sweng.GyroDraw.shop.ShopActivity;
+
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressBack;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.action.ViewActions.swipeRight;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity.disableLoadingAnimations;
 import static ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity.setOnTest;
 import static ch.epfl.sweng.GyroDraw.home.HomeActivity.disableBackgroundAnimation;
@@ -19,28 +44,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.os.SystemClock;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import ch.epfl.sweng.GyroDraw.R;
-import ch.epfl.sweng.GyroDraw.auth.Account;
-import ch.epfl.sweng.GyroDraw.game.LoadingScreenActivity;
-import ch.epfl.sweng.GyroDraw.game.drawing.DrawingOfflineActivity;
+import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sweng.GyroDraw.home.gallery.GalleryActivity;
-import ch.epfl.sweng.GyroDraw.home.leaderboard.LeaderboardActivity;
-import ch.epfl.sweng.GyroDraw.home.leagues.LeaguesActivity;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForAccount;
-import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForAccount;
-import ch.epfl.sweng.GyroDraw.shop.ShopActivity;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityTest {

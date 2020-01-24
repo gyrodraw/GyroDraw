@@ -2,8 +2,8 @@ package ch.epfl.sweng.GyroDraw.home.battleLog;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,9 +17,9 @@ import ch.epfl.sweng.GyroDraw.R;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbForGameResults;
 import ch.epfl.sweng.GyroDraw.localDatabase.LocalDbHandlerForGameResults;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivityTest.bitmapEqualsNewBitmap;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivityTest.compressBitmap;
 import static ch.epfl.sweng.GyroDraw.game.drawing.DrawingOnlineActivityTest.initializedBitmap;

@@ -2,7 +2,7 @@ package ch.epfl.sweng.GyroDraw.firebase;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;

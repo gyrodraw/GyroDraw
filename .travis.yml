@@ -9,7 +9,16 @@ android:
         - android-22
         # The system image, to run an emulator during the tests
         - sys-img-armeabi-v7a-android-22
+    licenses:
+        - 'android-sdk-preview-license-52d11cd2'
+        - 'android-sdk-license-.+'
+        - 'google-gdk-license-.+'
+before_install:
+  - yes | sdkmanager "platforms;android-28"
+  ​- yes | sdkmanager --install "build-tools;28.0.3"​
 before_script:
+  - yes | sdkmanager "platforms;android-28"
+  ​- yes | sdkmanager --install "build-tools;28.0.3"​
   # Set up Code Climate test reporter
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
